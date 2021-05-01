@@ -6,6 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="Avance4GeekDevelop" />
           <factory-entry name="entityManagerFactory" value="298b9f53-3a20-4d66-93a0-b906ba35f561" />
         </datasource-mapping>
         <naming-strategy-map />
@@ -16,6 +17,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="Avance4GeekDevelop" />
           <factory-entry name="entityManagerFactory" value="3f8931c9-6e38-46f8-9b9a-6f5e0d3c2986" />
         </datasource-mapping>
         <naming-strategy-map />

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Registro</title>
+
+    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
+    <link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../bootstrap/css/sb-admin-2.css" rel="stylesheet">
+
+
+    <link href="../estilosAdminRest.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" type="text/css" />
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column" >
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;" >
+                <a class="navbar-brand d-flex align-items-center justify-content-center" href="#" >
+                    <div class="navbar-brand rotate-n-15">
+                        <i class="fas fa-truck-loading" style="color: white"></i>
+                    </div>
+                    <div class="navbar-brand-text mx-3" style="color: white">
+                        Food Delivery</div>
+                </a>
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+
+
+                <!-- Topbar Navbar -->
+
+
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container">
+
+                <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal" style="position: relative; right:12%">
+                    <i class="fas fa-chevron-circle-left"></i>
+                    Volver
+                </a>
+                <h1 style="color: black">Registro</h1>
+                <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
+                <form class="user">
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+
+                            <input type="text" class="form-control"
+                                   id="exampleNombre"
+                                   placeholder="Nombres">
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <input type="text" class="form-control"
+                                   id="exampleApellido"
+                                   placeholder="Apellidos">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <input type="email" class="form-control"
+                                   id="exampleCorreo"
+                                   placeholder="Correo electrónico">
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <input placeholder="Fecha de nacimiento" class="form-control" type="text"
+                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <select class="form-control">
+                                <option value="" disabled selected>Sexo</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Masculino">Masculino</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6  mb-2 mb-sm-0">
+                            <input type="number" class="form-control"
+                                   id="exampleTelefono" placeholder="Teléfono">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <input type="number" class="form-control"
+                                   id="exampleDNI" placeholder="DNI">
+                        </div>
+
+                        <div class="col-sm-6  mb-2 mb-sm-0">
+                          <h6> </h6>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputGroupFile03">
+                                <label class="custom-file-label" for="inputGroupFile03">Foto de Perfil</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <h4 style="color: black">Dirección</h4>
+
+                            <div class="form-group row">
+                                <input type="text" class="form-control"
+                                       id="direccion" placeholder="Dirección">
+
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
+                                    <img src="images.jfif" width="350" height="150">
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <h4 style="color: black">Contraseña</h4>
+                            <p>La contraseña debe contar con al menos 8 caracteres.</p>
+                            <div class="form-group row">
+                                <div class="col-sm-12 mb-2 mb-sm-0">
+                                    <input type="password" class="form-control" id="inputPassword1" placeholder="Contraseña">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 mb-2 mb-sm-0">
+                                    <input type="password" class="form-control" id="inputPassword2" placeholder="Confirmar contraseña">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="form-group row">
+
+                    </div>
+                    <hr>
+                    <a href="#" class="btn btn-primary btn-user btn-block "  data-toggle="modal" data-target="#registrarModal">
+                        Registrar
+                    </a>
+                </form>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Volver Modal-->
+<div class="modal fade" id="volverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea volver?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="../login.html">Volver</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Registrar Modal-->
+<div class="modal fade" id="registrarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Confirmación de envío de solicitud</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la  revisión por parte del administrador.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="registroValidacion.html">Enviar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
+</body>
+
+</html>

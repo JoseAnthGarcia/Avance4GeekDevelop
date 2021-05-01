@@ -1,0 +1,136 @@
+.caja {
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #ffffff;
+
+}
+
+
+.ph-center {
+    height: 35px;
+}
+.ph-center::-webkit-input-placeholder {
+    text-align: center;
+    line-height: 100px;/* Centrado vertical */
+}
+
+
+
+.btn-cerrito {
+    color: white;
+    background-color: #701111;
+    border-color: white;
+}
+.btn-cielito{
+    color: white;
+    background-color: #2d4a8d;
+    border-color: white;
+}
+
+.btn-back{
+    color: white;
+    background-color: #d6bd1d;
+    border-color: white;
+}
+.btn-pay{
+    color: white;
+    background-color: #64a94d;
+    border-color: white;
+}
+.btn-trash {
+    color: white;
+    background-color: #701111;
+    border-color: white;
+}
+.btn-eliminar {
+    color: white;
+    background-color: #e08a3d;
+    border-color: white;
+}
+
+.btn-next {
+    color: white;
+    background-color: #d4b900;
+    border-color: white;
+}
+
+
+.card-background{
+    position: center;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #ece7e7;
+    background-clip: border-box;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+}
+.card-background-tab{
+    position: center;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #ece7e7;
+    background-clip: border-box;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+}
+
+button.botonbusca {
+color: #eeeeee;
+background-color:#701111;
+}
+div.notificacion{
+    background-color:#701111;
+}
+h6.notificacion{
+    background-color: #701111;
+    border: 1px solid #701111;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    color: #fff;
+    display: block;
+    padding: .5rem 1.5rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: .95rem;
+    color: #ffffff
+}
+/* Add a black background color to the top navigation */
+.topnav {
+    position: relative;
+    background-color: #ffffff;
+    overflow: hidden;
+    left: 50%;
+    position: absolute;
+  }
+  .pagination a.active {
+    background-color: #ffffff;
+    color: #701111;
+  }
+  .pagination a {
+    color: rgb(255, 255, 255);
+    padding: 8px 16px;
+    background-color:  #701111;
+    transition: background-color .3s;
+    
+  }
+  .bontondate{
+      background-color: rgb(255, 255, 255);
+      color: black;
+  }
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }
+
+#map {
+    height: 500px;
+    width: 100%;
+}
+

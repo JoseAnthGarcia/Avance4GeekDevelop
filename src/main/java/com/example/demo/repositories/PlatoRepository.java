@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdminRestRepository extends JpaRepository<Plato, Integer> {
+public interface PlatoRepository extends JpaRepository<Plato, Integer> {
 
 }

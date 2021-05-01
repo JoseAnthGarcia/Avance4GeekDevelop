@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.util.Date;
 

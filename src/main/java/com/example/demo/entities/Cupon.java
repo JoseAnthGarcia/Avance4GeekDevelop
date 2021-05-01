@@ -12,23 +12,17 @@ public class Cupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcupon;
     @Column(nullable = false)
-    @NotBlank
-    @Size(max = 45, message = "El nombre no puede tener más de 45 caracteres")
     private String nombre;
     @Column(nullable = false)
-    @Positive
-    @Max(value = 90)
-    @Min(value = 0)
+
     private int descuento;
     @Column(nullable = false)
-    @NotBlank
-    @Size(max = 300, message = "La descripción no puede tener más de 300 caracteres")
     private String descripcion;
 
     @Column(nullable = false)
-    private Date fechainicio;
+    private String fechainicio;
     @Column(nullable = false)
-    private Date fechafin;
+    private String fechafin;
     @Column(nullable = false)
     private int idrestaurante;
 
@@ -72,19 +66,19 @@ public class Cupon {
         this.idrestaurante = idrestaurante;
     }
 
-    public Date getFechainicio() {
+    public String getFechainicio() {
         return fechainicio;
     }
 
-    public void setFechainicio(Date fechainicio) {
+    public void setFechainicio(String fechainicio) {
         this.fechainicio = fechainicio;
     }
 
-    public Date getFechafin() {
+    public String getFechafin() {
         return fechafin;
     }
 
-    public void setFechafin(Date fechafin) {
+    public void setFechafin(String fechafin) {
         this.fechafin = fechafin;
     }
 }

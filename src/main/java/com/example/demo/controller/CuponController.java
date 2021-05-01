@@ -22,8 +22,8 @@ public class CuponController {
     public String listarCupones(Model model){
     List<Cupon> list = cuponRepository.findAll();
     model.addAttribute("listaCupon",list);
-
     return "AdminRestaurante/listaCupones";
+
     }
 
     @GetMapping("/nuevo")
@@ -45,7 +45,7 @@ public class CuponController {
     }
 
     @GetMapping("/editar")
-    public String editarCupon(@ModelAttribute("cupon") Cupon cupon, Model model, @RequestParam("id") int id){
+    public String editarCupon( Cupon cupon, Model model, @RequestParam("id") int id){
         Optional<Cupon> optionalCupon=cuponRepository.findById(id);
         if (optionalCupon.isPresent()){
             cupon = optionalCupon.get();

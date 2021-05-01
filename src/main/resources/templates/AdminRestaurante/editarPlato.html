@@ -297,11 +297,11 @@
                                                    href="#lModal2" data-target="#lModal2"
                                                    style="position:absolute;left:1000px;top:590px;width:130px;height:40px">Actualizar</a>
                                                 <td><a class="btn btn-block btn-primary"
-                                                       href="listaPlatos.html"
+                                                       th:href="@{/plato/lista}"
                                                        style="position:absolute;left:825px;top:590px;width:130px;height:40px">Cancelar</a>
                                                 </td>
                                                 <td><a class="btn btn-block btn-danger" data-toggle="modal"
-                                                       href="#lModal1" data-target="#lModal1"
+                                                       href="#lModal1" data-target="#modalEliminar"
                                                        style="position:absolute;left:600px;top:590px;width:180px;height:40px">Eliminar
                                                     Plato</a>
                                                 </td>
@@ -347,8 +347,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Modal1-->
-            <div class="modal fade" id="lModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            <!-- Modal eliminar-->
+            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -360,7 +360,7 @@
                             </button>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" form="editar" class="btn btn-primary">Sí</button>
+                            <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
                             <a class="btn" type="button"
                                data-dismiss="modal">
                                 No

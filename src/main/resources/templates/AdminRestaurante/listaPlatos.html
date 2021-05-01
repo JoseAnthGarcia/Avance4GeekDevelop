@@ -241,7 +241,7 @@
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">
-                            <a class="btn btn-warning" th:href="@{'/plato/formulario'}"><i
+                            <a class="btn btn-warning" th:href="@{'/plato/nuevo'}"><i
                                     class="fas fa-plus fa-sm"></i>&nbspNuevoplato</a>
                             <h5 class="font-weight-bold text-white text-lg-center mx-auto">PLATOS</h5>
 
@@ -274,7 +274,7 @@
                                 <tr th:each="platos,v:${listaPlatos} ">
                                     <td th:text="${v.index+1}"></td>
                                     <td th:text="${platos.nombre}"></td>
-                                    <td th:text="${platos.precio}"></td>
+                                    <td th:text="${'S./ '+platos.precio}"></td>
                                     <td th:text="${platos.descripcion}"></td>
                                     <td style="width: 160px"><a style="color: #dce3f9"
                                                                 class="btn btn-warning btn-circle align"

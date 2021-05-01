@@ -21,17 +21,20 @@ public class PlatoController {
 
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
-        model.addAttribute("listaPlatos", adminRestRepository.findAll());
+        model.addAttribute("listaPlatos", adminRestRepository.findByDisponible(true));
         return "/AdminRestaurante/listaPlatos";
     }
 
-    @GetMapping("/formulario")
+    @GetMapping("/nuevo")
     public String crearPlato() {
         return "/AdminRestaurante/nuevoPlato";
     }
 
     @PostMapping("/guardar")
     public String guardarPlato(Plato plato) {
+        plato.setIdrestaurante(1); //Arcodeado
+        plato.setIdcategoriaplato(3); //Arcodeado
+        plato.setDisponible(true); //default expresion !!!!
         adminRestRepository.save(plato);
         return "redirect:/plato/lista";
     }
@@ -49,18 +52,20 @@ public class PlatoController {
         }
     }
     @GetMapping("/borrar")
-    public String borrarPlato(@RequestParam("id") int id,
-                              Model model) {
+    public String borrarPlato(@RequestParam("id") int id) {
         Optional<Plato> platoOptional = adminRestRepository.findById(id);
         if (platoOptional.isPresent()) {
             Plato plato= platoOptional.get();
             plato.setDisponible(false);
             adminRestRepository.save(plato);
-            return "/AdminRestaurante/editarPlato";
-        } else {
-            return "redirect:/plato/lista";
         }
+        return "redirect:/plato/lista";
     }
+    @GetMapping("/prueba")
+    public String borrarPlato() {
+        return "/AdminRestaurante/prueba";
+    }
+
 
 
 }

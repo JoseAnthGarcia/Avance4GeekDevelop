@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom fonts for this template-->
+    <!-- href="./static/vendor/fontawesome-free/css/all.css"Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
+    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+
+
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!------------------------------->
+    <a class="btn btn-block btn-danger" data-toggle="modal"
+           href="#lModal1" data-target="#ESTOMODIFICAR1"
+           style="position:absolute;left:600px;top:590px;width:180px;height:40px">Prueba MODAL</a>
+    <a class="btn btn-primary mb-4 mr-2 " data-toggle="modal" data-target="#RegistroExitoso"
+       href="#RegistroExitoso">Registrar plato
+    </a>
+    <!------------------------------->
+    <div class="modal fade" id="ESTOMODIFICAR" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center"
+                        id="exampleModalRegistro">
+                        ¿Está seguro que desea
+                        registrar este producto?</h5>
+                    <button class="close" type="button"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="nuevo" class="btn btn-primary">Sí</button>
+                    <a class="btn" type="button"
+                       data-dismiss="modal">
+                        No
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="lModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
+                        plato?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary">Sí</a>
+                    <a class="btn" type="button"
+                       data-dismiss="modal">
+                        No
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------->
+</div>
+</body>
+</html>

@@ -39,7 +39,7 @@ public class CuponController {
 
         if(bindingResult.hasErrors()){
             model.addAttribute("cupon",cupon);
-            return "redirect:/cupon/editar";
+            return "/AdminRestaurante/editarCupon";
         }else{
             if (cupon.getIdcupon()==0){
                 attributes.addFlashAttribute("creado","Cupon creado exitosamente!");

@@ -206,8 +206,6 @@
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3 " style="background-color: #701111;">
                                         <h3 class="h3 font-weight-bold  text-white text-xl-center">EDITAR CUPÓN</h3>
-
-
                                     </div>
 
 
@@ -222,28 +220,31 @@
 
                                             <div class="mb-3">
                                                 <label for="nombre" class="form-label">Nombre</label>
-                                                <input name="precio" type="text" class="form-control mb-2" id="nombre"
+                                                <input name="precio" type="text" class="form-control mb-2"
                                                        value="CREDDI12" th:field="*{nombre}"
                                                        size="50">
+                                                <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="politica" class="form-label">Política:</label>
-                                                <textarea name="precio" type="text" class="form-control mb-2" id="politica"
+                                                <textarea name="precio" type="text" class="form-control mb-2"
                                                           placeholder="Descuentos en la primera compra"
                                                           size="50" th:field="*{descripcion}"
                                                 ></textarea>
+                                                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
                                             </div>
                                             <div class="mb-3" >
                                                 <label for="Caducidad" class="form-label">Caducidad</label>
                                                 <input name="fecha" type="date"
-                                                       class="text-left form-control mb-2" value="caducidad"  id="caducidad"
+                                                       class="text-left form-control mb-2" value="caducidad"
                                                        th:field="*{fechafin}"
                                                        size="5">
+
                                             </div>
                                             <div  class="mb-3">
                                                 <label for="descuento" class="form-label">Descuento</label>
                                                 <input name="precio" type="text" class="form-control mb-2"
-                                                       value="S/. 5.00" th:field="*{descuento}" id="descuento"
+                                                       value="S/. 5.00" th:field="*{descuento}"
                                                        size="50">
                                             </div>
                                             <div class="form-group row">

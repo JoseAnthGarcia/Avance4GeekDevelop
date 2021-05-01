@@ -11,18 +11,27 @@ public class Cupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcupon;
-    @Column(nullable = false)
+    
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Size(max = 8, message = "Ingrese como máximo 8 caractéres")
     private String nombre;
-    @Column(nullable = false)
 
-    private int descuento;
     @Column(nullable = false)
+    @NotBlank
+    private int descuento;
+
+    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 45, message = "Ingrese como máximo 45 caractéres")
     private String descripcion;
 
     @Column(nullable = false)
     private String fechainicio;
+
     @Column(nullable = false)
     private String fechafin;
+
     @Column(nullable = false)
     private int idrestaurante;
 

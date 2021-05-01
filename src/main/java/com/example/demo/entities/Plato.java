@@ -18,7 +18,7 @@ public class Plato {
     private int idcategoriaplato;
     @Column(name="idrestaurante", nullable = false)
     private int  idrestaurante;
-    @Column(name="disponible", nullable = false, columnDefinition = "tinyint default 1")
+    @Column(name="disponible", nullable = false)
     private boolean disponible;
 
 

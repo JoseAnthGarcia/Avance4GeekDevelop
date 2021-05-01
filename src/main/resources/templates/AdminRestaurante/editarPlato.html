@@ -206,7 +206,9 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <h4 class="text-danger text-left h4 mb-4 text-black-500 "><b><strong>Arroz con Pollo</strong></b></h4>
+                                    <h4 class="text-danger text-left h4 mb-4 text-black-500 "><b>
+                                        <strong th:text="${plato.nombre}">Plato_name</strong>
+                                    </b></h4>
                                     <TABLE class="table">
                                         <form id="editar" method="POST"
                                               th:action="@{/plato/guardar}" th:object="${plato}">

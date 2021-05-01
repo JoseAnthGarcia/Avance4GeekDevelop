@@ -17,11 +17,11 @@ import java.util.Optional;
 public class PlatoController {
 
     @Autowired
-    PlatoRepository adminRestRepository;
+    PlatoRepository platoRepository;
 
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
-        model.addAttribute("listaPlatos", adminRestRepository.findByDisponible(true));
+        model.addAttribute("listaPlatos", platoRepository.findByDisponible(true));
         return "/AdminRestaurante/listaPlatos";
     }
 
@@ -32,17 +32,24 @@ public class PlatoController {
 
     @PostMapping("/guardar")
     public String guardarPlato(Plato plato) {
-        plato.setIdrestaurante(1); //Arcodeado
-        plato.setIdcategoriaplato(3); //Arcodeado
+        plato.setIdrestaurante(1); //Jarcodeado
+        plato.setIdcategoriaplato(3); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        adminRestRepository.save(plato);
+        if(plato.getIdplato()==0){
+            platoRepository.save(plato);
+        }else{
+            Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
+            if(optPlato.isPresent()){
+                platoRepository.save(plato);
+            }
+        }
         return "redirect:/plato/lista";
     }
 
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,
                              Model model) {
-        Optional<Plato> platoOptional = adminRestRepository.findById(id);
+        Optional<Plato> platoOptional = platoRepository.findById(id);
         if (platoOptional.isPresent()) {
             Plato plato= platoOptional.get();
             model.addAttribute("plato", plato);
@@ -53,11 +60,11 @@ public class PlatoController {
     }
     @GetMapping("/borrar")
     public String borrarPlato(@RequestParam("id") int id) {
-        Optional<Plato> platoOptional = adminRestRepository.findById(id);
+        Optional<Plato> platoOptional = platoRepository.findById(id);
         if (platoOptional.isPresent()) {
             Plato plato= platoOptional.get();
             plato.setDisponible(false);
-            adminRestRepository.save(plato);
+            platoRepository.save(plato);
         }
         return "redirect:/plato/lista";
     }

@@ -21,7 +21,7 @@ public class Cupon {
     private String nombre;
 
     @Column(nullable = false)
-    @NotBlank(message = "El descuento no puede estar vacío")
+  //  @NotBlank(message = "El descuento no puede estar vacío")
     private int descuento;
 
     @Column(nullable = false, name = "descripcion")

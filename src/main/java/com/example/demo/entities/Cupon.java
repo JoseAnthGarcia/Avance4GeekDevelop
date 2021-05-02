@@ -1,8 +1,11 @@
 package com.example.demo.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,26 +16,25 @@ public class Cupon {
     private int idcupon;
     
     @Column(nullable = false, unique = true)
-    @NotBlank
+    @NotBlank(message = "El nombre no puede estar vacío")
     @Size(max = 8, message = "Ingrese como máximo 8 caractéres")
     private String nombre;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "El descuento no puede estar vacío")
     private int descuento;
 
-    @Column(nullable = false)
-    @NotBlank
+    @Column(nullable = false, name = "descripcion")
+    @NotBlank(message = "La política no puede estar vacío")
     @Size(max = 45, message = "Ingrese como máximo 45 caractéres")
-    private String descripcion;
+    private String politica;
 
-    @Column(nullable = false)
-    private String fechainicio;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechainicio;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private String fechafin;
-
-    @Column(nullable = false)
+    private LocalDate fechafin;
     private int idrestaurante;
 
     public int getIdcupon() {
@@ -55,16 +57,10 @@ public class Cupon {
         return descuento;
     }
 
-    public void setDescuento(int descuento) {
-        this.descuento = descuento;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public void setDescuento(int descuento) { this.descuento = descuento; }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.politica = descripcion;
     }
 
     public int getIdrestaurante() {
@@ -75,19 +71,27 @@ public class Cupon {
         this.idrestaurante = idrestaurante;
     }
 
-    public String getFechainicio() {
+    public String getPolitica() {
+        return politica;
+    }
+
+    public void setPolitica(String politica) {
+        this.politica = politica;
+    }
+
+    public LocalDate getFechainicio() {
         return fechainicio;
     }
 
-    public void setFechainicio(String fechainicio) {
+    public void setFechainicio(LocalDate fechainicio) {
         this.fechainicio = fechainicio;
     }
 
-    public String getFechafin() {
+    public LocalDate getFechafin() {
         return fechafin;
     }
 
-    public void setFechafin(String fechafin) {
+    public void setFechafin(LocalDate fechafin) {
         this.fechafin = fechafin;
     }
 }

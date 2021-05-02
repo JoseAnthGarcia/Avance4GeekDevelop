@@ -242,15 +242,16 @@
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
                                     <a class="btn btn-warning" th:href="@{'/cupon/nuevo'}"><i
-                                            class="fas fa-plus fa-sm"></i>&nbspNuevo cupón</a>
+                                            class="fas fa-plus fa-sm"></i> Nuevo cupón</a>
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto">CUPONES</h5>
-                                    <div th:if="${msg != null}" th:text="${msg}" class="alert alert-success" role="alert"></div>
-
                                 </div>
 
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
+
+                                    <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
+                                    <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning" role="alert"></div>
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -278,7 +279,7 @@
                                             <tr th:each="cupon : ${listaCupon}">
                                                 <td th:text="${cupon.idcupon}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
-                                                <td th:text="${cupon.descripcion}"></td>
+                                                <td th:text="${cupon.politica}"></td>
                                                 <td th:text="${cupon.fechafin}"></td>
                                                 <td th:text="'S/.'+${cupon.descuento}"></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"

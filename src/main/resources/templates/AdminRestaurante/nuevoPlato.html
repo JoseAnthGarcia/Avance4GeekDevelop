@@ -214,18 +214,25 @@
                             <div class="container-fluid">
                                 <div class="tabel-responsive">
                                     <table class="table">
-                                        <form method="POST" id="nuevo" th:action="@{/plato/guardar}" class="justify-content-left">
+                                        <form method="POST" id="nuevo" class="justify-content-left"
+                                              th:action="@{/plato/guardar}" th:object="${plato}" >
 
                                         <tr>
-                                            <td><label for="nombre">Nombre:</label></td>
-                                            <td colspan="2"><br><input type="text" class="form-control c" id="nombre" name="nombre">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 40 caracteres</h1>
+                                            <td><label>Nombre:</label></td>
+                                            <td colspan="2"><br><input type="text" class="form-control c" th:field="*{nombre}" >
+                                                <h1 style="color: red; font-size: small; text-align: left"
+                                                    th:if="${#fields.hasErrors('nombre')}"
+                                                    th:errors="*{nombre}" >Debes insertar como máximo 40 caracteres</h1>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><label>Descripción:</label></td>
-                                            <td colspan="2"><br><input class="form-control" id="descripcion" name="descripcion" type="text">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 100 caracteres</h1></td>
+                                            <td colspan="2">
+                                                <br><textarea class="form-control" type="text"
+                                                              th:field="*{descripcion}" placeholder="Ingrese una descripcion"></textarea>
+                                                <h1 style="color: red; font-size: small; text-align: left"
+                                                    th:if="${#fields.hasErrors('descripcion')}"
+                                                    th:errors="*{descripcion}" >Debes insertar como máximo 100 caracteres</h1></td>
                                             <td rowspan="3" colspan="3"><img id="image_preview"
                                                 src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
                                                 width="300"></td>
@@ -235,14 +242,21 @@
                                             <td colspan="2"><div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">S/.</span>
-                                                   <br> <input name="precio" id="precio" type="text" class="form-control">
-                                                    <h1 style="color: red; font-size: small; text-align: left">Debes insertar un número positivo</h1>
+                                                   <br> <input type="text" class="form-control" th:field="*{precio}">
+                                                    <h1 style="color: red; font-size: small; text-align: left"
+                                                        th:if="${#fields.hasErrors('precio')}"
+                                                        th:errors="*{precio}" >Debes insertar un número positivo</h1>
                                                 </div>
                                             </div></td>
                                         </tr>
                                         <tr>
                                             <td><label>Imagen referencial:</label></td>
-                                            <td colspan="2"> <br><input type="file" class="form-control"><h1 style="color: red; font-size: small; text-align: left">Ingresar imágenes con extensión jpg</h1></td>
+                                            <td colspan="2"> <br>
+                                                <input type="file" class="form-control">
+                                                <!--
+                                                <h1 style="color: red; font-size: small; text-align: left">Ingresar imágenes con extensión jpg</h1>
+                                                -->
+                                                </td>
 
                                         </tr>
                                         <tr>

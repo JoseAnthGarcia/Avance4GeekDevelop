@@ -236,6 +236,7 @@
                 </div>
                 </form>
 
+
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
@@ -249,6 +250,14 @@
 
                     </div>
                     <div class="card-body">
+                        <div class="alert alert-success" role="alert"
+                             th:if="${msg!=null and tipo.equalsIgnoreCase('saved')}" th:text="${msg}">
+
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg!=null and tipo.equalsIgnoreCase('borrado')}" th:text="${msg}">
+
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>

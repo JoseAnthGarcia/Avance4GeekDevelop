@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -22,6 +23,22 @@ public class PlatoController {
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
         model.addAttribute("listaPlatos", platoRepository.findByDisponible(true));
+        model.addAttribute("textoD", 1);
+        model.addAttribute("textoP", 0);
+        return "/AdminRestaurante/listaPlatos";
+    }
+    @PostMapping("/textSearch")
+    public String buscardor(@RequestParam("textBuscador") String textBuscador,
+                            @RequestParam("textDisponible") Integer inputDisponible,
+                            @RequestParam("textPrecio") Integer inputPrecio, Model model){
+        Integer inputID = 1;
+
+
+        model.addAttribute("listaPlatos", platoRepository.buscarInputBuscadores(inputID,inputDisponible, textBuscador,inputPrecio*5, inputPrecio*5-5));
+        model.addAttribute("texto", textBuscador);
+        model.addAttribute("textoD", inputDisponible);
+        model.addAttribute("textoP", inputPrecio);
+
         return "/AdminRestaurante/listaPlatos";
     }
 

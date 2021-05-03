@@ -222,7 +222,7 @@
                                                                       th:field="*{descripcion}"></textarea>
                                                         <h1 style="color: red; font-size: small; text-align: left"
                                                             th:if="${#fields.hasErrors('descripcion')}"
-                                                            th:erros="*{descripcion}" >Debes insertar como máximo 250 caracteres</h1>
+                                                            th:errors="*{descripcion}" >Debes insertar como máximo 250 caracteres</h1>
                                                     </td>
                                                 </div>
                                                 <div class="form-group">
@@ -242,7 +242,7 @@
                                                                    th:field="*{precio}"></div>
                                                         <h1 style="color: red; font-size: small; text-align: left"
                                                             th:if="${#fields.hasErrors('precio')}"
-                                                            th:erros="*{precio}" >Debes
+                                                            th:errors="*{precio}" >Debes
                                                             insertar un número positivo</h1>
                                                     </td>
                                                 </div>

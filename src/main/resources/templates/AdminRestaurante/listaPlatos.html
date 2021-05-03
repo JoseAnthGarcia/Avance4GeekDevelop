@@ -202,39 +202,50 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
+                <form class="input-group mb-lg-3" method="post" th:action="@{/plato/textSearch}">
                 <div class="form-group row">
+
                     <div class="col-sm-3 mb-1 ">
                         <input type="text" class="form-control"
                                id="examplePlato"
-                               placeholder="Búsqueda por plato">
+                               th:value="${texto}"
+                               placeholder="Búsqueda por plato"
+
+                               name="textBuscador">
                     </div>
+
                     <div class="col-sm-2 mb-1">
-                        <select class="form-control">
-                            <option value="">Precio</option>
-                            <option value="">S./00.00 hasta S./5.00</option>
-                            <option value="">S./5.00 hasta S./10.00</option>
-                            <option value="">S./10.00 hasta S./15.00</option>
-                            <option value="">S./15.00 hasta S./20.00</option>
+                        <select class="form-control" id="textPrecio" name="textPrecio">
+                            <option value="0" th:selected="${textoP==0}" >Precio</option>
+                            <option value="1" th:selected="${textoP==1}" >S./00.00 hasta S./5.00</option>
+                            <option value="2" th:selected="${textoP==2}" >S./5.00 hasta S./10.00</option>
+                            <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
+                            <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
                         </select>
                     </div>
                     <div class="col-sm-2 mb-1">
-                        <select class="form-control" style="justify-content: right">
-                            <option value="">Disponibilidad</option>
-                            <option value="">Disponible</option>
-                            <option value="">No disponible</option>
+                        <select class="form-control"  id="textDisponible" name="textDisponible"  style="justify-content: right">
+                            <option value="2"
+                                    th:selected="${textoD==2}" >Disponibilidad</option>
+                            <option value="1"
+                                    th:selected="${textoD==1}">Disponible</option>
+                            <option value="0"
+                                    th:selected="${textoD==0}">No disponible</option>
                         </select>
                     </div>
                     <div class="input-group-append col-sm-1 mb-3 ml-0">
-                        <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                        <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                             <i class="fas fa-filter"></i>
                         </button>
                     </div>
                     <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
-                        <a class="btn btn-secondary">Quitar filtros</a>
+                        <a class="btn btn-secondary"
+                           th:href="@{/plato/lista}"
+                        >Quitar filtros</a>
                     </div>
                 </div>
                 </form>
+
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
@@ -249,6 +260,14 @@
 
                     </div>
                     <div class="card-body">
+                        <div class="alert alert-success" role="alert"
+                             th:if="${msg!=null and tipo.equalsIgnoreCase('saved')}" th:text="${msg}">
+
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg!=null and tipo.equalsIgnoreCase('borrado')}" th:text="${msg}">
+
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -278,8 +297,8 @@
                                     <td th:text="${platos.descripcion}"></td>
                                     <td style="width: 160px"><a style="color: #dce3f9"
                                                                 class="btn btn-warning btn-circle align"
-                                                                th:href="@{'/plato/editar?id='+ ${platos.idplato}}">Editar</a><i
-                                            class="fas fa-pen"></i></td>
+                                                                th:href="@{'/plato/editar?id='+ ${platos.idplato}}"><i
+                                            class="fas fa-pen text-white"></i></a></td>
                                 </tr>
                                 </tbody>
 

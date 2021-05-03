@@ -1,9 +1,13 @@
 package com.example.demo.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import java.time.LocalDate;
 import java.util.Date;
+
 
 @Entity
 @Table(name = "cupon")
@@ -13,27 +17,45 @@ public class Cupon {
     private int idcupon;
     
     @Column(nullable = false, unique = true)
-    @NotBlank
-    @Size(max = 8, message = "Ingrese como máximo 8 caractéres")
+    //@Size(max = 8, message = "Ingrese como máximo 8 caractéres")
+    @Pattern(regexp = "^[A-Z0-9]{8}",message = "Ingrese 8 caracteres (letras mayúsculas y/o números)")
+    @NotBlank(message = "El nombre no puede estar vacío")
+
     private String nombre;
 
     @Column(nullable = false)
-    @NotBlank
+    @Digits(integer = 10, fraction = 0, message = "Tiene que ingresar un entero")
+    @Max(value = 50 , message = "No puede ingresar más de 50 soles")
+    @Min(value = 1, message = "No puede ingresar menos de 1 sol")
+    @NotNull(message = "Ingrese un número entero")
     private int descuento;
 
-    @Column(nullable = false)
-    @NotBlank
-    @Size(max = 45, message = "Ingrese como máximo 45 caractéres")
-    private String descripcion;
+    @Column(nullable = false, name = "descripcion")
+    @NotBlank(message = "La política no puede estar vacío")
+    @Size(max = 256, message = "Ingrese como máximo 256 caractéres")
+    private String politica;
 
-    @Column(nullable = false)
-    private String fechainicio;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechainicio;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Ingrese una fecha")
+    @Future(message = "La fecha de caducidad tiene que ser mayor a la fecha actual")
     @Column(nullable = false)
-    private String fechafin;
-
-    @Column(nullable = false)
+    private LocalDate fechafin;
     private int idrestaurante;
+
+    //True - disponible
+    @Column(nullable = false)
+    private boolean disponible;
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
 
     public int getIdcupon() {
         return idcupon;
@@ -55,16 +77,10 @@ public class Cupon {
         return descuento;
     }
 
-    public void setDescuento(int descuento) {
-        this.descuento = descuento;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public void setDescuento(int descuento) { this.descuento = descuento; }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.politica = descripcion;
     }
 
     public int getIdrestaurante() {
@@ -75,19 +91,27 @@ public class Cupon {
         this.idrestaurante = idrestaurante;
     }
 
-    public String getFechainicio() {
+    public String getPolitica() {
+        return politica;
+    }
+
+    public void setPolitica(String politica) {
+        this.politica = politica;
+    }
+
+    public LocalDate getFechainicio() {
         return fechainicio;
     }
 
-    public void setFechainicio(String fechainicio) {
+    public void setFechainicio(LocalDate fechainicio) {
         this.fechainicio = fechainicio;
     }
 
-    public String getFechafin() {
+    public LocalDate getFechafin() {
         return fechafin;
     }
 
-    public void setFechafin(String fechafin) {
+    public void setFechafin(LocalDate fechafin) {
         this.fechafin = fechafin;
     }
 }

@@ -224,9 +224,9 @@
                                                                                  width="300"></td>
                                             </tr>
                                             <tr>
-                                                <td><label for="descripcion">Politica:</label></td>
-                                                <td colspan="2"><input class="form-control mb-1" th:field="*{politica}"  style="border-color: lightgray"
-                                                                       type="text">
+                                                <td><label for="politica">Politica:</label></td>
+                                                <td colspan="2"><textarea class="form-control mb-1" th:field="*{politica}"  style="border-color: lightgray"
+                                                                          type="text"></textarea>
                                                     <h1 style="color: red; font-size: small; text-align: left"
                                                         th:if="${#fields.hasErrors('politica')}"
                                                         th:errors="*{politica}"></h1></td>

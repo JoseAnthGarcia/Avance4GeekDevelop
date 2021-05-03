@@ -83,24 +83,21 @@ public class CuponController {
     }*/
 
     @InitBinder("cupon")
-    public void validator(WebDataBinder binder){
+    public void validator(WebDataBinder binder) {
 
         PropertyEditorSupport validacionDescuento = new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
-                try{
+                try {
                     int descuentoInt = Integer.parseInt(text);
                     this.setValue(descuentoInt);
-                }catch (NumberFormatException e){
-                    this.setValue(0);
+                } catch (NumberFormatException e) {
+                    this.setValue(null);
                 }
             }
-
         };
 
-        binder.registerCustomEditor(Integer.class, "descuento",validacionDescuento);
-
-
+        binder.registerCustomEditor(Integer.class, "descuento", validacionDescuento);
     }
 
 }

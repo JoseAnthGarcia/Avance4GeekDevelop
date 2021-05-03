@@ -24,6 +24,7 @@ public class Cupon {
     @Digits(integer = 2, fraction = 0, message = "Tiene que ingresar un entero")
     @Max(value = 50 , message = "No puede ingresar más de 50 soles")
     @Min(value = 1, message = "No puede ingresar menos de 1 sol")
+    @NotNull(message = "Ingrese un número entero")
     private int descuento;
 
     @Column(nullable = false, name = "descripcion")

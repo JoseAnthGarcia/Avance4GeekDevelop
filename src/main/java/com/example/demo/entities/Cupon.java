@@ -22,6 +22,9 @@ public class Cupon {
 
     @Column(nullable = false)
   //  @NotBlank(message = "El descuento no puede estar vacío")
+    @Digits(integer = 2, fraction = 0)
+    @Max(value = 50)
+    @Min(value = 1)
     private int descuento;
 
     @Column(nullable = false, name = "descripcion")

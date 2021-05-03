@@ -83,10 +83,28 @@ public class CuponController {
     }*/
 
     @InitBinder("cupon")
-    public void fechaValidador(WebDataBinder binder){
+    public void validator(WebDataBinder binder){
 
-        PropertyEditorSupport fechaValidator = new PropertyEditorSupport(){
-            /*@Override
+        PropertyEditorSupport validacionDescuento = new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                try{
+                    int descuentoInt = Integer.parseInt(text);
+                    this.setValue(descuentoInt);
+                }catch (NumberFormatException e){
+                    this.setValue(0);
+                }
+            }
+
+        };
+
+        binder.registerCustomEditor(Integer.class, "descuento",validacionDescuento);
+
+
+    }
+
+}
+      /*@Override
             public void setAsText(Date date) throws IllegalArgumentException {
                 // dd-MM-yyyy
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
@@ -115,11 +133,3 @@ public class CuponController {
                 //se quiere validar que la fecha de caducidad sea mayor a la fecha actual pero que dure un año
 
             } */
-
-
-        };
-
-
-    }
-
-}

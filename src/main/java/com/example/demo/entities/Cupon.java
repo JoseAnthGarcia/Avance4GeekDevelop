@@ -18,7 +18,7 @@ public class Cupon {
     
     @Column(nullable = false, unique = true)
     //@Size(max = 8, message = "Ingrese como máximo 8 caractéres")
-    @Pattern(regexp = "^[a-zA-Z0-9]{8}",message = "Ingrese 8 caracteres (letras)")
+    @Pattern(regexp = "^[A-Z0-9]{8}",message = "Ingrese 8 caracteres (letras mayúsculas)")
     @NotBlank(message = "El nombre no puede estar vacío")
 
     private String nombre;

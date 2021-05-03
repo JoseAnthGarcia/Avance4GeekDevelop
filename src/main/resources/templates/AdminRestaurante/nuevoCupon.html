@@ -203,6 +203,7 @@
                         <h3 th:text="${cupon.idcupon == 0? 'REGISTRAR CUPÓN' : 'EDITAR CUPÓN'}"
                                 class="h3 font-weight-bold  text-white text-xl-center"></h3>
                     </div>
+                    <div th:if="${val != null}" th:text="${val}" class="alert alert-success" role="alert"></div>
 
                     <div class="row">
                         <div class="col-7">

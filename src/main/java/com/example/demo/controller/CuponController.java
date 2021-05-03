@@ -40,29 +40,35 @@ public class CuponController {
     public String guardarCupon(@ModelAttribute("cupon") @Valid Cupon cupon, BindingResult bindingResult,
                                RedirectAttributes attributes,
                                Model model) {
+        Cupon cVal = cuponRepository.buscarPorNombre(cupon.getNombre());
 
-        if(bindingResult.hasErrors()){
-            return "AdminRestaurante/nuevoCupon";
+        if(cVal == null){
+            if(bindingResult.hasErrors()){
+                return "AdminRestaurante/nuevoCupon";
+            }
+
+            cupon.setIdrestaurante(2);
+
+            if (cupon.getIdcupon() == 0) {
+                cupon.setFechainicio(LocalDate.now());
+                cupon.setDisponible(true);
+                attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
+            } else {
+                attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
+            }
+
+            if(cupon.getFechainicio().isEqual(cupon.getFechafin())){
+                cupon.setDisponible(false);
+            }
+
+            cuponRepository.save(cupon);
+            return "redirect:/cupon/lista";
+        }else{
+            attributes.addFlashAttribute("val","Este nombre ya está registrado");
+            return "redirect:/cupon/nuevo";
         }
 
-        cupon.setIdrestaurante(2);
 
-
-        if (cupon.getIdcupon() == 0) {
-            cupon.setFechainicio(LocalDate.now());
-            cupon.setDisponible(true);
-            attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
-        } else {
-            attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
-        }
-
-
-        if(cupon.getFechainicio().isEqual(cupon.getFechafin())){
-            cupon.setDisponible(false);
-        }
-
-        cuponRepository.save(cupon);
-        return "redirect:/cupon/lista";
     }
 
     @GetMapping("/editar")

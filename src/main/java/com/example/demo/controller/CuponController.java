@@ -43,9 +43,7 @@ public class CuponController {
         if(bindingResult.hasErrors()){
             return "AdminRestaurante/nuevoCupon";
         }
-
-        System.out.println(cupon.getIdrestaurante());
-        System.out.println(cupon.getNombre());
+;
         cupon.setIdrestaurante(12);
 
         if (cupon.getIdcupon() == 0) {
@@ -82,16 +80,20 @@ public class CuponController {
         return "redirect:/cupon/listar";
     }*/
 
-    @InitBinder("cupon")
+   /*
+   * @InitBinder("cupon")
     public void cuponValidator(WebDataBinder binder){
+        PropertyEditorSupport fechaValidator = new PropertyEditorSupport(){
 
-    }
-
-}
-      /*@Override
-            public void setAsText(Date date) throws IllegalArgumentException {
+            @Override
+            public void setAsText(String date) throws IllegalArgumentException {
                 // dd-MM-yyyy
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
+                System.out.println(date);
+                System.out.println(date);
+                System.out.println("date");
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                //obteniendo la fecha actual
                 Date currentDate = new Date();
                 Calendar c = new GregorianCalendar();
 
@@ -110,10 +112,16 @@ public class CuponController {
                 // una mejor forma de recibir la fecha
                 //obteniendo la fecha actual con el formato yyyy-MM-dd
 
-                if((currentDate.compareTo(dateCadu) <= 0){
-                    //lanza excepcion
+                if(currentDate.compareTo(dateCadu) <= 0){
+                    this.setValue(" ");
+                }else{
+                    this.setValue(date);
                 }
-
                 //se quiere validar que la fecha de caducidad sea mayor a la fecha actual pero que dure un año
+            }
+        };
+        binder.registerCustomEditor(LocalDate.class, "fechafin",fechaValidator);
+    }
+   **/
 
-            } */
+}

@@ -237,12 +237,12 @@
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <input type="date" class="form-control mb-1"  style="border-color: lightgray"
-                                                                   th:field="*{fechafin}">
+                                                                   th:field="*{fechafin}" th:novalidate="novalidate">
                                                         </div>
                                                     </div>
-                                                    <!-- <h1 style="color: red; font-size: small; text-align: left"
+                                                    <h1 style="color: red; font-size: small; text-align: left"
                                                         th:if="${#fields.hasErrors('fechafin')}"
-                                                        th:errors="*{fechafin}"></h1> -->
+                                                        th:errors="*{fechafin}"></h1>
                                                 </td>
                                             </tr>
                                             <tr>

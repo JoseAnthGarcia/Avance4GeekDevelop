@@ -36,6 +36,8 @@ public class Cupon {
     private LocalDate fechainicio;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Ingrese una fecha")
+    @Future(message = "La fecha de caducidad tiene que ser mayor a la fecha actual")
     @Column(nullable = false)
     private LocalDate fechafin;
     private int idrestaurante;

@@ -40,18 +40,27 @@ public class CuponController {
     public String guardarCupon(@ModelAttribute("cupon") @Valid Cupon cupon, BindingResult bindingResult,
                                RedirectAttributes attributes,
                                Model model) {
+
         if(bindingResult.hasErrors()){
             return "AdminRestaurante/nuevoCupon";
         }
-;
-        cupon.setIdrestaurante(12);
+
+        cupon.setIdrestaurante(2);
+
 
         if (cupon.getIdcupon() == 0) {
             cupon.setFechainicio(LocalDate.now());
+            cupon.setDisponible(true);
             attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
         } else {
             attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
         }
+
+
+        if(cupon.getFechainicio().isEqual(cupon.getFechafin())){
+            cupon.setDisponible(false);
+        }
+
         cuponRepository.save(cupon);
         return "redirect:/cupon/lista";
     }

@@ -21,7 +21,7 @@ public class Cupon {
     private String nombre;
 
     @Column(nullable = false)
-    @Digits(integer = 2, fraction = 0, message = "Tiene que ingresar un entero")
+    @Digits(integer = 10, fraction = 0, message = "Tiene que ingresar un entero")
     @Max(value = 50 , message = "No puede ingresar más de 50 soles")
     @Min(value = 1, message = "No puede ingresar menos de 1 sol")
     @NotNull(message = "Ingrese un número entero")
@@ -29,7 +29,7 @@ public class Cupon {
 
     @Column(nullable = false, name = "descripcion")
     @NotBlank(message = "La política no puede estar vacío")
-    @Size(max = 45, message = "Ingrese como máximo 45 caractéres")
+    @Size(max = 256, message = "Ingrese como máximo 256 caractéres")
     private String politica;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -41,6 +41,18 @@ public class Cupon {
     @Column(nullable = false)
     private LocalDate fechafin;
     private int idrestaurante;
+
+    //True - disponible
+    @Column(nullable = false)
+    private boolean disponible;
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
 
     public int getIdcupon() {
         return idcupon;

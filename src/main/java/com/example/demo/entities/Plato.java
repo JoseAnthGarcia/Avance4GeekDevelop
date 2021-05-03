@@ -2,6 +2,7 @@ package com.example.demo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name="plato")
@@ -34,7 +35,7 @@ public class Plato {
     @JoinColumn(name="categoriaextra_has_plato",
             joinColums=@JoinColumn(name="idplato"),
             inverseJoinColums=@JoinColumn(name = "idcategoriaextra"))
-    private List<CategoriaExtra> categoriaextraporplato;
+    private List<CategoriaExtra> categoriaExtraPorPlato;
 
 
     public int getIdplato() {
@@ -92,5 +93,13 @@ public class Plato {
 
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
+    }
+
+    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
+        return categoriaExtraPorPlato;
+    }
+
+    public void setCategoriaExtraPorPlato(List<CategoriaExtra> categoriaExtraPorPlato) {
+        this.categoriaExtraPorPlato = categoriaExtraPorPlato;
     }
 }

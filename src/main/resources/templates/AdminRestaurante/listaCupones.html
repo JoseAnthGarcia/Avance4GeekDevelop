@@ -276,7 +276,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="cupon : ${listaCupon}">
+
+                                            <tr th:each="cupon : ${listaCupon}" >
+                                                <div th:if="${cupon.disponible}">
                                                 <td th:text="${cupon.idcupon}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:text="${cupon.politica}"></td>
@@ -287,6 +289,7 @@
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
+                                                </div>
                                             </tr>
 
                                         </tbody>

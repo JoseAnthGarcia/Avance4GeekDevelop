@@ -64,8 +64,8 @@ public class CuponController {
             cuponRepository.save(cupon);
             return "redirect:/cupon/lista";
         }else{
-            attributes.addFlashAttribute("val","Este nombre ya está registrado");
-            return "redirect:/cupon/nuevo";
+           model.addAttribute("val","Este nombre ya está registrado");
+            return "AdminRestaurante/nuevoCupon";
         }
 
 

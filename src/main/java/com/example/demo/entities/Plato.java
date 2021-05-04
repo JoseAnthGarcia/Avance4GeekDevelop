@@ -17,7 +17,7 @@ public class Plato {
     private String nombre;
     @Column(name="descripcion", nullable = false)
     @NotBlank(message = "Este campo es obligatorio")
-    @Size(max=100, message = "Maximo 100 caracteres")
+    @Size(max=256, message = "Maximo 256 caracteres")
     private String descripcion;
     @Column(name="precio", nullable = false)
     @Positive(message = "Ingrese una cantidad positiva")

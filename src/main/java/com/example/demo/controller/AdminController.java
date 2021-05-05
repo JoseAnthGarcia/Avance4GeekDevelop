@@ -20,6 +20,8 @@ public class AdminController {
     @Autowired
     MovilidadRepository movilidadRepository;
 
+
+
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam("tipo") String tipo, Model model){
         switch (tipo){

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    List<Usuario> findByEstado(String estado);
+    List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(String estado, String rol);
 
     @Query(value = "select * from usuario where estado = 'bloqueado' or estado = 'activo' ", nativeQuery = true)
     List<Usuario> listaUsuariosAceptados();

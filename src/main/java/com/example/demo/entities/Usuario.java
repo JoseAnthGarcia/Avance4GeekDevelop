@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="usuario")
@@ -29,6 +30,23 @@ public class Usuario {
     private String fecharegistro;
     private String fechaadmitido;
     private String ultimoingreso;
+
+    @OneToOne(mappedBy = "usuario")
+    private Credenciales credenciales;
+
+    @ManyToMany(mappedBy = "usuarioPorDireccion")
+    private List<Direccion> direcciones;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> listaPedidosPorUsuario;
+
+    public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
+
+    public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
+
+    public Credenciales getCredenciales() { return credenciales; }
+
+    public void setCredenciales(Credenciales credenciales) { this.credenciales = credenciales; }
 
     public int getIdusuario() {
         return idusuario;
@@ -132,5 +150,13 @@ public class Usuario {
 
     public void setUltimoingreso(String ultimoingreso) {
         this.ultimoingreso = ultimoingreso;
+    }
+
+    public List<Direccion> getDirecciones() {
+        return direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 }

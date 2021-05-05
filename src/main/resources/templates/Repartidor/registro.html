@@ -146,8 +146,8 @@
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
                                     <select class="form-select" th:field="*{}">
-                                        <option th:each="categoria : ${listaCategorias}" th:value="${categoria.id}"
-                                                th:text="${categoria.categoryname}"></option>
+                                        <option th:each="categoria : ${}" th:value="${}"
+                                                th:text="${}"></option>
                                     </select>
                                 </div>
 

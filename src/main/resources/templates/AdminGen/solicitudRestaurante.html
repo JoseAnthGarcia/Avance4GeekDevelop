@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
 
@@ -9,21 +9,22 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Solicitudes</title>
+    <title>Solicitudes de restaurantes</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../../static/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../../static/bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
 
 
-    <link href="estilosAdminRest.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this page -->
-    <link href="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -31,6 +32,7 @@
 
 <!-- Page Wrapper -->
 <div id="wrapper">
+
 
     <!-- Sidebar -->
     <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
@@ -58,12 +60,23 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html" >
+            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Solicitudes</span>
 
             </a>
+            <div class="collapse" id="submenu2" aria-expanded="false">
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="solicitudAR.html"><span>Administrador Restaurante</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href=solicitudRepartidor.html#"><span>Repartidor</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="solicitudRestaurante.html"><span>Restaurante</span></a></li>
+                </ul>
 
+            </div>
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
@@ -83,19 +96,19 @@
             </a>
             <div class="collapse" id="submenu1" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
                 </ul>
             </div>
         </li>
@@ -113,6 +126,7 @@
 
     </ul>
     <!-- End of Sidebar -->
+
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -198,7 +212,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -214,37 +228,88 @@
                             </a>
                         </div>
                     </li>
-
                 </ul>
 
             </nav>
             <!-- End of Topbar -->
-            <style>
-                .containerta {
-                    padding: 2rem 0rem;
-                }
-
-                h4 {
-                    margin: 2rem 0rem 1rem;
-                }
-
-                .table-image
-                td, th {
-                    vertical-align: middle;
-                }
-
-            </style>
             <!-- Begin Page Content -->
-            <div class="container-fluid justify-content-center">
+            <div class="container-fluid">
+                <form>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3 mb-1 ">
+                            <input type="text" class="form-control"
+                                   id="exampleCliente"
+                                   placeholder="Búsqueda por usuario">
+                        </div>
+
+                        <!-- <div class="col-sm-2 mb-1 ">
+                            <select class="form-control  ">
+                                <option value="" disabled selected>Rol</option>
+                                <option value="Pendiente">Administrador</option>
+                                <option value="Pendiente">Administrador de Restaurante</option>
+
+                                <option value="Entregado">Repartidor</option>
+
+                                <option value="Cancelado" selected>Restaurante</option>
+
+                                <option value="Cancelado">Cliente</option>
+
+                            </select>
+                        </div>-->
+
+                        <div class="col-sm-2 mb-1">
+                            <select class="form-control">
+                                <option value="">Ultima fecha de ingreso</option>
+                                <option value="">Última Hora</option>
+                                <option value="">Hoy</option>
+                                <option value="">Esta semana</option>
+                                <option value="">Este mes</option>
+                                <option value="">Este año</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-1">
+                            <select class="form-control">
+                                <option value="">Estado</option>
+                                <option value="">Bloqueado</option>
+                                <option value="">Operativo</option>
+
+                            </select>
+                        </div>
+                        <div class="input-group-append col-sm-1 mb-3 ml-0">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
+                            <a class="btn btn-secondary">Quitar filtros</a>
+                        </div>
+                    </div>
+
+
+                </form>
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
-                        <div class="d-sm-flex align-items-center justify-content-between">
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto ">Solicitudes</h2>
-                        </div>
 
-                    </div></div>
+                            <h2 class="font-weight-bold text-white  text-md-center">LISTA DE SOLICITUDES RESTAURANTES</h2>
 
+
+                        <style>
+                            .containerta {
+                                padding: 2rem 0rem;
+                            }
+
+                            h4 {
+                                margin: 2rem 0rem 1rem;
+                            }
+
+                            .table-image
+                            td, th {
+                                vertical-align: middle;
+                            }
+
+                        </style>
                     </div>
                     <div class="containerta">
                         <div class="row">
@@ -258,10 +323,10 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="usuario, v : ${listaUsuariosSolicitudes}">
-                                        <td scope="row" th:text="${v.index+1}">1</td>
+                                    <tr>
+                                        <td scope="row">1</td>
                                         <td class="w-25">
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img src="imgAG/fondo.jpg" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">
@@ -269,42 +334,51 @@
                                                 <tbody>
                                                 <tr>
 
-                                                    <td th:text="|Fecha de Registro: ${usuario.fecharegistro}|">Fecha de Registro: 20/01/3113</td>
-                                                    <td th:text="|Estado: ${usuario.estado}|">Estado: Pendiente </td>
+                                                    <td>Fecha de Registro: 20/01/3113  10:30:12</td>
+                                                    <td>Estado: Aceptado 01/05/2021 04:20:23</td>
                                                 </tr>
                                                 <tr>
 
-                                                    <td th:text="|Nombre: ${usuario.nombres}|">Nombre: Martin Alvaro</td>
-                                                    <td th:text="|DNI: ${usuario.dni}|">DNI: 12345678</td>
+                                                    <td>Nombre: Martin Alvaro</td>
+                                                    <td>RUC: 12345678
+                                                    </td>
                                                 </tr>
                                                 <tr>
 
-                                                    <td th:text="|Apellidos: ${usuario.apellidos}|">Apellidos: Lopez Flores</td>
-                                                    <td th:text="|Sexo: ${usuario.sexo}|">Sexo: Masculino </td>
+                                                    <td>Distrito: San miguel</td>
+                                                    <td>Dicección: Av. Los Galvez 214 </td>
 
                                                 </tr>
+
+
                                                 <tr>
 
-                                                    <td>Correo: example@gmail.com</td>
-                                                    <td th:text="|Teléfono: ${usuario.telefono}|">Teléfono: 32325164564 </td>
-                                                </tr>
-                                                <div th:each="movilidad : ${listaMovilidades}">
-                                                    <tr th:if="${movilidad.usuario.idusuario == usuario.idusuario}">
-                                                        <td th:text="|Movilidad: ${movilidad.tipoMovilidad.tipo}|">Movilidad: Moto</td>
-                                                        <td>
-                                                            <a href="#" class="btn btn-success btn-circle btn-sm">
-                                                                <i class="fas fa-check"></i>
-                                                            </a>
-                                                            <a href="#" class="btn btn-danger btn-circle btn-sm">
-                                                                <i class="fas fa-times"></i>
-                                                            </a>
-                                                            <a href="#" class="btn btn-warning btn-circle btn-sm">
-                                                                <i class="fas fa-info"></i>
-                                                            </a>
-                                                        </td>
+                                                    <td>Categoria: Polleria,Chifa, Asiatica, Marina</td>
+                                                    <td>
 
-                                                    </tr>
-                                                </div>
+                                                        <a href="#" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                                            <span class="text">Aceptar</span>
+                                                        </a>
+                                                        <a href="#" class="btn btn-secondary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-times"></i>
+                                        </span>
+                                                            <span class="text">Rechazar</span>
+                                                        </a>
+
+                                                        <a href="#" class="btn btn-warning btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-info"></i>
+                                        </span>
+                                                            <span class="text">Informacion</span>
+                                                        </a>
+
+                                                    </td>
+
+                                                </tr>
                                                 </tbody>
 
                                             </table>
@@ -320,7 +394,7 @@
                                     <tr>
                                         <td scope="row">2</td>
                                         <td class="w-25">
-                                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/sheep-5.jpg" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img src="imgAG/fondo.jpg" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">
@@ -328,33 +402,112 @@
                                                 <tbody>
                                                 <tr>
 
-                                                    <td>Fecha de Registro: 20/01/3113</td>
+                                                    <td>Fecha de Registro: 20/01/3113  10:30:12</td>
                                                     <td>Estado: Pendiente </td>
                                                 </tr>
                                                 <tr>
 
                                                     <td>Nombre: Martin Alvaro</td>
-                                                    <td>DNI: 12345678
+                                                    <td>RUC: 12345678
                                                     </td>
                                                 </tr>
                                                 <tr>
 
-                                                    <td>Apellidos: Lopez Flores</td>
-                                                    <td>Sexo: Masculino
-                                                    </td>
+                                                    <td>Distrito: San miguel</td>
+                                                    <td>Dicección: Av. Los Galvez 214 </td>
+
                                                 </tr>
+
+
                                                 <tr>
 
-                                                    <td>Correo: asdddd@gmail.com</td>
+                                                    <td>Categoria: Polleria,Chifa, Asiatica, Marina</td>
                                                     <td>
-                                                        <a href="#" class="btn btn-success btn-circle btn-sm">
-                                                            <i class="fas fa-check"></i>
+                                                        <a href="#" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                                            <span class="text">Aceptar</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-danger btn-circle btn-sm">
-                                                            <i class="fas fa-times"></i>
+                                                        <a href="#" class="btn btn-danger btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-times"></i>
+                                        </span>
+                                                            <span class="text">Rechazar</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-warning btn-circle btn-sm">
-                                                            <i class="fas fa-info"></i>
+
+                                                        <a href="#" class="btn btn-warning btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-info"></i>
+                                        </span>
+                                                            <span class="text">Informacion</span>
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+
+                                            </table>
+
+
+
+
+                                        </div>
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">2</td>
+                                        <td class="w-25">
+                                            <img src="imgAG/fondo.jpg" class="img-fluid img-thumbnail" alt="Sheep">
+                                        </td>
+                                        <td><div class="table-responsive">
+                                            <table class="table table-bordered ">
+
+                                                <tbody>
+                                                <tr>
+
+                                                    <td>Fecha de Registro: 20/01/3113 10:30:12</td>
+                                                    <td>Estado: Rechazado 01/05/2021 04:20:23</td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td>Nombre: Martin Alvaro</td>
+                                                    <td>RUC: 12345678
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td>Distrito: San miguel</td>
+                                                    <td>Dicección: Av. Los Galvez 214 </td>
+
+                                                </tr>
+
+
+                                                <tr>
+
+                                                    <td>Categoria: Polleria,Chifa, Asiatica, Marina</td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-secondary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                                            <span class="text">Aceptar</span>
+                                                        </a>
+                                                        <a href="#" class="btn btn-danger btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-times"></i>
+                                        </span>
+                                                            <span class="text">Rechazar</span>
+                                                        </a>
+
+                                                        <a href="#" class="btn btn-warning btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-info"></i>
+                                        </span>
+                                                            <span class="text">Informacion</span>
+                                                        </a>
                                                     </td>
 
                                                 </tr>
@@ -372,18 +525,15 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div aria-label="Page navigation example">
-                                    <div class="pagination justify-content-center">
-                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="button" class="btn btn-light">anterior</button>
-                                            <button type="button" class="btn text-light" style="background-color: #701111;">1</button>
-
-                                            <button type="button" class="btn btn-light" >2</button>
-                                            <button type="button" class="btn btn-light" >3</button>
-
-                                            <button type="button" class="btn btn-light">siguiente</button>
-                                        </div>
-                                    </div>
+                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
+                                    <a  href="#">&laquo;</a>
+                                    <a  href="#" class="active">1</a>
+                                    <a href="#">2</a>
+                                    <a href="#">3</a>
+                                    <a href="#">4</a>
+                                    <a href="#">5</a>
+                                    <a href="#">6</a>
+                                    <a href="#">&raquo;</a>
                                 </div>
                             </div>
                         </div>
@@ -438,21 +588,21 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="../../static/bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../../static/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../../static/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../../static/bootstrap/js/sb-admin-2.min.js"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../../static/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="../../static/bootstrap/js/demo/datatables-demo.js"></script>
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 </body>
 

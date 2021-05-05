@@ -206,135 +206,59 @@
                          style="text-align:center">
                         <h3 class="h3 font-weight-bold  text-white text-xl-center">REGISTRAR EXTRA</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="text-xl-left">
+                    <!-- Formularioooooooooooooooooooooooooooooo inicia -->
+                    <div class="card-body ml-xl-5">
+                        <form method="POST" th:action="@{'/extra/guardar'}" class="justify-content-left"
+                              enctype="multipart/form-data" th:object="${cupon}">
+                            <div class="form-row">
+                                <div class="col-md-8 mb-4 ml-5">
+                                    <div th:if="${cupon.getIdcupon() != 0}">
+                                        <input type="hidden" th:field="*{idcupon}">
+                                        <input type="hidden" th:field="*{fechainicio}">
+                                        <input type="hidden" th:field="*{disponible}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="nombre">Nombre:</label>
+                                        <input type="text" class="form-control mb-2"  style="border-color: lightgray" th:field="*{nombre}">
+                                        <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></h1>
+                                        <h1 th:if="${val != null}" th:text="${val}" style="color: red; font-size: small; text-align: left"></h1>
 
-                            <div class="container-fluid">
-                                <div class="tabel-responsive">
-                                    <table class="table">
-                                        <form method="POST" action="" class="justify-content-left" enctype="multipart/form-data"></form>
-                                        <tr>
-                                            <td><label for="nombre">Nombre:</label></td>
-                                            <td colspan="2"><input type="text" class="form-control" id="nombre" name="nombre">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 40 caracteres</h1>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td><label>Descripción:</label></td>
-                                            <td colspan="2"><input class="form-control" name="descrip" type="text"
-                                                class="form-control">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 100 caracteres</h1>
-                                            </td>
-                                            <td rowspan="3" colspan="3"><img id="image_preview"
-                                                src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
-                                                width="300"></td>
-                                        </tr>
-                                        <tr>
-                                            <td> <label>Precio unitario:</label></td>
-                                            <td colspan="2"><div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">S/.</span>
-                                                    <input name="cantidad" type="text" class="form-control">
-                                                </div>
-                                            </div>
-                                            <h1 style="color: red; font-size: small; text-align: left">Ingrese un valor válido</h1>
-                                        </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>Imagen referencial:</label></td>
-                                            <td colspan="2"> <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                                <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
-                                              </div>
-                                              <h1 style="color: red; font-size: small; text-align: left">Ingrese un archivo válido(JPGE,JPG o PNG)</h1>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            
-                                            <td colspan="2"><a class="btn btn-primary mb-4 mr-2 "
-                                                data-toggle="modal"
-                                                data-target="#RegistroExitoso"
-                                                href="#RegistroExitoso">
-                                                 Registrar
-                                                 Extra
-                                             </a>
-                                           <a class="btn btn-danger mb-4"
-                                                href="#CancelarRegistro"
-                                                role="button"
-                                                data-toggle="modal"
-                                                data-target="#CancelarRegistro">Cancelar</a></td>
-                                                <div class="modal fade" id="RegistroExitoso" tabindex="-1"
-                                                         role="dialog"
-                                                         aria-labelledby="exampleModalLabel"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title text-center"
-                                                                        id="exampleModalRegistro">
-                                                                        ¿Está seguro que desea
-                                                                        registrar este extra?</h5>
-                                                                    <button class="close" type="button"
-                                                                            data-dismiss="modal"
-                                                                            aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <a type="submit" class="btn btn-primary"
-                                                                            href="listaExtras.html">
-                                                                        Sí
-                                                                    </a>
-                                                                    <a class="btn" type="button"
-                                                                       data-dismiss="modal">
-                                                                        No
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                            
-                                        </tr>
-                                    </form>
-                                    </table>
-                                </div>
-                               
-                                
-                            </div>
-                            <div class="modal fade" id="CancelarRegistro" tabindex="-1"
-                                 role="dialog"
-                                 aria-labelledby="exampleModalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-center"
-                                                id="exampleModalCancelarRegistro"
-                                                data-dismiss="modal">¿Desea cancelar el
-                                                registro?</h5>
-                                            <a class="close" type="button"
-                                                    data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                        </a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="politica">Politica:</label>
+                                        <textarea class="form-control mb-2" th:field="*{politica}"  style="border-color: lightgray" type="text"></textarea>
+                                        <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('politica')}" th:errors="*{politica}"></h1>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descuento" class="small mb-1">Descuento:</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <span class="input-group-text mb-2">S/.</span>
+                                            <input class="form-control mb-2" th:field="*{descuento}" type="text"  style="border-color: lightgray">
                                         </div>
-                                        <div class="modal-footer">
-                                            <a class="btn btn-primary"
-                                               href="listaExtras.html">Sí</a>
-                                            <a class="btn" type="button"
-                                               data-dismiss="modal">
-                                                No
-                                            </a>
-                                        </div>
+                                        <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('descuento')}" th:errors="*{descuento}"></h1>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="caducidad" class="small mb-1">Caducidad:</label>
+                                        <input type="date" class="form-control mb-2"  style="border-color: lightgray" th:field="*{fechafin}" th:novalidate="novalidate">
+                                        <h1  style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechafin')}" th:errors="*{fechafin}"></h1>
+                                    </div>
+                                    <div class="form-group mt-4">
+                                        <button type="submit" class="btn btn-primary mb-4 mr-2 "
+                                                th:text="${cupon.getIdcupon() == 0 ? 'Registrar Cupón' : 'Editar Cupón'}"></button> <!--
+                                                                   data-toggle="modal"
+                                                                   data-target="#RegistroExitoso" -->
+                                        <a class="btn btn-danger mb-4"
+                                           th:href="@{/cupon/lista}"
+                                           role="button"
+                                           data-toggle="modal"
+                                           data-target="#CancelarRegistro">Cancelar</a>
                                     </div>
                                 </div>
                             </div>
-                            </form>
-                        </div>
                         </form>
                     </div>
+                    <!-- Formularioooooooooooooooooooooooooooooo termina -->
                 </div>
             </div>
         </div>

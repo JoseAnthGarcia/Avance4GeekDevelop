@@ -13,16 +13,16 @@ public class Valoracion {
     @Column(nullable = false)
     private int idvaloracion;
 
-    @Column(name = "valoracionRestaurante")
+    @Column(name = "valoracionrestaurante")
     private int valoracionrestaurante;
 
-    @Column(name = "comentarioRestaurante")
+    @Column(name = "comentariorestaurante")
     private String comentariorestaurante;
 
-    @Column(name = "valoracionRepartidor")
+    @Column(name = "valoracionrepartidor")
     private int valoracionrepartidor;
 
-    @Column(name = "comentarioRestaurante")
+    @Column(name = "comentariorestaurante", insertable = false, updatable = false)
     private String comentariorepartidor;
 
     public int getIdvaloracion() {

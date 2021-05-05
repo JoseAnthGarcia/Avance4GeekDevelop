@@ -10,7 +10,7 @@ public class Credenciales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcredenciales;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
     private Usuario usuario;
 

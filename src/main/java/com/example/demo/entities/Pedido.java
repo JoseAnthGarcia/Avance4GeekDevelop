@@ -23,7 +23,7 @@ public class Pedido {
     private int idcupon;
     private int idmetodopago;
 
-    @Column(name = "precioTotal", nullable = false)
+    @Column(name = "preciototal", nullable = false)
     private BigDecimal preciototal;
 
     //TODO definir

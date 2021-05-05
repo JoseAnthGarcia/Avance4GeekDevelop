@@ -8,7 +8,7 @@ import java.util.List;
 public class Direccion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int iddireccion;
     private String ubicacion;
     private String coordenadas;

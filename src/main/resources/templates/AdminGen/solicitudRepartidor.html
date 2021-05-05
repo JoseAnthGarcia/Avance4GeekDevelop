@@ -313,16 +313,13 @@
                                                     <td th:text="|DNI: ${repartidor.dni}|">DNI: 12345678</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Correo: example@gmail.com</td>
+                                                    <td th:text="|Movilidad: ${repartidor.credencial.correo}|">Correo: example@gmail.com</td>
                                                     <td th:text="|Teléfono: ${repartidor.telefono}|">Teléfono: 32325164564 </td>
                                                 </tr>
 
 
                                                 <tr>
-                                                    <div th:each="movilidad : ${listaMovilidades}">
-                                                        <td th:if="${movilidad.usuario.idusuario == repartidor.idusuario}"
-                                                            th:text="|Movilidad: ${movilidad.tipoMovilidad.tipo}|">Movilidad: moto </td>
-                                                    </div>
+                                                        <td th:text="|Movilidad: ${repartidor.movilidad.tipoMovilidad.tipo}|">Movilidad: moto </td>
                                                     <td>
                                                         <a href="#" class="btn btn-success btn-icon-split">
                                         <span class="icon text-white-50">

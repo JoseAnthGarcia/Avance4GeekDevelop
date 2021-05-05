@@ -13,9 +13,6 @@ public class Movilidad {
     @OneToOne
     @JoinColumn(name = "idtipomovilidad", nullable = false)
     private TipoMovilidad tipoMovilidad;
-    @OneToOne
-    @JoinColumn(name = "idrepartidor", nullable = false)
-    private Usuario usuario;
 
     public int getIdmovilidad() {
         return idmovilidad;
@@ -49,11 +46,4 @@ public class Movilidad {
         this.tipoMovilidad = tipoMovilidad;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
 }

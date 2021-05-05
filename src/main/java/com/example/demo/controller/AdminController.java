@@ -28,7 +28,10 @@ public class AdminController {
 
 
     @GetMapping("/solicitudes")
-    public String listaDeSolicitudes(@RequestParam("tipo") String tipo, Model model){
+    public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
+        if(tipo == null){
+            tipo = "adminRest";
+        }
         switch (tipo){
             case "restaurante":
                 return "";
@@ -37,7 +40,6 @@ public class AdminController {
                         usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "administradorR"));
                 return "/AdminGen/solicitudAR";
             case "repartidor":
-                model.addAttribute("listaMovilidades", movilidadRepository.findAll());
                 model.addAttribute("listaRepartidorSolicitudes",
                         usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "repartidor"));
                 return "/AdminGen/solicitudRepartidor";

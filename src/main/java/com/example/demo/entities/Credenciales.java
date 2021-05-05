@@ -10,16 +10,8 @@ public class Credenciales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcredenciales;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
-    private Usuario usuario;
-
     private String correo;
     private String contrasenia;
-
-    public Usuario getUsuario() { return usuario; }
-
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     public int getIdcredenciales() {
         return idcredenciales;

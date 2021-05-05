@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Movilidad;
 import com.example.demo.entities.Usuario;
+import com.example.demo.repositories.DistritosRepository;
 import com.example.demo.repositories.MovilidadRepository;
 import com.example.demo.repositories.TipoMovilidadRepository;
 import com.example.demo.repositories.UsuarioRepository;
@@ -23,24 +24,44 @@ public class UsuarioController {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    DistritosRepository distritosRepository;
     @GetMapping("/registroRepartidor")
     public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
-        model.addAttribute("tipoMovilidad", tipoMovilidadRepository.findAll());
+        model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+
 
         return "/Repartidor/registro";
     }
     @PostMapping("/save")
     public String guardarRepartidor(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult,
-                                    RedirectAttributes attr, Model model) {
+                                    RedirectAttributes attr, Model model, @RequestAttribute("contrasenia1") String contrasenia1, @RequestAttribute("contrasenia2") String contrasenia2) {
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("listaMovilidad", tipoMovilidadRepository.findAll());
+        if (bindingResult.hasErrors() ) {
+
+
+            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+
             return "Repartidor/registro";
-        } else {
+        }else if (contrasenia1!=contrasenia2){
+            attr.addFlashAttribute("msg", "Las contraseñas no coinciden");
+            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+
+            return "Repartidor/registro";
+
+        }else {
 
             usuarioRepository.save(usuario);
             return "redirect:/x";
         }
+
+
+
+
     }
 
 

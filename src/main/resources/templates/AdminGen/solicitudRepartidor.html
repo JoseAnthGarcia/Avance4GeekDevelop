@@ -210,7 +210,7 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form th:action="@{/admin/searchSoli}">
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
@@ -247,7 +247,7 @@
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
@@ -321,7 +321,8 @@
                                                 <tr>
                                                         <td th:text="|Movilidad: ${repartidor.movilidad.tipoMovilidad.tipo}|">Movilidad: moto </td>
                                                     <td>
-                                                        <a href="#" class="btn btn-success btn-icon-split">
+                                                        <a th:href="@{'/admin/aceptarSolicitud?id='+${repartidor.idusuario}}"
+                                                           data-target="#modalAceptarSolicitud" class="btn btn-success btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>

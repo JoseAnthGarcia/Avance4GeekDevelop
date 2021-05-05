@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -24,6 +26,9 @@ public class AdminController {
 
     @Autowired
     MovilidadRepository movilidadRepository;
+
+    @Autowired
+    TipoMovilidadRepository tipoMovilidadRepository;
 
 
 
@@ -47,6 +52,31 @@ public class AdminController {
                 return "";
                 //mandar a la vista principal
         }
+    }
+
+    @GetMapping("/aceptarSolicitud")
+    public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id){
+
+        if(id == null){
+            return ""; //Retornar pagina principal
+        }else {
+            Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+            if(usuarioOpt.isPresent()){
+                Usuario usuario = usuarioOpt.get();
+                usuario.setEstado("ACTIVO");
+                //Fecha de registro:
+                Date date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                usuario.setFechaadmitido(hourdateFormat.format(date));
+                //
+                usuarioRepository.save(usuario);
+                return "/AdminGen/solicitudRepartidor";
+            }else{
+                return ""; //Retornar pagina principal
+            }
+        }
+
     }
 
     @GetMapping("/usuarios")

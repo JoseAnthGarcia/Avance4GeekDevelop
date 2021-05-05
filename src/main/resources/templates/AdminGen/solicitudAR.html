@@ -1,32 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Solicitude de administrador de restaurante</title>
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
-
-
-    <!-- Custom styles for this page -->
-    <link href="bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-</head>
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes AR')"></head>
 
 <body id="page-top">
 
@@ -67,13 +42,13 @@
             </a>
             <div class="collapse" id="submenu2" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudAR.html"><span>Administrador Restaurante</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Administrador Restaurante</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=solicitudRepartidor.html#"><span>Repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudRestaurante.html"><span>Restaurante</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Restaurante</span></a></li>
                 </ul>
 
             </div>
@@ -96,19 +71,19 @@
             </a>
             <div class="collapse" id="submenu1" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
                 </ul>
             </div>
         </li>
@@ -308,8 +283,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td scope="row">1</td>
+                                    <tr th:each="adminR, v : ${listaAdminRestSolicitudes}">
+                                        <td scope="row" th:text="${v.index+1}">1</td>
                                         <td class="w-25">
                                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
@@ -319,28 +294,25 @@
                                                 <tbody>
                                                 <tr>
 
-                                                    <td>Fecha de Registro: 20/01/3113 10:30:12</td>
-
-                                                    <td>Estado: Pendiente 10:30:12</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>Nombre: Martin Alvaro</td>
-                                                    <td>Apellidos: Lopez Flores</td>
-
+                                                    <td th:text="|Fecha de Registro: ${adminR.fecharegistro}|">Fecha de Registro: 20/01/3113 10:30:12</td>
+                                                    <td th:text="|Estado: ${adminR.estado}|">Estado: Pendiente 10:30:12</td>
 
                                                 </tr>
                                                 <tr>
-                                                    <td>DNI: 12345678
-                                                    </td>
-                                                    <td>Correo: asdddd@gmail.com</td>
+                                                    <td th:text="|Nombres: ${adminR.nombres}|">Nombre: Martin Alvaro</td>
+                                                    <td th:text="|Apellidos: ${adminR.apellidos}|">Apellidos: Lopez Flores</td>
+
+
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="|DNI: ${adminR.dni}|">DNI: 12345678</td>
+                                                    <td >Correo: asdddd@gmail.com</td>
 
                                                 </tr>
 
                                                 <tr>
-                                                    <td>Sexo: Masculino </td>
-                                                    <td>Teléfono: 32325164564 </td>
-
+                                                    <td th:text="|Sexo: ${adminR.sexo}|">Sexo: Masculino </td>
+                                                    <td th:text="|Teléfono: ${adminR.telefono}|">Teléfono: 32325164564 </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
@@ -369,160 +341,9 @@
 
                                                 </tr>
                                                 </tbody>
-
                                             </table>
-
-
-
-
                                         </div>
                                         </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">1</td>
-                                        <td class="w-25">
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
-                                        </td>
-                                        <td><div class="table-responsive">
-                                            <table class="table table-bordered ">
-
-                                                <tbody>
-                                                <tr>
-                                                    <td>Fecha de Registro: 20/01/3113 10:30:12</td>
-
-                                                    <td>Estado: Aceptado 01/05/2021 04:20:23</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>Nombre: Martin Alvaro</td>
-
-                                                    <td>Apellidos: Lopez Flores</td>
-                                                    </td>
-
-
-                                                </tr>
-                                                <tr>
-                                                    <td>DNI: 12345678
-
-                                                    <td>Correo: asdddd@gmail.com</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>Sexo: Masculino </td>
-
-                                                    <td>Teléfono: 32325164564 </td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-
-                                                    <td>
-                                                        <a href="#" class="btn btn-success btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                                            <span class="text">Aceptar</span>
-                                                        </a>
-                                                        <a href="#" class="btn btn-secondary btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-times"></i>
-                                        </span>
-                                                            <span class="text">Rechazar</span>
-                                                        </a>
-
-                                                        <a href="#" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-info"></i>
-                                        </span>
-                                                            <span class="text">Informacion</span>
-                                                        </a>
-                                                    </td>
-
-                                                </tr>
-                                                </tbody>
-
-                                            </table>
-
-
-
-
-                                        </div>
-                                        </td>
-
-
-                                    </tr><tr>
-                                        <td scope="row">1</td>
-                                        <td class="w-25">
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
-                                        </td>
-                                        <td><div class="table-responsive">
-                                            <table class="table table-bordered ">
-
-                                                <tbody>
-                                                <tr>
-                                                    <td>Fecha de Registro: 20/01/3113 10:30:12</td>
-
-                                                    <td>Estado: Rechazado 01/05/2021 04:20:23</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>Nombre: Martin Alvaro</td>
-
-                                                    <td>Apellidos: Lopez Flores</td>
-                                                    </td>
-
-
-                                                </tr>
-                                                <tr>
-                                                    <td>DNI: 12345678</td>
-
-                                                    <td>Correo: asdddd@gmail.com</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>Sexo: Masculino </td>
-
-                                                    <td>Teléfono: 32325164564 </td>
-
-
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-secondary btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                                            <span class="text">Aceptar</span>
-                                                        </a>
-                                                        <a href="#" class="btn btn-danger btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-times"></i>
-                                        </span>
-                                                            <span class="text">Rechazar</span>
-                                                        </a>
-
-                                                        <a href="#" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-info"></i>
-                                        </span>
-                                                            <span class="text">Informacion</span>
-                                                        </a>
-                                                    </td>
-
-                                                </tr>
-                                                </tbody>
-
-                                            </table>
-
-
-
-
-                                        </div>
-                                        </td>
-
-
                                     </tr>
                                     </tbody>
                                 </table>

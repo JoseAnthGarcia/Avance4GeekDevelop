@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    List<Usuario> findByEstado(String estado);
+    List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(String estado, String rol);
 }

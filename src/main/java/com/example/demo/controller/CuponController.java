@@ -57,7 +57,7 @@ public class CuponController {
                 attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
             }
 
-            if(cupon.getFechainicio().isEqual(cupon.getFechafin())){
+            if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
                 cupon.setDisponible(false);
             }
 

@@ -18,6 +18,8 @@ public class AdminController {
     @Autowired
     MovilidadRepository movilidadRepository;
 
+
+
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(Model model){
         model.addAttribute("listaMovilidades", movilidadRepository.findAll());

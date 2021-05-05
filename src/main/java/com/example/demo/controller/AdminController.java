@@ -33,12 +33,12 @@ public class AdminController {
                 return "";
             case "adminRest":
                 model.addAttribute("listaAdminRestSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistro("pendiente", "administradorR"));
+                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "administradorR"));
                 return "/AdminGen/solicitudAR";
             case "repartidor":
                 model.addAttribute("listaMovilidades", movilidadRepository.findAll());
                 model.addAttribute("listaRepartidorSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistro("pendiente", "repartidor"));
+                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "repartidor"));
                 return "/AdminGen/solicitudRepartidor";
             default:
                 return "";

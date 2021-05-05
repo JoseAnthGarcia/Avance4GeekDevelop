@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="usuario")
@@ -29,6 +30,8 @@ public class Usuario {
     private String fecharegistro;
     private String fechaadmitido;
     private String ultimoingreso;
+    @ManyToMany(mappedBy = "usuarioPorDireccion")
+    private List<Direccion> direcciones;
 
     public int getIdusuario() {
         return idusuario;
@@ -132,5 +135,13 @@ public class Usuario {
 
     public void setUltimoingreso(String ultimoingreso) {
         this.ultimoingreso = ultimoingreso;
+    }
+
+    public List<Direccion> getDirecciones() {
+        return direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 }

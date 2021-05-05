@@ -13,7 +13,7 @@ public class CategoriaExtra {
     @Column(nullable = false)
     private String tipo;
 
-    @ManyToMany(mappedBy = "categoriaExtraPorPlato")
+  /*  @ManyToMany(mappedBy = "categoriaExtraPorPlato")
     private List<Plato> platos;
 
 
@@ -24,7 +24,7 @@ public class CategoriaExtra {
     public void setIdcategoriaextra(int idcategoriaextra) {
         this.idcategoriaextra = idcategoriaextra;
     }
-
+*/
     public String getTipo() {
         return tipo;
     }

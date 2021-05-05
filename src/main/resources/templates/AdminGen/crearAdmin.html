@@ -12,19 +12,19 @@
     <title>Crear administrador</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-
+    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
+    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
     <link th:href="@{/cssAG/estilosAdmin.css}" rel="stylesheet" type="text/css">
+
+
     <!-- Custom styles for this page -->
     <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
 
 </head>
 
@@ -60,23 +60,12 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
+            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html" >
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Solicitudes</span>
 
             </a>
-            <div class="collapse" id="submenu2" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudAR.html"><span>Administrador Restaurante</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=solicitudRepartidor.html#"><span>Repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudRestaurante.html"><span>Restaurante</span></a></li>
-                </ul>
 
-            </div>
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
@@ -96,19 +85,19 @@
             </a>
             <div class="collapse" id="submenu1" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
                 </ul>
             </div>
         </li>
@@ -126,7 +115,6 @@
 
     </ul>
     <!-- End of Sidebar -->
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -142,8 +130,6 @@
                         <i class="fa fa-bars"></i>
                     </button>
                 </form>
-
-                <!-- Topbar Search -->
 
 
                 <!-- Topbar Navbar -->
@@ -209,13 +195,12 @@
                     </li>
 
                     <div class="topbar-divider d-none d-sm-block"></div>
-
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -246,52 +231,73 @@
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto ">Crear Administrador</h2>
+                            <h2 class="font-weight-bold text-white text-lg-center mx-auto "
+                                th:text="${usuario.getIdusuario() == 0? 'CREAR ADMINISTRADOR' : 'EDITAR ADMINISTRADOR'}"></h2>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form class="user" >
+                        <form method="POST" id="nuevo" class="justify-content-left"
+                              th:action="@{/admin/guardar}" th:object="${usuario}">
+
+                            <input th:field="*{idusuario}" type="hidden"/>
+
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <input type="text" class="form-control"
-                                           id="exampleNombre"
-                                           placeholder="Nombres">
+
+                                    <label class="form-label text-dark text-lg">Nombres:</label>
+                                    <input th:field="*{nombres}"  type="text" class="form-control border-secondary">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                                         th:errors="*{nombres}"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <input type="text" class="form-control"
-                                           id="exampleApellido"
-                                           placeholder="Apellidos">
+                                    <label class="form-label text-dark text-lg">Apellidos:</label>
+                                    <input th:field="*{apellidos}"  type="text" class="form-control border-secondary">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                                         th:errors="*{apellidos}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
+                                    <label class="form-label text-dark text-lg">Correo:</label>
                                     <input type="email" class="form-control"
                                            id="exampleCorreo"
                                            placeholder="Correo electrónico">
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <input placeholder="Fecha de nacimiento" class="form-control" type="text"
+                                    <label class="form-label text-dark text-lg">Fecha de nacimiento:</label>
+                                    <input th:field="*{fechanacimiento}"  type="text" class="form-control border-secondary"
                                            onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
+                                         th:errors="*{fechanacimiento}"></div>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <select class="form-control">
+                                    <label class="form-label text-dark text-lg">Sexo:</label>
+                                    <select class="form-control border-secondary" th:field="*{sexo}">
                                         <option value="" disabled selected>Sexo</option>
                                         <option value="Femenino">Femenino</option>
                                         <option value="Masculino">Masculino</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6  mb-2 mb-sm-0">
-                                    <input type="number" class="form-control"
-                                           id="exampleTelefono" placeholder="Teléfono">
+                                    <label class="form-label text-dark text-lg">Teléfono:</label>
+                                    <input th:field="*{telefono}"  type="text" class="form-control border-secondary">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                                         th:errors="*{telefono}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                                    <input type="number" class="form-control"
-                                           id="exampleDNI" placeholder="DNI">
+                                    <label class="form-label text-dark text-lg">DNI:</label>
+
+                                    <input th:field="*{dni}" type="text" class="form-control border-secondary">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                                         th:errors="*{dni}"></div>
+                                </div>
+                                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+
                                 </div>
 
                             </div>
@@ -314,12 +320,9 @@
 
                             </div>
                             <hr>
-                            <a href="validaciones.html" class="btn btn-warning " >
-                                Registrar
-                            </a>
-                            <a href="lista.html" class="btn btn-danger"  >
-                                Cancelar
-                            </a>
+                            <a th:href="@{'/admin'}" class="btn btn-danger">Cancelar</a>
+                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0? 'Registrar' : 'Actualizar'}">Reg/act</button>
+
                         </form>
                     </div>
 

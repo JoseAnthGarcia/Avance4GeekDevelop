@@ -31,6 +31,8 @@ public class Usuario {
     private String fechaadmitido;
     private String ultimoingreso;
 
+
+
     @OneToOne(mappedBy = "usuario")
     private Credenciales credenciales;
 

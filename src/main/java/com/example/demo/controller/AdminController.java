@@ -28,7 +28,10 @@ public class AdminController {
 
 
     @GetMapping("/solicitudes")
-    public String listaDeSolicitudes(@RequestParam("tipo") String tipo, Model model){
+    public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
+        if(tipo == null){
+            tipo = "adminRest";
+        }
         switch (tipo){
             case "restaurante":
                 return "";

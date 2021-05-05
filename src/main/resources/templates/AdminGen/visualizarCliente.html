@@ -306,20 +306,19 @@
                                                     <td th:text="|Sexo: ${cliente.sexo}|"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td th:text="|Correo: ${cliente.get}|">Correo: mastin@gmail.com</td>
+                                                    <td th:text="|Correo: ${cliente.credenciales.correo}|"></td>
                                                     <td>DNI : 23145560</td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td>Fecha de Nacimiento: 10/25/3210</td>
-
-                                                    <td>Direccion: Av. Lomas 4545</td>
-
+                                                    <td th:text="|Fecha de Nacimiento: ${cliente.fechanacimiento}|"></td>
+                                                    <td th:each="direccion : ${cliente.direcciones}"><h1 th:text="${direccion.ubicacion} + ' | '"></h1></td>
                                                 </tr>
-
                                                 <tr>
-                                                    <td>Total de Pedidos: 154541</td>
-                                                    <td>Total de ingresos: 4551</td>
+                                                    <td th:text="|Total de Pedidos: ${cliente.listaPedidosPorUsuario.size()}|"></td>
+                                                   <!-- <td th:each="pedido : ${cliente.listaPedidosPorUsuario}">
+                                                        <h1 th:value="${pedido.preciototal += pedido.preciototal}"></h1>
+                                                    </td> -->
                                                 </tr>
 
                                                 <tr>

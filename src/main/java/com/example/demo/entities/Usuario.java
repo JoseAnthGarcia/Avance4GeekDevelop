@@ -30,8 +30,23 @@ public class Usuario {
     private String fecharegistro;
     private String fechaadmitido;
     private String ultimoingreso;
+
+    @OneToOne(mappedBy = "credenciales")
+    private Credenciales credenciales;
+
     @ManyToMany(mappedBy = "usuarioPorDireccion")
     private List<Direccion> direcciones;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> listaPedidosPorUsuario;
+
+    public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
+
+    public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
+
+    public Credenciales getCredenciales() { return credenciales; }
+
+    public void setCredenciales(Credenciales credenciales) { this.credenciales = credenciales; }
 
     public int getIdusuario() {
         return idusuario;

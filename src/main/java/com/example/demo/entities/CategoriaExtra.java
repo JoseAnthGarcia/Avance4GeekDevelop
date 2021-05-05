@@ -25,6 +25,28 @@ public class CategoriaExtra {
         this.idcategoriaextra = idcategoriaextra;
     }
 */
+    @ManyToMany
+    @JoinTable(name = "categoriaextra_has_plato",
+    joinColumns = @JoinColumn(name = "idcategoria_extra"),
+    inverseJoinColumns = @JoinColumn(name = "idplato"))
+    private List<Plato> categoriaextra_has_plato;
+
+    public int getIdcategoriaextra() {
+        return idcategoriaextra;
+    }
+
+    public void setIdcategoriaextra(int idcategoriaextra) {
+        this.idcategoriaextra = idcategoriaextra;
+    }
+
+    public List<Plato> getCategoriaextra_has_plato() {
+        return categoriaextra_has_plato;
+    }
+
+    public void setCategoriaextra_has_plato(List<Plato> categoriaextra_has_plato) {
+        this.categoriaextra_has_plato = categoriaextra_has_plato;
+    }
+
     public String getTipo() {
         return tipo;
     }

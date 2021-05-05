@@ -39,6 +39,18 @@ public class Extra {
     @Column(nullable = false)
     private boolean disponible;
 
+    @ManyToOne
+    @JoinColumn(name="idcategoria_extra")
+    private CategoriaExtra categorias;
+
+    public CategoriaExtra getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(CategoriaExtra categorias) {
+        this.categorias = categorias;
+    }
+
     public int getIdextra() {
         return idextra;
     }

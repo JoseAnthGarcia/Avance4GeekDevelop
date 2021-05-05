@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Cupon;
+import com.example.demo.entities.Extra;
+import com.example.demo.repositories.ExtraRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +18,13 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/extra")
 public class ExtraController {
-
+    @Autowired
+    ExtraRepository extraRepository;
 
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model) {
-        model.addAttribute("listaCupon", cuponRepository.findAll());
-        return "AdminRestaurante/listaCupones";
+        model.addAttribute("listaExtra", extraRepository.findAll());
+        return "AdminRestaurante/listaExtras";
     }
 
     @GetMapping("/nuevo")
@@ -32,7 +36,7 @@ public class ExtraController {
     public String guardarCupon(@ModelAttribute("cupon") @Valid Cupon cupon, BindingResult bindingResult,
                                RedirectAttributes attributes,
                                Model model) {
-        Cupon cVal = cuponRepository.buscarPorNombre(cupon.getNombre());
+       /* Cupon cVal = extraRepository.buscarPorNombre(cupon.getNombre());
 
         if(cVal == null){
             if(bindingResult.hasErrors()){
@@ -53,27 +57,27 @@ public class ExtraController {
                 cupon.setDisponible(false);
             }
 
-            cuponRepository.save(cupon);
+            extraRepository.save(cupon);
             return "redirect:/cupon/lista";
         }else{
             model.addAttribute("val","Este nombre ya está registrado");
             return "AdminRestaurante/nuevoCupon";
-        }
+        }*/
 
-
+        return "AdminRestaurante/nuevoCupon";
     }
 
-    @GetMapping("/editar")
+    /*@GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
                               Model model,
                               @RequestParam("id") int id) {
-        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
+        Optional<Extra> optionalCupon = extraRepository.findById(id);
         if (optionalCupon.isPresent()) {
-            cupon = optionalCupon.get();
+            cupon = ;
             model.addAttribute("cupon", cupon);
             return "AdminRestaurante/nuevoCupon";
         } else {
             return "redirect:/cupon/lista";
         }
-    }
+    }*/
 }

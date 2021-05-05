@@ -1,4 +1,7 @@
 package com.example.demo.entities;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -30,8 +33,19 @@ public class Plato {
     private int  idrestaurante;
     @Column(name="disponible", nullable = false)
     private boolean disponible;
+    @ManyToMany(mappedBy ="categoriaextra_has_plato")
+    private List<CategoriaExtra>  categoriaextra;
 
-    /*
+
+
+    public List<CategoriaExtra> getCategoriaextra() {
+        return categoriaextra;
+    }
+
+    public void setCategoriaextra(List<CategoriaExtra> categoriaextra) {
+        this.categoriaextra = categoriaextra;
+    }
+/*
     @ManyToMany
     @JoinColumn(name="categoriaextra_has_plato",
             joinColums=@JoinColumn(name="idplato"),

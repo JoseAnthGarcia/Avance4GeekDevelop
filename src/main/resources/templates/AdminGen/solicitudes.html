@@ -1,31 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments/general.html :: cabecera(titulo= 'Solicitudes')"></head>
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Solicitudes</title>
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-    <link th:href="@{/cssAG/estilosAdmin.css}" rel="stylesheet" type="text/css">
-
-
-    <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-
-</head>
 
 <body id="page-top">
 
@@ -268,12 +244,10 @@
 
                                                 <tbody>
                                                 <tr>
-
                                                     <td th:text="|Fecha de Registro: ${usuario.fecharegistro}|">Fecha de Registro: 20/01/3113</td>
                                                     <td th:text="|Estado: ${usuario.estado}|">Estado: Pendiente </td>
                                                 </tr>
                                                 <tr>
-
                                                     <td th:text="|Nombre: ${usuario.nombres}|">Nombre: Martin Alvaro</td>
                                                     <td th:text="|DNI: ${usuario.dni}|">DNI: 12345678</td>
                                                 </tr>
@@ -284,7 +258,6 @@
 
                                                 </tr>
                                                 <tr>
-
                                                     <td>Correo: example@gmail.com</td>
                                                     <td th:text="|Teléfono: ${usuario.telefono}|">Teléfono: 32325164564 </td>
                                                 </tr>

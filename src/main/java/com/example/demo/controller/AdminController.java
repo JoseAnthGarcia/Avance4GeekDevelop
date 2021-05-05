@@ -40,7 +40,6 @@ public class AdminController {
                         usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "administradorR"));
                 return "/AdminGen/solicitudAR";
             case "repartidor":
-                model.addAttribute("listaMovilidades", movilidadRepository.findAll());
                 model.addAttribute("listaRepartidorSolicitudes",
                         usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "repartidor"));
                 return "/AdminGen/solicitudRepartidor";

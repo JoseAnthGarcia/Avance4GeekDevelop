@@ -31,8 +31,13 @@ public class Usuario {
     private String fechaadmitido;
     private String ultimoingreso;
 
-    @OneToOne(mappedBy = "usuario")
-    private Credenciales credenciales;
+    @OneToOne
+    @JoinColumn(name = "credencial", nullable = false)
+    private Credenciales credencial;
+
+    @OneToOne
+    @JoinColumn(name = "movilidad")
+    private Movilidad movilidad;
 
     @ManyToMany(mappedBy = "usuarioPorDireccion")
     private List<Direccion> direcciones;
@@ -44,9 +49,9 @@ public class Usuario {
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
 
-    public Credenciales getCredenciales() { return credenciales; }
+    public Credenciales getCredencial() { return credencial; }
 
-    public void setCredenciales(Credenciales credenciales) { this.credenciales = credenciales; }
+    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }
 
     public int getIdusuario() {
         return idusuario;
@@ -158,5 +163,13 @@ public class Usuario {
 
     public void setDirecciones(List<Direccion> direcciones) {
         this.direcciones = direcciones;
+    }
+
+    public Movilidad getMovilidad() {
+        return movilidad;
+    }
+
+    public void setMovilidad(Movilidad movilidad) {
+        this.movilidad = movilidad;
     }
 }

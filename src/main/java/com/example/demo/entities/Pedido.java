@@ -18,11 +18,11 @@ public class Pedido {
     @JoinColumn(name = "idcliente")
     private Usuario cliente;
 
-    private int idrepartidor;
+    /*private int idrepartidor;
     private int idrestaurante;
     private int idcupon;
     private int idmetodopago;
-
+*/
     @Column(name = "preciototal", nullable = false)
     private BigDecimal preciototal;
 
@@ -56,7 +56,7 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public int getIdrepartidor() {
+  /*  public int getIdrepartidor() {
         return idrepartidor;
     }
 
@@ -71,23 +71,23 @@ public class Pedido {
     public void setIdrestaurante(int idrestaurante) {
         this.idrestaurante = idrestaurante;
     }
-
-    public int getIdcupon() {
+*/
+   /* public int getIdcupon() {
         return idcupon;
     }
 
     public void setIdcupon(int idcupon) {
         this.idcupon = idcupon;
     }
-
-    public int getIdmetodopago() {
+*/
+ /*   public int getIdmetodopago() {
         return idmetodopago;
     }
 
     public void setIdmetodopago(int idmetodopago) {
         this.idmetodopago = idmetodopago;
     }
-
+*/
     public BigDecimal getPreciototal() {
         return preciototal;
     }

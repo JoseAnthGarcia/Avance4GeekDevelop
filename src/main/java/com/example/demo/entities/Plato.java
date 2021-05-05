@@ -17,7 +17,7 @@ public class Plato {
     private String nombre;
     @Column(name="descripcion", nullable = false)
     @NotBlank(message = "Este campo es obligatorio")
-    @Size(max=256, message = "Maximo 256 caracteres")
+    @Size(max=100, message = "Maximo 100 caracteres")
     private String descripcion;
     @Column(name="precio", nullable = false)
     @Positive(message = "Ingrese una cantidad positiva")
@@ -30,6 +30,15 @@ public class Plato {
     private int  idrestaurante;
     @Column(name="disponible", nullable = false)
     private boolean disponible;
+
+    /*
+    @ManyToMany
+    @JoinColumn(name="categoriaextra_has_plato",
+            joinColums=@JoinColumn(name="idplato"),
+            inverseJoinColums=@JoinColumn(name = "idcategoriaextra"))
+    private List<CategoriaExtra> categoriaExtraPorPlato;
+*/
+
 
     public int getIdplato() {
         return idplato;
@@ -88,4 +97,11 @@ public class Plato {
         this.disponible = disponible;
     }
 
+/*    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
+        return categoriaExtraPorPlato;
+    }
+
+    public void setCategoriaExtraPorPlato(List<CategoriaExtra> categoriaExtraPorPlato) {
+        this.categoriaExtraPorPlato = categoriaExtraPorPlato;
+    }*/
 }

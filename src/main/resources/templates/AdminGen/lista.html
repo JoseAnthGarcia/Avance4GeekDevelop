@@ -12,19 +12,19 @@
     <title>Lista de Usuarios</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../../static/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../static/bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
 
-    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
+    <link href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
 
-
+    <link href="estilosAdminRest.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this page -->
-    <link href="bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -34,7 +34,96 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="fragments/general.html::sidebar"></ul>
+    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
+        <div class="">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-shopping-basket"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Food Delivery </div>
+            </a>
+        </div>
+        <!-- Sidebar - Brand -->
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="lista.html">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Listas</span></a>
+        </li>
+
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Solicitudes</span>
+
+            </a>
+            <div class="collapse" id="submenu2" aria-expanded="false">
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Administrador Restaurante</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Repartidor</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#l"><span>Restaurante</span></a></li>
+                </ul>
+            </div>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/crearAdministrador.html">
+                <i class="fas fa-fw fa-user-edit"></i>
+                <span>Crear Administrador</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+
+        <li class="nav-item">
+            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Reportes</span>
+
+            </a>
+            <div class="collapse" id="submenu1" aria-expanded="false">
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
+                </ul>
+                <ul class="flex-column pl-2 nav">
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
+                </ul>
+            </div>
+        </li>
+
+
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>
+    <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -123,12 +212,12 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfilAG.html">
+                            <a class="dropdown-item" href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/editarPerfilAG.html">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
@@ -250,7 +339,7 @@
                                     <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
                                        <i class="fas fa-lock"></i>
                                    </a> </td>
-                                    <td>  <a href="visualizarRepartidor.html" class="btn btn-warning btn-circle btn-sm" >
+                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarRepartidor.html" class="btn btn-warning btn-circle btn-sm" >
                                         <i class="fas fa-info"></i>
                                     </a> </td>
 
@@ -265,7 +354,7 @@
                                     <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
                                         <i class="fas fa-lock-open"></i>
                                     </a> </td>
-                                    <td>  <a href="visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
+                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
                                         <i class="fas fa-info"></i>
                                     </a> </td>
                                 </tr><tr>
@@ -278,7 +367,7 @@
                                     <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
                                         <i class="fas fa-lock-open"></i>
                                     </a> </td>
-                                    <td>  <a href="visualizarAdministrador.html" class="btn btn-warning btn-circle btn-sm" >
+                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarAdministrador.html" class="btn btn-warning btn-circle btn-sm" >
                                         <i class="fas fa-info"></i>
                                     </a> </td>
                                 </tr>
@@ -292,7 +381,7 @@
                                     <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
                                         <i class="fas fa-lock"></i>
                                     </a> </td>
-                                    <td>  <a href="visualizarAdministradorRestaurante.html" class="btn btn-warning btn-circle btn-sm" >
+                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarAdministradorRestaurante.html" class="btn btn-warning btn-circle btn-sm" >
                                         <i class="fas fa-info"></i>
                                     </a> </td>
                                 </tr>
@@ -306,7 +395,7 @@
                                     <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
                                         <i class="fas fa-lock-open"></i>
                                     </a> </td>
-                                    <td>  <a href="visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
+                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
                                         <i class="fas fa-info"></i>
                                     </a> </td>
                                 </tr>
@@ -419,21 +508,21 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../../static/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../../static/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script src="../../static/bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="../../static/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script src="../../static/bootstrap/js/demo/datatables-demo.js"></script>
 
 </body>
 

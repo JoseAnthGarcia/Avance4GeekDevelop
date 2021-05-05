@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Sidebar -->
+<ul th:fragment="sidebar" class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
+    <div class="">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-shopping-basket"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Food Delivery </div>
+        </a>
+    </div>
+    <!-- Sidebar - Brand -->
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="lista.html">
+            <i class="fas fa-fw fa-list"></i>
+            <span>Listas</span></a>
+    </li>
+
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Solicitudes</span>
+
+        </a>
+
+    </li>
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link" href="crearAdministrador.html">
+            <i class="fas fa-fw fa-user-edit"></i>
+            <span>Crear Administrador</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+
+    <li class="nav-item">
+        <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Reportes</span>
+
+        </a>
+
+    </li>
+
+
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

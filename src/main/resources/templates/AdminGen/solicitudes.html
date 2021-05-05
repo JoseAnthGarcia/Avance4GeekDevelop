@@ -83,19 +83,19 @@
             </a>
             <div class="collapse" id="submenu1" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
                 </ul>
             </div>
         </li>
@@ -288,23 +288,23 @@
                                                     <td>Correo: example@gmail.com</td>
                                                     <td th:text="|Teléfono: ${usuario.telefono}|">Teléfono: 32325164564 </td>
                                                 </tr>
+                                                <div th:each="movilidad : ${listaMovilidades}">
+                                                    <tr th:if="${movilidad.usuario.idusuario == usuario.idusuario}">
+                                                        <td th:text="|Movilidad: ${movilidad.tipoMovilidad.tipo}|">Movilidad: Moto</td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-success btn-circle btn-sm">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                            <a href="#" class="btn btn-danger btn-circle btn-sm">
+                                                                <i class="fas fa-times"></i>
+                                                            </a>
+                                                            <a href="#" class="btn btn-warning btn-circle btn-sm">
+                                                                <i class="fas fa-info"></i>
+                                                            </a>
+                                                        </td>
 
-                                                <tr>
-
-                                                    <td>Movilidad: Moto</td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-success btn-circle btn-sm">
-                                                            <i class="fas fa-check"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-danger btn-circle btn-sm">
-                                                            <i class="fas fa-times"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-warning btn-circle btn-sm">
-                                                            <i class="fas fa-info"></i>
-                                                        </a>
-                                                    </td>
-
-                                                </tr>
+                                                    </tr>
+                                                </div>
                                                 </tbody>
 
                                             </table>

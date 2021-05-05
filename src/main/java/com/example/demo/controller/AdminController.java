@@ -17,6 +17,11 @@ public class AdminController {
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(Model model){
         model.addAttribute("listaUsuariosSolicitudes", usuarioRepository.findByEstado("pendiente"));
+        return "/AdminGen/solicitudes";
+    }
+    @GetMapping("/solicitudesAR")
+    public String listaDeSolicitudesAR(Model model){
+        model.addAttribute("listaARSolicitudes", usuarioRepository.findByEstado("pendiente"));
         return "/Admin/solicitudes";
     }
 

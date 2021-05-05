@@ -31,11 +31,13 @@ public class Plato {
     @Column(name="disponible", nullable = false)
     private boolean disponible;
 
+    /*
     @ManyToMany
     @JoinColumn(name="categoriaextra_has_plato",
             joinColums=@JoinColumn(name="idplato"),
             inverseJoinColums=@JoinColumn(name = "idcategoriaextra"))
     private List<CategoriaExtra> categoriaExtraPorPlato;
+*/
 
 
     public int getIdplato() {
@@ -95,11 +97,11 @@ public class Plato {
         this.disponible = disponible;
     }
 
-    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
+/*    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
         return categoriaExtraPorPlato;
     }
 
     public void setCategoriaExtraPorPlato(List<CategoriaExtra> categoriaExtraPorPlato) {
         this.categoriaExtraPorPlato = categoriaExtraPorPlato;
-    }
+    }*/
 }

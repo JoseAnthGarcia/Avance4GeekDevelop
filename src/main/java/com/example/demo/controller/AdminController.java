@@ -20,4 +20,11 @@ public class AdminController {
         return "/Admin/solicitudes";
     }
 
+    @GetMapping("/usuarios")
+    public String listaDeUsuarios(Model model){
+        model.addAttribute("listaUsuarios", usuarioRepository.listaUsuariosAceptados());
+        return "/AdminGen/lista";
+    }
+
+
 }

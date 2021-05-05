@@ -12,19 +12,19 @@
     <title>Lista de Usuarios</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../../static/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../../static/bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
 
-    <link href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
+    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
 
-    <link href="estilosAdminRest.css" rel="stylesheet" type="text/css">
+
     <!-- Custom styles for this page -->
-    <link href="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -294,9 +294,7 @@
                 <div class="card shadow ">
 
                     <div class="card-header py-3 " style="background-color: #701111;">
-
                         <h2 class="font-weight-bold text-white  text-md-center">LISTA DE USUARIOS</h2>
-
                     </div>
                         <div class="card-body">
                         <div class="table-responsive">
@@ -329,120 +327,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">1</td>
-                                    <td class="text-center" style="width: 450px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 450px">Repartidora</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Bloqueado</td>
-
-                                    <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
-                                       <i class="fas fa-lock"></i>
-                                   </a> </td>
-                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarRepartidor.html" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-
+                                <tr th:each= "usuario, v : ${listaUsuarios}">
+                                    <td th:text="${v.index + 1}" class="text-center" style="width: 150px"></td>
+                                    <td th:text="${usuario.apellidos} +' '+${usuario.nombres}" class="text-center" style="width: 450px"></td>
+                                    <td th:text="${usuario.rol}" class="text-center" style="width: 450px"></td>
+                                    <td th:text="${usuario.ultimoingreso}" class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
+                                    <td th:text="${usuario.estado}" class="text-center" style="width: 250px"></td>
+                                    <td><a href="#" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a></td>
+                                    <td><a href="#" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">2</td>
-                                    <td class="text-center" style="width: 450px">Garcia Melon karl</td>
-                                    <td  class="text-center" style="width: 450px">Cliente</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Operativo</td>
-
-                                    <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
-                                        <i class="fas fa-lock-open"></i>
-                                    </a> </td>
-                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr><tr>
-                                    <td class="text-center" style="width: 150px">3</td>
-                                    <td class="text-center" style="width: 450px">Luque Marin Ector</td>
-                                    <td  class="text-center" style="width: 450px">Administrador</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Operativo</td>
-
-                                    <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
-                                        <i class="fas fa-lock-open"></i>
-                                    </a> </td>
-                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarAdministrador.html" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">4</td>
-                                    <td class="text-center" style="width: 450px">Gonzales Martinez Pamela</td>
-                                    <td  class="text-center" style="width: 450px">Administrador de Restaurante</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Bloqueado</td>
-
-                                    <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
-                                        <i class="fas fa-lock"></i>
-                                    </a> </td>
-                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarAdministradorRestaurante.html" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">1</td>
-                                    <td class="text-center" style="width: 450px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 450px">Cliente</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Operativo</td>
-
-                                    <td>  <a href="#" class="btn text-white btn-circle btn-sm" style="background-color: #701111;">
-                                        <i class="fas fa-lock-open"></i>
-                                    </a> </td>
-                                    <td>  <a href="../../../../../../AdminRest/src/main/resources/templates/AdminGen/visualizarCliente.html" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">1</td>
-                                    <td class="text-center" style="width: 450px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 450px">Repartidora</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Bloqueado</td>
-
-                                    <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
-                                        <i class="fas fa-lock"></i>
-                                    </a> </td>
-                                    <td>  <a href="#" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 150px">1</td>
-                                    <td class="text-center" style="width: 450px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 450px">Repartidora</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Bloqueado</td>
-
-                                    <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
-                                        <i class="fas fa-lock"></i>
-                                    </a> </td>
-                                    <td>  <a href="#" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr><tr>
-                                    <td class="text-center" style="width: 150px">1</td>
-                                    <td class="text-center" style="width: 450px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 450px">CLiente</td>
-                                    <td  class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
-                                    <td  class="text-center" style="width: 250px">Bloqueado</td>
-
-                                    <td>  <a href="#" class="btn btn-secondary btn-circle btn-sm">
-                                        <i class="fas fa-lock"></i>
-                                    </a> </td>
-                                    <td>  <a href="#" class="btn btn-warning btn-circle btn-sm" >
-                                        <i class="fas fa-info"></i>
-                                    </a> </td>
-                                </tr>
-
-
-
                                 </tbody>
                             </table>
 

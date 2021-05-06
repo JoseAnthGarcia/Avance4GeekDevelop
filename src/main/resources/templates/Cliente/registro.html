@@ -73,7 +73,7 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user" th:action="@{/cliente/guardar}" th:object="${usuario}">
+                <form class="user" method="post" th:action="@{/cliente/guardar}" th:object="${usuario}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>
@@ -166,10 +166,9 @@
 
             </div>
             <hr>
-            <a href="#" class="btn btn-primary btn-user btn-block " data-toggle="modal"
-               data-target="#registrarModal">
+            <button type="submit" class="btn btn-primary btn-user btn-block " >
                 Registrar
-            </a>
+            </button>
             </form>
 
 

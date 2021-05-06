@@ -18,6 +18,10 @@ public class ClienteController {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+    @GetMapping("/login")
+    public String nuevoEmployeeForm() {
+        return "Cliente/login";
+    }
 
     @GetMapping("/nuevo")
     public String nuevoEmployeeForm(@ModelAttribute("cliente") Usuario cliente, Model model) {
@@ -35,7 +39,7 @@ public class ClienteController {
         }else{
             usuarioRepository.save(cliente);
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
-            return "redirect:/Cliente/login";
+            return "redirect:/cliente/login";
 
         }
 

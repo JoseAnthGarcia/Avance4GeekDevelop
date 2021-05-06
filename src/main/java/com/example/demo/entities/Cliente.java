@@ -1,8 +1,11 @@
 package com.example.demo.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="usuario")
@@ -13,23 +16,64 @@ public class Cliente {
     private int idusuario;
     @Column(nullable = false)
     private String rol;
-    private String estado;
+
     @Column(nullable = false)
     //@NotBlank(message = "Complete sus datos")
-   // @Pattern(regexp = "[^@]+[^\\.]+\\..+",message = "Solo Ingrese letras")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String nombres;
     @Column(nullable = false)
     //@NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
     @Column(nullable = false)
     private String sexo;
+
     @Column(nullable = false, unique = true)
-    //@NotBlank(message = "Complete sus datos")
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
+
     @Column(unique = true)
-    //@NotBlank(message = "Complete sus datos")
-    //@Pattern(regexp = "[^[a-zA-Z0-9.\\-\\/+=@_ ]*$]{8}",message = "Ingrese 8 dígitos")
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
+
+    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechanacimiento;
+
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fecharegistro;
+
+
+    @OneToOne
+    @JoinColumn(name = "credencial", nullable = false)
+    private Credenciales credencial;
+
+    public Credenciales getCredencial() {
+        return credencial;
+    }
+
+    public void setCredencial(Credenciales credencial) {
+        this.credencial = credencial;
+    }
+
+    public LocalDate getFecharegistro() {
+        return fecharegistro;
+    }
+
+    public void setFecharegistro(LocalDate fecharegistro) {
+        this.fecharegistro = fecharegistro;
+    }
+
+    public LocalDate getFechanacimiento() {
+        return fechanacimiento;
+    }
+
+    public void setFechanacimiento(LocalDate fechanacimiento) {
+        this.fechanacimiento = fechanacimiento;
+    }
 
     public int getIdusuario() {
         return idusuario;
@@ -47,13 +91,6 @@ public class Cliente {
         this.rol = rol;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 
     public String getNombres() {
         return nombres;

@@ -1,6 +1,9 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table
@@ -10,7 +13,10 @@ public class Credenciales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcredenciales;
 
+    @Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
     private String correo;
+    @NotBlank(message = "Complete sus datos")
+    @Size(min=8, message = "Ingrese 8 caracteres")
     private String contrasenia;
 
     public int getIdcredenciales() {

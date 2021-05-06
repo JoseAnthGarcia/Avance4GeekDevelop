@@ -10,6 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.Date;
+
 
 @Controller
 @RequestMapping("/cliente")
@@ -18,30 +22,30 @@ public class ClienteController {
     @Autowired
     ClienteRepository clienteRepository;
     @GetMapping("/login")
-    public String nuevoEmployeeForm() {
+    public String loginCliente() {
         return "Cliente/login";
     }
 
     @GetMapping("/nuevo")
     public String nuevoEmployeeForm(@ModelAttribute("cliente") Cliente cliente, Model model) {
-        return "Cliente/registroCliente";
+        return "Cliente/registro";
     }
 
-    @PostMapping("/guardar")
-    public String guardarNuevoEmployee(@ModelAttribute("cliente") Cliente cliente, BindingResult bindingResult
+    @PostMapping("/save")
+    public String guardarNuevoEmployee(@ModelAttribute("cliente") @Valid Cliente cliente, BindingResult bindingResult
                                     , Model model, RedirectAttributes attr) {
-        //Usuario cli2=cliente;
 
-        //if(bindingResult.hasErrors()){
-       //     return "Cliente/registro";
 
-       // }else{
-            cliente.setRol("cliente");
+        if(bindingResult.hasErrors()){
+            return "Cliente/registro";
+       }else{
+            cliente.getCredencial().setIdcredenciales(1);
+            cliente.setRol("CLIENTE");
+            cliente.setFecharegistro(LocalDate.now());
             clienteRepository.save(cliente);
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
             return "redirect:/cliente/login";
-
-       // }
+       }
 
 
     }

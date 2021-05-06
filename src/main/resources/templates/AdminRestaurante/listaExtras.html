@@ -202,7 +202,7 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form method="post" th:action="@{/extra/textSearch}">
+                        <form method="get" th:action="@{/extra/lista}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
@@ -215,10 +215,10 @@
                                 <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
-                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./5.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S./5.00 hasta S./10.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
+                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./15.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S./15.00 hasta S./35.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S./35.00 hasta S./60.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S./60.00 a más</option>
                                     </select>
                                 </div>
 
@@ -269,13 +269,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="extra,v :${listaExtra}">
-                                                <td th:text="${extra.getIdextra()}">00001</td>
+                                            <tr th:each="extra,v :${listaExtras}">
+                                                <td th:text="${extra.getIdExtra()}">00001</td>
                                                 <td th:text="${extra.getNombre()}">Inca Kola 500 ml</td>
-                                                <td th:text="${extra.getPreciounitario()}">S/. 15.00</td>
+                                                <td th:text="${extra.getPrecioUnitario()}">S/. 15.00</td>
                                                 <td >
                                                     <a style="color: #dce3f9"
-                                                       class="btn btn-warning btn-circle align" th:href="${'/extra/editar?id='+${extra.getIdextra()}}">
+                                                       class="btn btn-warning btn-circle align" th:href="@{'/extra/editar?id='+${extra.getIdExtra()}}">
                                                         <i class="fas fa-pen"></i></a></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             href="#lModal1" data-target="#modalEliminar" class="btn btn-danger btn-circle align">
@@ -293,7 +293,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <a th:href="@{'/extra/borrar?id='+${extra.getIdextra()}}" class="btn btn-primary">Sí</a>
+                                                                    <a th:href="@{'/extra/borrar?id='+${extra.getIdExtra()}}" class="btn btn-primary">Sí</a>
                                                                     <a class="btn" type="button"
                                                                        data-dismiss="modal">
                                                                         No

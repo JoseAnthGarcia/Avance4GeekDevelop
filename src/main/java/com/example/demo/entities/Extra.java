@@ -18,11 +18,7 @@ public class Extra {
     private String nombre;
 
 
-    //TODO agregar a la BD
-    @Column(nullable = false)
-    @Size(max = 256, message = "Ingrese como máximo 45 caractéres")
-    @NotBlank(message = "El nombre del extra no puede estar vacío")
-    private String descripcion;
+
 
     //@ManyToOne
     //@JoinColumn(name = "idcategoriaExtra")
@@ -34,10 +30,18 @@ public class Extra {
     @Max(value = 19 , message = "No puede ingresar más de 50 soles")
     @Min(value = 2, message = "No puede ingresar menos de 1 sol")
     @NotNull(message = "Ingrese un número entero")
-    private int preciounitario;
+    private double preciounitario;
+
+    public double getPreciounitario() {
+        return preciounitario;
+    }
+
+    public void setPreciounitario(double preciounitario) {
+        this.preciounitario = preciounitario;
+    }
 
     @Column(nullable = false)
-    private boolean disponible;
+    private int disponible;
 
    // @ManyToOne
    // @JoinColumn(name="idcategoria_extra")
@@ -61,13 +65,8 @@ public class Extra {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+
 
   //  public CategoriaExtra getCategoriaExtra() {
   //      return categoriaExtra;
@@ -77,19 +76,12 @@ public class Extra {
      //   this.categoriaExtra = categoriaExtra;
    // }
 
-    public int getPreciounitario() {
-        return preciounitario;
-    }
 
-    public void setPreciounitario(int preciounitario) {
-        this.preciounitario = preciounitario;
-    }
-
-    public boolean isDisponible() {
+    public int getDisponible() {
         return disponible;
     }
 
-    public void setDisponible(boolean disponible) {
+    public void setDisponible(int disponible) {
         this.disponible = disponible;
     }
 }

@@ -3,51 +3,34 @@ package com.example.demo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.List;
 
+@Entity
 @Table(name="usuario")
+
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
-
     @Column(nullable = false)
     private String rol;
-
     private String estado;
-
     @Column(nullable = false)
+    //@NotBlank(message = "Complete sus datos")
+   // @Pattern(regexp = "[^@]+[^\\.]+\\..+",message = "Solo Ingrese letras")
     private String nombres;
-
     @Column(nullable = false)
+    //@NotBlank(message = "Complete sus datos")
     private String apellidos;
-
     @Column(nullable = false)
     private String sexo;
-
     @Column(nullable = false, unique = true)
+    //@NotBlank(message = "Complete sus datos")
     private String telefono;
-
     @Column(unique = true)
+    //@NotBlank(message = "Complete sus datos")
+    //@Pattern(regexp = "[^[a-zA-Z0-9.\\-\\/+=@_ ]*$]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
-    @Column(name="fechaNacimiento",nullable = false)
-    private String fechanacimiento;
-
-    private byte[] foto;
-
-    /*@OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;
-
-
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
-    private List<Direccion> direcciones;
-
-    //borrar
-    @OneToMany(mappedBy = "cliente")
-    private List<Pedido> listaPedidosPorUsuario;
-*/
     public int getIdusuario() {
         return idusuario;
     }
@@ -111,44 +94,4 @@ public class Cliente {
     public void setDni(String dni) {
         this.dni = dni;
     }
-
-    public String getFechanacimiento() {
-        return fechanacimiento;
-    }
-
-    public void setFechanacimiento(String fechanacimiento) {
-        this.fechanacimiento = fechanacimiento;
-    }
-
-    public byte[] getFoto() {
-        return foto;
-    }
-
-    public void setFoto(byte[] foto) {
-        this.foto = foto;
-    }
-/*
-    public Credenciales getCredencial() {
-        return credencial;
-    }
-
-    public void setCredencial(Credenciales credencial) {
-        this.credencial = credencial;
-    }
-
-    public List<Direccion> getDirecciones() {
-        return direcciones;
-    }
-
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
-    }
-
-    public List<Pedido> getListaPedidosPorUsuario() {
-        return listaPedidosPorUsuario;
-    }
-
-    public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) {
-        this.listaPedidosPorUsuario = listaPedidosPorUsuario;
-    }*/
 }

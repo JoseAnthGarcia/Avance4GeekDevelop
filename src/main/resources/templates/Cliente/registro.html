@@ -73,13 +73,15 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user" method="post" th:action="@{/cliente/guardar}" th:object="${usuario}">
+                <form class="user" th:action="@{/cliente/save}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>
                             <input type="text" class="form-control border-secondary"
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
+                         <!--   <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                                 th:errors="*{nombres}"></div>-->
                         </div>
 
 
@@ -88,6 +90,8 @@
                             <input type="text" class="form-control border-secondary"
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
+                          <!--  <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                                 th:errors="*{apellidos}"></div> -->
                         </div>
                     </div>
                     <!--div class="form-group row">
@@ -116,6 +120,8 @@
                             <label style="color: black">Teléfono</label>
                             <input type="number" class="form-control border-secondary" th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
+                            <!-- <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                                 th:errors="*{telefono}"></div> -->
                         </div>
                     </div>
                     <div class="form-group row">
@@ -123,8 +129,10 @@
                             <label style="color: black">DNI</label>
                             <input type="number" class="form-control border-secondary" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
+                           <!--  <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                                 th:errors="*{dni}"></div>-->
                         </div>
-
+<!--
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">Foto de Perfil</label>
                             <div class="custom-file">
@@ -132,19 +140,23 @@
                                 <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
                             </div>
                         </div>
+                         -->
 
                     </div>
+                    <!--
                     <div class="form-group row">
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control border-secondary"
-                                   id="direccion" placeholder="Dirección">
+                                   id="direccion" placeholder="Dirección" th:field="*{direcciones}">
+
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                         </div>
                     </div>
+                    -->
 
-
+<!--
             <div class="form-group row">
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Contraseña</label>
@@ -162,13 +174,15 @@
                     <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp" width="350" height="150">
                 </div>
             </div>
+                    -->
             <div class="form-group row">
 
             </div>
             <hr>
-            <button type="submit" class="btn btn-primary btn-user btn-block " >
-                Registrar
-            </button>
+                    <button class="btn btn-primary btn-user btn-block"
+                            type="submit">
+                        Registrar
+                    </button>
             </form>
 
 

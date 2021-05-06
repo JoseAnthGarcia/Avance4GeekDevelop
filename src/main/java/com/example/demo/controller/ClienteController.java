@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Usuario;
-import com.example.demo.repositories.UsuarioRepository;
+
+import com.example.demo.entities.Cliente;
+import com.example.demo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,39 +10,38 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
-
 
 @Controller
 @RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    ClienteRepository clienteRepository;
     @GetMapping("/login")
     public String nuevoEmployeeForm() {
         return "Cliente/login";
     }
 
     @GetMapping("/nuevo")
-    public String nuevoEmployeeForm(@ModelAttribute("cliente") Usuario cliente, Model model) {
-        return "Cliente/registro";
+    public String nuevoEmployeeForm(@ModelAttribute("cliente") Cliente cliente, Model model) {
+        return "Cliente/registroCliente";
     }
 
-    @PostMapping("/save")
-    public String guardarNuevoEmployee(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult
+    @PostMapping("/guardar")
+    public String guardarNuevoEmployee(@ModelAttribute("cliente") Cliente cliente, BindingResult bindingResult
                                     , Model model, RedirectAttributes attr) {
-        Usuario cli2=cliente;
-        System.out.println(cli2.getNombres());
-        if(bindingResult.hasErrors()){
-            return "Cliente/registro";
+        //Usuario cli2=cliente;
 
-        }else{
-            usuarioRepository.save(cliente);
+        //if(bindingResult.hasErrors()){
+       //     return "Cliente/registro";
+
+       // }else{
+            cliente.setRol("cliente");
+            clienteRepository.save(cliente);
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
             return "redirect:/cliente/login";
 
-        }
+       // }
 
 
     }

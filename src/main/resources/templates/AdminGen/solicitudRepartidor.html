@@ -210,53 +210,66 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form th:action="@{/admin/searchSoli}">
+                <form th:action="@{/admin/buscadorSoli}" method="post">
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
                             <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Búsqueda por usuario">
+                                   name="nombreUsuario"
+                                   placeholder="Búsqueda por usuario"
+                                   th:if="${nombreUsuario1 == null || nombreUsuario1.equals('')}">
+                            <input type="text" class="form-control"
+                                   name="nombreUsuario"
+                                   th:unless="${nombreUsuario1 == null || nombreUsuario1.equals('')}"
+                                   th:value="${nombreUsuario1}">
                         </div>
-                        <div class="col-sm-2 mb-1 ">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Movilidad</option>
-                                <option value="Pendiente">Moto</option>
-                                <option value="Pendiente">Bicicleta</option>
+                        <div class="col-sm-2 mb-1 " th:if="${tipoMovilidad1==null}">
+                            <select class="form-control" name="tipoMovilidad">
+                                <option value="-1" disabled selected>Movilidad</option>
+                                <option th:each="tipoMovilidad : ${listaTipoMovilidad}"
+                                        th:value="${tipoMovilidad.idtipomovilidad}"
+                                        th:text="${tipoMovilidad.tipo}">Moto</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-1 " th:unless="${tipoMovilidad1==null}">
+                            <select class="form-control" name="tipoMovilidad">
+                                <option th:each="tipoMovilidad : ${listaTipoMovilidad}"
+                                        th:value="${tipoMovilidad.idtipomovilidad}"
+                                        th:text="${tipoMovilidad.tipo}"
+                                        th:selected="${tipoMovilidad.idtipomovilidad==tipoMovilidad1}">Moto</option>
                             </select>
                         </div>
 
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Fecha de Registro</option>
-                                <option value="">Última Hora</option>
-                                <option value="">Hoy</option>
-                                <option value="">Esta semana</option>
-                                <option value="">Este mes</option>
-                                <option value="">Este año</option>
+                            <select class="form-control" name="fechaRegistro" th:if="${fechaRegistro1==null}">
+                                <option value="" disabled selected>Fecha de Registro</option>
+                                <!--option value="hora">Última Hora</option-->
+                                <option value="1">Hoy</option>
+                                <option value="7">Esta semana</option>
+                                <option value="30">Este mes</option>
+                                <option value="365">Este año</option>
+                            </select>
+                            <select class="form-control" name="fechaRegistro" th:unless="${fechaRegistro1==null}">
+                                <option value="1"
+                                        th:selected="${fechaRegistro1 == 1}">Hoy</option>
+                                <option value="7"
+                                        th:selected="${fechaRegistro1 == 7}">Esta semana</option>
+                                <option value="30"
+                                        th:selected="${fechaRegistro1 == 30}">Este mes</option>
+                                <option value="365"
+                                        th:selected="${fechaRegistro1 == 365}">Este año</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Estado</option>
-                                <option value="">Aceptado</option>
-                                <option value="">Rechazado</option>
-                                <option value="">Pendiente</option>
 
-
-                            </select>
-                        </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/solicitudes?tipo=repartidor'}">Quitar filtros</a>
                         </div>
                     </div>
-
-
                 </form>
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
@@ -328,7 +341,7 @@
                                         </span>
                                                             <span class="text">Aceptar</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-danger btn-icon-split">
+                                                        <a th:href="@{'/admin/rechazarSolicitud?id='+${repartidor.idusuario}}" class="btn btn-danger btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-times"></i>
                                         </span>

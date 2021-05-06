@@ -18,13 +18,12 @@ public class Pedido {
     @JoinColumn(name = "idcliente")
     private Usuario cliente;
 
-    /*private int idrepartidor;
-    private int idrestaurante;
+    /*
     private int idcupon;
     private int idmetodopago;
 */
     @Column(name = "preciototal", nullable = false)
-    private BigDecimal preciototal;
+    private double preciototal;
 
     //TODO definir
     private String estado;
@@ -32,9 +31,33 @@ public class Pedido {
     private boolean mismodistrito;
     private LocalDateTime fechapedido;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "idvaloracion")
     private Valoracion valoracion;
+
+    @ManyToOne
+    @JoinColumn(name = "idrepartidor")
+    private Usuario repartidor;
+
+    @ManyToOne
+    @JoinColumn(name = "idrestaurante")
+    private Restaurante restaurante;
+
+    public Usuario getRepartidor() {
+        return repartidor;
+    }
+
+    public void setRepartidor(Usuario repartidor) {
+        this.repartidor = repartidor;
+    }
+
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
 
     public LocalDateTime getFechapedido() { return fechapedido; }
 
@@ -56,43 +79,11 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-  /*  public int getIdrepartidor() {
-        return idrepartidor;
-    }
-
-    public void setIdrepartidor(int idrepartidor) {
-        this.idrepartidor = idrepartidor;
-    }
-
-    public int getIdrestaurante() {
-        return idrestaurante;
-    }
-
-    public void setIdrestaurante(int idrestaurante) {
-        this.idrestaurante = idrestaurante;
-    }
-*/
-   /* public int getIdcupon() {
-        return idcupon;
-    }
-
-    public void setIdcupon(int idcupon) {
-        this.idcupon = idcupon;
-    }
-*/
- /*   public int getIdmetodopago() {
-        return idmetodopago;
-    }
-
-    public void setIdmetodopago(int idmetodopago) {
-        this.idmetodopago = idmetodopago;
-    }
-*/
-    public BigDecimal getPreciototal() {
+    public double getPreciototal() {
         return preciototal;
     }
 
-    public void setPreciototal(BigDecimal preciototal) {
+    public void setPreciototal(double preciototal) {
         this.preciototal = preciototal;
     }
 

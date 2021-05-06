@@ -22,7 +22,7 @@ public class Valoracion {
     @Column(name = "valoracionrepartidor")
     private int valoracionrepartidor;
 
-    @Column(name = "comentariorestaurante", insertable = false, updatable = false)
+    @Column(name = "comentariorepartidor")
     private String comentariorepartidor;
 
     public int getIdvaloracion() {

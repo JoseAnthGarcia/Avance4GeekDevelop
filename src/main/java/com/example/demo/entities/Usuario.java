@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario {
-
+//tu misma eres mela :3
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;

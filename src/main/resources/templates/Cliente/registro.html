@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -57,19 +57,13 @@
                     </button>
                 </form>
 
-
-
                 <!-- Topbar Navbar -->
-
 
                 <div class="topbar-divider d-none d-sm-block"></div>
 
-
                 </ul>
-
             </nav>
             <!-- End of Topbar -->
-
             <!-- Begin Page Content -->
             <div class="container">
 
@@ -79,49 +73,50 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user">
-
+                <form class="user" th:action="@{/cliente/guardar}"  th:object="${usuario}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-
                             <input type="text" class="form-control"
-                                   id="exampleNombre"
-                                   placeholder="Nombres">
+                                   id="exampleNombre"  th:field="*{nombres}"
+                                   placeholder="Nombres"  >
                         </div>
+
+
                         <div class="col-sm-6 mb-2">
                             <input type="text" class="form-control"
-                                   id="exampleApellido"
+                                   id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <input type="email" class="form-control"
-                                   id="exampleCorreo"
+                                   id="exampleCorreo"  th:field="*{}"
                                    placeholder="Correo electrónico">
                         </div>
                         <div class="col-sm-6 mb-2">
                             <input placeholder="Fecha de nacimiento" class="form-control" type="text"
+                                   th:field="*{fechanacimiento}"
                                    onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-                            <select class="form-control">
-                                <option value="" disabled selected>Sexo</option>
+                            <select class="form-select" th:field="*{sexo}">
+                                <option value="" disabled selected >Sexo</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control" th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control"  th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
                         </div>
 

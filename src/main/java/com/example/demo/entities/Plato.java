@@ -34,17 +34,11 @@ public class Plato {
     @Column(name="disponible", nullable = false)
     private boolean disponible;
     @ManyToMany(mappedBy ="categoriaextra_has_plato")
-    private List<CategoriaExtra>  categoriaextra;
 
 
-
-    public List<CategoriaExtra> getCategoriaextra() {
-        return categoriaextra;
-    }
-
-    public void setCategoriaextra(List<CategoriaExtra> categoriaextra) {
-        this.categoriaextra = categoriaextra;
-    }
+//    public void setCategoriaextra(List<CategoriaExtra> categoriaextra) {
+  //      this.categoriaextra = categoriaextra;
+   // }
 /*
     @ManyToMany
     @JoinColumn(name="categoriaextra_has_plato",

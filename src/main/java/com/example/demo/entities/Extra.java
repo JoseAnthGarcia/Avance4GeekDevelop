@@ -24,9 +24,9 @@ public class Extra {
     @NotBlank(message = "El nombre del extra no puede estar vacío")
     private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "idcategoriaExtra")
-    private CategoriaExtra categoriaExtra;
+    //@ManyToOne
+    //@JoinColumn(name = "idcategoriaExtra")
+   // private CategoriaExtra categoriaExtra;
 
     //Considerando un precio máximo de extra de 200 - superior a esto se considera String <- Se puede cambiar
     @Column(nullable = false, name = "precioUnitario")
@@ -39,17 +39,11 @@ public class Extra {
     @Column(nullable = false)
     private boolean disponible;
 
-    @ManyToOne
-    @JoinColumn(name="idcategoria_extra")
-    private CategoriaExtra categorias;
+   // @ManyToOne
+   // @JoinColumn(name="idcategoria_extra")
+    //private CategoriaExtra categorias;
 
-    public CategoriaExtra getCategorias() {
-        return categorias;
-    }
 
-    public void setCategorias(CategoriaExtra categorias) {
-        this.categorias = categorias;
-    }
 
     public int getIdextra() {
         return idextra;
@@ -75,13 +69,13 @@ public class Extra {
         this.descripcion = descripcion;
     }
 
-    public CategoriaExtra getCategoriaExtra() {
-        return categoriaExtra;
-    }
+  //  public CategoriaExtra getCategoriaExtra() {
+  //      return categoriaExtra;
+   // }
 
-    public void setCategoriaExtra(CategoriaExtra categoriaExtra) {
-        this.categoriaExtra = categoriaExtra;
-    }
+    //public void setCategoriaExtra(CategoriaExtra categoriaExtra) {
+     //   this.categoriaExtra = categoriaExtra;
+   // }
 
     public int getPreciounitario() {
         return preciounitario;

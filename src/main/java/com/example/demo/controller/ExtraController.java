@@ -18,12 +18,13 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/extra")
 public class ExtraController {
+
     @Autowired
     ExtraRepository extraRepository;
 
-    @GetMapping(value = {"/lista", ""})
+    @GetMapping(value = {"/lista", "/"})
     public String listarCupones(Model model) {
-        model.addAttribute("listaExtra", extraRepository.findAll());
+       // model.addAttribute("listaExtra", extraRepository.findAll());
         return "AdminRestaurante/listaExtras";
     }
 

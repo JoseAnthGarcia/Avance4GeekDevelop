@@ -39,7 +39,7 @@ public class UsuarioController {
     public String guardarRepartidor(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult,
                                     RedirectAttributes attr, Model model, @RequestAttribute("contrasenia1") String contrasenia1, @RequestAttribute("contrasenia2") String contrasenia2) {
 
-        if (bindingResult.hasErrors() ) {
+        if (bindingResult.hasErrors()) {
 
 
             model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
@@ -58,8 +58,6 @@ public class UsuarioController {
             usuarioRepository.save(usuario);
             return "redirect:/x";
         }
-
-
 
 
     }

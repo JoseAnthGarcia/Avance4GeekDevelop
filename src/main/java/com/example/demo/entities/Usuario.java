@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario {
-
+//tu misma eres mela :3
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
@@ -23,6 +23,7 @@ public class Usuario {
     private String telefono;
     @Column(unique = true)
     private String dni;
+
     @Column(nullable = false)
     private String fechanacimiento;
     private byte[] foto;

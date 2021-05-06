@@ -35,7 +35,7 @@ public class UsuarioController {
 
         return "/Repartidor/registro";
     }
-    @PostMapping("/save")
+    @PostMapping("/guardarRepartidor")
     public String guardarRepartidor(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult,
                                     RedirectAttributes attr, Model model, @RequestAttribute("contrasenia1") String contrasenia1, @RequestAttribute("contrasenia2") String contrasenia2) {
 

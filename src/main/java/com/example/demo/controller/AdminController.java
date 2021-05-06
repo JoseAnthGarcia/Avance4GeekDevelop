@@ -74,9 +74,9 @@ public class AdminController {
 
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         if(tipoMovilidad1==null){
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1, fechaRegistro1*-1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1));
         }else{
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1, tipoMovilidad1));
         }
 
         System.out.println("------------");

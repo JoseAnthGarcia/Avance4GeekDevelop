@@ -1,7 +1,9 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -16,23 +18,33 @@ public class Usuario {
     private String rol;
     private String estado;
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     @Pattern(regexp = "[^@]+[^\\.]+\\..+",message = "Solo Ingrese letras")
     private String nombres;
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     private String apellidos;
     @Column(nullable = false)
     private String sexo;
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Complete sus datos")
     private String telefono;
     @Column(unique = true)
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[^[a-zA-Z0-9.\\-\\/+=@_ ]*$]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     private String fechanacimiento;
+    @NotBlank(message = "Complete sus datos")
     private byte[] foto;
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     private String fecharegistro;
+    @NotBlank(message = "Complete sus datos")
     private String fechaadmitido;
+    @NotBlank(message = "Complete sus datos")
     private String ultimoingreso;
 
     @OneToOne

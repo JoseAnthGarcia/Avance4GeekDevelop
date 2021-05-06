@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entities.Pedido;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.MovilidadRepository;
 import com.example.demo.repositories.TipoMovilidadRepository;
@@ -16,7 +17,6 @@ import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -142,9 +142,15 @@ public class AdminController {
                                  Model model) {
 
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        double totalIngresos = 0.0;
+
 
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
+
+            for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
+                totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
+            }
 
             switch (usuario.getRol()) {
                 case "administrador":
@@ -154,7 +160,9 @@ public class AdminController {
 
                    // return "/AdminGen/visualizarCliente";
                 case "cliente":
+                    //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
+                    model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarCliente";
                 case "administradorRestaurante":
 

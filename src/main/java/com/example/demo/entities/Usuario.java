@@ -42,6 +42,7 @@ public class Usuario {
     @ManyToMany(mappedBy = "usuarioPorDireccion")
     private List<Direccion> direcciones;
 
+    //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
 

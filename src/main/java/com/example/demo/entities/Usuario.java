@@ -1,12 +1,14 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
 @Table(name="usuario")
 public class Usuario {
 //tu misma eres mela :3
+    //nel mano
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
@@ -14,6 +16,7 @@ public class Usuario {
     private String rol;
     private String estado;
     @Column(nullable = false)
+    @Pattern(regexp = "[^@]+[^\\.]+\\..+",message = "Solo Ingrese letras")
     private String nombres;
     @Column(nullable = false)
     private String apellidos;

@@ -18,13 +18,13 @@ public class ClienteController {
     @Autowired
     ClienteRepository clienteRepository;
     @GetMapping("/login")
-    public String nuevoEmployeeForm() {
+    public String login() {
         return "Cliente/login";
     }
 
     @GetMapping("/nuevo")
     public String nuevoEmployeeForm(@ModelAttribute("cliente") Cliente cliente, Model model) {
-        return "Cliente/registroCliente";
+        return "Cliente/registro";
     }
 
     @PostMapping("/guardar")

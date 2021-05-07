@@ -73,7 +73,7 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user" th:action="@{/cliente/save}" th:object="${cliente}">
+                <form class="user" method="post" th:action="@{/cliente/guardar}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>

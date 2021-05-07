@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Plato;
 import com.example.demo.repositories.PlatoRepository;
+import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,12 +23,12 @@ public class PlatoController {
     @Autowired
     PlatoRepository platoRepository;
 
+    @Autowired
+    PlatoService platoService;
+
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
-        model.addAttribute("listaPlatos", platoRepository.findByDisponible(true));
-        model.addAttribute("textoD", 1);
-        model.addAttribute("textoP", 0);
-        return "/AdminRestaurante/listaPlatos";
+        return findPaginated(1, model);
     }
     @PostMapping("/textSearch")
     public String buscardor(@RequestParam("textBuscador") String textBuscador,
@@ -40,6 +43,26 @@ public class PlatoController {
         model.addAttribute("textoP", inputPrecio);
 
         return "/AdminRestaurante/listaPlatos";
+    }
+
+    @GetMapping("/page")
+    public String findPaginated(@RequestParam("pageNo") int pageNo, Model model){
+
+        int pageSize = 5;
+
+        Page<Plato> page = platoService.findPaginated(pageNo, pageSize);
+        List<Plato> listaPlatos= page.getContent();
+
+        model.addAttribute("textoD", 1);
+        model.addAttribute("textoP", 0);
+        model.addAttribute("currentPage",pageNo);
+        System.out.println(pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaPlatos", listaPlatos);
+
+        return "AdminRestaurante/listaPlatos";
+
     }
 
     @GetMapping("/nuevo")
@@ -85,6 +108,8 @@ public class PlatoController {
         }
 
     }
+
+
 
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,

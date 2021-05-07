@@ -2,6 +2,8 @@ package com.example.demo.repositories;
 
 import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.entities.Extra;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,7 +20,7 @@ public interface ExtraRepository extends JpaRepository<Extra, Integer> {
             "inner join categoriaextra_has_plato cep on cep.idcategoriaextra=ce.idcategoriaextra\n" +
             "inner join plato p on p.idplato=cep.idplato\n" +
             "inner join restaurante re on p.idrestaurante=re.idrestaurante) \n" +
-            "where e.nombre like %?1% and e.disponible=1 and re.idrestaurante=?2 and ce.idcategoriaextra=?3 ", nativeQuery = true)
+            "where e.nombre like %% and e.disponible=1 and re.idrestaurante=?2 and ce.idcategoriaextra=?3", nativeQuery = true)
     List<ExtraDTO> buscarExtraPornombre(String nombre, int idRestaurante, int categoria);
 
     @Query(value = "SELECT DISTINCT e.idextra, e.nombre, e.precioUnitario FROM (extra e \n" +

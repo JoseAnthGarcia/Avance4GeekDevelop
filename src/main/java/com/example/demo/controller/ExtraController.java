@@ -1,8 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Cupon;
+import com.example.demo.entities.Extra;
 import com.example.demo.repositories.ExtraRepository;
+import com.example.demo.service.ExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Controller
@@ -18,13 +25,17 @@ import java.math.BigDecimal;
 public class ExtraController {
     int idrestaurante = 1;
     //ELIMINAR ESTO
-    int categoria =1;
+    int categoria = 1;
     @Autowired
     ExtraRepository extraRepository;
 
+    @Autowired
+    ExtraService extraService;
+
+
     @GetMapping(value = {"/lista", ""})
-    public String listarExtra(Model model, @RequestParam(value = "textBuscador",required = false) String nombre
-            , @RequestParam(value = "textPrecio",required = false) String rango) {
+    public String listarExtra(Model model, @RequestParam(value = "textBuscador", required = false) String nombre
+            , @RequestParam(value = "textPrecio", required = false) String rango) {
         int precios = 0;
         System.out.println(nombre);
         try {
@@ -37,68 +48,87 @@ public class ExtraController {
         double precio1;
         double precio2;
         if (nombre != null & precios == 0) {
-            model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante,categoria));
-        } else if(nombre == null & precios != 0) {
+            model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
+        } else if (nombre == null & precios != 0) {
             switch (precios) {
                 case 1:
-                    precio1= 0.0;
-                    precio2= 15.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPorPrecio(precio1,precio2,idrestaurante,categoria));
+                    precio1 = 0.0;
+                    precio2 = 15.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
                     break;
                 case 2:
-                    precio1= 15.0;
-                    precio2= 35.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPorPrecio(precio1,precio2,idrestaurante,categoria));
+                    precio1 = 15.0;
+                    precio2 = 35.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
                     break;
                 case 3:
-                    precio1= 35.0;
-                    precio2= 60.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPorPrecio(precio1,precio2,idrestaurante,categoria));
+                    precio1 = 35.0;
+                    precio2 = 60.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
                     break;
                 case 4:
-                    precio1= 60.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPorPrecioAMAS(precio1,idrestaurante,categoria));
+                    precio1 = 60.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecioAMAS(precio1, idrestaurante, categoria));
                     break;
                 default:
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante,categoria));
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
                     break;
             }
-        }else if (nombre != null & precios != 0){
+        } else if (nombre != null & precios != 0) {
             switch (precios) {
                 case 1:
-                    precio1= 0.0;
-                    precio2= 15.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPornombreyPrecio(nombre,precio1,precio2,idrestaurante,categoria));
+                    precio1 = 0.0;
+                    precio2 = 15.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
                     break;
                 case 2:
-                    precio1= 15.0;
-                    precio2= 35.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPornombreyPrecio(nombre,precio1,precio2,idrestaurante,categoria));
+                    precio1 = 15.0;
+                    precio2 = 35.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
                     break;
                 case 3:
-                    precio1= 35.0;
-                    precio2= 60.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPornombreyPrecio(nombre,precio1,precio2,idrestaurante,categoria));
+                    precio1 = 35.0;
+                    precio2 = 60.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
                     break;
                 case 4:
-                    precio1= 60.0;
-                    model.addAttribute("listaExtras",extraRepository.buscarExtraPornombreyPrecioAMAS(nombre,precio1,idrestaurante,categoria));
+                    precio1 = 60.0;
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecioAMAS(nombre, precio1, idrestaurante, categoria));
                     break;
                 default:
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante,categoria));
+                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
                     break;
             }
-        }else if (nombre==null & precios==0){
-            model.addAttribute("listaExtras", extraRepository.lista(idrestaurante,categoria));
+        } else if (nombre == null & precios == 0) {
+            model.addAttribute("listaExtras", extraRepository.lista(idrestaurante, categoria));
         }
         model.addAttribute("texto", nombre);
         model.addAttribute("textoP", precios);
         return "AdminRestaurante/listaExtras";
     }
 
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+
+        int pageSize = 10;
+
+        Page<Extra> page = extraService.findPaginated(pageNo, pageSize);
+        List<Extra> listExtras = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listExtras", listExtras);
+
+        return "AdminRestaurante/listaExtras";
+
+    }
+
+
     @GetMapping("/nuevo")
     public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon) {
-        return "AdminRestaurante/nuevoCupon";
+        return "AdminRestaurante/nuevoExtra";
     }
 
     @PostMapping("/guardar")

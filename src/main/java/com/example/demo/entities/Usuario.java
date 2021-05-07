@@ -27,7 +27,6 @@ public class Usuario {
     private String telefono;
     @Column(unique = true)
     private String dni;
-
     @Column(nullable = false)
     private String fechanacimiento;
 

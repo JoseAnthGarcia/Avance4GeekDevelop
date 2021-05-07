@@ -296,8 +296,10 @@
 
                                                 <tr>
                                                     <td th:text="|Fecha de Nacimiento: ${cliente.fechanacimiento}|"></td>
-                                                    <td th:each="direccion : ${cliente.direcciones}">
-                                                        <h6 th:text="${direccion.ubicacion} + ' | '"></h6>
+                                                    <td >
+                                                        <h6>Direccion:</h6>
+                                                        <div th:each="direccion : ${cliente.direcciones}" th:text="${direccion.ubicacion} ">
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -411,14 +413,13 @@
                                     <div th:each="pedidos : ${cliente.getListaPedidosPorUsuario()}">
                                         <tr>
                                             <td style="width: 1300px;">
-                                                <h4 style="color: black"
-                                                    th:text="|REPARTIDOR: ${pedidos.repartidor.nombres}|"></h4>
-                                                <p th:text="${pedidos.valoracion.comentariorepartidor}"></p>
-                                            </td>
-                                            <td style="width: 300px;" align="center">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-4 mb-2 mb-sm-0">
+                                                        <div style="color: black" align="left"
+                                                            th:text="|REPARTIDOR: ${pedidos.repartidor.nombres}|"></div>
 
-                                                <div class="col-sm-auto m-5">
-                                                    <div class="row ">
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
                                                         <div th:switch="${pedidos.valoracion.valoracionrepartidor}">
                                                             <div th:case="1">
                                                                 <i class="fas fa-star" style="color: gold"></i>
@@ -456,21 +457,29 @@
                                                                 <i class="fas fa-star" style="color: gold"></i>
                                                             </div>
                                                         </div>
+
                                                     </div>
-                                                    <div class="row ">
-                                                        <h7 th:text="${#temporals.format(pedidos.fechapedido, 'dd-MM-yyyy HH:mm')}"></h7>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0">
+                                                        <div   align="right"
+                                                             th:text="${#temporals.format(pedidos.fechapedido, 'dd-MM-yyyy HH:mm')}"></div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12 mb-2 mb-sm-0" align="left">
+                                                        <p th:text="${pedidos.valoracion.comentariorepartidor}"></p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style="width: 1300px;">
-                                                <h4 style="color: black"
-                                                    th:text="|RESTAURANTE: ${pedidos.restaurante.nombre}|"></h4>
-                                                <p th:text="${pedidos.valoracion.comentariorestaurante}"></p>
-                                            </td>
-                                            <td style="width: 300px;" align="center">
 
-                                                <div class="col-sm-auto m-5">
-                                                    <div class="row ">
+                                            <td style="width: 1300px;">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
+                                                        <div style="color: black"
+                                                             th:text="|RESTAURANTE: ${pedidos.restaurante.nombre}|"></div>
+
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
                                                         <div th:switch="${pedidos.valoracion.valoracionrestaurante}">
                                                             <div th:case="1">
                                                                 <i class="fas fa-star" style="color: gold"></i>
@@ -508,12 +517,22 @@
                                                                 <i class="fas fa-star" style="color: gold"></i>
                                                             </div>
                                                         </div>
+
                                                     </div>
-                                                    <div class="row ">
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="right">
                                                         <h7 th:text="${#temporals.format(pedidos.fechapedido, 'dd-MM-yyyy HH:mm')}"></h7>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12 mb-2 mb-sm-0" align="left">
+                                                        <p th:text="${pedidos.valoracion.comentariorestaurante}"></p>
+                                                    </div>
+
+                                                </div>
+
+
                                             </td>
+
                                         </tr>
                                     </div>
 

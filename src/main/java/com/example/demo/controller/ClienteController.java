@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Usuario;
-import com.example.demo.repositories.UsuarioRepository;
+
+import com.example.demo.entities.Cliente;
+import com.example.demo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.Date;
 
 
 @Controller
@@ -17,31 +20,33 @@ import javax.validation.Valid;
 public class ClienteController {
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    ClienteRepository clienteRepository;
     @GetMapping("/login")
-    public String nuevoEmployeeForm() {
+    public String loginCliente() {
         return "Cliente/login";
     }
 
     @GetMapping("/nuevo")
-    public String nuevoEmployeeForm(@ModelAttribute("cliente") Usuario cliente, Model model) {
+    public String nuevoEmployeeForm(@ModelAttribute("cliente") Cliente cliente, Model model) {
         return "Cliente/registro";
     }
 
     @PostMapping("/save")
-    public String guardarNuevoEmployee(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult
+    public String guardarNuevoEmployee(@ModelAttribute("cliente") @Valid Cliente cliente, BindingResult bindingResult
                                     , Model model, RedirectAttributes attr) {
-        Usuario cli2=cliente;
-        System.out.println(cli2.getNombres());
+
+
         if(bindingResult.hasErrors()){
             return "Cliente/registro";
+       }else{
 
-        }else{
-            usuarioRepository.save(cliente);
+            cliente.setRol("CLIENTE");
+            cliente.setFecharegistro(LocalDate.now());
+
+            clienteRepository.save(cliente);
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
             return "redirect:/cliente/login";
-
-        }
+       }
 
 
     }

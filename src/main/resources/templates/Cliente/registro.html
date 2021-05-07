@@ -71,17 +71,19 @@
                     <i class="fas fa-chevron-circle-left"></i>
                     Volver
                 </a>
-                <h1 style="color: black">Registro</h1>
+                <h1 style="color: black">Regitro</h1>
                 <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user" th:action="@{/cliente/save}" th:object="${cliente}">
+                <form method="post"
+                      class="user" th:action="@{/cliente/save}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>
                             <input type="text" class="form-control border-secondary"
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
-                            <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
-                                 th:errors="*{nombres}"></div>
+                          <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                                 th:errors="*{nombres}"> </div>
+
                         </div>
 
 
@@ -94,18 +96,20 @@
                                  th:errors="*{apellidos}"></div>
                         </div>
                     </div>
-                    <!--div class="form-group row">
+                    <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-                            <input type="email" class="form-control"
-                                   id="exampleCorreo"  th:field="*{}"
+                            <input type="text" class="form-control"
+                                   id="exampleCorreo" th:field="*{credencial.correo}"
                                    placeholder="Correo electrónico">
-                        </div-->
-                    <!--div class="col-sm-6 mb-2">
-                        <input placeholder="Fecha de nacimiento" class="form-control" type="text"
-                               th:field="*{fechanacimiento}"
-                               onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
+                        </div>
+                    <div class="col-sm-6 mb-2">
+
+                        <input th:field="*{fechanacimiento}" type="text" class="form-control" placeholder="Fecha de nacimiento"
+                               onfocus="(this.type='date')" onblur="(this.type='text')"/>
+
+
                     </div>
-                </div-->
+                </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
@@ -132,7 +136,7 @@
                             <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
                         </div>
-
+<!--
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">Foto de Perfil</label>
                             <div class="custom-file">
@@ -140,25 +144,30 @@
                                 <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
                             </div>
                         </div>
+                         -->
 
                     </div>
+                    <!--
                     <div class="form-group row">
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control border-secondary"
-                                   id="direccion" placeholder="Dirección">
+                                   id="direccion" placeholder="Dirección" th:field="*{direcciones}">
+
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                         </div>
                     </div>
+                    -->
 
 
             <div class="form-group row">
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Contraseña</label>
-                    <input type="password" class="form-control border-secondary" id="inputPassword1"
+                    <input type="password" class="form-control border-secondary" id="inputPassword1" th:field="*{credencial.contrasenia}"
                            placeholder="La contraseña debe contar con al menos 8 caracteres.">
                 </div>
+                <!--
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Confirmar contraseña</label>
                     <input type="password" class="form-control  border-secondary" id="inputPassword2"
@@ -170,6 +179,7 @@
                     <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp" width="350" height="150">
                 </div>
             </div>
+                    -->
             <div class="form-group row">
 
             </div>
@@ -177,7 +187,9 @@
                     <button class="btn btn-primary btn-user btn-block"
                             type="submit">
                         Registrar
+
                     </button>
+            </div>
             </form>
 
 
@@ -249,21 +261,22 @@
     </div>
 </div>
 
-<script src="../../static/bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../../static/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../../static/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../../static/bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../../static/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../../static/bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+
 
 </body>
 

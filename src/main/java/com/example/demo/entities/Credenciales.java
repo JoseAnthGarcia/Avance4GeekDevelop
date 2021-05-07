@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table
+@Table(name = "credenciales")
 public class Credenciales {
 
     @Id

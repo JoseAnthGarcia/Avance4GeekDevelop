@@ -39,9 +39,10 @@ public class ClienteController {
         if(bindingResult.hasErrors()){
             return "Cliente/registro";
        }else{
-            cliente.getCredencial().setIdcredenciales(1);
+
             cliente.setRol("CLIENTE");
             cliente.setFecharegistro(LocalDate.now());
+
             clienteRepository.save(cliente);
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
             return "redirect:/cliente/login";

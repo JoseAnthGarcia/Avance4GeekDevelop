@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CredencialesRepository  extends JpaRepository<Credenciales,Integer> {
+
+
 }

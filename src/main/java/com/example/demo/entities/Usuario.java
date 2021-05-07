@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,20 +16,37 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
+
     @Column(nullable = false)
     private String rol;
+
     private String estado;
+
     @Column(nullable = false)
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    @NotBlank(message = "Complete sus datos")
     private String nombres;
+
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
+
     @Column(nullable = false)
     private String sexo;
+
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
+
     @Column(unique = true)
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
+
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String fechanacimiento;
 
     private byte[] foto;
@@ -47,6 +66,8 @@ public class Usuario {
     @ManyToMany(mappedBy = "usuarioPorDireccion")
     private List<Direccion> direcciones;
 
+    private String addresselegido;
+
     //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
@@ -54,6 +75,14 @@ public class Usuario {
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
+
+    public String getAddresselegido() {
+        return addresselegido;
+    }
+
+    public void setAddresselegido(String addresselegido) {
+        this.addresselegido = addresselegido;
+    }
 
     public Credenciales getCredencial() { return credencial; }
 

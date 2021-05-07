@@ -6,6 +6,7 @@ import com.example.demo.repositories.MovilidadRepository;
 import com.example.demo.repositories.TipoMovilidadRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,8 +32,6 @@ public class AdminController {
 
     @Autowired
     TipoMovilidadRepository tipoMovilidadRepository;
-
-
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
@@ -238,6 +237,5 @@ public class AdminController {
         }
 
     }
-
 
 }

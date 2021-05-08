@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Pedido;
+import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.MovilidadRepository;
+import com.example.demo.repositories.RolRepository;
 import com.example.demo.repositories.TipoMovilidadRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class AdminController {
     @Autowired
     TipoMovilidadRepository tipoMovilidadRepository;
 
+    @Autowired
+    RolRepository rolRepository;
+
 
 
     @GetMapping("/solicitudes")
@@ -42,14 +47,15 @@ public class AdminController {
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
-                return "";
+                return "1";
             case "adminRest":
+                Rol rol = new Rol();
                 model.addAttribute("listaAdminRestSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "administradorR"));
+                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
                 return "/AdminGen/solicitudAR";
             case "repartidor":
                 model.addAttribute("listaRepartidorSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc("pendiente", "repartidor"));
+                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
                 return "/AdminGen/solicitudRepartidor";
             default:
                 return "";
@@ -57,7 +63,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/buscadorSoli")
+    @PostMapping("/buscadorSR")
     public String aceptarSolitud(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                  @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
                                  @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
@@ -68,15 +74,15 @@ public class AdminController {
         model.addAttribute("fechaRegistro1", fechaRegistro1);
 
         if(fechaRegistro1==null){
-            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor();
+            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
         }
 
 
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         if(tipoMovilidad1==null){
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1));
         }else{
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1, tipoMovilidad1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1));
         }
 
         System.out.println("------------");
@@ -96,7 +102,7 @@ public class AdminController {
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado("ACTIVO");
+                usuario.setEstado(1);
                 //Fecha de registro:
                 Date date = new Date();
                 DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -121,7 +127,7 @@ public class AdminController {
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado("REHAZADO");
+                usuario.setEstado(3);
                 usuarioRepository.save(usuario);
                 return "redirect:/admin/solicitudes?tipo=repartidor";
             }else{
@@ -152,7 +158,7 @@ public class AdminController {
                 totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
             }
 
-            switch (usuario.getRol()) {
+            switch (usuario.getRol().getTipo()) {
                 case "administrador":
 
                    // return "/AdminGen/visualizarCliente";
@@ -184,7 +190,7 @@ public class AdminController {
 
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
-            usuario.setEstado("ACTIVO");
+            usuario.setEstado(1);
             usuario.setFechaadmitido(String.valueOf(new Date()));
             usuarioRepository.save(usuario);
 
@@ -201,7 +207,7 @@ public class AdminController {
 
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
-            usuario.setEstado("BLOQUEADO");
+            usuario.setEstado(0);
             usuarioRepository.save(usuario);
 
         }
@@ -226,7 +232,7 @@ public class AdminController {
 
             if (usuario.getIdusuario() == 0) {
                 attr.addFlashAttribute("msg", "Administrador creado exitosamente");
-                usuario.setRol("ADMINISTRADOR");
+                usuario.setRol(rolRepository.findById(5).get());
                 usuario.setFecharegistro(String.valueOf(new Date()));
                 usuarioRepository.save(usuario);
                 return "redirect:/admin";

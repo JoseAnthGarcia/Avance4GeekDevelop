@@ -1,17 +1,18 @@
 package com.example.demo.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
-@Table(name = "rol")
 public class Rol {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private int idrol;
 
+    @Column(nullable = false)
     private String tipo;
-    private int idusuario;
-
 
     public int getIdrol() {
         return idrol;
@@ -29,11 +30,4 @@ public class Rol {
         this.tipo = tipo;
     }
 
-    public int getIdusuario() {
-        return idusuario;
-    }
-
-    public void setIdusuario(int idusuario) {
-        this.idusuario = idusuario;
-    }
 }

@@ -56,17 +56,14 @@ public class Usuario {
     private String ultimoingreso;
 
     @OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;
-
-    @OneToOne
     @JoinColumn(name = "movilidad")
     private Movilidad movilidad;
 
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
-    private List<Direccion> direcciones;
+    @ManyToOne
+    @JoinColumn(name="idusuario")
+    private
 
-    private String addresselegido;
+
 
     //borrar
     @OneToMany(mappedBy = "cliente")
@@ -76,17 +73,6 @@ public class Usuario {
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
 
-    public String getAddresselegido() {
-        return addresselegido;
-    }
-
-    public void setAddresselegido(String addresselegido) {
-        this.addresselegido = addresselegido;
-    }
-
-    public Credenciales getCredencial() { return credencial; }
-
-    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }
 
     public int getIdusuario() {
         return idusuario;

@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/usuario")
-public class UsuarioController {
+@RequestMapping("/repartidor")
+public class RepartidorController {
 
     @Autowired
     TipoMovilidadRepository tipoMovilidadRepository;
@@ -57,7 +57,10 @@ public class UsuarioController {
         //se agrega rol:
         usuario.setRol(rolRepository.findById(4).get());
         //
-
+        if(movilidad.getTipoMovilidad().getIdtipomovilidad()==6){
+          movilidad.setLicencia(null);
+          movilidad.setPlaca(null);
+        }
         movilidad = movilidadRepository.save(movilidad);
         usuario.setMovilidad(movilidad);
 
@@ -72,7 +75,7 @@ public class UsuarioController {
 
         //--------
 
-        usuario.setIdusuario(50); //harcodeaoooooooooooooooooooooooooooooooooooo
+        usuario.setIdusuario(51); //harcodeaoooooooooooooooooooooooooooooooooooo
         usuario = usuarioRepository.save(usuario);
 
         for(Distrito distrito : usuario.getDistritos()){
@@ -87,7 +90,7 @@ public class UsuarioController {
             usuario_has_distritoRepository.save(usuario_has_distrito);
         }
 
-        return "redirect:/usuario/registroRepartidor";
+        return "redirect:/repartidor/registroRepartidor";
     }
 
     /*

@@ -16,23 +16,33 @@ public class Usuario {
     private int idusuario;
     @Column(nullable = false)
     private String rol;
+
     private String estado;
+
     @Column(nullable = false)
     private String nombres;
+
     @Column(nullable = false)
     private String apellidos;
+
     @Column(nullable = false)
     private String sexo;
+
     @Column(nullable = false, unique = true)
     private String telefono;
+
     @Column(unique = true)
     private String dni;
+
     @Column(nullable = false)
     private String fechanacimiento;
 
     private byte[] foto;
+
     @Column(nullable = false)
     private String fecharegistro;
+
+    @Column(nullable = false)
     private String fechaadmitido;
     private String ultimoingreso;
 
@@ -50,6 +60,7 @@ public class Usuario {
     //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
+
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 

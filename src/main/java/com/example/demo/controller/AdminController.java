@@ -150,14 +150,15 @@ public class AdminController {
             for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
                 totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
             }
-
+           // model.addAttribute("totalIngresos", totalIngresos);
             switch (usuario.getRol()) {
                 case "administrador":
 
                    // return "/AdminGen/visualizarCliente";
                 case "repartidor":
-
-                   // return "/AdminGen/visualizarCliente";
+                    model.addAttribute("repartidor",usuario);
+               //     model.addAttribute("totalIngresos", totalIngresos);
+                    return "/AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);

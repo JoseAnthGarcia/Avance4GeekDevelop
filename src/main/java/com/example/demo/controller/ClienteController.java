@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CredencialesRepository;
+import com.example.demo.repositories.RolRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class ClienteController {
 
     @Autowired
     CredencialesRepository credencialesRepository;
+
+    @Autowired
+    RolRepository rolRepository;
 
     @GetMapping("/login")
     public String loginCliente() {
@@ -47,7 +51,7 @@ public class ClienteController {
             //tamañoListaCredenciales = clienteRepository.findAll().size();
             //int idCredencial = tamañoListaCredenciales + 1;
             //cliente.getCredencial().setIdcredenciales(5);
-            cliente.setRol("cliente");
+            cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
             cliente.setFecharegistro(fechanacimiento);
 

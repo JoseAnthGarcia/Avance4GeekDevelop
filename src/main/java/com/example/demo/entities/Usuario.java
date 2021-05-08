@@ -17,10 +17,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
 
-    @Column(nullable = false)
-    private String rol;
-
-    private String estado;
+    @Column(unique = true)
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
+    private String dni;
 
     @Column(nullable = false)
     @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
@@ -40,33 +40,45 @@ public class Usuario {
     @Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
 
-    @Column(unique = true)
-    @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
-    private String dni;
+    private int estado;
+
+    @Column(nullable = false)
+    private String fecharegistro;
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String fechanacimiento;
 
     private byte[] foto;
-    @Column(nullable = false)
-    private String fecharegistro;
+
     private String fechaadmitido;
+
     private String ultimoingreso;
 
-    @OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;
+    @ManyToOne
+    @JoinColumn(name = "idrol", nullable = false)
+    private Rol rol;
+
+    //---credenciales-----
+    @Column(nullable = false)
+    private String correo;
+
+    @Column(nullable = false)
+    private String contrasenia;
+    //-------
 
     @OneToOne
-    @JoinColumn(name = "movilidad")
+    @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
     @ManyToMany(mappedBy = "usuarioPorDireccion")
     private List<Direccion> direcciones;
 
-    private String addresselegido;
+    /*@OneToOne
+    @JoinColumn(name = "credencial", nullable = false)
+    private Credenciales credencial;*/
+
+    //private String addresselegido;
 
     //borrar
     @OneToMany(mappedBy = "cliente")
@@ -76,17 +88,17 @@ public class Usuario {
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
 
-    public String getAddresselegido() {
+    /*public String getAddresselegido() {
         return addresselegido;
     }
 
     public void setAddresselegido(String addresselegido) {
         this.addresselegido = addresselegido;
-    }
-
+    }*/
+    /*
     public Credenciales getCredencial() { return credencial; }
 
-    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }
+    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
 
     public int getIdusuario() {
         return idusuario;
@@ -96,19 +108,12 @@ public class Usuario {
         this.idusuario = idusuario;
     }
 
-    public String getRol() {
-        return rol;
-    }
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public String getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -206,5 +211,29 @@ public class Usuario {
 
     public void setMovilidad(Movilidad movilidad) {
         this.movilidad = movilidad;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }

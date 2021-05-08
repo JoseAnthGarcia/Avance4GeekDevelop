@@ -12,7 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/usuario")
@@ -40,11 +42,7 @@ public class UsuarioController {
     public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("movilidad", new Movilidad());
-        model.addAttribute("distrito1", new Distrito()); //guardar usuario y distrito
-        model.addAttribute("distrito2", new Distrito());
-        model.addAttribute("distrito3", new Distrito());
-        model.addAttribute("distrito4", new Distrito());
-        model.addAttribute("distrito5", new Distrito());
+        model.addAttribute("distritosSeleccionados", new ArrayList<>());
 
         model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
         model.addAttribute("listaDistritos", distritosRepository.findAll());
@@ -54,10 +52,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(Usuario usuario, Movilidad movilidad,
-                                    Distrito distrito1, Distrito distrito2,
-                                    Distrito distrito3, Distrito distrito4,
-                                    Distrito distrito5 ) {
+    public String guardarRepartidor(Usuario usuario, Movilidad movilidad) {
 
         //se agrega rol:
         usuario.setRol(rolRepository.findById(4).get());
@@ -76,21 +71,23 @@ public class UsuarioController {
         //
 
         //--------
+
         usuario.setIdusuario(50); //harcodeaoooooooooooooooooooooooooooooooooooo
         usuario = usuarioRepository.save(usuario);
-        distrito1 = distritosRepository.findById(distrito1.getIddistrito()).get(); //validar si existe distrito1.getIddistrito()
 
-        Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
-        usuario_has_distritoKey.setIddistrito(distrito1.getIddistrito());
-        usuario_has_distritoKey.setIdusuario(usuario.getIdusuario());
+        for(Distrito distrito : usuario.getDistritos()){
+            Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
+            usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
+            usuario_has_distritoKey.setIdusuario(usuario.getIdusuario());
 
-        Usuario_has_distrito usuario_has_distrito = new Usuario_has_distrito();
-        usuario_has_distrito.setId(usuario_has_distritoKey);
-        usuario_has_distrito.setDistrito(distrito1);
-        usuario_has_distrito.setUsuario(usuario);
-        usuario_has_distritoRepository.save(usuario_has_distrito);
+            Usuario_has_distrito usuario_has_distrito = new Usuario_has_distrito();
+            usuario_has_distrito.setId(usuario_has_distritoKey);
+            usuario_has_distrito.setDistrito(distrito);
+            usuario_has_distrito.setUsuario(usuario);
+            usuario_has_distritoRepository.save(usuario_has_distrito);
+        }
 
-        return "/usuario/registroRepartidor";
+        return "redirect:/usuario/registroRepartidor";
     }
 
     /*

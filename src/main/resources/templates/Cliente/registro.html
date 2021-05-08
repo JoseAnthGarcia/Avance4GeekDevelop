@@ -71,14 +71,14 @@
                     <i class="fas fa-chevron-circle-left"></i>
                     Volver
                 </a>
-                <h1 style="color: black">Regitro</h1>
-                <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
+                <h1 style="color: black">Registro</h1>
+                <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
                 <form method="post"
                       class="user" th:action="@{/cliente/save}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>
-                            <input type="text" class="form-control border-secondary"
+                            <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
                           <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
@@ -89,7 +89,7 @@
 
                         <div class="col-sm-6 mb-2">
                             <label style="color: black">Apellidos</label>
-                            <input type="text" class="form-control border-secondary"
+                            <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
                             <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
@@ -98,23 +98,23 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-                            <input type="text" class="form-control"
+                            <label style="color: black">Correo electrónico</label>
+
+                            <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleCorreo" th:field="*{credencial.correo}"
                                    placeholder="Correo electrónico">
                         </div>
                     <div class="col-sm-6 mb-2">
-
-                        <input th:field="*{fechanacimiento}" type="text" class="form-control" placeholder="Fecha de nacimiento"
+                        <label style="color: black">Fecha de nacimiento</label>
+                        <input th:field="*{fechanacimiento}" type="text" class="form-control" style="border-color:lightgray" placeholder="Fecha de nacimiento"
                                onfocus="(this.type='date')" onblur="(this.type='text')"/>
-
-
                     </div>
                 </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Sexo</label>
-                            <select class="form-control border-secondary" th:field="*{sexo}">
+                            <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
                                 <option value="" disabled selected>Sexo</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
@@ -122,7 +122,7 @@
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: black">Teléfono</label>
-                            <input type="number" class="form-control border-secondary" th:field="*{telefono}"
+                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
                             <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
@@ -131,7 +131,7 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">DNI</label>
-                            <input type="number" class="form-control border-secondary" th:field="*{dni}"
+                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
                             <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
@@ -147,31 +147,29 @@
                          -->
 
                     </div>
-                    <!--
+
                     <div class="form-group row">
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Dirección</label>
-                            <input type="text" class="form-control border-secondary"
-                                   id="direccion" placeholder="Dirección" th:field="*{direcciones}">
+                            <input type="text" class="form-control" style="border-color:lightgray"
+                                   id="addresselegido" placeholder="addresselegido" th:field="*{addresselegido}">
 
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                         </div>
                     </div>
-                    -->
-
 
             <div class="form-group row">
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Contraseña</label>
-                    <input type="password" class="form-control border-secondary" id="inputPassword1" th:field="*{credencial.contrasenia}"
+                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword1" th:field="*{credencial.contrasenia}"
                            placeholder="La contraseña debe contar con al menos 8 caracteres.">
                 </div>
-                <!--
+
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Confirmar contraseña</label>
-                    <input type="password" class="form-control  border-secondary" id="inputPassword2"
-                           placeholder="Confirmar contraseña">
+                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword2"
+                           placeholder="Confirmar contraseña" th:value="passwordV">
                 </div>
             </div>
             <div class="form-group row">
@@ -179,7 +177,7 @@
                     <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp" width="350" height="150">
                 </div>
             </div>
-                    -->
+
             <div class="form-group row">
 
             </div>
@@ -189,7 +187,7 @@
                         Registrar
 
                     </button>
-            </div>
+
             </form>
 
 

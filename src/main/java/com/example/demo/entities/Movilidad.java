@@ -10,6 +10,7 @@ public class Movilidad {
     private int idmovilidad;
     private String placa;
     private String licencia;
+
     @OneToOne
     @JoinColumn(name = "idtipomovilidad", nullable = false)
     private TipoMovilidad tipoMovilidad;

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/prueba/save}" method="post" th:object="${movilidad}">
+    <label >Placa:</label><br>
+    <input type="text" name="placa"><br>
+    <label >Licencia:</label><br>
+    <input type="text" name="licencia">
+    <div th:object="${tipoMovilidad}">
+        <label >Tipo movilidad:</label><br>
+        <input type="text" name="tipo">
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+
+</body>
+</html>

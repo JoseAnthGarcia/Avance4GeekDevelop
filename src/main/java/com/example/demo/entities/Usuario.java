@@ -14,22 +14,22 @@ public class Usuario {
 //tu misma eres mela :3
     //nel mano
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
 
     @Column(unique = true)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
+    //@Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
     @Column(nullable = false)
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     @NotBlank(message = "Complete sus datos")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
 
     @Column(nullable = false)
@@ -37,7 +37,7 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
+    //@Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
 
     private int estado;
@@ -67,12 +67,14 @@ public class Usuario {
     private String contrasenia;
     //-------
 
+    @ManyToMany(mappedBy = "usuariosDistrito")
+    private List<Distrito> distritos;
+
     @OneToOne
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
-    private List<Direccion> direcciones;
+
 
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
@@ -197,14 +199,6 @@ public class Usuario {
         this.ultimoingreso = ultimoingreso;
     }
 
-    public List<Direccion> getDirecciones() {
-        return direcciones;
-    }
-
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
-    }
-
     public Movilidad getMovilidad() {
         return movilidad;
     }
@@ -235,5 +229,13 @@ public class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public List<Distrito> getDistritos() {
+        return distritos;
+    }
+
+    public void setDistritos(List<Distrito> distritos) {
+        this.distritos = distritos;
     }
 }

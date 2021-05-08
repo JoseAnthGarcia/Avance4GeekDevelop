@@ -81,8 +81,10 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
+                            <!--
                           <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"> </div>
+                                 -->
 
                         </div>
 
@@ -92,8 +94,10 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
+                            <!--
                             <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
+                                 -->
                         </div>
                     </div>
                     <div class="form-group row">
@@ -101,7 +105,7 @@
                             <label style="color: black">Correo electrónico</label>
 
                             <input type="text" class="form-control" style="border-color:lightgray"
-                                   id="exampleCorreo" th:field="*{credencial.correo}"
+                                   id="exampleCorreo" th:field="*{correo}"
                                    placeholder="Correo electrónico">
                         </div>
                     <div class="col-sm-6 mb-2">
@@ -124,8 +128,10 @@
                             <label style="color: black">Teléfono</label>
                             <input type="number" class="form-control" style="border-color:lightgray" th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
+                            <!--
                             <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
+                                 -->
                         </div>
                     </div>
                     <div class="form-group row">
@@ -133,9 +139,12 @@
                             <label style="color: black">DNI</label>
                             <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
+                            <!--
                             <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
+                                 -->
                         </div>
+
 <!--
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">Foto de Perfil</label>
@@ -152,7 +161,7 @@
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control" style="border-color:lightgray"
-                                   id="addresselegido" placeholder="addresselegido" th:field="*{addresselegido}">
+                                   id="addresselegido" placeholder="addresselegido" th:field="*{}">
 
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
@@ -162,7 +171,7 @@
             <div class="form-group row">
                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                     <label style="color: black">Contraseña</label>
-                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword1" th:field="*{credencial.contrasenia}"
+                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword1" th:field="*{contrasenia}"
                            placeholder="La contraseña debe contar con al menos 8 caracteres.">
                 </div>
 

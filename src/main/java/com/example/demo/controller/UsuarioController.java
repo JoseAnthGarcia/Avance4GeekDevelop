@@ -80,7 +80,12 @@ public class UsuarioController {
         usuario = usuarioRepository.save(usuario);
         distrito1 = distritosRepository.findById(distrito1.getIddistrito()).get(); //validar si existe distrito1.getIddistrito()
 
+        Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
+        usuario_has_distritoKey.setIddistrito(distrito1.getIddistrito());
+        usuario_has_distritoKey.setIdusuario(usuario.getIdusuario());
+
         Usuario_has_distrito usuario_has_distrito = new Usuario_has_distrito();
+        usuario_has_distrito.setId(usuario_has_distritoKey);
         usuario_has_distrito.setDistrito(distrito1);
         usuario_has_distrito.setUsuario(usuario);
         usuario_has_distritoRepository.save(usuario_has_distrito);

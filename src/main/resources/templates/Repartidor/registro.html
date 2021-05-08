@@ -71,7 +71,7 @@
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de
                     repartidor.</p>
-                <form method="post" th:action="@{'/usuario/guardarRepartidor'}" th:object="${usuario}">
+                <form method="post" th:action="@{'/repartidor/guardarRepartidor'}" th:object="${usuario}">
                     <input th:field="*{idusuario}" type="hidden"/>
                     <input th:field="*{rol}" th:value="repartidor" type="hidden"/>
                     <div class="form-group row">

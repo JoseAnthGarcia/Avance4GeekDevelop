@@ -63,7 +63,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/buscadorSoli")
+    @PostMapping("/buscadorSR")
     public String aceptarSolitud(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                  @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
                                  @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
@@ -74,15 +74,15 @@ public class AdminController {
         model.addAttribute("fechaRegistro1", fechaRegistro1);
 
         if(fechaRegistro1==null){
-            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor();
+            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
         }
 
 
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         if(tipoMovilidad1==null){
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1));
         }else{
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1, (fechaRegistro1*-1)-1, tipoMovilidad1));
+            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1));
         }
 
         System.out.println("------------");

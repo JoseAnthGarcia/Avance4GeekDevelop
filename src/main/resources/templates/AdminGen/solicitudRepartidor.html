@@ -210,7 +210,7 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form th:action="@{/admin/buscadorSoli}" method="post">
+                <form th:action="@{/admin/buscadorSR}" method="post">
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
@@ -319,15 +319,18 @@
                                                 <tbody>
                                                 <tr>
                                                     <td th:text="|Fecha de Registro: ${repartidor.fecharegistro}|">Fecha de Registro: 20/01/3113</td>
-                                                    <td th:text="|Estado: ${repartidor.estado}|">Estado: Pendiente </td>
-                                                </tr>
-                                                <tr>
-                                                    <td th:text="|Nombre: ${repartidor.nombres}|">Nombre: Martin Alvaro</td>
                                                     <td th:text="|DNI: ${repartidor.dni}|">DNI: 12345678</td>
+                                                    <!--td th:if="${repartidor.estado==0}">Estado: Bloqueado </td-->
+                                                    <!--td th:if="${repartidor.estado==1}">Estado: Activo </td-->
+                                                    <!--td th:if="${repartidor.estado==2}">Estado: Pendiente </td-->
                                                 </tr>
                                                 <tr>
-                                                    <td th:text="|Movilidad: ${repartidor.credencial.correo}|">Correo: example@gmail.com</td>
+                                                    <td th:text="|Nombres: ${repartidor.nombres}|">Nombre: Martin Alvaro</td>
+                                                    <td th:text="|Apellidos: ${repartidor.apellidos}|">apellidos: Martin Alvaro</td>
+                                                </tr>
+                                                <tr>
                                                     <td th:text="|Teléfono: ${repartidor.telefono}|">Teléfono: 32325164564 </td>
+                                                    <td th:text="|Correo: ${repartidor.correo}|">Correo: example@gmail.com</td>
                                                 </tr>
 
 

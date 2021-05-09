@@ -73,7 +73,7 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
-                <form method="post"
+                <form method="post" enctype="multipart/form-data"
                       class="user" th:action="@{/cliente/guardar}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
@@ -109,7 +109,7 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleCorreo" th:field="*{correo}"
                                    placeholder="Correo electrónico">
-                            <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></h1>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
                         </div>
 
                         <div class="col-sm-6 mb-2">
@@ -169,7 +169,7 @@
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="direccion" placeholder="Dirección" th:field="*{direccion}">
-                            <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></h1>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></div>
                         </div>
                     </div>
 
@@ -189,7 +189,7 @@
                             <input type="password" class="form-control" style="border-color:lightgray"
                                    id="inputPassword1" th:field="*{contrasenia}"
                                    placeholder="La contraseña debe contar con al menos 8 caracteres.">
-                            <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></h1>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></div>
                         </div>
 
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">

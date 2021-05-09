@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "usuario_has_distrito")
@@ -20,8 +21,9 @@ public class Usuario_has_distrito {
     private Distrito distrito;
 
     @Column(nullable = false)
+    @NotBlank(message = "Complete el espacio")
     private String direccion;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String coordenadas;
 
     public Usuario_has_distritoKey getId() {

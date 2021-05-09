@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+
 @RequestMapping("/cliente")
 public class ClienteController {
 
@@ -45,8 +46,8 @@ public class ClienteController {
     }
 
     @GetMapping("/nuevo")
-    public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
-        String direccion;
+    public String nuevoCliente(@ModelAttribute("cliente")  Usuario cliente, Model model) {
+        // String direccion;
         model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
         //distritos
         model.addAttribute("distritosSeleccionados", new ArrayList<>());
@@ -57,8 +58,9 @@ public class ClienteController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, Usuario_has_distrito usuario_has_distrito,
-                                 Model model, RedirectAttributes attr, BindingResult bindingResult) {
+    public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente,BindingResult bindingResult,
+                                 @ModelAttribute("Usuario_has_distrito") @Valid Usuario_has_distrito usuario_has_distrito,
+                                 BindingResult bindingResult2,Model model, RedirectAttributes attr) {
 
         /*int id = 0;
         if (cliente.getIdusuario() != null) {
@@ -72,8 +74,12 @@ public class ClienteController {
         if (!clientesxdni.isEmpty()) {
             bindingResult.rejectValue("dni", "error.Usuario", "DNI ya registrado anteriormente");
         }*/
-            if (bindingResult.hasErrors()) {
-                String direccion;
+
+
+
+            if (bindingResult.hasErrors() || bindingResult2.hasErrors() ) {
+                System.out.println("Entro hasErrors");
+             //   String direccion;
                 model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
                 //distritos
                 model.addAttribute("distritosSeleccionados", new ArrayList<>());

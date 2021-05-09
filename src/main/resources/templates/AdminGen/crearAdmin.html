@@ -259,9 +259,10 @@
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <label class="form-label text-dark text-lg">Correo:</label>
-                                    <input type="email" class="form-control"
-                                           id="exampleCorreo"
-                                           placeholder="Correo electrónico">
+                                    <input th:field="*{correo}"  type="email" class="form-control border-secondary"
+                                          >
+                                    <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
+                                         th:errors="*{correo}"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="form-label text-dark text-lg">Fecha de nacimiento:</label>
@@ -277,8 +278,8 @@
                                     <label class="form-label text-dark text-lg">Sexo:</label>
                                     <select class="form-control border-secondary" th:field="*{sexo}">
                                         <option value="" disabled selected>Sexo</option>
-                                        <option value="Femenino">Femenino</option>
-                                        <option value="Masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                        <option value="masculino">Masculino</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6  mb-2 mb-sm-0">

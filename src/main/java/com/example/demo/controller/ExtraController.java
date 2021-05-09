@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
 import com.example.demo.repositories.ExtraRepository;
@@ -110,11 +111,12 @@ public class ExtraController {
     }
 
 
-    @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+    @GetMapping("/page")
+    public String findPaginated(@RequestParam("pageNo") int pageNo, Model model) {
 
-        int pageSize = 5;
+        int pageSize = 2;
 
+        System.out.println(pageNo);
         Page<Extra> page = extraService.findPaginated(pageNo, pageSize);
         List<Extra> listaExtras = page.getContent();
 

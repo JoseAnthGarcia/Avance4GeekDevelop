@@ -79,6 +79,7 @@ public class ClienteController {
             usuario_has_distrito.setId(usuario_has_distritoKey);
             usuario_has_distrito.setDistrito(distrito);
             usuario_has_distrito.setUsuario(cliente);
+
             usuario_has_distritoRepository.save(usuario_has_distrito);
         }
 

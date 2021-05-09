@@ -15,8 +15,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
-    @Query(value = "select * from usuario where estado = 'bloqueado' or estado = 'activo' ", nativeQuery = true)
-    List<Usuario> listaUsuariosAceptados();
+    @Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' " , nativeQuery = true)
+    List<Usuario> listaUsuarios();
 
     @Query(value = "select datediff(now(),min(fechaRegistro)) from usuario", nativeQuery = true)
     int buscarFechaMinimaRepartidor();

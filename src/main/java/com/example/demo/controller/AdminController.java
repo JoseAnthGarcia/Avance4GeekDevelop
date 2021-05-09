@@ -139,7 +139,7 @@ public class AdminController {
 
     @GetMapping("/usuarios")
     public String listaDeUsuarios(Model model) {
-        model.addAttribute("listaUsuarios", usuarioRepository.listaUsuariosAceptados());
+        model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
         return "/AdminGen/lista";
     }
 
@@ -171,7 +171,7 @@ public class AdminController {
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarCliente";
-                case "administradorRestaurante":
+                case "administradorR    ":
 
                    // return "/AdminGen/visualizarCliente";
                 default:

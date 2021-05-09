@@ -277,7 +277,7 @@
 
                                                     <td th:text="|Fecha de Registro: ${cliente.fecharegistro}|"
                                                         style="width: 1300px;"></td>
-                                                    <td th:text="|Estado: ${cliente.estado}|"
+                                                    <td th:text="|Estado: ${cliente.estado == 1 ? 'ACTIVO' : '----'}|"
                                                         style="width: 1300px;"></td>
                                                 </tr>
                                                 <tr>
@@ -290,7 +290,7 @@
                                                     <td th:text="|Sexo: ${cliente.sexo}|"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td th:text="|Correo: ${cliente.credencial.correo}|"></td>
+                                                    <td th:text="|Correo: ${cliente.correo}|"></td>
                                                     <td th:text="|DNI: ${cliente.dni}|"></td>
                                                 </tr>
 

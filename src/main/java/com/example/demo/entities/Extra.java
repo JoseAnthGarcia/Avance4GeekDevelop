@@ -17,13 +17,6 @@ public class Extra {
     @NotBlank(message = "El nombre del extra no puede estar vacío")
     private String nombre;
 
-
-
-
-    //@ManyToOne
-    //@JoinColumn(name = "idcategoriaExtra")
-   // private CategoriaExtra categoriaExtra;
-
     //Considerando un precio máximo de extra de 200 - superior a esto se considera String <- Se puede cambiar
     @Column(nullable = false, name = "precioUnitario")
     @Digits(integer = 200, fraction = 0, message = "Tiene que ingresar un entero")
@@ -31,6 +24,24 @@ public class Extra {
     @Min(value = 2, message = "No puede ingresar menos de 1 sol")
     @NotNull(message = "Ingrese un número entero")
     private double preciounitario;
+    private int idrestaurante;
+    private int idcategoria;
+
+    public int getIdrestaurante() {
+        return idrestaurante;
+    }
+
+    public void setIdrestaurante(int idrestaurante) {
+        this.idrestaurante = idrestaurante;
+    }
+
+    public int getIdcategoria() {
+        return idcategoria;
+    }
+
+    public void setIdcategoria(int idcategoria) {
+        this.idcategoria = idcategoria;
+    }
 
     public double getPreciounitario() {
         return preciounitario;
@@ -42,12 +53,6 @@ public class Extra {
 
     @Column(nullable = false)
     private int disponible;
-
-   // @ManyToOne
-   // @JoinColumn(name="idcategoria_extra")
-    //private CategoriaExtra categorias;
-
-
 
     public int getIdextra() {
         return idextra;
@@ -64,18 +69,6 @@ public class Extra {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-
-
-
-  //  public CategoriaExtra getCategoriaExtra() {
-  //      return categoriaExtra;
-   // }
-
-    //public void setCategoriaExtra(CategoriaExtra categoriaExtra) {
-     //   this.categoriaExtra = categoriaExtra;
-   // }
-
 
     public int getDisponible() {
         return disponible;

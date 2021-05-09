@@ -253,23 +253,19 @@
                                             <td><label>Imagen referencial:</label></td>
                                             <td colspan="2"> <br>
                                                 <input type="file" class="form-control">
-                                                <!--
-                                                <h1 style="color: red; font-size: small; text-align: left">Ingresar imágenes con extensión jpg</h1>
-                                                -->
+
                                                 </td>
 
                                         </tr>
                                         <tr>
                                             <td> <label>Extras: </label></td>
                                             <td colspan="2">
-                                                <input type="checkbox" id="extra1" name="extra1" >
-                                                <label for="extra1"> Cubiertos</label>
-                                                <input type="checkbox" id="extra2" name="extra2" >
-                                                <label for="extra2"> Ensaladas</label><br>
-                                                <input type="checkbox" id="extra3" name="extra3" >
-                                                <label for="extra3"> Bebidas</label>
-                                                <input type="checkbox" id="extra4" name="extra4" >
-                                                <label for="extra4"> Guarniciones</label><br></td>
+                                                <div th:each="categoria :${listaCategoria}">
+                                                <input  name="extra" th:field="*{categoriaExtraList}" type="checkbox">
+                                                <label th:text="${categoria.getTipo()}" th:value="${categoria.getIdcategoriaextra()}"></label><br>
+                                                </div>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><a class="btn btn-primary mb-4 mr-2 "

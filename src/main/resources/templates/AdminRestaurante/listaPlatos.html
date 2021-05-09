@@ -314,7 +314,7 @@
                                      style=" margin-left: 630px ;align-content: center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
-                                        <a  th:if="${currentPage != i}"
+                                        <a th:if="${currentPage != i}"
                                            th:href="@{'/plato/page?pageNo=' + ${i}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>

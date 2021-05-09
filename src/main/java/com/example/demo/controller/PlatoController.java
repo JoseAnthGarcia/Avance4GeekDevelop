@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/plato")
-public class PlatoController {
+public class    PlatoController {
 
     @Autowired
     PlatoRepository platoRepository;
@@ -30,6 +30,7 @@ public class PlatoController {
     public String listaPlatos(Model model) {
         return findPaginated(1, model);
     }
+
     @PostMapping("/textSearch")
     public String buscardor(@RequestParam("textBuscador") String textBuscador,
                             @RequestParam("textDisponible") Integer inputDisponible,

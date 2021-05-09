@@ -18,6 +18,7 @@ public interface ExtraRepository extends JpaRepository<Extra, Integer> {
 
     Page<Extra> findByDisponible(boolean disponible, Pageable pageable);
 
+
     @Query(value = "SELECT DISTINCT  e.idextra, e.nombre, e.precioUnitario FROM (extra e \n" +
             "inner join categoriaextra ce on ce.idcategoriaextra=e.idcategoriaExtra\n" +
             "inner join categoriaextra_has_plato cep on cep.idcategoriaextra=ce.idcategoriaextra\n" +

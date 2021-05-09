@@ -204,7 +204,7 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form class="input-group mb-lg-3" method="post" th:action="@{/plato/textSearch}">
+                        <form method="get" th:action="@{/plato/page}">
                             <div class="form-group row">
 
                                 <div class="col-sm-3 mb-1 ">
@@ -289,7 +289,7 @@
                                                     Precio
                                                 </th>
                                                 <th>
-                                                    Descripcion
+                                                    Descripción
                                                 </th>
                                                 <th>
                                                     Editar
@@ -300,7 +300,7 @@
                                             <tr th:each="platos,v:${listaPlatos} ">
                                                 <td th:text="${v.index+1}"></td>
                                                 <td th:text="${platos.nombre}"></td>
-                                                <td th:text="${'S./ '+platos.precio}"></td>
+                                                <td th:text="${'S/. '+platos.precio}"></td>
                                                 <td th:text="${platos.descripcion}"></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
@@ -315,7 +315,7 @@
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/plato/page?pageNo=' + ${i}}"
+                                           th:href="@{'/plato/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

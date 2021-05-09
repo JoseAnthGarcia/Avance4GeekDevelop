@@ -20,5 +20,9 @@ public class ExtraServiceImpl implements ExtraService{
     public Page<Extra> findPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return this.extraRepository.findByDisponible(true, pageable);
+
+
+
     }
+
 }

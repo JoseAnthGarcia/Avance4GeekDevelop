@@ -67,7 +67,7 @@ public class Usuario {
     private String contrasenia;
     //-------
 
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
+    @ManyToMany(mappedBy = "usuariosDistrito")
     private List<Distrito> distritos;
 
     @OneToOne

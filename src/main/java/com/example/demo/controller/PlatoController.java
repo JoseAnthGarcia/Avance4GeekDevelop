@@ -81,14 +81,9 @@ public class    PlatoController {
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
                                BindingResult bindingResult, RedirectAttributes attr) {
 
-        plato.setIdrestaurante(3); //Jarcodeado
-        plato.setIdcategoriaplato(5); //Jarcodeado
+        plato.setIdrestaurante(1); //Jarcodeado
+        plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        platoRepository.save(plato);
-
-        return "redirect:/plato/lista";
-
-        /*
 
         for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
         System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
@@ -124,7 +119,7 @@ public class    PlatoController {
                 }
             }
             return "redirect:/plato/lista";
-        }*/
+        }
 
     }
 
@@ -138,7 +133,8 @@ public class    PlatoController {
         if (platoOptional.isPresent()) {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
-            return "/AdminRestaurante/editarPlato";
+            model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+            return "/AdminRestaurante/nuevoPlato";
         } else {
             return "redirect:/plato/lista";
         }

@@ -16,7 +16,12 @@ import java.util.List;
 @Repository
 public interface ExtraRepository extends JpaRepository<Extra, Integer> {
 
-    Page<Extra> findByDisponible(boolean disponible, Pageable pageable);
+    @Query(value= "select idextra, nombre, precioUnitario, disponible, idrestaurante, idcategoriaextra from extra where idrestaurante=?1", nativeQuery = true)
+    List<Extra> listarExtra(int idrestaurante);
+
+
+
+    Page<Extra> findByIdrestauranteAndDisponible(int idrestaurante,boolean disponible, Pageable pageable);
 
 
     @Query(value = "SELECT DISTINCT  e.idextra, e.nombre, e.precioUnitario FROM (extra e \n" +

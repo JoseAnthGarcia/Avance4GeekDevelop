@@ -262,14 +262,10 @@
                                         <tr>
                                             <td> <label>Extras: </label></td>
                                             <td colspan="2">
-                                                <input type="checkbox" id="extra1" name="extra1" >
-                                                <label for="extra1"> Cubiertos</label>
-                                                <input type="checkbox" id="extra2" name="extra2" >
-                                                <label for="extra2"> Ensaladas</label><br>
-                                                <input type="checkbox" id="extra3" name="extra3" >
-                                                <label for="extra3"> Bebidas</label>
-                                                <input type="checkbox" id="extra4" name="extra4" >
-                                                <label for="extra4"> Guarniciones</label><br></td>
+                                                <div th:each="categoria : ${listaCategoriasExtra}">
+                                                    <input type="checkbox" id="extra1" name="extra1" th:fielf="*{categoriaExtraPorPlato}">
+                                                    <label for="extra1" th:text="${categoria.tipo}" th:value="${categoria.idtipocategoria}"> Cubiertos</label>
+                                                </div>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><a class="btn btn-primary mb-4 mr-2 "

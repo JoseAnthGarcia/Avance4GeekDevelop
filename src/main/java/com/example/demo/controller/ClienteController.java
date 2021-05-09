@@ -75,7 +75,6 @@ public class ClienteController {
             usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
             usuario_has_distritoKey.setIdusuario(cliente.getIdusuario());
 
-
             usuario_has_distrito.setId(usuario_has_distritoKey);
             usuario_has_distrito.setDistrito(distrito);
             usuario_has_distrito.setUsuario(cliente);

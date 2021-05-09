@@ -11,24 +11,24 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario {
-//tu misma eres mela :3
+    //tu misma eres mela :3
     //nel mano
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idusuario;
+    private Integer idusuario;
 
     @Column(unique = true)
     @NotBlank(message = "Complete sus datos")
-    //@Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
+    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
     @Column(nullable = false)
     //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
-    @NotBlank(message = "Complete sus datos")
+    //@NotBlank(message = "Complete sus datos")
     private String nombres;
 
     @Column(nullable = false)
-    @NotBlank(message = "Complete sus datos")
+    //@NotBlank(message = "Complete sus datos")
     //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
 
@@ -36,7 +36,7 @@ public class Usuario {
     private String sexo;
 
     @Column(nullable = false, unique = true)
-    @NotBlank(message = "Complete sus datos")
+    //@NotBlank(message = "Complete sus datos")
     //@Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
 
@@ -61,13 +61,17 @@ public class Usuario {
 
     //---credenciales-----
     @Column(nullable = false)
+    //@NotBlank(message = "no puede estar vacío")
+    //@Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
     private String correo;
 
     @Column(nullable = false)
+    //@NotBlank(message = "No debe ser vacío o blanco")
+    //@Size(min = 8, message = "Ingrese como mínimo 8 caracteres")
     private String contrasenia;
     //-------
 
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
+    @ManyToMany(mappedBy = "usuariosDistrito")
     private List<Distrito> distritos;
 
     @OneToOne
@@ -102,14 +106,13 @@ public class Usuario {
 
     public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
 
-    public int getIdusuario() {
+    public Integer getIdusuario() {
         return idusuario;
     }
 
-    public void setIdusuario(int idusuario) {
+    public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
-
 
     public int getEstado() {
         return estado;

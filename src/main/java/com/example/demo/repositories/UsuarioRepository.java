@@ -15,6 +15,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
+
+    @Query(value = "select * from usuario where dni = ?1", nativeQuery = true)
+    Usuario findByDni (String dni);
+    @Query(value = "select * from usuario where telefono = ?1", nativeQuery = true)
+    Usuario findByTelefono (String telefono);
+    @Query(value = "select * from usuario where correo = ?1", nativeQuery = true)
+    Usuario findByCorreo (String correo);
+
     @Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' " , nativeQuery = true)
     List<Usuario> listaUsuarios();
 

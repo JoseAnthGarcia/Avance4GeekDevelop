@@ -94,6 +94,9 @@
                             <input type="email" class="form-control"
                                    id="exampleCorreo"
                                    placeholder="Correo electrónico" th:field="*{correo}">
+                            <div th:if="${msg4 != null}" th:text="${msg4}" class="text-danger" ></div>
+                            <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
+                                 th:errors="*{correo}"></div>
 
                         </div>
                         <div class="col-sm-6 mb-2">
@@ -101,6 +104,7 @@
                             <input th:field="*{fechanacimiento}" type="text" class="form-control"
                                    placeholder="Fecha de nacimiento"
                                    onfocus="(this.type='date')" onblur="(this.type='text')"/>
+
                             <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>
 
@@ -115,10 +119,12 @@
                                 <option th:value="Femenino">Femenino</option>
                                 <option th:value="Masculino">Masculino</option>
                             </select>
+                            <div th:if="${msg5 != null}" th:text="${msg5}" class="text-danger" ></div>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
 
                             <input th:field="*{telefono}" type="text" class="form-control" placeholder="Teléfono"/>
+                            <div th:if="${msg3 != null}" th:text="${msg3}" class="text-danger" ></div>
                             <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
 
@@ -128,6 +134,7 @@
 
 
                         <input th:field="*{dni}" type="number" class="form-control" placeholder="DNI"/>
+                        <div th:if="${msg2 != null}" th:text="${msg2}" class="text-danger" ></div>
                         <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                              th:errors="*{dni}"></div>
                         <div class="col-sm-6 mb-2 mb-sm-0">
@@ -166,6 +173,7 @@
 
                                     <input th:field="*{licencia}" type="text" class="form-control"
                                            placeholder="Licencia de conducir"/>
+                                    <div th:if="${msg6 != null}" th:text="${msg6}" class="text-danger" ></div>
                                     <div class="text-danger" th:if="${#fields.hasErrors('licencia')}"
                                          th:errors="*{licencia}"></div>
                                 </div>
@@ -173,22 +181,24 @@
                         </div>
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <h4 style="color: black">Contraseña</h4>
-                            <p>La contraseña debe contar con al menos 8 caracteres.</p>
+                            <p>La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula y al menos una mayúscula..</p>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
                                     <input type="password" class="form-control" th:field="*{contrasenia}"
                                            placeholder="Contraseña">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('contrasenia')}"
+                                         th:errors="*{contrasenia}"></div>
                                     <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
                                 </div>
 
 
                             </div>
-                            <!--div class="form-group row">
+                            <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
                                     <input type="password" class="form-control" name="contrasenia2" placeholder="Confirmar contraseña">
                                     <div th:if="${msg != null}" th:text="${msg}" class="text-danger" ></div>
                                 </div>
-                            </div-->
+                            </div>
 
                         </div>
 

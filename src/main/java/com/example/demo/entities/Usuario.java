@@ -3,9 +3,7 @@ package com.example.demo.entities;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -20,16 +18,19 @@ public class Usuario {
     @Column(unique = true)
     @NotBlank(message = "Complete sus datos")
     //@Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
+    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
     @Column(nullable = false)
     //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo ingrese letras")
     @NotBlank(message = "Complete sus datos")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
     //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo ingrese letras")
     private String apellidos;
 
     @Column(nullable = false)
@@ -38,6 +39,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Complete sus datos")
     //@Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
+    @Pattern(regexp = "[0-9]{9}",message = "Ingrese 9 dígitos")
     private String telefono;
 
     private int estado;
@@ -46,6 +48,7 @@ public class Usuario {
     private String fecharegistro;
 
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String fechanacimiento;
 
@@ -61,9 +64,12 @@ public class Usuario {
 
     //---credenciales-----
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
+    @Email(message = "Ingrese una dirección de correo electrónico válido")
     private String correo;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$",message = "Ingrese una contraseña válida.")
     private String contrasenia;
     //-------
 

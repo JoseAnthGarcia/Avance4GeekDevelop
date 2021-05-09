@@ -82,9 +82,6 @@ public class ClienteController {
             usuario_has_distritoRepository.save(usuario_has_distrito);
         }
 
-
-
-
             return "redirect:/cliente/login";
 
     }

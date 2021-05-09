@@ -277,7 +277,7 @@
 
                                                     <td th:text="|Fecha de Registro: ${cliente.fecharegistro}|"
                                                         style="width: 1300px;"></td>
-                                                    <td th:text="|Estado: ${cliente.estado}|"
+                                                    <td th:text="|Estado: ${cliente.estado == 1 ? 'ACTIVO' : '----'}|"
                                                         style="width: 1300px;"></td>
                                                 </tr>
                                                 <tr>
@@ -290,14 +290,14 @@
                                                     <td th:text="|Sexo: ${cliente.sexo}|"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td th:text="|Correo: ${cliente.credencial.correo}|"></td>
+                                                    <td th:text="|Correo: ${cliente.correo}|"></td>
                                                     <td th:text="|DNI: ${cliente.dni}|"></td>
                                                 </tr>
 
                                                 <tr>
                                                     <td th:text="|Fecha de Nacimiento: ${cliente.fechanacimiento}|"></td>
                                                     <td >
-                                                        <h6>Direccion:</h6>
+                                                        <h6>Direcciones:</h6>
                                                         <div th:each="direccion : ${cliente.direcciones}" th:text="${direccion.ubicacion} ">
                                                         </div>
                                                     </td>
@@ -411,7 +411,7 @@
 
                                     <tbody>
                                     <div th:each="pedidos : ${cliente.getListaPedidosPorUsuario()}">
-                                        <tr>
+                                        <tr th:if="${pedidos.valoracion != null}">
                                             <td style="width: 1300px;">
                                                 <div class="form-group row">
                                                     <div class="col-sm-4 mb-2 mb-sm-0">
@@ -535,143 +535,6 @@
 
                                         </tr>
                                     </div>
-
-                                    <!--<tr>
-                                        <td style="width: 1300px;"><h4 style="color: black">RESTAURANTE [Don
-                                            Martin] </h4>
-                                            <p>Me gusto toda la comida, uhmmm riquisimo xd. Recomendaria que el pollito
-                                                a la brasa
-                                                con las extras de aliños y su pan de ajo. </p>
-                                        </td>
-                                        <td style="width: 300px;" align="center">
-
-                                            <div class="col-sm-auto m-5">
-                                                <div class="row ">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="row ">
-                                                    <h7> 20/02/2021</h7>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-
-                                        <td style="width: 1300px;"><h4 style="color: black"> REPARTIDOR [Juan
-                                            martin] </h4>
-                                            <p>Me gusto toda la comida, uhmmm riquisimo xd. Recomendaria que el pollito
-                                                a la brasa
-                                                con las extras de aliños y su pan de ajo. </p>
-                                        </td>
-
-
-                                        <td style="width: 300px;" align="center">
-
-                                            <div class="col-sm-auto m-5">
-                                                <div class="row ">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="row ">
-                                                    <h7> 20/02/2021</h7>
-                                                </div>
-                                            </div>
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-
-                                        <td style="width: 1300px;"><h4 style="color: black">RESTAURANTE [Don
-                                            Martin] </h4>
-                                            <p>Me gusto toda la comida, uhmmm riquisimo xd. Recomendaria que el pollito
-                                                a la brasa
-                                                con las extras de aliños y su pan de ajo. </p>
-                                        </td>
-
-
-                                        <td style="width: 300px;" align="center">
-
-                                            <div class="col-sm-auto m-5">
-                                                <div class="row ">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="row ">
-                                                    <h7> 20/02/2021</h7>
-                                                </div>
-                                            </div>
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-
-                                        <td style="width: 1300px;"><h4 style="color: black"> REPARTIDOR [Juan
-                                            martin] </h4>
-                                            <p>Me gusto toda la comida, uhmmm riquisimo xd. Recomendaria que el pollito
-                                                a la brasa
-                                                con las extras de aliños y su pan de ajo. </p>
-                                        </td>
-
-
-                                        <td style="width: 300px;" align="center">
-
-                                            <div class="col-sm-auto m-5">
-                                                <div class="row ">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="row ">
-                                                    <h7> 20/02/2021</h7>
-                                                </div>
-                                            </div>
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-
-                                        <td style="width: 1300px;"><h4 style="color: black">RESTAURANTE [Don
-                                            Martin] </h4>
-                                            <p>Me gusto toda la comida, uhmmm riquisimo xd. Recomendaria que el pollito
-                                                a la brasa
-                                                con las extras de aliños y su pan de ajo. </p>
-                                        </td>
-
-
-                                        <td style="width: 300px;" align="center">
-
-                                            <div class="col-sm-auto m-5">
-                                                <div class="row ">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <div class="row ">
-                                                    <h7> 20/02/2021</h7>
-                                                </div>
-                                            </div>
-                                        </td>
-
-
-                                    </tr>-->
-
                                     </tbody>
 
                                 </table>

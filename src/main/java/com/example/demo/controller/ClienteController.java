@@ -10,6 +10,7 @@ import com.example.demo.repositories.RolRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import com.example.demo.repositories.Usuario_has_distritoRepository;
 import org.apache.tomcat.util.modeler.BaseAttributeFilter;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,18 +64,18 @@ public class ClienteController {
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr) {
 
         try {
-            String valDireccion = usuario_has_distrito.getDireccion();
-            System.out.println(valDireccion);
+            String valDirec = usuario_has_distrito.getDireccion();
+            System.out.println(valDirec+"Valdirec");
         } catch (NullPointerException n) {
-            System.out.println("Coloca tus datos plox v2");
-        }
-        try {
-            Distrito valDistrito = usuario_has_distrito.getDistrito();
-            System.out.println(valDistrito.getNombre());
-        } catch (NullPointerException n) {
-            System.out.println("Coloca tus datos plox");
+            System.out.println("COMPLETA TUS DATOS");
         }
 
+        try {
+            Distrito valDist = usuario_has_distrito.getDistrito();
+            System.out.println(valDist.getNombre());
+        } catch (NullPointerException nullPointerException) {
+            System.out.println("completa tu datos v2");
+        }
 
         int id = 0;
         if (cliente.getIdusuario() != null) {
@@ -94,7 +95,7 @@ public class ClienteController {
             bindingResult.rejectValue("telefono", "error.Usuario", "Teléfono ya registrado anteriormente");
         }
 
-        if (bindingResult.hasErrors() || bindingResult2.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             System.out.println("Entro hasErrors");
             //   String direccion;
             model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());

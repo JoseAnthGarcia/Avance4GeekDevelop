@@ -23,21 +23,21 @@ public class Usuario {
     private String dni;
 
     @Column(nullable = false)
-    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
-    //@NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    @NotBlank(message = "Complete sus datos")
     private String nombres;
 
     @Column(nullable = false)
-    //@NotBlank(message = "Complete sus datos")
-    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
 
     @Column(nullable = false)
     private String sexo;
 
     @Column(nullable = false, unique = true)
-    //@NotBlank(message = "Complete sus datos")
-    //@Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
+    @NotBlank(message = "Complete sus datos")
+    @Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
 
     private int estado;
@@ -61,9 +61,11 @@ public class Usuario {
 
     //---credenciales-----
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     private String correo;
 
     @Column(nullable = false)
+    @NotBlank(message = "Complete sus datos")
     private String contrasenia;
     //-------
 

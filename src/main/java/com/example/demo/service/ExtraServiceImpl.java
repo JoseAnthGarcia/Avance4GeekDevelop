@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExtraServiceImpl implements ExtraService{
 
+    int id=1;
+
     @Autowired
     private ExtraRepository extraRepository;
 
@@ -19,6 +21,9 @@ public class ExtraServiceImpl implements ExtraService{
     @Override
     public Page<Extra> findPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.extraRepository.findByDisponible(true, pageable);
+        return this.extraRepository.findByIdrestauranteAndDisponible(1,true, pageable);
+        //return this.extraRepository.listarExtra(id);
     }
+
+
 }

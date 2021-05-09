@@ -30,7 +30,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping("/lista")
+    @GetMapping(value = {"/lista",""})
     public String listaPlatos(Model model) {
         return findPaginated(1, model);
     }

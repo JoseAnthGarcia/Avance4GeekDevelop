@@ -37,6 +37,7 @@ public class ExtraController {
     @GetMapping(value = {"/lista", ""})
     public String listarExtra(Model model, @RequestParam(value = "textBuscador", required = false) String nombre
             , @RequestParam(value = "textPrecio", required = false) String rango) {
+        //model.addAttribute("listaExtras", extraRepository.listarExtra(idrestaurante));
         return findPaginated(1,model);
         /*
         int precios = 0;
@@ -107,7 +108,8 @@ public class ExtraController {
         }
         model.addAttribute("texto", nombre);
         model.addAttribute("textoP", precios);
-        return "AdminRestaurante/listaExtras";*/
+         */
+        //return "AdminRestaurante/listaExtras";
     }
 
 

@@ -14,7 +14,7 @@ public class Usuario {
 //tu misma eres mela :3
     //nel mano
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
 
     @Column(unique = true)

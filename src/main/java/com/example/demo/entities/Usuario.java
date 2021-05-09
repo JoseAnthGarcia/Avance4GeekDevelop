@@ -67,14 +67,12 @@ public class Usuario {
     private String contrasenia;
     //-------
 
-    @ManyToMany(mappedBy = "usuarioPorDireccion")
+    @ManyToMany(mappedBy = "usuariosDistrito")
     private List<Distrito> distritos;
 
     @OneToOne
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
-
-
 
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
@@ -82,13 +80,24 @@ public class Usuario {
 
     //private String addresselegido;
 
-    //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
+
+    @OneToMany(mappedBy = "repartidor")
+    private List<Pedido> listaPedidosPorRepartidor;
+
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
+
+    public List<Pedido> getListaPedidosPorRepartidor() {
+        return listaPedidosPorRepartidor;
+    }
+
+    public void setListaPedidosPorRepartidor(List<Pedido> listaPedidosPorRepartidor) {
+        this.listaPedidosPorRepartidor = listaPedidosPorRepartidor;
+    }
 
     /*public String getAddresselegido() {
         return addresselegido;
@@ -109,6 +118,7 @@ public class Usuario {
     public void setIdusuario(int idusuario) {
         this.idusuario = idusuario;
     }
+
 
 
     public int getEstado() {

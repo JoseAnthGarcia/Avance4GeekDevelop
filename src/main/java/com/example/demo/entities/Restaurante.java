@@ -13,6 +13,16 @@ public class Restaurante {
     @Column(nullable = false)
     private String nombre;
 
+    private int idadministrador;
+
+    public int getIdadministrador() {
+        return idadministrador;
+    }
+
+    public void setIdadministrador(int idadministrador) {
+        this.idadministrador = idadministrador;
+    }
+
     public int getIdrestaurante() {
         return idrestaurante;
     }

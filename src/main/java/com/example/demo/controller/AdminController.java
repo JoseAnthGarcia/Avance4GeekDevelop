@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entities.Pedido;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
-import com.example.demo.repositories.MovilidadRepository;
-import com.example.demo.repositories.RolRepository;
-import com.example.demo.repositories.TipoMovilidadRepository;
-import com.example.demo.repositories.UsuarioRepository;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +34,8 @@ public class AdminController {
     @Autowired
     RolRepository rolRepository;
 
-
+    @Autowired
+    Usuario_has_distritoRepository usuario_has_distritoRepository;
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
@@ -160,20 +158,24 @@ public class AdminController {
 
             switch (usuario.getRol().getTipo()) {
                 case "administrador":
-
-                   // return "/AdminGen/visualizarCliente";
+                    model.addAttribute("administrador",usuario);
+                    return "/AdminGen/visualizarAdministrador";
                 case "repartidor":
                     model.addAttribute("repartidor",usuario);
+                    model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
+                    model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
                     return "/AdminGen/visualizarCliente";
-                case "administradorR    ":
-
-                   // return "/AdminGen/visualizarCliente";
+                case "administradorR":
+                    model.addAttribute("administradorRestaurante",usuario);
+                   return "/AdminGen/visualizarAdministradorRestaurante";
                 default:
                     //TODO ver si enviar con mensaje de alerta
                     return "redirect:/admin/usuarios";

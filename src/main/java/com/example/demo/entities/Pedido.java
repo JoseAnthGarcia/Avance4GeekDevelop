@@ -31,9 +31,13 @@ public class Pedido {
     private boolean mismodistrito;
     private LocalDateTime fechapedido;
 
-    @OneToOne
-    @JoinColumn(name = "idvaloracion")
-    private Valoracion valoracion;
+    private String comentariorestaurante;
+
+    private int valoracionrestaurante;
+
+    private String comentariorepartidor;
+
+    private int valoracionrepartidor;
 
     @ManyToOne
     @JoinColumn(name = "idrepartidor")
@@ -42,6 +46,39 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "idrestaurante")
     private Restaurante restaurante;
+
+
+    public String getComentariorestaurante() {
+        return comentariorestaurante;
+    }
+
+    public void setComentariorestaurante(String comentariorestaurante) {
+        this.comentariorestaurante = comentariorestaurante;
+    }
+
+    public int getValoracionrestaurante() {
+        return valoracionrestaurante;
+    }
+
+    public void setValoracionrestaurante(int valoracionrestaurante) {
+        this.valoracionrestaurante = valoracionrestaurante;
+    }
+
+    public String getComentariorepartidor() {
+        return comentariorepartidor;
+    }
+
+    public void setComentariorepartidor(String comentariorepartidor) {
+        this.comentariorepartidor = comentariorepartidor;
+    }
+
+    public int getValoracionrepartidor() {
+        return valoracionrepartidor;
+    }
+
+    public void setValoracionrepartidor(int valoracionrepartidor) {
+        this.valoracionrepartidor = valoracionrepartidor;
+    }
 
     public Usuario getRepartidor() {
         return repartidor;
@@ -111,11 +148,4 @@ public class Pedido {
         this.mismodistrito = mismodistrito;
     }
 
-    public Valoracion getValoracion() {
-        return valoracion;
-    }
-
-    public void setValoracion(Valoracion valoracion) {
-        this.valoracion = valoracion;
-    }
 }

@@ -61,13 +61,9 @@ public class Usuario {
 
     //---credenciales-----
     @Column(nullable = false)
-    //@NotBlank(message = "no puede estar vacío")
-    //@Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
     private String correo;
 
     @Column(nullable = false)
-    //@NotBlank(message = "No debe ser vacío o blanco")
-    //@Size(min = 8, message = "Ingrese como mínimo 8 caracteres")
     private String contrasenia;
     //-------
 
@@ -78,7 +74,8 @@ public class Usuario {
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
-
+    @OneToOne(mappedBy = "administrador")
+    private Restaurante restaurante;
 
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
@@ -86,13 +83,33 @@ public class Usuario {
 
     //private String addresselegido;
 
-    //borrar
+
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
+
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
+
+    @OneToMany(mappedBy = "repartidor")
+    private List<Pedido> listaPedidosPorRepartidor;
+
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
+
+    public List<Pedido> getListaPedidosPorRepartidor() {
+        return listaPedidosPorRepartidor;
+    }
+
+    public void setListaPedidosPorRepartidor(List<Pedido> listaPedidosPorRepartidor) {
+        this.listaPedidosPorRepartidor = listaPedidosPorRepartidor;
+    }
 
     /*public String getAddresselegido() {
         return addresselegido;
@@ -113,6 +130,7 @@ public class Usuario {
     public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
+
 
     public int getEstado() {
         return estado;

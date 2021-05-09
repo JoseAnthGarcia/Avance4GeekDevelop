@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.entities.CategoriaExtra;
 import com.example.demo.entities.Plato;
+import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.PlatoRepository;
+import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,12 +25,14 @@ public class PlatoController {
     @Autowired
     PlatoRepository platoRepository;
 
+    @Autowired
+    PlatoService platoService;
+    @Autowired
+    CategoriaExtraRepository categoriaExtraRepository;
+
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
-        model.addAttribute("listaPlatos", platoRepository.findByDisponible(true));
-        model.addAttribute("textoD", 1);
-        model.addAttribute("textoP", 0);
-        return "/AdminRestaurante/listaPlatos";
+        return findPaginated(1, model);
     }
     @PostMapping("/textSearch")
     public String buscardor(@RequestParam("textBuscador") String textBuscador,
@@ -42,14 +49,38 @@ public class PlatoController {
         return "/AdminRestaurante/listaPlatos";
     }
 
+    @GetMapping("/page")
+    public String findPaginated(@RequestParam("pageNo") int pageNo, Model model){
+
+        int pageSize = 5;
+
+        Page<Plato> page = platoService.findPaginated(pageNo, pageSize);
+        List<Plato> listaPlatos= page.getContent();
+
+        model.addAttribute("textoD", 1);
+        model.addAttribute("textoP", 0);
+        model.addAttribute("currentPage",pageNo);
+        System.out.println(pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaPlatos", listaPlatos);
+
+        return "AdminRestaurante/listaPlatos";
+
+    }
+
     @GetMapping("/nuevo")
-    public String crearPlato(@ModelAttribute("plato") Plato plato) {
+    public String crearPlato(@ModelAttribute("plato") Plato plato,
+                             Model model) {
+        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
         return "/AdminRestaurante/nuevoPlato";
     }
 
     @PostMapping("/guardar")
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
                                BindingResult bindingResult, RedirectAttributes attr) {
+        for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
+        System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
 
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
@@ -86,6 +117,8 @@ public class PlatoController {
 
     }
 
+
+
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,
                               Model model,
@@ -119,5 +152,7 @@ public class PlatoController {
         return "/AdminRestaurante/prueba";
     }
 
+// IMAGEN
+public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
 
 }

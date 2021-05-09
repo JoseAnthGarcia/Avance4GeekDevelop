@@ -1,4 +1,7 @@
 package com.example.demo.entities;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -24,21 +27,25 @@ public class Plato {
     @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
     @NotNull(message = "Este campo es obligatorio")
     private BigDecimal precio;
-    @Column(name="idcategoriaplato", nullable = false)
+    @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;
     @Column(name="idrestaurante", nullable = false)
     private int  idrestaurante;
     @Column(name="disponible", nullable = false)
     private boolean disponible;
-
-    /*
     @ManyToMany
-    @JoinColumn(name="categoriaextra_has_plato",
-            joinColums=@JoinColumn(name="idplato"),
-            inverseJoinColums=@JoinColumn(name = "idcategoriaextra"))
-    private List<CategoriaExtra> categoriaExtraPorPlato;
-*/
+    @JoinTable(name = "categoriaextra_has_plato",
+            joinColumns = @JoinColumn(name = "idplato"),
+            inverseJoinColumns = @JoinColumn(name = "idcategoriaextra"))
+    private List<CategoriaExtra> categoriaExtraList;
 
+    public List<CategoriaExtra> getCategoriaExtraList() {
+        return categoriaExtraList;
+    }
+
+    public void setCategoriaExtraList(List<CategoriaExtra> categoriaExtraList) {
+        this.categoriaExtraList = categoriaExtraList;
+    }
 
     public int getIdplato() {
         return idplato;
@@ -97,11 +104,4 @@ public class Plato {
         this.disponible = disponible;
     }
 
-/*    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
-        return categoriaExtraPorPlato;
-    }
-
-    public void setCategoriaExtraPorPlato(List<CategoriaExtra> categoriaExtraPorPlato) {
-        this.categoriaExtraPorPlato = categoriaExtraPorPlato;
-    }*/
 }

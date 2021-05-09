@@ -46,7 +46,7 @@ public class ClienteController {
         String direccion;
         model.addAttribute("Usuario_has_distrito",new Usuario_has_distrito()) ;
         //distritos
-        model.addAttribute("distrito", new Distrito());
+        model.addAttribute("distritosSeleccionados", new ArrayList<>());
         //distritos -->
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         return "Cliente/registro";
@@ -55,7 +55,7 @@ public class ClienteController {
 
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute("cliente") Usuario cliente,Usuario_has_distrito usuario_has_distrito,
-                                 Distrito distrito,Model model, RedirectAttributes attr) {
+                               Model model, RedirectAttributes attr) {
 
             //setear direccion
 
@@ -70,27 +70,18 @@ public class ClienteController {
 
             clienteRepository.save(cliente);
 
-
-            //SETEO EXTERNO
-
-
-            //Guaradando el seleccionado
-        //todo ya esta arriba
-            // Distrito distrito=cliente.getDistritos().get(0);
-
+        for(Distrito distrito : cliente.getDistritos()){
             Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
-            //SETEANDO ID'S
             usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
             usuario_has_distritoKey.setIdusuario(cliente.getIdusuario());
 
-            //todo ya c recibio
-            //Usuario_has_distrito usuario_has_distrito = new Usuario_has_distrito();
-            usuario_has_distrito.setId(usuario_has_distritoKey);
 
+            usuario_has_distrito.setId(usuario_has_distritoKey);
             usuario_has_distrito.setDistrito(distrito);
             usuario_has_distrito.setUsuario(cliente);
-            //usuario_has_distrito.setDireccion();
             usuario_has_distritoRepository.save(usuario_has_distrito);
+        }
+
 
 
 

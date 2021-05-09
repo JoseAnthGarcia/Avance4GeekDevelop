@@ -13,15 +13,9 @@ public class Restaurante {
     @Column(nullable = false)
     private String nombre;
 
-    private int idadministrador;
-
-    public int getIdadministrador() {
-        return idadministrador;
-    }
-
-    public void setIdadministrador(int idadministrador) {
-        this.idadministrador = idadministrador;
-    }
+    @OneToOne
+    @JoinColumn(name = "idadministrador")
+    private Usuario administrador;
 
     public int getIdrestaurante() {
         return idrestaurante;

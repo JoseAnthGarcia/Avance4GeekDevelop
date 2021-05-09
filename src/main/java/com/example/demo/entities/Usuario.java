@@ -74,11 +74,23 @@ public class Usuario {
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
+    @OneToOne(mappedBy = "administrador")
+    private Restaurante restaurante;
+
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
     private Credenciales credencial;*/
 
     //private String addresselegido;
+
+
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
 
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;

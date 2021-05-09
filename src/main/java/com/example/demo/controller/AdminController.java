@@ -5,16 +5,21 @@ import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -33,6 +38,12 @@ public class AdminController {
 
     @Autowired
     RolRepository rolRepository;
+
+    @Autowired  //////------------importante para enviar correo
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Autowired
     Usuario_has_distritoRepository usuario_has_distritoRepository;
@@ -226,25 +237,74 @@ public class AdminController {
 
 
     @PostMapping("/guardar")
-    public String guardarPlato(@ModelAttribute("usuario") @Valid Usuario usuario,
+    public String guardarAdmin(@ModelAttribute("usuario") @Valid Usuario usuario,
                                BindingResult bindingResult, RedirectAttributes attr) {
 
+        // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
+
         if(bindingResult.hasErrors()){
-            return "AdminGen/crearAdmin";
+            return "AdminGen" +
+                    "/crearAdmin";
         }else {
 
             if (usuario.getIdusuario() == 0) {
                 attr.addFlashAttribute("msg", "Administrador creado exitosamente");
                 usuario.setRol(rolRepository.findById(5).get());
-                usuario.setFecharegistro(String.valueOf(new Date()));
+                usuario.setFecharegistro(String.valueOf(LocalDateTime.now()));
+                usuario.setContrasenia("123456");////contraseña por default
                 usuarioRepository.save(usuario);
-                return "redirect:/admin";
+
+                /////----------------Envio Correo--------------------/////
+
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+
+                //sendEmailHtml(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+
+
+
+                /////-----------------------------------------------/////
+
+
+
+
+                return "redirect:/admin/solicitudes";
             } else {
                 usuarioRepository.save(usuario);
                 attr.addFlashAttribute("msg", "Administrador actualizado exitosamente");
-                return "redirect:/admin";
+                return "redirect:/admin/solicitudes";
             }
         }
+
+    }
+
+
+    //Pasamos por parametro: destinatario, asunto y el mensaje
+    public void sendEmail(String to, String subject, String content) {
+
+        SimpleMailMessage email = new SimpleMailMessage();
+
+        email.setTo(to);
+        email.setSubject(subject);
+        email.setText(content);
+
+        mailSender.send(email);
+    }
+
+    public void sendEmailHtml(String to, String subject, Usuario usuario) {
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(to);
+        email.setSubject(subject);
+        // Crear cuerpo del mensaje
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        email.setText(emailContent);
+        mailSender.send(email);
+
+
 
     }
 

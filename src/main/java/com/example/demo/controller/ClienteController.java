@@ -46,7 +46,7 @@ public class ClienteController {
     }
 
     @GetMapping("/nuevo")
-    public String nuevoCliente(@ModelAttribute("cliente")  Usuario cliente, Model model) {
+    public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
         // String direccion;
         model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
         //distritos
@@ -58,60 +58,78 @@ public class ClienteController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente,BindingResult bindingResult,
+    public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("Usuario_has_distrito") @Valid Usuario_has_distrito usuario_has_distrito,
-                                 BindingResult bindingResult2,Model model, RedirectAttributes attr) {
+                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) {
 
-        /*int id = 0;
+        try {
+            String valDireccion = usuario_has_distrito.getDireccion();
+            System.out.println(valDireccion);
+        } catch (NullPointerException n) {
+            System.out.println("Coloca tus datos plox v2");
+        }
+        try {
+            Distrito valDistrito = usuario_has_distrito.getDistrito();
+            System.out.println(valDistrito.getNombre());
+        } catch (NullPointerException n) {
+            System.out.println("Coloca tus datos plox");
+        }
+
+
+        int id = 0;
         if (cliente.getIdusuario() != null) {
             id = cliente.getIdusuario();
         }
-        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreoAndIdusuarioNot(cliente.getCorreo(),id);
+        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreoAndIdusuarioNot(cliente.getCorreo(), id);
         if (!clientesxcorreo.isEmpty()) {
-            bindingResult.rejectValue("correo", "error.Usuario", "No puedes colocar un correo existente");
+            bindingResult.rejectValue("correo", "error.Usuario", "Correo ya registrado anteriormente");
         }
-        List<Usuario> clientesxdni = clienteRepository.findUsuarioByDniAndIdusuarioNot(cliente.getDni(),id);
+        List<Usuario> clientesxdni = clienteRepository.findUsuarioByDniAndIdusuarioNot(cliente.getDni(), id);
         if (!clientesxdni.isEmpty()) {
             bindingResult.rejectValue("dni", "error.Usuario", "DNI ya registrado anteriormente");
-        }*/
-
-
-
-            if (bindingResult.hasErrors() || bindingResult2.hasErrors() ) {
-                System.out.println("Entro hasErrors");
-             //   String direccion;
-                model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
-                //distritos
-                model.addAttribute("distritosSeleccionados", new ArrayList<>());
-                //distritos -->
-                model.addAttribute("listaDistritos", distritosRepository.findAll());
-                return "Cliente/registro";
-            } else {
-                cliente.setEstado(1);
-                cliente.setRol(rolRepository.findById(1).get());
-                String fechanacimiento = LocalDate.now().toString();
-                cliente.setFecharegistro(fechanacimiento);
-                clienteRepository.save(cliente);
-                attr.addFlashAttribute("msg", "Cliente creado exitosamente");
-
-
-                clienteRepository.save(cliente);
-
-                for (Distrito distrito : cliente.getDistritos()) {
-                    Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
-                    usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
-                    usuario_has_distritoKey.setIdusuario(cliente.getIdusuario());
-
-
-                    usuario_has_distrito.setId(usuario_has_distritoKey);
-                    usuario_has_distrito.setDistrito(distrito);
-                    usuario_has_distrito.setUsuario(cliente);
-
-                    usuario_has_distritoRepository.save(usuario_has_distrito);
-                }
-
-                return "redirect:/cliente/login";
-
-            }
         }
+
+        List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefonoAndIdusuarioNot(cliente.getTelefono(), id);
+        if (!clientesxtelefono.isEmpty()) {
+            bindingResult.rejectValue("telefono", "error.Usuario", "Teléfono ya registrado anteriormente");
+        }
+
+        if (bindingResult.hasErrors() || bindingResult2.hasErrors()) {
+            System.out.println("Entro hasErrors");
+            //   String direccion;
+            model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
+            //distritos
+            model.addAttribute("distritosSeleccionados", new ArrayList<>());
+            //distritos -->
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+            return "Cliente/registro";
+        } else {
+            cliente.setEstado(1);
+            cliente.setRol(rolRepository.findById(1).get());
+            String fechanacimiento = LocalDate.now().toString();
+            cliente.setFecharegistro(fechanacimiento);
+            clienteRepository.save(cliente);
+            attr.addFlashAttribute("msg", "Cliente creado exitosamente");
+
+
+            clienteRepository.save(cliente);
+
+            for (Distrito distrito : cliente.getDistritos()) {
+                Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
+                usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
+                usuario_has_distritoKey.setIdusuario(cliente.getIdusuario());
+
+
+                usuario_has_distrito.setId(usuario_has_distritoKey);
+                usuario_has_distrito.setDistrito(distrito);
+                usuario_has_distrito.setUsuario(cliente);
+
+                usuario_has_distritoRepository.save(usuario_has_distrito);
+            }
+
+            return "redirect:/cliente/login";
+
+        }
+
     }
+}

@@ -42,6 +42,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     List<Usuario> findUsuarioByCorreoAndIdusuarioNot(String correo, int id);
     List<Usuario> findUsuarioByDniAndIdusuarioNot(String dni, int id);
+    List<Usuario> findUsuarioByTelefonoAndIdusuarioNot(String telefono, int id);
+
     //muestra la ganancia de un repartidor - la ganancia de un repartidor depende del atributo mismo distrito, entonces la ganancia sería
     //la cantidad de pedidos que tiene en un distrito *4 + la cantidad de pedidos que tiene fuera *6
     @Query(value = "SELECT ((select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 1 and u.idusuario = p.idrepartidor and u.idusuario = 3)*4 + (select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 0 and u.idusuario = p.idrepartidor and u.idusuario = 3)*6) as `ganancia` \n" +

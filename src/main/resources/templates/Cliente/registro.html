@@ -82,7 +82,7 @@
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
 
-                          <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                          <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"> </div>
 
 
@@ -95,7 +95,7 @@
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
 
-                            <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
 
 
@@ -114,9 +114,9 @@
 
                         <div class="col-sm-6 mb-2">
                             <label style="color: black">Fecha de nacimiento</label>
-                            <input th:field="*{fechanacimiento}" type="text" class="form-control"
-                                   style="border-color:lightgray" placeholder="Fecha de nacimiento"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')"/>
+                            <input type="date" class="form-control mb-2"  style="border-color: lightgray" th:field="*{fechanacimiento}" th:novalidate="novalidate">
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechanacimiento')}"
+                                 th:errors="*{fechanacimiento}"></div>
                         </div>
                     </div>
 
@@ -124,10 +124,12 @@
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Sexo</label>
                             <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
-                                <option value="" disabled selected>Sexo</option>
+                                <option value="" selected>Sexo</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('sexo')}"
+                                 th:errors="*{sexo}"></div>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: black">Teléfono</label>
@@ -135,7 +137,7 @@
                                    th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
 
-                            <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
 
 
@@ -146,49 +148,45 @@
                             <label style="color: black">DNI</label>
                             <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
-
-                            <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
-
                         </div>
-
-                        <!--
                                                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                                                     <label style="color: black">Foto de Perfil</label>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input border-secondary" id="inputGroupFile03">
+                                                        <input type="file" style="border-color:lightgray" id="inputGroupFile03">
                                                         <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
                                                     </div>
                                                 </div>
-                                                 -->
+
 
                     </div>
 
                     <div class="form-group row" th:object="${Usuario_has_distrito}">
-                        <div class="col-sm-6  mb-2 mb-sm-0">
+                        <div class="col-sm-6   mb-sm-0">
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="direccion" placeholder="Dirección" th:field="*{direccion}">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></div>
+
                         </div>
                     </div>
-
-
+                    <div class="form-group row">
                     <div class="col-sm-6  mb-2 mb-sm-0">
-                        <select class="form-class" th:field="*{distritos}">
-                            <option value="" disabled selected>Distrito</option>
-                            <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
-                                    th:text="${dist.nombre}"></option>
-                        </select>
-                    </div>
+                        <label style="color: #000000">Distritos</label>
+                        <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
+                            <option value="Distrito" selected>Distrito</option>
 
+                        </select>
+
+                    </div>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">Contraseña</label>
                             <input type="password" class="form-control" style="border-color:lightgray"
                                    id="inputPassword1" th:field="*{contrasenia}"
-                                   placeholder="La contraseña debe contar con al menos 8 caracteres.">
+                                   placeholder="Coloque contraseña">
                             <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></div>
                         </div>
 

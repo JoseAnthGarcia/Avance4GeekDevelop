@@ -53,12 +53,15 @@ public class ClienteController {
 
     }
 
+    @GetMapping("/listaRestaurantes")
+    public String listaRest(Model model){
+
+        return "Cliente/listaRestaurantes";
+    }
+
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute("cliente") Usuario cliente,Usuario_has_distrito usuario_has_distrito,
                                Model model, RedirectAttributes attr) {
-
-            //setear direccion
-
 
             cliente.setEstado(1);
             cliente.setRol(rolRepository.findById(1).get());

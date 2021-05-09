@@ -18,8 +18,8 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="Avance4GeekDevelop" value="e42e9e9a-d0a8-4cf6-9e5b-890c3e53c16e" />
-          <factory-entry name="entityManagerFactory" />
+          <factory-entry name="Avance4GeekDevelop" />
+          <factory-entry name="entityManagerFactory" value="298b9f53-3a20-4d66-93a0-b906ba35f561" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
@@ -132,6 +132,5 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.3.5" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.13" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
   </component>
 </module>

@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.entities.CategoriaExtra;
 import com.example.demo.entities.Plato;
+import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.PlatoRepository;
 import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class    PlatoController {
 
     @Autowired
     PlatoService platoService;
+    @Autowired
+    CategoriaExtraRepository categoriaExtraRepository;
 
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
@@ -67,7 +71,9 @@ public class    PlatoController {
     }
 
     @GetMapping("/nuevo")
-    public String crearPlato(@ModelAttribute("plato") Plato plato) {
+    public String crearPlato(@ModelAttribute("plato") Plato plato,
+                             Model model) {
+        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
         return "/AdminRestaurante/nuevoPlato";
     }
 
@@ -75,13 +81,25 @@ public class    PlatoController {
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
                                BindingResult bindingResult, RedirectAttributes attr) {
 
+        plato.setIdrestaurante(3); //Jarcodeado
+        plato.setIdcategoriaplato(5); //Jarcodeado
+        plato.setDisponible(true); //default expresion !!!!
+        platoRepository.save(plato);
+
+        return "redirect:/plato/lista";
+
+        /*
+
+        for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
+        System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
+
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
                 return "/AdminRestaurante/nuevoPlato";
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
-                    return "/AdminRestaurante/editarPlato";
+                    return "/AdminRestaurante/aja";
                 }else{
 
                     return "redirect:/plato/lista";
@@ -106,7 +124,7 @@ public class    PlatoController {
                 }
             }
             return "redirect:/plato/lista";
-        }
+        }*/
 
     }
 

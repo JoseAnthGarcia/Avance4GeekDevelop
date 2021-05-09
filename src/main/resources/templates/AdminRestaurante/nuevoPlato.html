@@ -261,8 +261,8 @@
                                             <td> <label>Extras: </label></td>
                                             <td colspan="2">
                                                 <div th:each="categoria :${listaCategoria}">
-                                                <input  name="extra" th:field="*{categoriaExtraList}" type="checkbox">
-                                                <label th:text="${categoria.getTipo()}" th:value="${categoria.getIdcategoriaextra()}"></label><br>
+                                                <input th:field="*{categoriaExtraList}" type="checkbox" th:value="${categoria.getIdcategoriaextra()}">
+                                                <label th:text="${categoria.getTipo()}"></label><br>
                                                 </div>
 
                                             </td>

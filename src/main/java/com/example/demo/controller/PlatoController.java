@@ -79,6 +79,16 @@ public class PlatoController {
     @PostMapping("/guardar")
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
                                BindingResult bindingResult, RedirectAttributes attr) {
+
+        plato.setIdrestaurante(3); //Jarcodeado
+        plato.setIdcategoriaplato(5); //Jarcodeado
+        plato.setDisponible(true); //default expresion !!!!
+        platoRepository.save(plato);
+
+        return "redirect:/plato/lista";
+
+        /*
+
         for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
         System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
 
@@ -113,7 +123,7 @@ public class PlatoController {
                 }
             }
             return "redirect:/plato/lista";
-        }
+        }*/
 
     }
 

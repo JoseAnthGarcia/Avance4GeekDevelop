@@ -153,7 +153,7 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">DNI</label>
-                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
+                            <input type="text" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
                             <div style="color: red; font-size: small; text-align: left"
                                  th:if="${#fields.hasErrors('dni')}"

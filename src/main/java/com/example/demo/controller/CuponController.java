@@ -31,6 +31,8 @@ public class CuponController {
         return "AdminRestaurante/listaCupones";
     }
 
+
+
     @GetMapping("/nuevo")
     public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon) {
         return "AdminRestaurante/nuevoCupon";

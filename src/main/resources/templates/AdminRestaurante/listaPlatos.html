@@ -212,11 +212,9 @@
                                            id="examplePlato"
                                            th:value="${texto}"
                                            placeholder="Buscar plato"
-
                                            name="textBuscador">
                                 </div>
-
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
@@ -225,6 +223,7 @@
                                         <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/.20.00</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="textDisponible" name="textDisponible"
                                             style="justify-content: right">
@@ -239,6 +238,7 @@
                                         </option>
                                     </select>
                                 </div>
+
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
@@ -247,8 +247,7 @@
                                 </div>
                                 <div class="col-sm-3 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
-                                       th:href="@{/plato/lista}"
-                                    >Quitar filtros</a>
+                                       th:href="@{/plato/lista}">Quitar filtros</a>
                                 </div>
                             </div>
                         </form>
@@ -310,16 +309,15 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination"
-                                     style=" margin-left: 630px ;align-content: center">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/plato/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2"></a>
+                                           class="active mt-2 no"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white"></a>
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/plato")
-public class    PlatoController {
+public class PlatoController {
 
     @Autowired
     PlatoRepository platoRepository;
@@ -31,7 +31,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping(value={"/lista",""})
+    @GetMapping(value = {"/lista", ""})
     public String listaPlatos(Model model) {
         return findPaginated("", 1, 0, 1, model);
     }
@@ -50,10 +50,10 @@ public class    PlatoController {
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textDisponible", required = false) Integer inputDisponible,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model){
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
 
-        if(pageNo==null || pageNo==0){
-            pageNo=1;
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
         }
 
         int inputID = 1;
@@ -61,38 +61,38 @@ public class    PlatoController {
         Page<Plato> page;
         List<Plato> listaPlatos;
         System.out.println(textBuscador);
-        if(textBuscador==null){
-            textBuscador="";
+        if (textBuscador == null) {
+            textBuscador = "";
         }
-        if(inputDisponible==null){
-            inputDisponible=1;
+        if (inputDisponible == null) {
+            inputDisponible = 1;
         }
         boolean disponibilidad;
-        disponibilidad= inputDisponible != 0;
+        disponibilidad = inputDisponible != 0;
         System.out.println(inputPrecio);
-        if(inputPrecio==null){
-            inputPrecio=0;
+        if (inputPrecio == null) {
+            inputPrecio = 0;
         }
         int inputPMax;
         int inputPMin;
-        if (inputPrecio==0){
-            inputPMin=0;
-            inputPMax=100;
-        }else {
-            inputPMax=inputPrecio;
-            inputPMin=inputPrecio;
+        if (inputPrecio == 0) {
+            inputPMin = 0;
+            inputPMax = 100;
+        } else {
+            inputPMax = inputPrecio;
+            inputPMin = inputPrecio;
         }
-        page = platoService.findPaginated2(pageNo, pageSize, textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);
-        listaPlatos= page.getContent();
+        page = platoService.findPaginated2(pageNo, pageSize, textBuscador, disponibilidad, inputPMin * 5 - 5, inputPMax * 5);
+        listaPlatos = page.getContent();
 
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoD", inputDisponible);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" +inputPMax);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" + inputPMax);
 
-        model.addAttribute("currentPage",pageNo);
+        model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaPlatos", listaPlatos);
@@ -104,7 +104,7 @@ public class    PlatoController {
     @GetMapping("/nuevo")
     public String crearPlato(@ModelAttribute("plato") Plato plato,
                              Model model) {
-        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+        model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
         return "/AdminRestaurante/nuevoPlato";
     }
 
@@ -115,20 +115,20 @@ public class    PlatoController {
         plato.setIdrestaurante(1); //Jarcodeado
         plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
-        if(bindingResult.hasErrors()){
+        model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
+        if (bindingResult.hasErrors()) {
             if (plato.getIdplato() == 0) {
                 return "/AdminRestaurante/nuevoPlato";
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
                     return "/AdminRestaurante/nuevoPlato";
-                }else{
+                } else {
 
                     return "redirect:/plato/lista";
                 }
             }
-        }else{
+        } else {
             if (plato.getIdplato() == 0) {
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
@@ -147,7 +147,6 @@ public class    PlatoController {
     }
 
 
-
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,
                               Model model,
@@ -156,7 +155,7 @@ public class    PlatoController {
         if (platoOptional.isPresent()) {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
-            model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+            model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
             return "/AdminRestaurante/nuevoPlato";
         } else {
             return "redirect:/plato/lista";
@@ -164,7 +163,7 @@ public class    PlatoController {
     }
 
     @GetMapping("/borrar")
-    public String borrarPlato(@RequestParam("id") int id ,RedirectAttributes attr) {
+    public String borrarPlato(@RequestParam("id") int id, RedirectAttributes attr) {
         Optional<Plato> platoOptional = platoRepository.findById(id);
         if (platoOptional.isPresent()) {
             Plato plato = platoOptional.get();
@@ -183,6 +182,6 @@ public class    PlatoController {
     }
 
     // IMAGEN
-    public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
+    public static String directoriofoto = System.getProperty("user.dir") + "/src/main/resources/static/imagenDeRestaurante";
 
 }

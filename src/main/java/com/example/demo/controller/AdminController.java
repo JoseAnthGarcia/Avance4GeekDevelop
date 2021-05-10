@@ -104,16 +104,31 @@ public class AdminController  {
 
     @GetMapping("/buscador")
     public String buscadorUsuario(@RequestParam(value = "texto",required = false) String texto,
-                                  @RequestParam(value = "fechaRegsitro",required = false) int fechaRegsitro,
-                                  @RequestParam(value = "idRol",required = false) int idRol,
-                                  @RequestParam(value = "estado",required = false) int estado,
+                                  @RequestParam(value = "fechaRegsitro",required = false) Integer fechaRegsitro,
+                                  @RequestParam(value = "idRol",required = false) Integer idRol,
+                                  @RequestParam(value = "estado",required = false) Integer estado,
                                   Model model){
+
+        //busca por nombre y apellido - no hay problema si es nulo
         model.addAttribute("textoBuscador", texto);
         model.addAttribute("fechaBuscador", fechaRegsitro);
         model.addAttribute("rolBuscador", idRol);
         model.addAttribute("estadoBuscador", estado);
 
-        model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        //si es nulo se manda la fecha minima de la lista de USUARIOS
+        if(fechaRegsitro==null){
+            fechaRegsitro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        }
+        if(estado==null && idRol == null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstadoNiRol(texto,-1*fechaRegsitro));
+        }else if(idRol==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinRol(texto,-1*fechaRegsitro,estado));
+        }else if(estado==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstado(texto,-1*fechaRegsitro,idRol));
+        }else{
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        }
+
         return "/AdminGen/lista";
     }
     @GetMapping("/aceptarSolicitud")

@@ -80,6 +80,9 @@ public class LoginController {
                 System.out.println("ingreso");
                 return "redirect:/admin/usuarios";
             }else {
+                if(rol.equals("administradorR")){
+                    return "redirect:/plato/";
+                }
                 return "redirect:/ClienteLogin";
             }
 

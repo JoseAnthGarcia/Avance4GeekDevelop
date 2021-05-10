@@ -292,11 +292,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Tipo de vehículo: ${repartidor.movilidad.tipoMovilidad.tipo}|"></td>
-                                                    <td th:if="${repartidor.movilidad == null}" th:text="|Placa: ${repartidor.movilidad.placa}|"></td>
+                                                    <td th:text="|Placa: ${repartidor.movilidad.placa!=null?repartidor.movilidad.placa:'--'}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td th:if="${repartidor.movilidad == null}" th:text="|Licencia de Conducir: ${repartidor.movilidad.licencia}|"></td>
-                                                    <td th:text="|Total de ingreso: S/.${ganancia}|"></td>
+                                                    <td th:if="${ganancia!=null}" th:text="|Total de ingreso: S/.${ganancia}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Valoracion:
@@ -372,7 +372,7 @@
 
                 </div>
 
-                <form>
+                <form th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
 
                     <div class="form-group row">
 
@@ -417,7 +417,7 @@
                 </form>
 
                 <!-- /.container-fluid -->
-                <div class="card shadow ">
+                <div class="card shadow " th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">

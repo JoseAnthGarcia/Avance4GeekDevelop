@@ -265,7 +265,7 @@ public class AdminController  {
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":

@@ -266,8 +266,14 @@
                                                 <tr>
                                                     <td th:text="|Fecha de Registro: ${repartidor.fecharegistro}|"
                                                         style="width: 1300px;"></td>
-                                                    <td th:text="|Estado: ${repartidor.estado}|"
-                                                        style="width: 1300px;"></td>
+                                                    <div th:switch="${repartidor.estado}">
+                                                        <td th:case="0" style="width: 1300px;">Estado: bloqueado</td>
+                                                        <td th:case="1" style="width: 1300px;">Estado: activo</td>
+                                                        <td th:case="2" style="width: 1300px;">Estado: pendiente</td>
+                                                        <td th:case="3" style="width: 1300px;">Estado: rechazado</td>
+                                                    </div>
+                                                    <!--td th:text="|Estado: ${repartidor.estado}|"
+                                                        style="width: 1300px;"></td-->
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Nombre: ${repartidor.nombres}|"></td>
@@ -292,11 +298,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Tipo de vehículo: ${repartidor.movilidad.tipoMovilidad.tipo}|"></td>
-                                                    <td th:if="${repartidor.movilidad == null}" th:text="|Placa: ${repartidor.movilidad.placa}|"></td>
+                                                    <td th:text="|Placa: ${repartidor.movilidad.placa!=null?repartidor.movilidad.placa:'--'}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td th:if="${repartidor.movilidad == null}" th:text="|Licencia de Conducir: ${repartidor.movilidad.licencia}|"></td>
-                                                    <td th:text="|Total de ingreso: S/.${ganancia}|"></td>
+                                                    <td th:if="${ganancia!=null}" th:text="|Total de ingreso: S/.${ganancia}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Valoracion:
@@ -372,7 +378,7 @@
 
                 </div>
 
-                <form>
+                <form th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
 
                     <div class="form-group row">
 
@@ -413,7 +419,7 @@
                 </form>
 
                 <!-- /.container-fluid -->
-                <div class="card shadow ">
+                <div class="card shadow " th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">

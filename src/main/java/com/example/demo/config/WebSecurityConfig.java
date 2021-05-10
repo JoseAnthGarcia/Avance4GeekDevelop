@@ -32,7 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll();
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 
-        http.logout().deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        http.logout()
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
         System.out.println("configure");
     }
 

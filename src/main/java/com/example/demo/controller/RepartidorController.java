@@ -70,8 +70,7 @@ public class RepartidorController {
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null ||
-            !usuario.getSexo().equals("Femenino") ||!usuario.getSexo().equals("Masculino") || errorMov){
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -84,9 +83,7 @@ public class RepartidorController {
             if(usuario3!=null){
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
-            if (!usuario.getSexo().equals("Femenino") ||!usuario.getSexo().equals("Masculino")){
-                model.addAttribute("msg5", "Seleccione una opción");
-            }
+
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }

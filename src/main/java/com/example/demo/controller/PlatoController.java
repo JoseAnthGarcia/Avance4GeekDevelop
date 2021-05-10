@@ -37,7 +37,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping("/lista")
+    @GetMapping(value = {"/lista", ""})
     public String listaPlatos(Model model) {
         return findPaginated("", 1, 0, 1, model);
     }
@@ -153,17 +153,13 @@ public class    PlatoController {
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
-                    return "/AdminRestaurante/aja";
-                }else{
+                    return "/AdminRestaurante/nuevoPlato";
+                } else {
 
                     return "redirect:/plato/lista";
                 }
             }
-        }else{
-            plato.setIdrestaurante(1); //Jarcodeado
-            plato.setIdcategoriaplato(3); //Jarcodeado
-            plato.setDisponible(true); //default expresion !!!!
-
+        } else {
             if (plato.getIdplato() == 0) {
 
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
@@ -204,7 +200,7 @@ public class    PlatoController {
         if (platoOptional.isPresent()) {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
-            model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+            model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
             return "/AdminRestaurante/nuevoPlato";
         } else {
             return "redirect:/plato/lista";

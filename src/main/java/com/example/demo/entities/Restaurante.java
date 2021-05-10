@@ -18,6 +18,14 @@ public class Restaurante  implements Serializable {
     @JoinColumn(name = "idadministrador")
     private Usuario administrador;
 
+    public Usuario getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(Usuario administrador) {
+        this.administrador = administrador;
+    }
+
     public int getIdrestaurante() {
         return idrestaurante;
     }

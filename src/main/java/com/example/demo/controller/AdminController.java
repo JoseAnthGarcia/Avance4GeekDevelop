@@ -224,12 +224,22 @@ public class AdminController  {
                                   @RequestParam(value = "fechaPedido",required = false) Integer fechaPedido,
                                   @RequestParam(value = "valoracion",required = false) Integer valoracion,
                                   Model model){
+        System.out.println(idUsuario + "sfasdfasdfasfasfd");
+        System.out.println(texto + "sfasdfasdfasfasfd");
+        System.out.println(fechaPedido + "sfasdfasdfasfasfd");
+        System.out.println(valoracion + "sfasdfasdfasfasfd");
+
         model.addAttribute("textoBuscador", texto);
         model.addAttribute("fechaPedidoBuscador", fechaPedido);
         model.addAttribute("valoracionBuscador", valoracion);
+        model.addAttribute("idUsuario", idUsuario);
 
-        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
-        return "redirect:/admin/detalle?idUsuario="+idUsuario;
+        if(fechaPedido == null){
+            fechaPedido = usuarioRepository.buscarFechaMinimaRepartidor();
+        }
+
+        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,-1*fechaPedido,valoracion));
+        return "/AdminGen/visualizarCliente";
     }
 
     @GetMapping("/detalle")
@@ -255,14 +265,14 @@ public class AdminController  {
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
                     return "/AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);

@@ -346,11 +346,11 @@
                     <input type="hidden" name="idUsuario" th:value="${cliente.idusuario}">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
-                            <input th:if="${fechaPedidoBuscador == null}" type="text" class="form-control"
+                            <input th:if="${textoBuscador == null}" type="text" class="form-control"
                                    name="textoPedido"
                                    placeholder="Búsqueda por repartidor o restaurante">
-                            <input th:unless="${fechaPedidoBuscador == null}" type="text" class="form-control"
-                                   name="textoPedido"
+                            <input th:unless="${textoBuscador == null}" type="text" class="form-control"
+                                   name="textoPedido" th:value="${textoBuscador}"
                                    placeholder="Búsqueda por repartidor o restaurante">
                         </div>
                         <div class="col-sm-2 mb-1 ">
@@ -362,7 +362,8 @@
                                 <option value="4">4</option>
                                 <option value="5">5</option>
                             </select>
-                            <select th:unless="${valoracionBuscador == null}" class="form-control" name="valoracion">
+                            <select th:unless="${valoracionBuscador == null}"
+                                    class="form-control" name="valoracion">
                                 <option value="" disabled selected>Fecha de Registro</option>
                                 <option th:selected="${valoracionBuscador == 1}" value="1">1</option>
                                 <option th:selected="${valoracionBuscador == 2}" value="2">2</option>
@@ -422,7 +423,133 @@
                                 <table class="table table-bordered table-image table-responsive">
 
                                     <tbody>
-                                    <div th:each="pedidos : ${cliente.getListaPedidosPorUsuario()}">
+                                    <div th:if="${textoBuscador == null}" th:each="pedidos : ${cliente.getListaPedidosPorUsuario()}">
+                                        <div th:if="${pedidos.estado != 0}">
+                                             <tr>
+                                            <td style="width: 1300px;">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-4 mb-2 mb-sm-0">
+                                                        <div style="color: black" align="left"
+                                                            th:text="|REPARTIDOR: ${pedidos.repartidor.nombres}|"></div>
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
+                                                        <div th:switch="${pedidos.valoracionrepartidor}">
+                                                            <div th:case="1">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="2">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="3">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="4">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="5">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0">
+                                                        <div   align="right"
+                                                             th:text="${#temporals.format(pedidos.fechapedido, 'dd-MM-yyyy HH:mm')}"></div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12 mb-2 mb-sm-0" align="left">
+                                                        <p th:text="${pedidos.comentariorepartidor}"></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td style="width: 1300px;">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
+                                                        <div style="color: black"
+                                                             th:text="|RESTAURANTE: ${pedidos.restaurante.nombre}|"></div>
+
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="left">
+                                                        <div th:switch="${pedidos.valoracionrestaurante}">
+                                                            <div th:case="1">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="2">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="3">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="4">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <div th:case="5">
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                                <i class="fas fa-star" style="color: gold"></i>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-4 mb-2 mb-sm-0" align="right">
+                                                        <h7 th:text="${#temporals.format(pedidos.fechapedido, 'dd-MM-yyyy HH:mm')}"></h7>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12 mb-2 mb-sm-0" align="left">
+                                                        <p th:text="${pedidos.comentariorestaurante}"></p>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </td>
+
+                                        </tr>
+                                        </div>
+                                    </div>
+                                    <div th:unless="${textoBuscador == null}" th:each="pedidos : ${listaPedidos}">
                                         <div th:if="${pedidos.estado != 0}">
                                              <tr>
                                             <td style="width: 1300px;">

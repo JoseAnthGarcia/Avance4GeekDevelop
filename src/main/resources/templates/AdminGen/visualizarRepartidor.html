@@ -292,11 +292,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Tipo de vehículo: ${repartidor.movilidad.tipoMovilidad.tipo}|"></td>
-                                                    <td th:if="${repartidor.movilidad == null}" th:text="|Placa: ${repartidor.movilidad.placa}|"></td>
+                                                    <td th:text="|Placa: ${repartidor.movilidad.placa!=null?repartidor.movilidad.placa:'--'}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td th:if="${repartidor.movilidad == null}" th:text="|Licencia de Conducir: ${repartidor.movilidad.licencia}|"></td>
-                                                    <td th:text="|Total de ingreso: S/.${ganancia}|"></td>
+                                                    <td th:if="${ganancia!=null}" th:text="|Total de ingreso: S/.${ganancia}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Valoracion:
@@ -372,22 +372,18 @@
 
                 </div>
 
-                <form>
+                <form th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
 
                     <div class="form-group row">
 
                         <div class="col-sm-2 mb-1 ">
-                            <select class="form-control  ">
+                            <select class="form-control" >
                                 <option value="" disabled selected>Valoracion</option>
-                                <option value="Pendiente">1</option>
-                                <option value="Pendiente">2</option>
-
-                                <option value="Entregado">3</option>
-
-                                <option value="Cancelado">4</option>
-
-                                <option value="Cancelado">5</option>
-
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
                         </div>
 
@@ -409,7 +405,7 @@
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{'/admin/detalle?idUsuario='+${repartidor.idusuario}}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -417,7 +413,7 @@
                 </form>
 
                 <!-- /.container-fluid -->
-                <div class="card shadow ">
+                <div class="card shadow " th:if="${repartidor.listaPedidosPorRepartidor.size()!=0}">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">

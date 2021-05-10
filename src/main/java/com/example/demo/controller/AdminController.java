@@ -102,6 +102,20 @@ public class AdminController  {
         return "/AdminGen/solicitudRepartidor";
     }
 
+    @GetMapping("/buscador")
+    public String buscadorUsuario(@RequestParam(value = "texto",required = false) String texto,
+                                  @RequestParam(value = "fechaRegsitro",required = false) int fechaRegsitro,
+                                  @RequestParam(value = "idRol",required = false) int idRol,
+                                  @RequestParam(value = "estado",required = false) int estado,
+                                  Model model){
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaBuscador", fechaRegsitro);
+        model.addAttribute("rolBuscador", idRol);
+        model.addAttribute("estadoBuscador", estado);
+
+        model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        return "/AdminGen/lista";
+    }
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id){
 
@@ -197,6 +211,8 @@ public class AdminController  {
             return "redirect:/admin/usuarios";
         }
     }
+
+
     @GetMapping("/aceptado")
     public String aceptarUsuario(Model model,
                                  @RequestParam("id") int id) {

@@ -56,7 +56,10 @@
                     <input type="password" class="form-control form-control-user"
                            id="contra" name="contrasenia" placeholder="Contraseña">
                   </div>
-                  <h1 th:if="${param.error}" class="form-signin-heading" style="color:black">Acceso denegado</h1>
+                  <div style="color: red; font-size: small; text-align: left"
+                       th:if="${param.error}">Acceso denegado</div>
+
+
                   <button class="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>
                   <hr>
                   <a href="index.html" class="btn btn-google btn-user btn-block">

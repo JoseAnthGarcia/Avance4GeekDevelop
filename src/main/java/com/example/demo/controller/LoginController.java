@@ -11,6 +11,7 @@ import com.example.demo.repositories.Usuario_has_distritoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,9 +53,6 @@ public class LoginController {
 
 
 
-
-
-
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
@@ -62,6 +60,7 @@ public class LoginController {
             rol = role.getAuthority();
             break;
         }
+        System.out.println(rol);
 
         String correo = auth.getName();
         Usuario usuario = usuarioRepository.findByCorreo(correo);
@@ -70,14 +69,23 @@ public class LoginController {
         System.out.println(usuario.getApellidos());
 
         session.setAttribute("usuario",usuario);
+        //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
         System.out.println(usuario);
 
 
         if (rol.equals("cliente")) {
             return "redirect:/cliente/listaRestaurantes";
         } else{
-            return "redirect:/plato/";
+            if(rol.equals("administrador") || rol.equals("administradorG")){
+                System.out.println("ingreso");
+                return "redirect:/admin/usuarios";
+            }else {
+                return "redirect:/ClienteLogin";
+            }
+
         }
+
+
     }
 
     //REGISTRO CLIENTE
@@ -95,6 +103,15 @@ public class LoginController {
         return "Cliente/registro";
 
     }
+
+
+
+
+
+
+
+
+
 
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
@@ -122,6 +139,10 @@ public class LoginController {
 
         Boolean usuario_direccion = usuario_has_distrito.getDireccion().equalsIgnoreCase("") || usuario_has_distrito.getDireccion() == null;
         Boolean dist_u_val =true;
+
+
+
+
         try {
             Integer u_dist = cliente.getDistritos().get(0).getIddistrito();
             System.out.println(u_dist + "ID DISTRITO");
@@ -147,7 +168,11 @@ public class LoginController {
             fecha_naci=true;
         }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val|| fecha_naci) {
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val|| fecha_naci
+         ) {
+
+            //----------------------------------------
+
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
             }
@@ -158,6 +183,8 @@ public class LoginController {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
                 model.addAttribute("msg5", "Complete sus datos");
             }
+
+
             if (!contrasenia2.equals(cliente.getContrasenia())) {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -181,6 +208,14 @@ public class LoginController {
             Date date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             cliente.setFecharegistro(hourdateFormat.format(date));
+
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(cliente.getContrasenia());
+            System.out.println(hashedPassword);
+            cliente.setContrasenia(hashedPassword);
+
+
             clienteRepository.save(cliente);
 
             for (Distrito distrito : cliente.getDistritos()) {

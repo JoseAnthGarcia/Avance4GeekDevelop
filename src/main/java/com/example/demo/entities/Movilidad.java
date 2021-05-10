@@ -2,9 +2,10 @@ package com.example.demo.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @Entity
-public class Movilidad {
+public class Movilidad implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,11 +1,12 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "categoriaextra")
-public class CategoriaExtra {
+public class CategoriaExtra  implements Serializable {
 
     @Id
     @Column(nullable = false)

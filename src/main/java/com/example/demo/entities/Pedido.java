@@ -1,13 +1,14 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Formatter;
 
 @Entity
 @Table(name = "pedido")
-public class Pedido {
+public class Pedido implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true)

@@ -46,4 +46,16 @@ public class ClienteController {
         return "Cliente/login";
     }
 
+
+
+    @GetMapping("/listaRestaurantes")
+    public String listaRestaurantes(){
+
+
+        return "Cliente/listaRestaurantes";
+    }
+
+
+
+
 }

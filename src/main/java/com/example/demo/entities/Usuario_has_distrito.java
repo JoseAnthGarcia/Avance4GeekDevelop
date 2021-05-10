@@ -1,11 +1,11 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "usuario_has_distrito")
-public class Usuario_has_distrito implements Serializable {
+public class Usuario_has_distrito {
 
     @EmbeddedId
     Usuario_has_distritoKey id;
@@ -21,8 +21,9 @@ public class Usuario_has_distrito implements Serializable {
     private Distrito distrito;
 
     @Column(nullable = false)
+    @NotBlank(message = "Complete el espacio")
     private String direccion;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String coordenadas;
 
     public Usuario_has_distritoKey getId() {

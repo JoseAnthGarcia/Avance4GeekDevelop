@@ -19,6 +19,7 @@ public interface ExtraRepository extends JpaRepository<Extra, Integer> {
     @Query(value= "select idextra, nombre, precioUnitario, disponible, idrestaurante, idcategoriaextra from extra where idrestaurante=?1", nativeQuery = true)
     List<Extra> listarExtra(int idrestaurante);
 
+    Page<Extra> findByIdrestauranteAndDisponibleAndNombreIsContainingAndPreciounitarioGreaterThanEqualAndPreciounitarioLessThanEqual(int idrestaurante, boolean disponible, String nombre, Pageable pageable, double inputPMin, double inputPMax);
 
 
     Page<Extra> findByIdrestauranteAndDisponible(int idrestaurante,boolean disponible, Pageable pageable);

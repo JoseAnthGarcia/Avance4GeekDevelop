@@ -203,7 +203,7 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form method="get" th:action="@{/extra/lista}">
+                        <form method="get" th:action="@{/extra/page}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
@@ -216,10 +216,10 @@
                                 <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
-                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./15.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S./15.00 hasta S./35.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S./35.00 hasta S./60.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S./60.00 a más</option>
+                                        <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S/.5.00 hasta S/.10.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S/.10.00 hasta S/.15.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/..20.00</option>
                                     </select>
                                 </div>
 
@@ -327,7 +327,7 @@
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/extra/page?pageNo=' + ${i}}"
+                                           th:href="@{'/extra/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

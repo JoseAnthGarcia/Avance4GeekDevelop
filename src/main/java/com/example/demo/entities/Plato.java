@@ -1,12 +1,13 @@
 package com.example.demo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Table(name="plato")
-public class Plato {
+public class Plato implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idplato")

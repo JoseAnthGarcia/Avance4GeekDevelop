@@ -74,7 +74,7 @@ public class Usuario implements Serializable {
 
     @Column(nullable = false)
     @NotBlank(message = "Complete su contraseña")
-    @Size(min = 8, message = "Ingrese como mínimo 8 caracteres")
+    @Size(min = 8,message = "Ingrese mínimo 8 caracteres.")
 
     private String contrasenia;
     //-------

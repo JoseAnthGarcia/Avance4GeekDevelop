@@ -61,17 +61,15 @@ public class CuponController {
 
             /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
                 cupon.setDisponible(false);
-            }*/
+            }
 
             cuponRepository.save(cupon);
             return "redirect:/cupon/lista";
         }else{
            model.addAttribute("val","Este nombre ya está registrado");
             return "AdminRestaurante/nuevoCupon";
-        }
-
-
-    }
+}
+    }*/
 
     @GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,

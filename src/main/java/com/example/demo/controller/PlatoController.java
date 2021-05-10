@@ -31,7 +31,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping("/lista")
+    @GetMapping(value={"/lista",""})
     public String listaPlatos(Model model) {
         return findPaginated("", 1, 0, 1, model);
     }
@@ -129,12 +129,7 @@ public class    PlatoController {
                 }
             }
         }else{
-            plato.setIdrestaurante(1); //Jarcodeado
-            plato.setIdcategoriaplato(3); //Jarcodeado
-            plato.setDisponible(true); //default expresion !!!!
-
             if (plato.getIdplato() == 0) {
-
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
                 platoRepository.save(plato);

@@ -47,4 +47,11 @@ h6.notificacion{
       width: 100%;
     }
   }
+.ocultar {
+    display: none;
+}
+
+.mostrar {
+    display: block;
+}
 

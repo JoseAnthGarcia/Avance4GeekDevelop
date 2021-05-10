@@ -31,7 +31,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping(value = {"/lista",""})
+    @GetMapping(value={"/lista",""})
     public String listaPlatos(Model model) {
         return findPaginated("", 1, 0, 1, model);
     }
@@ -110,34 +110,26 @@ public class    PlatoController {
 
     @PostMapping("/guardar")
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
-                               BindingResult bindingResult, RedirectAttributes attr) {
+                               BindingResult bindingResult, RedirectAttributes attr, Model model) {
 
         plato.setIdrestaurante(1); //Jarcodeado
         plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-
-        for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
-        System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
-
+        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
                 return "/AdminRestaurante/nuevoPlato";
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
-                    return "/AdminRestaurante/aja";
+                    return "/AdminRestaurante/nuevoPlato";
                 }else{
 
                     return "redirect:/plato/lista";
                 }
             }
         }else{
-            plato.setIdrestaurante(1); //Jarcodeado
-            plato.setIdcategoriaplato(3); //Jarcodeado
-            plato.setDisponible(true); //default expresion !!!!
-
             if (plato.getIdplato() == 0) {
-
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
                 platoRepository.save(plato);
@@ -190,7 +182,7 @@ public class    PlatoController {
         return "/AdminRestaurante/prueba";
     }
 
-// IMAGEN
-public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
+    // IMAGEN
+    public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
 
 }

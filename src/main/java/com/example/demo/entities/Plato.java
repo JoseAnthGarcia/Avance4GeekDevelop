@@ -39,6 +39,7 @@ public class Plato {
             inverseJoinColumns = @JoinColumn(name = "idcategoriaextra"))
     private List<CategoriaExtra> categoriaExtraList;
 
+
     public List<CategoriaExtra> getCategoriaExtraList() {
         return categoriaExtraList;
     }

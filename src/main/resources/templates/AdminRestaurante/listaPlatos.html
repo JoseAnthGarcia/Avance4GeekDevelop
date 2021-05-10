@@ -211,12 +211,12 @@
                                     <input type="text" class="form-control"
                                            id="examplePlato"
                                            th:value="${texto}"
-                                           placeholder="Búsqueda por plato"
+                                           placeholder="Buscar plato"
 
                                            name="textBuscador">
                                 </div>
 
-                                <div class="col-sm-2 mb-1">
+                                <div class="col-sm-5 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
@@ -245,7 +245,7 @@
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-3 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{/plato/lista}"
                                     >Quitar filtros</a>

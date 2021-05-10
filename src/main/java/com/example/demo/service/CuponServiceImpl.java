@@ -18,8 +18,8 @@ public class CuponServiceImpl implements CuponService {
     CuponRepository cuponRepository;
 
     @Override
-    public Page<Cupon> findPaginated2(int pageNo, int pageSize, String nombre, Date caducidad, int inputDescuento) {
+    public Page<Cupon> findPaginated2(int pageNo, int pageSize, String nombre, Date caducidad, int inputDescuentoMin, int inputDescuentoMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.cuponRepository.findByNombreIsContainingAndFechafinAndDescuento(nombre, caducidad, inputDescuento);
+        return this.cuponRepository.findByNombreIsContainingAndFechafinAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(nombre, caducidad, inputDescuentoMin, inputDescuentoMax, pageable);
     }
 }

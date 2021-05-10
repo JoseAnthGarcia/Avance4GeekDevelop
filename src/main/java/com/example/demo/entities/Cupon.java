@@ -30,7 +30,7 @@ public class Cupon {
     @NotNull(message = "Ingrese un número entero")
     private int descuento;
 
-    @Column(nullable = false, name = "descripcion")
+    @Column(nullable = false)
     @NotBlank(message = "La política no puede estar vacío")
     @Size(max = 256, message = "Ingrese como máximo 256 caractéres")
     private String politica;

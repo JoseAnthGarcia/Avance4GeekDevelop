@@ -53,15 +53,15 @@ public class CuponController {
 
             if (cupon.getIdcupon() == 0) {
                 cupon.setFechainicio(LocalDate.now());
-                cupon.setDisponible(true);
+                cupon.setEstado(1);
                 attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
             } else {
                 attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
             }
 
-            if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
+            /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
                 cupon.setDisponible(false);
-            }
+            }*/
 
             cuponRepository.save(cupon);
             return "redirect:/cupon/lista";
@@ -81,6 +81,19 @@ public class CuponController {
         if (optionalCupon.isPresent()) {
             cupon = optionalCupon.get();
             model.addAttribute("cupon", cupon);
+            return "AdminRestaurante/nuevoCupon";
+        } else {
+            return "redirect:/cupon/lista";
+        }
+    }
+
+    @GetMapping("/bloqueado")
+    public String bloquearCupon(@RequestParam("id") int id){
+        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
+        if (optionalCupon.isPresent()) {
+            Cupon cupon = optionalCupon.get();
+            cupon.setEstado(0);
+            cuponRepository.save(cupon);
             return "AdminRestaurante/nuevoCupon";
         } else {
             return "redirect:/cupon/lista";

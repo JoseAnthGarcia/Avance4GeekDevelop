@@ -253,19 +253,19 @@
                                             <td><label>Imagen referencial:</label></td>
                                             <td colspan="2"> <br>
                                                 <input type="file" class="form-control">
-
+                                                <!--
+                                                <h1 style="color: red; font-size: small; text-align: left">Ingresar imágenes con extensión jpg</h1>
+                                                -->
                                                 </td>
 
                                         </tr>
                                         <tr>
                                             <td> <label>Extras: </label></td>
                                             <td colspan="2">
-                                                <div th:each="categoria :${listaCategoria}">
-                                                <input th:field="*{categoriaExtraList}" type="checkbox" th:value="${categoria.getIdcategoriaextra()}">
-                                                <label th:text="${categoria.getTipo()}"></label><br>
+                                                <div th:each="categoria : ${listaCategoriasExtra}">
+                                                    <input type="checkbox" id="extra1" name="extra1" th:fielf="*{categoriaExtraPorPlato}">
+                                                    <label for="extra1" th:text="${categoria.tipo}" th:value="${categoria.idtipocategoria}"> Cubiertos</label>
                                                 </div>
-
-                                            </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"><a class="btn btn-primary mb-4 mr-2 "

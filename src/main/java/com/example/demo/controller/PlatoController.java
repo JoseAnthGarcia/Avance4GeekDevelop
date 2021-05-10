@@ -115,43 +115,35 @@ public class    PlatoController {
 
     @PostMapping("/guardar")
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,BindingResult bindingResult,
-                               @RequestParam("photo") MultipartFile file,RedirectAttributes attr, Model model) {
+                               @RequestParam(value = "photo",required = false) MultipartFile file,RedirectAttributes attr, Model model) {
         model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
-        if(file.isEmpty()){
-            model.addAttribute("mensajefoto", "Debe subir una imagen");
-            return "/AdminRestaurante/nuevoPlato";
+        String fileName ="";
+        if (file!=null){
+            if(file.isEmpty()){
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                return "/AdminRestaurante/nuevoPlato";
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/nuevoPlato";
+            }
         }
-        String fileName = file.getOriginalFilename();
-        if (fileName.contains("..")){
-            model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-            return "/AdminRestaurante/nuevoPlato";
-        }
-        System.out.println(file.getContentType()+" e xtemcion   del archivo");
-        /*if (!file.getContentType().equals("image/webp")||
-                !file.getContentType().equals("image/jpeg")||
-                !file.getContentType().equals("png")){
-            model.addAttribute("mensajefoto","Solo puede ingresar imágenes tipo webp, jpeg y png");
-            return "/AdminRestaurante/nuevoPlato";
-        }*/
-        try{
-            plato.setFoto(file.getBytes());
-            plato.setFotonombre(fileName);
-            plato.setFotocontenttype(file.getContentType());
-        }catch (IOException e){
-            e.printStackTrace();
-            model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
-            return "/AdminRestaurante/nuevoPlato";
-        }
+
+
         plato.setIdrestaurante(1); //Jarcodeado
-        plato.setIdcategoriaplato(2); //Jarcodeado
+        plato.setIdcategoriaplato(1); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
+
 
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
+                System.out.println("estoy 1");
                 return "/AdminRestaurante/nuevoPlato";
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
+                    System.out.println("estoy 2");
                     return "/AdminRestaurante/nuevoPlato";
                 } else {
 
@@ -163,10 +155,26 @@ public class    PlatoController {
 
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
-                platoRepository.save(plato);
+                System.out.println("estoy 3");
+                try{
+                    plato.setFoto(file.getBytes());
+                    plato.setFotonombre(fileName);
+                    plato.setFotocontenttype(file.getContentType());
+                    platoRepository.save(plato);
+                }catch (IOException e){
+                    e.printStackTrace();
+                    model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+                    return "/AdminRestaurante/nuevoPlato";
+                }
+
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
+                    System.out.println("estoy 4");
+                    Optional<Plato> platoOptional=platoRepository.findById(plato.getIdplato());
+                    plato.setFoto(platoOptional.get().getFoto());
+                    plato.setFotonombre(platoOptional.get().getFotonombre());
+                    plato.setFotocontenttype(platoOptional.get().getFotocontenttype());
                     platoRepository.save(plato);
                     attr.addFlashAttribute("tipo", "saved");
                     attr.addFlashAttribute("msg", "Plato actualizado exitosamente");

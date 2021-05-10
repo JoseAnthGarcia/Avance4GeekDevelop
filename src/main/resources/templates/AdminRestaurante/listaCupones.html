@@ -204,34 +204,40 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form>
+                        <form method="get" th:action="@{/cupon/page}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="exampleCupon"
-                                           placeholder="Búsqueda por nombre">
+                                           th:value="${texto}"
+                                           placeholder="Búsqueda por nombre"
+                                           name="textBuscador">
                                 </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input placeholder="Caducidad" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+
+                                <div class="col-sm-2 mb-1" hidden>
+                                    <input placeholder="Caducidad" class="form-control" name="fechafin"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
+
                                 <div class="col-sm-2 mb-1">
-                                    <select class="form-control">
-                                        <option value="">Descuento</option>
-                                        <option value="">S./00.00 hasta S./5.00</option>
-                                        <option value="">S./5.00 hasta S./10.00</option>
-                                        <option value="">S./10.00 hasta S./15.00</option>
-                                        <option value="">S./15.00 hasta S./20.00</option>
+                                    <select class="form-control" id="textPrecio" name="textPrecio">
+                                        <option value="0" th:selected="${textoP==0}">Descuento</option>
+                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./5.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S./5.00 hasta S./10.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
-                                    <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                    <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                            type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                                    <a class="btn btn-secondary">Quitar filtros</a>
+                                <div class="col-sm-6 mb-1 ml-0" style="text-align: right">
+                                    <a class="btn btn-secondary"
+                                       th:href="@{/cupon/lista}">Quitar filtros</a>
                                 </div>
 
                             </div>
@@ -320,12 +326,12 @@
 
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&dateCaducidad='+ ${textoD} + '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2 no"></a>
+                                           class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"
                                            th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 

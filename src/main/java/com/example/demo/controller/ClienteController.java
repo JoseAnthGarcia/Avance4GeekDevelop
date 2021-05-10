@@ -61,21 +61,8 @@ public class ClienteController {
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("Usuario_has_distrito") @Valid Usuario_has_distrito usuario_has_distrito,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) {
+                                 BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) {
 
-        try {
-            String valDirec = usuario_has_distrito.getDireccion();
-            System.out.println(valDirec+"Valdirec");
-        } catch (NullPointerException n) {
-            System.out.println("COMPLETA TUS DATOS");
-        }
-
-        try {
-            Distrito valDist = usuario_has_distrito.getDistrito();
-            System.out.println(valDist.getNombre());
-        } catch (NullPointerException nullPointerException) {
-            System.out.println("completa tu datos v2");
-        }
 
         int id = 0;
         if (cliente.getIdusuario() != null) {
@@ -83,26 +70,51 @@ public class ClienteController {
         }
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreoAndIdusuarioNot(cliente.getCorreo(), id);
         if (!clientesxcorreo.isEmpty()) {
-            bindingResult.rejectValue("correo", "error.Usuario", "Correo ya registrado anteriormente");
+            bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
         }
         List<Usuario> clientesxdni = clienteRepository.findUsuarioByDniAndIdusuarioNot(cliente.getDni(), id);
         if (!clientesxdni.isEmpty()) {
-            bindingResult.rejectValue("dni", "error.Usuario", "DNI ya registrado anteriormente");
+            bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
         }
 
         List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefonoAndIdusuarioNot(cliente.getTelefono(), id);
         if (!clientesxtelefono.isEmpty()) {
-            bindingResult.rejectValue("telefono", "error.Usuario", "Teléfono ya registrado anteriormente");
+            bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
-        if (bindingResult.hasErrors()) {
-            System.out.println("Entro hasErrors");
+        Boolean usuario_direccion = usuario_has_distrito.getDireccion().equalsIgnoreCase("") || usuario_has_distrito.getDireccion() == null;
+        Boolean dist_u_val =false;
+        try {
+            Integer u_dist = usuario_has_distrito.getDistrito().getIddistrito();
+            int dist_c = distritosRepository.findAll().size();
+            for (int i = 1; i <= dist_c; i++) {
+                if (u_dist != i) {
+                    dist_u_val = true;
+                }
+            }
+        } catch (NullPointerException n){
+            System.out.println("No llegó nada");
+            dist_u_val = true;
+        }
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val) {
+            if (usuario_direccion) {
+                model.addAttribute("msg2", "Complete sus datos");
+            }
+            if (dist_u_val) {
+                model.addAttribute("msg3", "Seleccione una de las opciones");
+                model.addAttribute("msg5", "Complete sus datos");
+            }
+            if (!contrasenia2.equals(cliente.getContrasenia())) {
+                model.addAttribute("msg", "Las contraseñas no coinciden");
+            }
+
             //   String direccion;
             model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
             //distritos
             model.addAttribute("distritosSeleccionados", new ArrayList<>());
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
+
             return "Cliente/registro";
         } else {
             cliente.setEstado(1);

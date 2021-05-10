@@ -73,7 +73,7 @@
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
-                <form method="post"
+                <form method="post" enctype="multipart/form-data"
                       class="user" th:action="@{/cliente/guardar}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
@@ -81,10 +81,10 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
-                            <!--
-                          <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+
+                          <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"> </div>
-                                 -->
+
 
                         </div>
 
@@ -94,44 +94,53 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
-                            <!--
-                            <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
-                                 -->
+
+
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Correo electrónico</label>
 
+
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleCorreo" th:field="*{correo}"
                                    placeholder="Correo electrónico">
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
                         </div>
-                    <div class="col-sm-6 mb-2">
-                        <label style="color: black">Fecha de nacimiento</label>
-                        <input th:field="*{fechanacimiento}" type="text" class="form-control" style="border-color:lightgray" placeholder="Fecha de nacimiento"
-                               onfocus="(this.type='date')" onblur="(this.type='text')"/>
+
+                        <div class="col-sm-6 mb-2">
+                            <label style="color: black">Fecha de nacimiento</label>
+                            <input type="date" class="form-control mb-2"  style="border-color: lightgray" th:field="*{fechanacimiento}" th:novalidate="novalidate">
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechanacimiento')}"
+                                 th:errors="*{fechanacimiento}"></div>
+                        </div>
                     </div>
-                </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Sexo</label>
                             <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
-                                <option value="" disabled selected>Sexo</option>
+                                <option value="" selected>Sexo</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('sexo')}"
+                                 th:errors="*{sexo}"></div>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: black">Teléfono</label>
-                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{telefono}"
+                            <input type="number" class="form-control" style="border-color:lightgray"
+                                   th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
-                            <!--
-                            <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
-                                 -->
+
+
                         </div>
                     </div>
                     <div class="form-group row">
@@ -139,94 +148,95 @@
                             <label style="color: black">DNI</label>
                             <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
-                            <!--
-                            <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
-                                 -->
                         </div>
+                                                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                                                    <label style="color: black">Foto de Perfil</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" style="border-color:lightgray" id="inputGroupFile03">
+                                                        <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
+                                                    </div>
+                                                </div>
 
-<!--
-                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <label style="color: black">Foto de Perfil</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input border-secondary" id="inputGroupFile03">
-                                <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
-                            </div>
-                        </div>
-                         -->
 
                     </div>
 
-                    <div class="form-group row"  th:object="${Usuario_has_distrito}">
-                        <div class="col-sm-6  mb-2 mb-sm-0">
+                    <div class="form-group row" th:object="${Usuario_has_distrito}">
+                        <div class="col-sm-6   mb-sm-0">
                             <label style="color: #000000">Dirección</label>
                             <input type="text" class="form-control" style="border-color:lightgray"
-                                   id="direccion" placeholder="Dirección" th:field="*{direccion}" >
-
+                                   id="direccion" placeholder="Dirección" th:field="*{direccion}">
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('direccion')}"
+                                 th:errors="*{direccion}"></div>
                         </div>
                     </div>
-
-
-
-                    <div class="col-sm-6  mb-2 mb-sm-0" >
-                        <select class="form-class" th:field="*{distritos}" >
-                            <option value="" disabled selected>Distrito </option>
+                    <div class="form-group row">
+                    <div class="col-sm-6  mb-2 mb-sm-0">
+                        <label style="color: #000000">Distritos</label>
+                        <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
+                            <option value="" selected>Distrito</option>
                             <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                     th:text="${dist.nombre}"></option>
                         </select>
+
+                    </div>
                     </div>
 
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <label style="color: black">Contraseña</label>
+                            <input type="password" class="form-control" style="border-color:lightgray"
+                                   id="inputPassword1" th:field="*{contrasenia}"
+                                   placeholder="Coloque contraseña">
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></div>
+                        </div>
 
-            <div class="form-group row">
-                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                    <label style="color: black">Contraseña</label>
-                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword1" th:field="*{contrasenia}"
-                           placeholder="La contraseña debe contar con al menos 8 caracteres.">
-                </div>
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <label style="color: black">Confirmar contraseña</label>
+                            <input type="password" class="form-control" style="border-color:lightgray"
+                                   id="inputPassword2"
+                                   placeholder="Confirmar contraseña">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
+                            <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp"
+                                 width="350" height="150">
+                        </div>
+                    </div>
 
-                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                    <label style="color: black">Confirmar contraseña</label>
-                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword2"
-                           placeholder="Confirmar contraseña" >
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
-                    <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp" width="350" height="150">
-                </div>
-            </div>
+                    <div class="form-group row">
 
-            <div class="form-group row">
-
-            </div>
-            <hr>
+                    </div>
+                    <hr>
                     <button class="btn btn-primary btn-user btn-block"
                             type="submit">
                         Registrar
 
                     </button>
 
-            </form>
+                </form>
 
+
+            </div>
+            <!-- /.container-fluid -->
 
         </div>
-        <!-- /.container-fluid -->
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
 
     </div>
-    <!-- End of Main Content -->
-
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Geek Developers &copy; 2021-1</span>
-            </div>
-        </div>
-    </footer>
-    <!-- End of Footer -->
-
-</div>
-<!-- End of Content Wrapper -->
+    <!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
@@ -278,20 +288,20 @@
 </div>
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
 <!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
 <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+<script th:src="@{/js/demo/datatables-demo.js}"></script>
 
 
 </body>

@@ -1,10 +1,11 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "usuario_has_distrito")
-public class Usuario_has_distrito {
+public class Usuario_has_distrito implements Serializable {
 
     @EmbeddedId
     Usuario_has_distritoKey id;

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -62,7 +63,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "FROM usuario u, rol r, pedido p \n" +
             "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = ?1 \n" +
             "group by u.idusuario ", nativeQuery = true)
-    double gananciaRepartidor(int idrepartidor);
+    BigDecimal gananciaRepartidor(int idrepartidor);
 
     //promedio de valoracion repartidor
     @Query(value = "select ceil(avg(p.valoracionrepartidor)) as `valoracion` from usuario u, pedido p, rol r\n" +

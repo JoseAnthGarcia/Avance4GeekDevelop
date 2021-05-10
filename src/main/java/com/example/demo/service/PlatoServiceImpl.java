@@ -21,9 +21,10 @@ public class PlatoServiceImpl implements PlatoService{
     }
 
     @Override
-    public Page<Plato> findPaginated2(int pageNo, int pageSize, String nombre, boolean disponibilidad, double inputPMin, double inputPMax) {
+    public Page<Plato> findPaginated2(int pageNo, int pageSize, int idrestaurante, int idcategoriaplato, String nombre, boolean disponibilidad, double inputPMin, double inputPMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.platoRepository.findByDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(disponibilidad, nombre, pageable, inputPMin, inputPMax);
+        return this.platoRepository.findByIdrestauranteAndIdcategoriaplatoAndDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(idrestaurante,
+                idcategoriaplato,disponibilidad, nombre, pageable, inputPMin, inputPMax);
     }
 
 

@@ -88,9 +88,8 @@ public class    PlatoController {
             inputPMax=inputPrecio;
             inputPMin=inputPrecio;
         }
-        page = platoService.findPaginated2(pageNo, pageSize, textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);
+        page = platoService.findPaginated2(pageNo, pageSize, 1,1,textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);//harcodeado
         listaPlatos= page.getContent();
-
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoD", inputDisponible);

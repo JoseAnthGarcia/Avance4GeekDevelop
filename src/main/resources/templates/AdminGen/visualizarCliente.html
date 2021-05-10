@@ -342,48 +342,60 @@
 
                 </div>
 
-                <form>
-
+                <form th:action="@{'/admin/buscadorCliente'}" method="get">
+                    <input type="hidden" name="idUsuario" th:value="${cliente.idusuario}">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
-                            <input type="text" class="form-control"
-                                   id="exampleCliente"
+                            <input th:if="${fechaPedidoBuscador == null}" type="text" class="form-control"
+                                   name="textoPedido"
+                                   placeholder="Búsqueda por repartidor o restaurante">
+                            <input th:unless="${fechaPedidoBuscador == null}" type="text" class="form-control"
+                                   name="textoPedido"
                                    placeholder="Búsqueda por repartidor o restaurante">
                         </div>
                         <div class="col-sm-2 mb-1 ">
-                            <select class="form-control  ">
+                            <select th:if="${valoracionBuscador == null}" class="form-control" name="valoracion">
                                 <option value="" disabled selected>Valoracion</option>
-                                <option value="Pendiente">1</option>
-                                <option value="Pendiente">2</option>
-
-                                <option value="Entregado">3</option>
-
-                                <option value="Cancelado">4</option>
-
-                                <option value="Cancelado">5</option>
-
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <select th:unless="${valoracionBuscador == null}" class="form-control" name="valoracion">
+                                <option value="" disabled selected>Fecha de Registro</option>
+                                <option th:selected="${valoracionBuscador == 1}" value="1">1</option>
+                                <option th:selected="${valoracionBuscador == 2}" value="2">2</option>
+                                <option th:selected="${valoracionBuscador == 3}" value="3">3</option>
+                                <option th:selected="${valoracionBuscador == 4}" value="4">4</option>
+                                <option th:selected="${valoracionBuscador == 5}" value="5">5</option>
                             </select>
                         </div>
-
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
+                            <select th:if="${fechaPedidoBuscador == null}" class="form-control" name="fechaPedido">
                                 <option value="">Fecha</option>
-                                <option value="">Última Hora</option>
-                                <option value="">Hoy</option>
-                                <option value="">Esta semana</option>
-                                <option value="">Este mes</option>
-                                <option value="">Este año</option>
+                                <option value="1">Hoy</option>
+                                <option value="7">Esta semana</option>
+                                <option value="31">Este mes</option>
+                                <option value="365">Este año</option>
+                            </select>
+                            <select th:unless="${fechaPedidoBuscador == null}" class="form-control" name="fechaPedido">
+                                <option value="" disabled selected>Fecha de Registro</option>
+                                <option th:selected="${fechaPedidoBuscador == 1}" value="1">Hoy</option>
+                                <option th:selected="${fechaPedidoBuscador == 7}" value="7">Esta semana</option>
+                                <option th:selected="${fechaPedidoBuscador == 30}" value="30">Este mes</option>
+                                <option th:selected="${fechaPedidoBuscador == 365}" value="365">Este año</option>
                             </select>
                         </div>
 
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="button">
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{'/admin/detalle?idUsuario='+${cliente.idusuario}}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
 

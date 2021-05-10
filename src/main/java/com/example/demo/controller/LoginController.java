@@ -22,9 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 
@@ -137,17 +138,28 @@ public class LoginController {
             dist_u_val = true;
         }
 
+        String[] parts = cliente.getFechanacimiento().split("-");
+        int naci = Integer.parseInt(parts[0]);
+        Calendar fecha = new GregorianCalendar();
+        int anio = fecha.get(Calendar.YEAR);
+        Boolean fecha_naci=false;
+        if(anio-naci<18){
+            fecha_naci=true;
+        }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val) {
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val|| fecha_naci) {
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
+            }
+            if (fecha_naci) {
+                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
             }
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
                 model.addAttribute("msg5", "Complete sus datos");
             }
             if (!contrasenia2.equals(cliente.getContrasenia())) {
-                model.addAttribute("msg", "usuario_direccion");
+                model.addAttribute("msg", "Las contraseñas no coinciden");
             }
 
             //   String direccion;
@@ -163,10 +175,12 @@ public class LoginController {
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
             cliente.setFecharegistro(fechanacimiento);
-            clienteRepository.save(cliente);
+
             attr.addFlashAttribute("msg", "Cliente creado exitosamente");
 
-
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            cliente.setFecharegistro(hourdateFormat.format(date));
             clienteRepository.save(cliente);
 
             for (Distrito distrito : cliente.getDistritos()) {

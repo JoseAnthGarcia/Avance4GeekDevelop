@@ -122,6 +122,7 @@
                             <div style="color: red; font-size: small; text-align: left"
                                  th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>
+                            <div th:if="${msg7 != null}" th:text="${msg7}" style="color: red; font-size: small; text-align: left" ></div>
                         </div>
                     </div>
 
@@ -139,7 +140,7 @@
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: black">Teléfono</label>
-                            <input type="number" class="form-control" style="border-color:lightgray"
+                            <input type="text" class="form-control" style="border-color:lightgray"
                                    th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
 

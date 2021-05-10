@@ -32,7 +32,7 @@ public class CuponController {
     }
 
 
-/*
+
     @GetMapping("/nuevo")
     public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon) {
         return "AdminRestaurante/nuevoCupon";
@@ -87,17 +87,29 @@ public class CuponController {
         }
     }
 
-    @GetMapping("/bloqueado")
-    public String bloquearCupon(@RequestParam("id") int id){
+    @GetMapping("/bloquear")
+    public String bloquearCupon(@RequestParam("id") int id, RedirectAttributes attr){
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
             cupon.setEstado(0);
             cuponRepository.save(cupon);
+            attr.addFlashAttribute("bloqueo","Cupón bloqueado exitosamente");
             return "AdminRestaurante/nuevoCupon";
         } else {
             return "redirect:/cupon/lista";
         }
+    }
+    @GetMapping("/publicar")
+    public String publicarCupon(@RequestParam("id") int id, RedirectAttributes attr){
+        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
+        if (optionalCupon.isPresent()) {
+            Cupon cupon = optionalCupon.get();
+            cupon.setEstado(2);
+            cuponRepository.save(cupon);
+            attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
+        }
+        return "redirect:/cupon/lista";
     }
 
     /*@GetMapping("/eliminar")

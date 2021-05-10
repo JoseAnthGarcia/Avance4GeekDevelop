@@ -6,13 +6,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name="usuario")
-public class Usuario {
-//tu misma eres mela :3
-    //nel mano
+public class Usuario implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idusuario;
@@ -49,7 +49,7 @@ public class Usuario {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String fechanacimiento;
 
-    private byte[] foto;
+    //private byte[] foto;
 
     private String fechaadmitido;
 
@@ -73,8 +73,6 @@ public class Usuario {
     @OneToOne
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
-
-
 
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
@@ -166,7 +164,7 @@ public class Usuario {
     public void setFechanacimiento(String fechanacimiento) {
         this.fechanacimiento = fechanacimiento;
     }
-
+/*
     public byte[] getFoto() {
         return foto;
     }
@@ -174,6 +172,8 @@ public class Usuario {
     public void setFoto(byte[] foto) {
         this.foto = foto;
     }
+
+ */
 
     public String getFecharegistro() {
         return fecharegistro;

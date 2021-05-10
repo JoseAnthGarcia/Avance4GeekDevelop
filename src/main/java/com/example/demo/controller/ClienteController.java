@@ -35,11 +35,13 @@ public class ClienteController {
     @Autowired
     Usuario_has_distritoRepository usuario_has_distritoRepository;
 
-
+    /*
     @GetMapping("/login")
     public String loginCliente() {
         return "Cliente/login";
     }
+
+     */
 
     @GetMapping("/nuevo")
     public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {

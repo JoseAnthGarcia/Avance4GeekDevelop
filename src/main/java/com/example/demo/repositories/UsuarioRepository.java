@@ -40,4 +40,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true)
     List<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad);
 
+    Usuario findByCorreo(String correo);
+
 }

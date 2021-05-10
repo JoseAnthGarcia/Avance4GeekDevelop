@@ -277,7 +277,7 @@ public class AdminController  {
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findAll());
+                    model.addAttribute("direcciones",usuario_has_distritoRepository.direccionesPorUsuario(idUsuario));
                     return "/AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);

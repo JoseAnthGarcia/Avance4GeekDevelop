@@ -104,6 +104,7 @@
                             <input th:field="*{fechanacimiento}" type="text" class="form-control"
                                    placeholder="Fecha de nacimiento"
                                    onfocus="(this.type='date')" onblur="(this.type='text')"/>
+                            <div th:if="${msg7 != null}" th:text="${msg7}" class="text-danger" ></div>
 
                             <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>

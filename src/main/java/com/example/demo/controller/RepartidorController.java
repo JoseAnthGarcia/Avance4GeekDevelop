@@ -13,10 +13,7 @@ import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/repartidor")
@@ -73,7 +70,21 @@ public class RepartidorController {
         if(usuario.getDistritos().size()>5){
             errorDist=true;
         }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || errorDist){
+        Boolean errorFecha = true;
+        try {
+            String[] parts = usuario.getFechanacimiento().split("-");
+            System.out.println(parts[0]+"Año");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            if (anio - naci >18) {
+                errorFecha = false;
+            }
+        } catch (NumberFormatException n) {
+            errorFecha = true;
+        }
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
+                errorDist || errorFecha){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -91,6 +102,9 @@ public class RepartidorController {
             }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
+            }
+            if(errorFecha){
+                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse.");
             }
 
             model.addAttribute("usuario", usuario);

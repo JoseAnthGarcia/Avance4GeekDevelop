@@ -226,8 +226,7 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form>
-
+                <form method="post" th:action="@{/admin/buscadorUsuario}">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
                             <input type="text" class="form-control"
@@ -239,13 +238,9 @@
                                 <option value="" disabled selected>Rol</option>
                                 <option value="Pendiente">Administrador</option>
                                 <option value="Pendiente">Administrador de Restaurante</option>
-
                                 <option value="Entregado">Repartidor</option>
-
                                 <option value="Cancelado">Restaurante</option>
-
                                 <option value="Cancelado">Cliente</option>
-
                             </select>
                         </div>
 
@@ -264,16 +259,15 @@
                                 <option value="">Estado</option>
                                 <option value="">Bloqueado</option>
                                 <option value="">Operativo</option>
-
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{/admin/usuarios}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -321,10 +315,18 @@
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
                                     <td th:text="${v.index + 1}" class="text-center" style="width: 150px"></td>
                                     <td th:text="${usuario.nombres} +' '+${usuario.apellidos}" class="text-center" style="width: 450px"></td>
-                                    <td th:text="${usuario.rol.tipo}" class="text-center" style="width: 450px"></td>
+                                    <td th:switch="${usuario.rol.tipo}" class="text-center" style="width: 450px">
+                                        <div th:case="cliente" th:text="|Cliente|"></div>
+                                        <div th:case="administradorR" th:text="|Administrador de Restaurante|"></div>
+                                        <div th:case="administrador" th:text="|Administrador|"></div>
+                                        <div th:case="repartidor" th:text="|Repartidor${usuario.sexo == 'femenino' ? 'a' : ''}|"></div>
+                                    </td>
                                     <td th:text="${usuario.ultimoingreso}" class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
                                     <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
-                                    <td><a href="#" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a></td>
+                                    <td>
+                                        <a th:if="${usuario.estado == 1}" th:href="@{'/admin/bloqueado?idUsuario='+${usuario.idusuario}+'&estado='+${usuario.estado}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
+                                        <a th:if="${usuario.estado == 0}" th:href="@{'/admin/bloqueado?idUsuario='+${usuario.idusuario}+'&estado='+${usuario.estado}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
+                                    </td>
                                     <td><a th:href="@{'/admin/detalle?idUsuario='+${usuario.idusuario}}" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>
                                 </tr>
                                 </tbody>

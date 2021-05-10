@@ -163,10 +163,6 @@ public class AdminController {
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
 
-            for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
-                totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
-            }
-
             switch (usuario.getRol().getTipo()) {
                 case "administrador":
                     model.addAttribute("administrador",usuario);
@@ -179,6 +175,10 @@ public class AdminController {
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":
+                    //volverlo query
+                    for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
+                        totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
+                    }
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
@@ -196,6 +196,16 @@ public class AdminController {
             return "redirect:/admin/usuarios";
         }
     }
+
+ /*   @PostMapping("/buscadorUsuario")
+    public String buscadorUsuario(@RequestParam("") ){
+
+
+
+        return "redirect:/admin/usuarios";
+    }*/
+
+
     @GetMapping("/aceptado")
     public String aceptarUsuario(Model model,
                                  @RequestParam("id") int id) {
@@ -216,6 +226,7 @@ public class AdminController {
     @GetMapping("/bloqueado")
     public String bloquearUsuario(Model model,
                                   @RequestParam("id") int id) {
+                                  //@RequestParam(value = "idPage",required = false) int page
 
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
 
@@ -226,7 +237,14 @@ public class AdminController {
 
         }
         return "redirect:/admin/solicitudes";
+        /*
+        //mando un identificador de pagina donde si es 1 viene de la lista de usuarios
+        if(page == 1){
+            attr.addFlashAttribute("bloqueado", "Usuario Bloqueado Exitosamente");
+            return "redirect:/admin/usuarios";
+        }else{
 
+        }*/
     }
 
 

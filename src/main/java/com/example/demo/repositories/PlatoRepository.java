@@ -13,7 +13,7 @@ import java.util.List;
 public interface PlatoRepository extends JpaRepository<Plato, Integer> {
 
 
-    Page<Plato> findByDisponible(boolean disponible, Pageable pageable);
+    Page<Plato> findByIdrestauranteAndDisponible(int id,boolean disponible, Pageable pageable);
 
     Page<Plato> findByIdrestauranteAndIdcategoriaplatoAndDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(int idrestaurante,int idcategoriaplato,boolean disponible, String nombre, Pageable pageable, double inputPMin, double inputPMax);
 

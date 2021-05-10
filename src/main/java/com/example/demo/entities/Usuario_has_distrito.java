@@ -21,10 +21,7 @@ public class Usuario_has_distrito implements Serializable {
     @JoinColumn(name = "iddistrito")
     private Distrito distrito;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Complete el espacio")
     private String direccion;
-    @Column(nullable = true)
     private String coordenadas;
 
     public Usuario_has_distritoKey getId() {

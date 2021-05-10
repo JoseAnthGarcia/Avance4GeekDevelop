@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+
 <head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes repartidor')"></head>
 
 <body id="page-top">
@@ -311,7 +313,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="repartidor, v : ${listaRepartidorSolicitudes}">
-                                        <td scope="row" th:text="${v.index+1}">1</td>
+                                        <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
                                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
@@ -360,32 +362,30 @@
                                                             <span class="text">Informacion</span>
                                                         </a>
                                                     </td>
-
                                                 </tr>
                                                 </tbody>
-
                                             </table>
                                         </div>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
-
                             </div>
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
+                        </div>
+                        <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3">
+                            <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                <a th:if="${currentPage != i}"
+                                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}}"
+                                   th:utext="${i}"
+                                   class="active mt-2 no"></a>
+                                <a th:unless="${currentPage != i}"
+                                   th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- /.container-fluid -->
 

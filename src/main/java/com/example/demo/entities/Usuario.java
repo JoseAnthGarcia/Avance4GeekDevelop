@@ -13,8 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario implements Serializable {
-    //tu misma eres mela :3
-    //nel mano
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario;

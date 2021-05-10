@@ -1,10 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Pedido;
+import com.example.demo.entities.Plato;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
+import com.example.demo.service.RepartidorService;
+import com.example.demo.service.RepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -49,23 +54,47 @@ public class AdminController  {
     @Autowired
     Usuario_has_distritoRepository usuario_has_distritoRepository;
 
+    @Autowired
+    RepartidorService repartidorService;
+
+    @Autowired
+    PedidoRepository pedidoRepository;
+
     @GetMapping("/solicitudes")
-    public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
+    public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
+                                     @RequestParam(value = "numPag", required = false) Integer numPag, Model model){
         if(tipo == null){
-            tipo = "adminRest";
+            tipo = "repartidor";//TODO: cambiar a "tipo = "adminRest";"
         }
+
+        //paginacion --------
+        if(numPag==null){
+            numPag= 1;
+        }
+
+        int tamPag = 3;
+
+        //-------
+
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
                 return "1";
             case "adminRest":
-                Rol rol = new Rol();
-                model.addAttribute("listaAdminRestSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
+                //model.addAttribute("listaAdminRestSolicitudes",
+                //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
                 return "/AdminGen/solicitudAR";
             case "repartidor":
-                model.addAttribute("listaRepartidorSolicitudes",
-                        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
+                Page<Usuario> pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
+                List<Usuario> listaRepartidores = pagina.getContent();
+                model.addAttribute("tamPag",tamPag);
+                model.addAttribute("currentPage",numPag);
+                model.addAttribute("totalPages", pagina.getTotalPages());
+                model.addAttribute("totalItems", pagina.getTotalElements());
+
+                model.addAttribute("listaRepartidorSolicitudes", listaRepartidores);
+                //model.addAttribute("listaRepartidorSolicitudes",
+                //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
                 return "/AdminGen/solicitudRepartidor";
             default:
                 return "";
@@ -94,6 +123,12 @@ public class AdminController  {
         }else{
             model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1));
         }
+
+        //BORRAR
+        model.addAttribute("currentPage",1);
+        model.addAttribute("tamPag",0);
+        model.addAttribute("totalPages", 3);
+        model.addAttribute("totalItems", 4);
 
         System.out.println("------------");
         System.out.println(nombreUsuario1+", "+tipoMovilidad1+", "+fechaRegistro1);
@@ -153,6 +188,50 @@ public class AdminController  {
         return "/AdminGen/lista";
     }
 
+    @GetMapping("/buscador")
+    public String buscadorUsuario(@RequestParam(value = "texto",required = false) String texto,
+                                  @RequestParam(value = "fechaRegsitro",required = false) Integer fechaRegsitro,
+                                  @RequestParam(value = "idRol",required = false) Integer idRol,
+                                  @RequestParam(value = "estado",required = false) Integer estado,
+                                  Model model){
+
+        //busca por nombre y apellido - no hay problema si es nulo
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaBuscador", fechaRegsitro);
+        model.addAttribute("rolBuscador", idRol);
+        model.addAttribute("estadoBuscador", estado);
+
+        //si es nulo se manda la fecha minima de la lista de USUARIOS
+        if(fechaRegsitro==null){
+            fechaRegsitro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        }
+        if(estado==null && idRol == null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstadoNiRol(texto,-1*fechaRegsitro));
+        }else if(idRol==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinRol(texto,-1*fechaRegsitro,estado));
+        }else if(estado==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstado(texto,-1*fechaRegsitro,idRol));
+        }else{
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        }
+
+        return "/AdminGen/lista";
+    }
+
+    @GetMapping("/buscadorCliente")
+    public String buscadorUsuario(@RequestParam(value = "idUsuario",required = false) Integer idUsuario,
+                                  @RequestParam(value = "textoPedido",required = false) String texto,
+                                  @RequestParam(value = "fechaPedido",required = false) Integer fechaPedido,
+                                  @RequestParam(value = "valoracion",required = false) Integer valoracion,
+                                  Model model){
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaPedidoBuscador", fechaPedido);
+        model.addAttribute("valoracionBuscador", valoracion);
+
+        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
+        return "redirect:/admin/detalle?idUsuario="+idUsuario;
+    }
+
     @GetMapping("/detalle")
     public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
                                  Model model) {
@@ -197,6 +276,8 @@ public class AdminController  {
             return "redirect:/admin/usuarios";
         }
     }
+
+
     @GetMapping("/aceptado")
     public String aceptarUsuario(Model model,
                                  @RequestParam("id") int id) {

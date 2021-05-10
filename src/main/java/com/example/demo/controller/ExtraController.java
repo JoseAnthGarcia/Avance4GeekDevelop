@@ -11,13 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -166,7 +172,7 @@ public class ExtraController {
     @PostMapping("/guardar")
     public String guardarExtra(@ModelAttribute("extra") @Valid Extra extra, BindingResult bindingResult,
                                RedirectAttributes attr,
-                               Model model) {
+                               Model model,@RequestParam("photo") MultipartFile file) {
        /* Cupon cVal = extraRepository.buscarPorNombre(cupon.getNombre());
 
         if(cVal == null){
@@ -194,6 +200,24 @@ public class ExtraController {
             model.addAttribute("val","Este nombre ya está registrado");
             return "AdminRestaurante/nuevoCupon";
         }*/
+        if(file.isEmpty()){
+            model.addAttribute("mensajefoto", "Debe subir una imagen");
+            return "/AdminRestaurante/nuevoExtra";
+        }
+        String fileName = file.getOriginalFilename();
+        if (fileName.contains("..")){
+            model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+            return "/AdminRestaurante/nuevoExtra";
+        }
+        try{
+            extra.setFoto(file.getBytes());
+            extra.setFotonombre(fileName);
+            extra.setFotocontenttype(file.getContentType());
+        }catch (IOException e){
+            e.printStackTrace();
+            model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+            return "/AdminRestaurante/nuevoExtra";
+        }
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
         extra.setIdcategoriaextra(idcategoriaextra);
@@ -223,6 +247,21 @@ public class ExtraController {
                 }
             }
             return "redirect:/extra/lista";
+        }
+    }
+
+
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id){
+        Optional<Extra> optionalExtra=extraRepository.findById(id);
+        if (optionalExtra.isPresent()){
+            Extra extra = optionalExtra.get();
+            byte[] imagenBytes=extra.getFoto();
+            HttpHeaders httpHeaders= new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(extra.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
+        }else {
+            return null;
         }
     }
 

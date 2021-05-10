@@ -88,8 +88,8 @@ public class CuponController {
         model.addAttribute("listaCupon", listaCupon);
 
         return "AdminRestaurante/listaCupones";
-
     }
+
 
 
     @GetMapping("/nuevo")
@@ -139,26 +139,29 @@ public class CuponController {
         }
     }
 
-    @GetMapping("/bloquear")
-    public String bloquearCupon(@RequestParam("id") int id, RedirectAttributes attr) {
+    @GetMapping("/actualizar")
+    public String actualizarCupon(@RequestParam("id") int id,
+                                  @RequestParam("estado") String estado,
+                                  RedirectAttributes attr){
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
-            cupon.setEstado(0);
-            cuponRepository.save(cupon);
-            attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
-        }
-        return "redirect:/cupon/lista";
-    }
 
-    @GetMapping("/publicar")
-    public String publicarCupon(@RequestParam("id") int id, RedirectAttributes attr) {
-        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
-        if (optionalCupon.isPresent()) {
-            Cupon cupon = optionalCupon.get();
-            cupon.setEstado(2);
+            switch (estado){
+                case "0":
+                    cupon.setEstado(0);
+                    attr.addFlashAttribute("bloqueo", "Cupón publicado exitosamente");
+                    break;
+                case "1":
+                    cupon.setEstado(1);
+                    attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
+                    break;
+                case "2":
+                    cupon.setEstado(2);
+                    attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
+                    break;
+            }
             cuponRepository.save(cupon);
-            attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
         }
         return "redirect:/cupon/lista";
     }

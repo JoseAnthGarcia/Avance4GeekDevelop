@@ -76,7 +76,7 @@
                         </a>
                         <h1 style="color: black">REGÍSTRESE</h1>
                         <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de administrador.</p>
-                        <form id="nuevo" method="post" th:action="@{'/guardarAdminRest'}" th:object="${adminRest}">
+                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}" th:object="${adminRest}">
 
                             <div class="form-group row">
                                 <input th:field="*{idusuario}" type="hidden"/>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-0 mb-sm-0">
-                                    <input type="email" class="form-control"
+                                    <input class="form-control"
                                            id="exampleCorreo"
                                            placeholder="Correo electrónico" th:field="*{correo}">
                                 </div>

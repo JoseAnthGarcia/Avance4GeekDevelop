@@ -12,13 +12,13 @@
         <title>LISTA DE CUPONES</title>
 
         <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
                 href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
                 rel="stylesheet">
 
         <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
@@ -185,8 +185,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle"
-                                         src="../../static/bootstrap/img/undraw_profile.svg">
+                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -257,14 +256,11 @@
                             <div class="card-body">
                                 <div class="table-responsive">
 
-                                    <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success"
-                                         role="alert"></div>
-                                    <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning"
-                                         role="alert"></div>
-                                    <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger"
-                                         role="alert"></div>
-                                    <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info"
-                                         role="alert"></div>
+                                    <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
+                                    <div th:if="${activo != null}" th:text="${activo}" class="alert alert-success" role="alert"></div>
+                                    <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning" role="alert"></div>
+                                    <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger" role="alert"></div>
+                                    <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info" role="alert"></div>
 
                                     <table class="table table-bordered">
                                         <thead>
@@ -297,12 +293,12 @@
                                         </thead>
                                         <tbody>
 
-                                            <tr th:each="cupon : ${listaCupon}">
+                                            <tr th:each="cupon : ${listaCupon}" >
                                                 <td th:text="${cuponStat.index}+1"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>
-                                                    <div th:case="${1}" th:text="|Creado|"></div>
+                                                    <div th:case="${1}" th:text="|Activo|"></div>
                                                     <div th:case="${2}" th:text="|Publicado|"></div>
                                                 </td>
                                                 <td th:text="${cupon.politica}"></td>
@@ -313,16 +309,12 @@
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
-                                                <td th:if="${cupon.estado != 2}" style="width: 160px"><a
-                                                        style="color: #dce3f9"
-                                                        class="btn btn-info btn-circle align"
-                                                        th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
+                                                <td th:if="${cupon.estado == 1}" style="width: 160px"><a style="color: #dce3f9"
+                                                                            class="btn btn-info btn-circle align"
+                                                                            th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon}+ '&estado=2'}">
                                                     <i class="fas fa-book"></i>
                                                 </a></td>
-                                                <td th:unless="${cupon.estado == 2}" style="width: 160px"><a
-                                                        style="color: gray"
-                                                        class="btn btn-info btn-circle align"
-                                                        href="#">
+                                                <td th:unless="${cupon.estado == 1}" style="width: 160px"><a class="btn btn-info btn-circle align" style="background-color: gray" href="#">
                                                     <i class="fas fa-book"></i>
                                                 </a>
                                                 </td>
@@ -398,20 +390,20 @@
 
         <!-- Bootstrap core JavaScript-->
         <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
         <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
         <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
+        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
         <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
         <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
         <!-- Page level custom scripts -->
-        <script th:src="@{/js/demo/datatables-demo.js}"></script>
+        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
     </body>
 

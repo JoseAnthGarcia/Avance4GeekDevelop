@@ -8,6 +8,6 @@ public interface PlatoService {
     Page<Plato> findPaginated(int pageNo, int pageSize);
 
 
-    Page<Plato> findPaginated2(int pageNo, int pageSize, String nombre, boolean disponibilidad, double inputPMin, double inputPMax);
+    Page<Plato> findPaginated2(int pageNo, int pageSize,int idrestaurante,int idcategoriaplato, String nombre, boolean disponibilidad, double inputPMin, double inputPMax);
 
 }

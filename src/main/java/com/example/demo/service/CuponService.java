@@ -7,5 +7,5 @@ import java.util.Date;
 
 public interface CuponService {
 
-    Page<Cupon> findPaginated2(int pageNo, int pageSize, String nombre, Date caducidad, int inputDescuento);
+    Page<Cupon> findPaginated2(int pageNo, int pageSize, String nombre, Date caducidad, int inputDescuentoMin, int inputDescuentoMax);
 }

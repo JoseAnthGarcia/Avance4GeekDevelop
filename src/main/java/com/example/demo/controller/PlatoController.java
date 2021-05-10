@@ -2,8 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.CategoriaExtra;
 import com.example.demo.entities.Plato;
+import com.example.demo.entities.Restaurante;
+import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.PlatoRepository;
+import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -36,10 +41,18 @@ public class    PlatoController {
     PlatoService platoService;
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
+    @Autowired
+    RestauranteRepository restauranteRepository;
+
 
     @GetMapping(value = {"/lista", ""})
-    public String listaPlatos(Model model) {
-        return findPaginated("", 1, 0, 1, model);
+    public String listaPlatos(Model model, HttpSession session) {
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        int id=adminRest.getIdusuario();
+        Restaurante restaurante= restauranteRepository.encontrarRest(id);
+        System.out.println(adminRest.getIdusuario());
+        System.out.println(restaurante.getIdrestaurante());
+        return findPaginated("", 1, 0, 1,restaurante.getIdrestaurante(), model,session);
     }
 
     /*@PostMapping("/textSearch")
@@ -56,7 +69,8 @@ public class    PlatoController {
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textDisponible", required = false) Integer inputDisponible,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model){
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "idrestaurante",required = false) Integer idrestaurante, Model model,HttpSession session){
 
         if(pageNo==null || pageNo==0){
             pageNo=1;
@@ -88,7 +102,12 @@ public class    PlatoController {
             inputPMax=inputPrecio;
             inputPMin=inputPrecio;
         }
-        page = platoService.findPaginated2(pageNo, pageSize, 1,1,textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);//harcodeado
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        int id=adminRest.getIdusuario();
+        Restaurante restaurante= restauranteRepository.encontrarRest(id);
+        System.out.println("-----Esto----"+adminRest.getIdusuario());
+        System.out.println("------Esto2----"+restaurante.getIdrestaurante());
+        page = platoService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(),1,textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);//harcodeado
         listaPlatos= page.getContent();
 
         model.addAttribute("texto", textBuscador);
@@ -115,7 +134,7 @@ public class    PlatoController {
 
     @PostMapping("/guardar")
     public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,BindingResult bindingResult,
-                               @RequestParam(value = "photo",required = false) MultipartFile file,RedirectAttributes attr, Model model) {
+                               @RequestParam(value = "photo",required = false) MultipartFile file,RedirectAttributes attr, Model model, HttpSession session) {
         model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
         String fileName ="";
         if (file!=null){
@@ -131,7 +150,14 @@ public class    PlatoController {
         }
 
 
-        plato.setIdrestaurante(1); //Jarcodeado
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        int id=adminRest.getIdusuario();
+        Restaurante restaurante= restauranteRepository.encontrarRest(id);
+        System.out.println(adminRest.getIdusuario());
+        System.out.println(restaurante.getIdrestaurante());
+
+
+        plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
         plato.setIdcategoriaplato(1); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
 

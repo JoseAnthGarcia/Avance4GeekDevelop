@@ -69,4 +69,20 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = 8 ", nativeQuery = true)
     int valoracionRepartidor(int idrepartidor);
 
+
+    @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
+            "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) and u.idrol = ?3 and u.estado = ?4 ",nativeQuery = true)
+    List<Usuario> buscadorUsuario(String texto, int fechaRegistro, int idRol, int estado);
+
+    @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
+            "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) and u.estado = ?3 ",nativeQuery = true)
+    List<Usuario> buscadorUsuarioSinRol(String texto, int fechaRegistro, int idRol);
+
+    @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
+            "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) and u.estado = ?3 ",nativeQuery = true)
+    List<Usuario> buscadorUsuarioSinEstado(String texto, int fechaRegistro, int estado);
+
+    @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
+            "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) ",nativeQuery = true)
+    List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
 }

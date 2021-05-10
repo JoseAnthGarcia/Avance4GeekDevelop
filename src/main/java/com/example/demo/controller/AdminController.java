@@ -6,6 +6,7 @@ import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
 import com.example.demo.service.RepartidorService;
+import com.example.demo.service.RepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
@@ -55,6 +56,9 @@ public class AdminController  {
 
     @Autowired
     RepartidorService repartidorService;
+
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
@@ -184,6 +188,51 @@ public class AdminController  {
         return "/AdminGen/lista";
     }
 
+    @GetMapping("/buscador")
+    public String buscadorUsuario(@RequestParam(value = "texto",required = false) String texto,
+                                  @RequestParam(value = "fechaRegsitro",required = false) Integer fechaRegsitro,
+                                  @RequestParam(value = "idRol",required = false) Integer idRol,
+                                  @RequestParam(value = "estado",required = false) Integer estado,
+                                  Model model){
+
+        //busca por nombre y apellido - no hay problema si es nulo
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaBuscador", fechaRegsitro);
+        model.addAttribute("rolBuscador", idRol);
+        model.addAttribute("estadoBuscador", estado);
+
+        //si es nulo se manda la fecha minima de la lista de USUARIOS
+        if(fechaRegsitro==null){
+            fechaRegsitro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        }
+        if(estado==null && idRol == null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstadoNiRol(texto,-1*fechaRegsitro));
+        }else if(idRol==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinRol(texto,-1*fechaRegsitro,estado));
+        }else if(estado==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstado(texto,-1*fechaRegsitro,idRol));
+        }else{
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        }
+
+        return "/AdminGen/lista";
+    }
+
+    @GetMapping("/buscadorCliente")
+    public String buscadorUsuario(@RequestParam(value = "idUsuario",required = false) Integer idUsuario,
+                                  @RequestParam(value = "textoPedido",required = false) String texto,
+                                  @RequestParam(value = "fechaPedido",required = false) Integer fechaPedido,
+                                  @RequestParam(value = "valoracion",required = false) Integer valoracion,
+                                  Model model){
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaPedidoBuscador", fechaPedido);
+        model.addAttribute("valoracionBuscador", valoracion);
+
+
+        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
+        return "redirect:/admin/detalle?idUsuario="+idUsuario;
+    }
+
     @GetMapping("/detalle")
     public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
                                  Model model) {
@@ -228,6 +277,8 @@ public class AdminController  {
             return "redirect:/admin/usuarios";
         }
     }
+
+
     @GetMapping("/aceptado")
     public String aceptarUsuario(Model model,
                                  @RequestParam("id") int id) {

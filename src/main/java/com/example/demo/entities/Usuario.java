@@ -74,15 +74,11 @@ public class Usuario {
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
-
-
-    /*@OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;*/
+    @OneToOne(mappedBy = "administrador")
+    private Restaurante restaurante;
 
     //private String addresselegido;
 
-    //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
 
@@ -97,10 +93,15 @@ public class Usuario {
     public void setAddresselegido(String addresselegido) {
         this.addresselegido = addresselegido;
     }*/
-    /*
-    public Credenciales getCredencial() { return credencial; }
 
-    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
+
 
     public int getIdusuario() {
         return idusuario;

@@ -74,7 +74,7 @@
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
                 <form method="post" enctype="multipart/form-data"
-                      class="user" th:action="@{/cliente/guardar}" th:object="${cliente}">
+                      class="user" th:action="@{/ClienteGuardar}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
                             <label style="color: black">Nombres</label>
@@ -82,8 +82,9 @@
                                    id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
 
-                          <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombres')}"
-                                 th:errors="*{nombres}"> </div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('nombres')}"
+                                 th:errors="*{nombres}"></div>
 
 
                         </div>
@@ -95,7 +96,8 @@
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
 
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('apellidos')}"
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
 
 
@@ -109,14 +111,18 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleCorreo" th:field="*{correo}"
                                    placeholder="Correo electrónico">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
                         </div>
 
                         <div class="col-sm-6 mb-2">
                             <label style="color: black">Fecha de nacimiento</label>
-                            <input type="date" class="form-control mb-2"  style="border-color: lightgray" th:field="*{fechanacimiento}" th:novalidate="novalidate">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechanacimiento')}"
+                            <input type="date" class="form-control mb-2" style="border-color: lightgray"
+                                   th:field="*{fechanacimiento}" th:novalidate="novalidate">
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>
+                            <div th:if="${msg7 != null}" th:text="${msg7}" style="color: red; font-size: small; text-align: left" ></div>
                         </div>
                     </div>
 
@@ -128,16 +134,18 @@
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('sexo')}"
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('sexo')}"
                                  th:errors="*{sexo}"></div>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: black">Teléfono</label>
-                            <input type="number" class="form-control" style="border-color:lightgray"
+                            <input type="text" class="form-control" style="border-color:lightgray"
                                    th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
 
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}"
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
 
 
@@ -146,58 +154,46 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
                             <label style="color: black">DNI</label>
-                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
+                            <input type="text" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('dni')}"
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
                         </div>
-                                                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                                                    <label style="color: black">Foto de Perfil</label>
-                                                    <div class="custom-file">
-                                                        <input type="file" style="border-color:lightgray" id="inputGroupFile03">
-                                                        <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
-                                                    </div>
-                                                </div>
-
-
-                    </div>
-
-                    <div class="form-group row" th:object="${Usuario_has_distrito}">
-                        <div class="col-sm-6   mb-sm-0">
-                            <label style="color: #000000">Dirección</label>
-                            <input type="text" class="form-control" style="border-color:lightgray"
-                                   id="direccion" placeholder="Dirección" th:field="*{direccion}">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('direccion')}"
-                                 th:errors="*{direccion}"></div>
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <label style="color: black">Foto de Perfil</label>
+                            <div class="custom-file">
+                                <input type="file" style="border-color:lightgray" id="inputGroupFile03">
+                                <label class="custom-file-label " for="inputGroupFile03" style="border-color:lightgray">Foto de
+                                    Perfil</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                    <div class="col-sm-6  mb-2 mb-sm-0">
-                        <label style="color: #000000">Distritos</label>
-                        <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
-                            <option value="" selected>Distrito</option>
-                            <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
-                                    th:text="${dist.nombre}"></option>
-                        </select>
 
-                    </div>
+
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <label style="color: black">Contraseña</label>
-                            <input type="password" class="form-control" style="border-color:lightgray"
-                                   id="inputPassword1" th:field="*{contrasenia}"
-                                   placeholder="Coloque contraseña">
-                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></div>
+                        <div class="col-sm-6" th:object="${Usuario_has_distrito}">
+                            <div class="col-sm-12   mb-sm-0">
+                                <label style="color: #000000">Dirección</label>
+                                <input type="text" class="form-control" style="border-color:lightgray"
+                                       id="direccion" placeholder="Dirección" th:field="*{direccion}">
+                                <div th:if="${msg2 != null}" th:text="${msg2}" style="color: red; font-size: small; text-align: left" ></div>
+                            </div>
                         </div>
+                        <div class="col-sm-6  mb-2 mb-sm-0">
+                            <label style="color: #000000">Distritos</label>
+                            <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
+                                <option value="0" selected>Distrito</option>
+                                <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
+                                        th:text="${dist.nombre}"></option>
+                            </select>
+                            <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
+                            <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
 
-                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <label style="color: black">Confirmar contraseña</label>
-                            <input type="password" class="form-control" style="border-color:lightgray"
-                                   id="inputPassword2"
-                                   placeholder="Confirmar contraseña">
-                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
@@ -205,6 +201,26 @@
                                  width="350" height="150">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <label style="color: black">Contraseña</label>
+                            <input type="password" class="form-control" style="border-color:lightgray"
+                                   id="inputPassword1" th:field="*{contrasenia}"
+                                   placeholder="Coloque contraseña">
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${#fields.hasErrors('contrasenia')}" th:errors="*{contrasenia}"></div>
+                        </div>
+
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+
+                            <label style="color: black">Confirmar contraseña
+
+                            </label>
+                            <input type="password" class="form-control" name="contrasenia2" placeholder="Confirmar contraseña"  style="border-color:lightgray">
+                            <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
+                        </div>
+                    </div>
+
 
                     <div class="form-group row">
 

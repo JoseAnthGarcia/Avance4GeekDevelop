@@ -49,6 +49,9 @@ public class AdminController  {
     @Autowired
     Usuario_has_distritoRepository usuario_has_distritoRepository;
 
+    @Autowired
+    PedidoRepository pedidoRepository;
+
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo, Model model){
         if(tipo == null){
@@ -182,6 +185,22 @@ public class AdminController  {
 
         return "/AdminGen/lista";
     }
+
+    @GetMapping("/buscadorCliente")
+    public String buscadorUsuario(@RequestParam(value = "idUsuario",required = false) Integer idUsuario,
+                                  @RequestParam(value = "textoPedido",required = false) String texto,
+                                  @RequestParam(value = "fechaPedido",required = false) Integer fechaPedido,
+                                  @RequestParam(value = "valoracion",required = false) Integer valoracion,
+                                  Model model){
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaPedidoBuscador", fechaPedido);
+        model.addAttribute("valoracionBuscador", valoracion);
+
+
+        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
+        return "redirect:/admin/detalle?idUsuario="+idUsuario;
+    }
+
     @GetMapping("/detalle")
     public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
                                  Model model) {

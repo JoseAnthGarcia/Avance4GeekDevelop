@@ -32,7 +32,7 @@ public class CuponController {
     }
 
 
-
+/*
     @GetMapping("/nuevo")
     public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon) {
         return "AdminRestaurante/nuevoCupon";

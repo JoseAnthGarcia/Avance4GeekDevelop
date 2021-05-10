@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Visualizar Administrador Restaurante')"></head>
 
 <head>
 
@@ -34,13 +35,14 @@
 
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
+    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
+        id="accordionSidebar">
         <div class="">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-shopping-basket"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Food Delivery </div>
+                <div class="sidebar-brand-text mx-3">Food Delivery</div>
             </a>
         </div>
         <!-- Sidebar - Brand -->
@@ -59,23 +61,12 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
+            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Solicitudes</span>
 
             </a>
-            <div class="collapse" id="submenu2" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudAR.html"><span>Administrador Restaurante</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=solicitudRepartidor.html#"><span>Repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudRestaurante.html"><span>Restaurante</span></a></li>
-                </ul>
 
-            </div>
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
@@ -88,31 +79,29 @@
         <!-- Nav Item - Pages Collapse Menu -->
 
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
+            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Reportes</span>
 
             </a>
             <div class="collapse" id="submenu1" aria-expanded="false">
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
                 </ul>
                 <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
                 </ul>
             </div>
         </li>
-
-
 
 
         <!-- Divider -->
@@ -287,36 +276,28 @@
                                                 <tbody>
                                                 <tr >
 
-                                                    <td  style="width: 1300px;" >Fecha de Registro: 20/01/3113</td>
-                                                    <td  style="width: 1300px;">Estado: Bloqueado </td>
+                                                    <td th:text="|Fecha de Registro: ${administradorRestaurante.fecharegistro}|" style="width: 1300px;" ></td>
+                                                    <td th:text="|Estado: ${administradorRestaurante.estado != 0 ? 'Activo' : 'Bloqueado'}|" style="width: 1300px;"></td>
                                                 </tr>
                                                 <tr>
-
-                                                    <td>Nombre: Martin Alvaro</td>
-                                                    <td>Telefono: 12345678
-                                                    </td>
+                                                    <td th:text="|Nombre: ${administradorRestaurante.nombres}|"></td>
+                                                    <td th:text="|Teléfono: ${administradorRestaurante.telefono}|"></td>
                                                 </tr>
                                                 <tr>
-
-                                                    <td>Apellidos: Lopez Flores</td>
-                                                    <td>Sexo: Masculino </td>
-
+                                                    <td th:text="|Apellidos: ${administradorRestaurante.apellidos}|"></td>
+                                                    <td th:text="|Sexo: ${administradorRestaurante.sexo}|"></td>
                                                 </tr>
                                                 <tr>
-
-                                                    <td>Correo: mastin@gmail.com</td>
-                                                    <td>DNI : 23145560 </td>
+                                                    <td th:text="|Correo: ${administradorRestaurante.correo}|"></td>
+                                                    <td th:text="|DNI: ${administradorRestaurante.dni}|"></td>
                                                 </tr>
-
                                                 <tr>
-
-                                                    <td>Restaurante que Administra: Don alvaro</td>
+                                                    <td th:text="|Restaurante que Administra: ${administradorRestaurante.restaurante.nombre}|"></td>
                                                     <td>
-
-                                                        <a href="lista.html" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-reply"></i>
-                                        </span>
+                                                        <a th:href="@{/admin/usuarios}" class="btn btn-warning btn-icon-split">
+                                                            <span class="icon text-white-50">
+                                                                <i class="fas fa-reply"></i>
+                                                            </span>
                                                             <span class="text">Volver</span>
                                                         </a>
                                                         <a href="#" class="btn btn-icon-split" style="background-color: #701111;">

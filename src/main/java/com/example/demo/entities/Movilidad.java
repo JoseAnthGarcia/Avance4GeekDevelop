@@ -1,13 +1,16 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @Entity
-public class Movilidad {
+public class Movilidad implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idmovilidad;
+    //@Pattern(regexp = "^[A-Z]{3}-[1-9]{3}|^[A-Z]{1}[1-9]{1}[A-Z]{1}-[1-9]{3}|^[1-9]{4}-[A-Z,1-9]{2}|^[A-Z]{2}-[1-9]{3}$",message = "Ingrese una placa válida")
     private String placa;
     private String licencia;
 

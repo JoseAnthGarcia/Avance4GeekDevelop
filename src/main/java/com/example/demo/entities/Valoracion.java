@@ -3,10 +3,11 @@ package com.example.demo.entities;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "valoracion")
-public class Valoracion {
+public class Valoracion  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -302,11 +302,17 @@
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
+                                                <td th:if="${cupon.estado != 2}" style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-info btn-circle align"
                                                                             th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-book"></i>
                                                 </a></td>
+                                                <td th:unless="${cupon.estado == 2}" style="width: 160px"><a style="color: gray"
+                                                                                                         class="btn btn-info btn-circle align"
+                                                                                                         href="#">
+                                                    <i class="fas fa-book"></i>
+                                                </a>
+                                                </td>
                                             </tr>
 
                                         </tbody>

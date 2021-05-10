@@ -65,7 +65,7 @@
 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
+                    <a class="nav-link" th:href="@{/extra}">
                         <i class="fas fa-fw fa-utensils"></i>
                         <span>Extras</span>
                     </a>
@@ -79,7 +79,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
+                    <a class="nav-link " th:href="@{/cupon}">
                         <i class="fas fa-fw fa-ticket-alt"></i>
                         <span>Cupones</span>
                     </a>
@@ -204,27 +204,26 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form class="input-group mb-lg-3" method="post" th:action="@{/plato/textSearch}">
+                        <form method="get" th:action="@{/plato/page}">
                             <div class="form-group row">
 
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="examplePlato"
                                            th:value="${texto}"
-                                           placeholder="Búsqueda por plato"
-
+                                           placeholder="Buscar plato"
                                            name="textBuscador">
                                 </div>
-
-                                <div class="col-sm-2 mb-1">
+                                <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
-                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./5.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S./5.00 hasta S./10.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
+                                        <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S/.5.00 hasta S/.10.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S/.10.00 hasta S/.15.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/.20.00</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="textDisponible" name="textDisponible"
                                             style="justify-content: right">
@@ -239,16 +238,16 @@
                                         </option>
                                     </select>
                                 </div>
+
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-3 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
-                                       th:href="@{/plato/lista}"
-                                    >Quitar filtros</a>
+                                       th:href="@{/plato/lista}">Quitar filtros</a>
                                 </div>
                             </div>
                         </form>
@@ -289,7 +288,7 @@
                                                     Precio
                                                 </th>
                                                 <th>
-                                                    Descripcion
+                                                    Descripción
                                                 </th>
                                                 <th>
                                                     Editar
@@ -300,7 +299,7 @@
                                             <tr th:each="platos,v:${listaPlatos} ">
                                                 <td th:text="${v.index+1}"></td>
                                                 <td th:text="${platos.nombre}"></td>
-                                                <td th:text="${'S./ '+platos.precio}"></td>
+                                                <td th:text="${'S/. '+platos.precio}"></td>
                                                 <td th:text="${platos.descripcion}"></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
@@ -310,16 +309,15 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination"
-                                     style=" margin-left: 630px ;align-content: center">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
-                                        <a  th:if="${currentPage != i}"
-                                           th:href="@{'/plato/page?pageNo=' + ${i}}"
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/plato/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2"></a>
+                                           class="active mt-2 no"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white"></a>
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

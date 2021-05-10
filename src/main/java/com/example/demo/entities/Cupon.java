@@ -31,7 +31,7 @@ public class Cupon implements Serializable {
     @NotNull(message = "Ingrese un número entero")
     private int descuento;
 
-    @Column(nullable = false, name = "descripcion")
+    @Column(nullable = false)
     @NotBlank(message = "La política no puede estar vacío")
     @Size(max = 256, message = "Ingrese como máximo 256 caractéres")
     private String politica;
@@ -48,14 +48,14 @@ public class Cupon implements Serializable {
 
     //True - disponible
     @Column(nullable = false)
-    private boolean disponible;
+    private int estado;
 
-    public boolean isDisponible() {
-        return disponible;
+    public int getEstado() {
+        return estado;
     }
 
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public int getIdcupon() {

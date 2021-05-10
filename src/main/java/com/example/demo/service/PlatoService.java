@@ -6,4 +6,8 @@ import org.springframework.data.domain.Page;
 public interface PlatoService {
 
     Page<Plato> findPaginated(int pageNo, int pageSize);
+
+
+    Page<Plato> findPaginated2(int pageNo, int pageSize,int idrestaurante,int idcategoriaplato, String nombre, boolean disponibilidad, double inputPMin, double inputPMax);
+
 }

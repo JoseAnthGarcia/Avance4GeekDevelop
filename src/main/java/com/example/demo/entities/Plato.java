@@ -27,7 +27,7 @@ public class Plato implements Serializable {
     @Positive(message = "Ingrese una cantidad positiva")
     @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
     @NotNull(message = "Este campo es obligatorio")
-    private BigDecimal precio;
+    private double precio;
     @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;
     @Column(name="idrestaurante", nullable = false)
@@ -40,6 +40,37 @@ public class Plato implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "idcategoriaextra"))
     private List<CategoriaExtra> categoriaExtraList;
 
+    //FOTO
+    private String fotonombre;
+    private String fotocontenttype;
+    @Lob
+    private byte[] foto;
+
+    public String getFotonombre() {
+        return fotonombre;
+    }
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    //FIN FOTO
     public List<CategoriaExtra> getCategoriaExtraList() {
         return categoriaExtraList;
     }
@@ -64,11 +95,11 @@ public class Plato implements Serializable {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 

@@ -11,13 +11,13 @@
 
         <title>LISTA BEBIDAS</title>
 
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
                 href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
                 rel="stylesheet">
 
         <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
@@ -63,7 +63,7 @@
 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
+                    <a class="nav-link" th:href="@{/extra}">
                         <i class="fas fa-fw fa-utensils"></i>
                         <span>Extras</span>
                     </a>
@@ -77,7 +77,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
+                    <a class="nav-link " th:href="@{/cupon}">
                         <i class="fas fa-fw fa-ticket-alt"></i>
                         <span>Cupones</span>
                     </a>
@@ -183,7 +183,8 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                                    <img class="img-profile rounded-circle"
+                                         th:href="@{/static/img/undraw_profile.svg}">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -202,34 +203,35 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form method="get" th:action="@{/extra/lista}">
-
+                        <form method="get" th:action="@{/extra/page}">
                             <div class="form-group row">
+
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
-                                           id="exampleCupon"
+                                           id="exampleExtra"
                                            th:value="${texto}"
-                                           placeholder="Búsqueda por nombre"
-                                    name="textBuscador">
+                                           placeholder="Búsqueda extra"
+                                           name="textBuscador">
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
-                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./15.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S./15.00 hasta S./35.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S./35.00 hasta S./60.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S./60.00 a más</option>
+                                        <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S/.5.00 hasta S/.10.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S/.10.00 hasta S/.15.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/.20.00</option>
                                     </select>
                                 </div>
 
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
-                                    <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
+                                    <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                            type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
                                 <div class="col-sm-5 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
-                                    th:href="@{/extra/lista}">Quitar filtros</a>
+                                       th:href="@{/extra/lista}">Quitar filtros</a>
                                 </div>
                             </div>
                         </form>
@@ -241,7 +243,8 @@
                                 <div class="d-sm-flex align-items-center justify-content-between">
                                     <a class="btn btn-warning" th:href="@{'/extra/nuevo'}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo Extra</a>
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto" th:text="${'Bebidas'}"></h5>
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:text="${'Bebidas'}"></h5>
 
                                 </div>
 
@@ -263,49 +266,18 @@
                                                 <th>
                                                     Editar
                                                 </th>
-                                                <th>
-                                                    Eliminar
-                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr th:each="extra,v :${listaExtras}">
-                                                <td th:text="${extra.getIdExtra()}">00001</td>
-                                                <td th:text="${extra.getNombre()}">Inca Kola 500 ml</td>
-                                                <td th:text="${extra.getPrecioUnitario()}">S/. 15.00</td>
-                                                <td >
+                                                <td th:text="${v.index+1}"></td>
+                                                <td th:text="${extra.getNombre()}"></td>
+                                                <td th:text="${extra.getPreciounitario()}"></td>
+                                                <td>
                                                     <a style="color: #dce3f9"
-                                                       class="btn btn-warning btn-circle align" th:href="@{'/extra/editar?id='+${extra.getIdExtra()}}">
+                                                       class="btn btn-warning btn-circle align"
+                                                       th:href="@{'/extra/editar?id='+${extra.getIdextra()}}">
                                                         <i class="fas fa-pen"></i></a></td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            href="#lModal1" data-target="#modalEliminar" class="btn btn-danger btn-circle align">
-                                                    <i class="fas fa-times"></i>
-                                                </a>
-                                                    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
-                                                                        extra?</h5>
-                                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <a th:href="@{'/extra/borrar?id='+${extra.getIdExtra()}}" class="btn btn-primary">Sí</a>
-                                                                    <a class="btn" type="button"
-                                                                       data-dismiss="modal">
-                                                                        No
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                </td>
-
                                             </tr>
 
                                         </tbody>
@@ -313,15 +285,16 @@
                                     </table>
 
                                 </div>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a href="#">&laquo;</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/extra/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
+                                           th:utext="${i}"
+                                           class="active mt-2"></a>
+                                        <a th:unless="${currentPage != i}"
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -374,22 +347,23 @@
             </div>
         </div>
 
+
         <!-- Bootstrap core JavaScript-->
         <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
         <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
         <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
         <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
         <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
         <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <script th:src="@{/js/demo/datatables-demo.js}"></script>
     </body>
 
 </html>

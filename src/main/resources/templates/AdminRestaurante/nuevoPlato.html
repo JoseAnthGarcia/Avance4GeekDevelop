@@ -212,185 +212,199 @@
                     <div class="card-body">
                         <div class="text-xl-left">
 
-                            <div class="container-fluid">
-                                <div class="tabel-responsive">
-                                    <table class="table">
-                                        <form method="POST" id="nuevo" class="justify-content-left"
-                                              th:action="@{/plato/guardar}" th:object="${plato}"
-                                              enctype="multipart/form-data">
-                                            <input hidden th:field="*{idplato}">
+                                    <div class="container-fluid">
+                                        <div class="tabel-responsive">
+                                            <table class="table">
+                                                <form method="POST" id="nuevo" class="justify-content-left"
+                                                      th:action="@{/plato/guardar}" th:object="${plato}"
+                                                      enctype="multipart/form-data">
+                                                    <input hidden th:field="*{idplato}">
 
-                                            <tr>
-                                                <td><label>Nombre:</label></td>
-                                                <td colspan="2"><br><input type="text" class="form-control c"
-                                                                           th:field="*{nombre}">
-                                                    <h1 style="color: red; font-size: small; text-align: left"
-                                                        th:if="${#fields.hasErrors('nombre')}"
-                                                        th:errors="*{nombre}">Debes insertar como máximo 40
-                                                        caracteres</h1>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><label>Descripción:</label></td>
-                                                <td colspan="2">
-                                                    <br><textarea class="form-control" type="text"
-                                                                  th:field="*{descripcion}"
-                                                                  placeholder="Ingrese una descripcion"></textarea>
-                                                    <h1 style="color: red; font-size: small; text-align: left"
-                                                        th:if="${#fields.hasErrors('descripcion')}"
-                                                        th:errors="*{descripcion}">Debes insertar como máximo 100
-                                                        caracteres</h1></td>
-                                                <td rowspan="3" colspan="3" th:if="${plato.idplato==0}"><img
-                                                        id="image_preview"
-                                                        src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
-                                                        width="300"></td>
-                                                <td rowspan="3" colspan="3" th:if="${plato.idplato!=0}"><img
-                                                        id="image_previe"
-                                                        th:src="htt"
-                                                        width="300"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><label>Precio unitario:</label></td>
-                                                <td colspan="2">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">S/.</span>
-                                                            <br> <input type="text" class="form-control"
-                                                                        th:field="*{precio}">
+                                                    <tr>
+                                                        <td><label for="nombre">Nombre:</label></td>
+                                                        <td colspan="2"><input type="text" class="form-control c"
+                                                                               id="nombre" name="nombre"
+                                                                               th:field="*{nombre}"
+                                                                               placeholder="Ingrese un nombre">
                                                             <h1 style="color: red; font-size: small; text-align: left"
-                                                                th:if="${#fields.hasErrors('precio')}"
-                                                                th:errors="*{precio}"></h1>
+                                                                th:if="${#fields.hasErrors('nombre')}"
+                                                                th:errors="*{nombre}">Debes insertar como máximo 40
+                                                                caracteres</h1>
+                                                        </td>
+                                                        <td rowspan="3" colspan="3" th:if="${plato.idplato==0}"><img
+                                                                id="image_preview"
+                                                                src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
+                                                                width="300"></td>
+                                                        <td rowspan="3" colspan="3" th:if="${plato.idplato!=0}"><img
+                                                                id="image_previe"
+                                                                th:src="htt"
+                                                                width="300"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label>Descripción:</label></td>
+                                                        <td colspan="2">
+                                                            <br><textarea class="form-control" type="text"
+                                                                          th:field="*{descripcion}"
+                                                                          placeholder="Ingrese una descripción"></textarea>
+                                                            <h1 style="color: red; font-size: small; text-align: left"
+                                                                th:if="${#fields.hasErrors('descripcion')}"
+                                                                th:errors="*{descripcion}">Debes insertar como máximo
+                                                                100
+                                                                caracteres</h1>
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label>Precio unitario:</label></td>
+                                                        <td colspan="2">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text">S/.</span>
+                                                                    <br> <input type="text" class="form-control"
+                                                                                th:field="*{precio}">
+                                                                    <h1 style="color: red; font-size: small; text-align: left"
+                                                                        th:if="${#fields.hasErrors('precio')}"
+                                                                        th:errors="*{precio}"></h1>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr th:if="${plato.idplato==0}">
+                                                        <td><label>Imagen referencial:</label></td>
+                                                        <td colspan="2"><br>
+
+                                                            <div class="custom-file">
+                                                                <input type="file" name="photo"  accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                                                <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                                                <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}" style="color: red; font-size: small; text-align: left"></h1>
+                                                            </div>
+
+
+
+                                                        </td>
+                                                    <tr>
+                                                    <td><label>Extras: </label></td>
+                                                    <td colspan="2">
+                                                        <div th:each="categoria :${listaCategoria}"
+                                                             class="text-left">
+                                                            <input th:field="*{categoriaExtraList}" type="checkbox"
+                                                                   th:value="${categoria.getIdcategoriaextra()}">
+                                                            <label th:text="${categoria.getTipo()}"></label><br>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr th:if="${plato.idplato==0}">
-                                                <td><label>Imagen referencial:</label></td>
-                                                <td colspan="2"><br>
-                                                    <input type="file" name="foto"  class="form-control">
-                                                </td>
 
-                                            </tr>
-                                            <tr>
-                                                <td><label>Extras: </label></td>
-                                                <td colspan="2">
-                                                    <div th:each="categoria :${listaCategoria}">
-                                                        <input th:field="*{categoriaExtraList}" type="checkbox"
-                                                               th:value="${categoria.getIdcategoriaextra()}">
-                                                        <label th:text="${categoria.getTipo()}"></label><br>
-                                                    </div>
+                                                    </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <a th:text="${plato.idplato ==0? 'Registrar plato':'Editar plato'}"
+                                                               class="btn btn-primary mb-4 mr-2"
+                                                               data-toggle="modal"
+                                                               data-target="#RegistroExitoso"
+                                                               href="#RegistroExitoso">
+                                                            </a>
+                                                            <a class="btn btn-info mb-4 mr-2"
+                                                               th:href="@{/plato/lista}"
+                                                               role="button">Cancelar</a>
 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <a th:text="${plato.idplato ==0? 'Registrar plato':'Editar plato'}"
-                                                       class="btn btn-primary mb-4 mr-2 "
-                                                       data-toggle="modal"
-                                                       data-target="#RegistroExitoso"
-                                                       href="#RegistroExitoso">
-                                                    </a>
-                                                    <a class="btn btn-danger mb-4"
-                                                       th:href="@{/plato/lista}"
-                                                       role="button"
-                                                    >Cancelar</a></td>
-                                                <td th:if="${plato.idplato!=0}"><a class="btn btn-block btn-danger" data-toggle="modal"
-                                                       href="#lModal1" data-target="#modalEliminar"
-                                                       >Eliminar
-                                                    Plato</a>
-                                                </td>
-                                            </tr>
-                                        </form>
-                                    </table>
+                                                            <a th:if="${plato.idplato!=0}"
+                                                               class="btn btn-danger mb-4 mr-2" data-toggle="modal"
+                                                               href="#lModal1" data-target="#modalEliminar">Eliminar
+                                                                Plato</a>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- End of Main Content -->
-    <!-- End of Content Wrapper -->
-    <!-- End of Page Wrapper -->
+            <!-- End of Main Content -->
+            <!-- End of Content Wrapper -->
+            <!-- End of Page Wrapper -->
 
 
-    <!-- Logout Modal-->
-    <!-- Alerta cierre sesion-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea continuar?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
-                       href="loginAR.html">Cerrar
-                        Sesión</a>
-                    <a class="btn" type="button"
-                       data-dismiss="modal">
-                        Cancelar
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal eliminar-->
-    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
-                        plato?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
-                    <a class="btn" type="button"
-                       data-dismiss="modal">
-                        No
-                    </a>
+            <!-- Logout Modal-->
+            <!-- Alerta cierre sesion-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
+                                continuar?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-primary"
+                               style="background-color: #701111; color: #FFFFFF; border: #701111"
+                               href="loginAR.html">Cerrar
+                                Sesión</a>
+                            <a class="btn" type="button"
+                               data-dismiss="modal">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="modal fade" id="RegistroExitoso" tabindex="-1"
-         role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center"
-                        id="exampleModalRegistro"
-                        th:text="${plato.idplato!=0? '¿Está seguro de registrar este plato?':'¿Está seguro de editar este plato?'}">
-                    </h5>
-                    <button class="close" type="button"
-                            data-dismiss="modal"
-                            aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" form="nuevo" class="btn btn-primary">Sí</button>
-                    <a class="btn" type="button"
-                       data-dismiss="modal">
-                        No
-                    </a>
+            <!-- Modal eliminar-->
+            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
+                                plato?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
+                            <a class="btn" type="button"
+                               data-dismiss="modal">
+                                No
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+            <div class="modal fade" id="RegistroExitoso" tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-center"
+                                id="exampleModalRegistro"
+                                th:text="${plato.idplato!=0? '¿Está seguro de registrar este plato?':'¿Está seguro de editar este plato?'}">
+                            </h5>
+                            <button class="close" type="button"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" form="nuevo" class="btn btn-primary">Sí</button>
+                            <a class="btn" type="button"
+                               data-dismiss="modal">
+                                No
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+            <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
     <!-- Core plugin JavaScript-->
     <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
@@ -407,6 +421,13 @@
 
 </div>
 </body>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 <script>$(document).ready(function () {
     function readURL(input) {
         if (input.files && input.files[0]) {

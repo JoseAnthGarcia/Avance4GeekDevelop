@@ -63,7 +63,7 @@
 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
+                    <a class="nav-link" th:href="@{/extra}">
                         <i class="fas fa-utensils"></i>
                         <span>Extras</span>
                     </a>
@@ -77,7 +77,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
+                    <a class="nav-link " th:href="@{/cupon}">
                         <i class="fas fa-ticket-alt"></i>
                         <span>Cupones</span>
                     </a>
@@ -305,11 +305,7 @@
                                                        th:href="@{/plato/lista}"
                                                        style="position:absolute;left:825px;top:590px;width:130px;height:40px">Cancelar</a>
                                                 </td>
-                                                <td><a class="btn btn-block btn-danger" data-toggle="modal"
-                                                       href="#lModal1" data-target="#modalEliminar"
-                                                       style="position:absolute;left:600px;top:590px;width:180px;height:40px">Eliminar
-                                                    Plato</a>
-                                                </td>
+
                                             </tr>
                                         </form>
                                     </TABLE>

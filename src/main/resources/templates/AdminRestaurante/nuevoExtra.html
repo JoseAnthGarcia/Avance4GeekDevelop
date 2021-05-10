@@ -1,423 +1,434 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <title>NUEVO EXTRA</title>
+        <title>NUEVO EXTRA</title>
 
-    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
 
-    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
-</head>
-
-<body>
-
-<div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
-        id="accordionSidebar">
-
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-shopping-basket"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="categorias.html">
-                <i class="fas fa-fw fa-list"></i>
-                <span>Categorias</span></a>
-        </li>
+        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+        <!-- Custom styles for this page -->
+        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
 
 
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="listaPedidos.html">
-                <i class="fas fa-fw fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-        </li>
+    </head>
 
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="extras.html">
-                <i class="fas fa-fw fa-utensils"></i>
-                <span>Extras</span>
-            </a>
-        </li>
+    <body>
 
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " href="eleccionReporte.html">
-                <i class="fas fa-fw fa-fw fa-file"></i>
-                <span>Reportes</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="listaCupones.html">
-                <i class="fas fa-fw fa-ticket-alt"></i>
-                <span>Cupones</span>
-            </a>
-        </li>
+        <div id="wrapper">
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+            <!-- Sidebar -->
+            <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
+                id="accordionSidebar">
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
-
-                <!-- Topbar Search -->
-
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
-                                Nuevos Pedidos
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los pedidos</a>
-                        </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Salir
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="card shadow mb-4">
-                    <div class="p-3  bg-primary text-white"
-                         style="text-align:center">
-                        <h3 class="h3 font-weight-bold  text-white text-xl-center">REGISTRAR EXTRA</h3>
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-shopping-basket"></i>
                     </div>
+                    <div class="sidebar-brand-text mx-3">Food Delivery</div>
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link" href="categorias.html">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Categorias</span></a>
+                </li>
 
 
-                    <div class="card-body">
-                        <div class="text-xl-left">
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link" href="listaPedidos.html">
+                        <i class="fas fa-fw fa-book-open"></i>
+                        <span>Pedidos</span>
+                    </a>
+                </li>
 
-                            <div class="container-fluid">
-                                <div class="tabel-responsive">
-                                    <table class="table">
-                                        <form method="POST" action="" class="justify-content-left" enctype="multipart/form-data"></form>
-                                        <tr>
-                                            <td><label for="nombre">Nombre:</label></td>
-                                            <td colspan="2"><input type="text" class="form-control" id="nombre" name="nombre">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 40 caracteres</h1>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td><label>Descripción:</label></td>
-                                            <td colspan="2"><input class="form-control" name="descrip" type="text"
-                                                class="form-control">
-                                                <h1 style="color: red; font-size: small; text-align: left">Debes insertar como máximo 100 caracteres</h1>
-                                            </td>
-                                            <td rowspan="3" colspan="3"><img id="image_preview"
-                                                src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
-                                                width="300"></td>
-                                        </tr>
-                                        <tr>
-                                            <td> <label>Precio unitario:</label></td>
-                                            <td colspan="2"><div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">S/.</span>
-                                                    <input name="cantidad" type="text" class="form-control">
-                                                </div>
+                <!-- Nav Item - Utilities Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/extra}">
+                        <i class="fas fa-fw fa-utensils"></i>
+                        <span>Extras</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link " href="eleccionReporte.html">
+                        <i class="fas fa-fw fa-fw fa-file"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/cupon}">
+                        <i class="fas fa-fw fa-ticket-alt"></i>
+                        <span>Cupones</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
+
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+
+            </ul>
+            <!-- End of Sidebar -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Topbar -->
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <form class="form-inline">
+                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </form>
+
+                        <!-- Topbar Search -->
+
+
+                        <!-- Topbar Navbar -->
+                        <ul class="navbar-nav ml-auto">
+
+                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                            <li class="nav-item dropdown no-arrow d-sm-none">
+                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </a>
+                            </li>
+
+                            <!-- Nav Item - Alerts -->
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bell fa-fw"></i>
+                                    <!-- Counter - Alerts -->
+                                    <span class="badge badge-danger badge-counter">3+</span>
+                                </a>
+                                <!-- Dropdown - Alerts -->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="alertsDropdown">
+                                    <h6 class="dropdown-header">
+                                        Nuevos Pedidos
+                                    </h6>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
                                             </div>
-                                            <h1 style="color: red; font-size: small; text-align: left">Ingrese un valor válido</h1>
-                                        </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>Imagen referencial:</label></td>
-                                            <td colspan="2"> <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                                <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
-                                              </div>
-                                              <h1 style="color: red; font-size: small; text-align: left">Ingrese un archivo válido(JPGE,JPG o PNG)</h1>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            
-                                            <td colspan="2"><a class="btn btn-primary mb-4 mr-2 "
-                                                data-toggle="modal"
-                                                data-target="#RegistroExitoso"
-                                                href="#RegistroExitoso">
-                                                 Registrar
-                                                 Extra
-                                             </a>
-                                           <a class="btn btn-danger mb-4"
-                                                href="#CancelarRegistro"
-                                                role="button"
-                                                data-toggle="modal"
-                                                data-target="#CancelarRegistro">Cancelar</a></td>
-                                                <div class="modal fade" id="RegistroExitoso" tabindex="-1"
-                                                         role="dialog"
-                                                         aria-labelledby="exampleModalLabel"
-                                                         aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title text-center"
-                                                                        id="exampleModalRegistro">
-                                                                        ¿Está seguro que desea
-                                                                        registrar este extra?</h5>
-                                                                    <button class="close" type="button"
-                                                                            data-dismiss="modal"
-                                                                            aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <a type="submit" class="btn btn-primary"
-                                                                            href="listaExtras.html">
-                                                                        Sí
-                                                                    </a>
-                                                                    <a class="btn" type="button"
-                                                                       data-dismiss="modal">
-                                                                        No
-                                                                    </a>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                            <span class="font-weight-bold">Arroz con pollo</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                            <span class="font-weight-bold">Arroz con pollo</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                            <span class="font-weight-bold">Arroz con pollo</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
+                                        pedidos</a>
+                                </div>
+                            </li>
+
+                            <div class="topbar-divider d-none d-sm-block"></div>
+
+                            <!-- Nav Item - User Information -->
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                                    <img class="img-profile rounded-circle"
+                                         src="../../static/bootstrap/img/undraw_profile.svg">
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Salir
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                    </nav>
+                    <!-- End of Topbar -->
+
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <div class="card shadow mb-4">
+                            <div class="p-3  bg-primary text-white"
+                                 style="text-align:center">
+                                <h3 th:text="${extra.idextra == 0? 'REGISTRAR EXTRA' : 'EDITAR EXTRA'}"
+                                    class="h3 font-weight-bold  text-white text-xl-center"></h3>
+                            </div>
+
+
+                            <div class="card-body">
+                                <div class="text-xl-left">
+
+                                    <div class="container-fluid">
+                                        <div class="tabel-responsive">
+                                            <table class="table">
+                                                <form method="POST" id="nuevo" class="justify-content-left"
+                                                      th:action="@{/extra/guardar}" th:object="${extra}"
+                                                      enctype="multipart/form-data">
+                                                    <input hidden th:field="*{idextra}">
+                                                    <tr>
+                                                        <td><label for="nombre">Nombre:</label></td>
+                                                        <td colspan="2"><input type="text" class="form-control"
+                                                                               id="nombre"
+                                                                               name="nombre" th:field="*{nombre}"
+                                                                               placeholder="Ingrese un nombre">
+                                                            <h1 style="color: red; font-size: small; text-align: left"
+                                                                th:if="${#fields.hasErrors('nombre')}"
+                                                                th:errors="*{nombre}"></h1>
+                                                        <td rowspan="3" colspan="3" th:if="${extra.idextra==0}"><img
+                                                                id="image_preview"
+                                                                src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
+                                                                width="300"></td>
+                                                        <td rowspan="3" colspan="3" th:if="${extra.idextra!=0}"><img
+                                                                id="image_previe"
+                                                                th:src="@{|imagen/${extra.idextra}|}"
+                                                                width="300"></td>
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label>Precio unitario:</label></td>
+                                                        <td colspan="2">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text">S/.</span>
+                                                                    <input name="preciounitario" id="preciounitario"
+                                                                           type="text"
+                                                                           class="form-control"
+                                                                           th:field="*{preciounitario}">
+                                                                    <h1 style="color: red; font-size: small; text-align: left"
+                                                                        th:if="${#fields.hasErrors('preciounitario')}"
+                                                                        th:errors="*{preciounitario}"></h1>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                            
-                                        </tr>
-                                    </form>
-                                    </table>
-                                </div>
-                               
-                                
-                            </div>
-                            <div class="modal fade" id="CancelarRegistro" tabindex="-1"
-                                 role="dialog"
-                                 aria-labelledby="exampleModalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-center"
-                                                id="exampleModalCancelarRegistro"
-                                                data-dismiss="modal">¿Desea cancelar el
-                                                registro?</h5>
-                                            <a class="close" type="button"
-                                                    data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                        </a>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a class="btn btn-primary"
-                                               href="listaExtras.html">Sí</a>
-                                            <a class="btn" type="button"
-                                               data-dismiss="modal">
-                                                No
-                                            </a>
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr th:if="${extra.idextra==0}">
+                                                        <td><label>Imagen referencial:</label></td>
+                                                        <td colspan="2"><br>
+
+                                                            <div class="custom-file">
+                                                                <input type="file" name="photo"  accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                                                <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                                                <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}" style="color: red; font-size: small; text-align: left"></h1>
+                                                            </div>
+
+                                                        </td>
+                                                    <tr>
+                                                    <tr>
+                                                        <td colspan="3"><a
+                                                                th:text="${extra.idextra ==0? 'Registrar Extra':'Editar Extra'}"
+                                                                class="btn btn-primary mb-4 mr-2 "
+                                                                data-toggle="modal"
+                                                                data-target="#RegistroExitoso"
+                                                                href="#RegistroExitoso"></a>
+                                                            <a class="btn btn-info mb-4 mr-2"
+                                                               th:href="@{/extra/lista}"
+                                                               role="button">Cancelar</a>
+                                                            <a th:if="${extra.idextra!=0}"
+                                                               class="btn btn-danger mb-4 mr-2"
+                                                               data-toggle="modal" href="#modalEliminar"
+                                                               data-target="#modalEliminar">Eliminar
+                                                                Extra</a>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            </form>
                         </div>
-                        </form>
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
-<!-- End of Main Content -->
-<!-- End of Content Wrapper -->
-<!-- End of Page Wrapper -->
+        <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
+        <!-- End of Page Wrapper -->
 
-
-<!-- Logout Modal-->
-<!-- Alerta cierre sesion-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea continuar?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
-                   href="loginAR.html">Cerrar
-                    Sesión</a>
-                <a class="btn" type="button"
-                   data-dismiss="modal">
-                    Cancelar
-                </a>
+        <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
+                            extra?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <a th:href="@{'/extra/borrar?id='+${extra.getIdextra()}}" class="btn btn-primary">Sí</a>
+                        <a class="btn" type="button"
+                           data-dismiss="modal">
+                            No
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Bootstrap core JavaScript-->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+        <div class="modal fade" id="RegistroExitoso" tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center"
+                            id="exampleModalRegistro"
+                            th:text="${extra.idextra!=0? '¿Está seguro de registrar este extra?':'¿Está seguro de editar este extra?'}">
+                        </h5>
+                        <button class="close" type="button"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="nuevo" class="btn btn-primary">Sí</button>
+                        <a class="btn" type="button"
+                           data-dismiss="modal">
+                            No
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Logout Modal-->
+        <!-- Alerta cierre sesion-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
+                            continuar?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
+                           href="loginAR.html">Cerrar
+                            Sesión</a>
+                        <a class="btn" type="button"
+                           data-dismiss="modal">
+                            Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+        <!-- Bootstrap core JavaScript-->
+        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
-<!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+        <!-- Core plugin JavaScript-->
+        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+        <!-- Custom scripts for all pages-->
+        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
-<!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <!-- Page level plugins -->
+        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
-</div>
-</body>
-<script>$(document).ready(function () {
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                $('#image_preview').attr('src', e.target.result);
-                $('#image_preview').removeAttr('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-            console.log(input.files[0].name.split(".")[1])
-            let extensions = ['jpg', 'jpeg', 'png']
-            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
-                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
-                $('#error').attr('hidden', 'true');
-            } else {
-                $('#photo_error').attr('hidden', 'true');
+        <!-- Page level custom scripts -->
+        <script th:src="@{/js/demo/datatables-demo.js}"></script>
+
+        </div>
+    </body>
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+    <script>$(document).ready(function () {
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image_preview').attr('src', e.target.result);
+                    $('#image_preview').removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+                console.log(input.files[0].name.split(".")[1])
+                let extensions = ['jpg', 'jpeg', 'png']
+                if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                    $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                    $('#error').attr('hidden', 'true');
+                } else {
+                    $('#photo_error').attr('hidden', 'true');
+                }
             }
         }
-    }
 
-    $("#imagen").change(function () {
-        console.log("sdafefdgsagsagasdg");
-        readURL(this);
-    });
-})</script>
+        $("#imagen").change(function () {
+            console.log("sdafefdgsagsagasdg");
+            readURL(this);
+        });
+    })</script>
 </html>
 
 

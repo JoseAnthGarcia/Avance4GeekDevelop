@@ -224,12 +224,22 @@ public class AdminController  {
                                   @RequestParam(value = "fechaPedido",required = false) Integer fechaPedido,
                                   @RequestParam(value = "valoracion",required = false) Integer valoracion,
                                   Model model){
+        System.out.println(idUsuario + "sfasdfasdfasfasfd");
+        System.out.println(texto + "sfasdfasdfasfasfd");
+        System.out.println(fechaPedido + "sfasdfasdfasfasfd");
+        System.out.println(valoracion + "sfasdfasdfasfasfd");
+
         model.addAttribute("textoBuscador", texto);
         model.addAttribute("fechaPedidoBuscador", fechaPedido);
         model.addAttribute("valoracionBuscador", valoracion);
+        model.addAttribute("idUsuario", idUsuario);
 
-        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
-        return "redirect:/admin/detalle?idUsuario="+idUsuario;
+        if(fechaPedido == null){
+            fechaPedido = usuarioRepository.buscarFechaMinimaRepartidor();
+        }
+
+        model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,-1*fechaPedido,valoracion));
+        return "/AdminGen/visualizarCliente";
     }
 
     @GetMapping("/detalle")

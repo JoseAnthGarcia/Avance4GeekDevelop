@@ -56,11 +56,12 @@
                     <input type="password" class="form-control form-control-user"
                            id="contra" name="contrasenia" placeholder="Contraseña">
                   </div>
-                  <div style="color: red; font-size: small; text-align: left"
-                       th:if="${param.error}">Acceso denegado</div>
+
 
 
                   <button class="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>
+                  <div style="color: red; font-size: small; text-align: left"
+                       th:if="${param.error}">Acceso denegado</div>
                   <hr>
                   <a href="index.html" class="btn btn-google btn-user btn-block">
                     <i class="fab fa-google fa-fw"></i> Login with Google

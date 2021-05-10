@@ -13,7 +13,8 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario implements Serializable {
-
+    //tu misma eres mela :3
+    //nel mano
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario;
@@ -48,7 +49,6 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String fecharegistro;
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Ingrese una fecha")
     @Column(nullable = false)
@@ -73,10 +73,10 @@ public class Usuario implements Serializable {
 
     @Column(nullable = false)
     @NotBlank(message = "Complete su contraseña")
-    @Size(min = 8,message = "Ingrese mínimo 8 caracteres.")
+    //@Pattern(regexp = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$",message = "Ingrese una contraseña válida.")
 
     private String contrasenia;
-    //-------
+    //---------------------
 
     @ManyToMany(mappedBy = "usuariosDistrito")
     private List<Distrito> distritos;

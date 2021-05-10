@@ -1,28 +1,22 @@
 package com.example.demo.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "categoriaextra")
-public class CategoriaExtra {
+public class CategoriaExtra  implements Serializable {
+
     @Id
+    @Column(nullable = false)
     private int idcategoriaextra;
+    @Column(nullable = false)
     private String tipo;
 
-    @ManyToMany(mappedBy = "categoriaExtraList")
-    private List<Plato> extraslist;
+  /*  @ManyToMany(mappedBy = "categoriaExtraPorPlato")
+    private List<Plato> platos;
 
-    public List<Plato> getExtraslist() {
-        return extraslist;
-    }
-
-    public void setExtraslist(List<Plato> extraslist) {
-        this.extraslist = extraslist;
-    }
 
     public int getIdcategoriaextra() {
         return idcategoriaextra;
@@ -31,7 +25,7 @@ public class CategoriaExtra {
     public void setIdcategoriaextra(int idcategoriaextra) {
         this.idcategoriaextra = idcategoriaextra;
     }
-
+*/
     public String getTipo() {
         return tipo;
     }

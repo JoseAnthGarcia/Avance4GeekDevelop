@@ -47,14 +47,14 @@ public class Cupon {
 
     //True - disponible
     @Column(nullable = false)
-    private boolean disponible;
+    private int estado;
 
-    public boolean isDisponible() {
-        return disponible;
+    public int getEstado() {
+        return estado;
     }
 
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public int getIdcupon() {

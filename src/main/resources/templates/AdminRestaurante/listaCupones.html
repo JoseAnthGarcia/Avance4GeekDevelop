@@ -278,7 +278,7 @@
                                         <tbody>
 
                                             <tr th:each="cupon : ${listaCupon}" >
-                                                <div th:if="${cupon.disponible}">
+                                                <div th:if="${cupon.estado}">
                                                 <td th:text="${cupon.idcupon}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:text="${cupon.politica}"></td>

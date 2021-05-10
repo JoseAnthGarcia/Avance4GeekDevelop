@@ -226,7 +226,5 @@ public class    PlatoController {
         return "/AdminRestaurante/prueba";
     }
 
-    // IMAGEN
-    public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
 
 }

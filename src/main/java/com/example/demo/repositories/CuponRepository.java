@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,5 +18,6 @@ public interface CuponRepository extends JpaRepository<Cupon, Integer> {
             nativeQuery = true)
     Cupon buscarPorNombre(String nombre);
 
-    Page<Cupon> findByNombreIsContainingAndFechafinAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(String nombre, Date fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
+    Page<Cupon> findByNombreIsContainingAndFechafinBeforeAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(String nombre, LocalDate fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
+
 }

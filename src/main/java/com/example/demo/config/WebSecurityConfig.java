@@ -31,7 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/plato","/plato/**","/cupon","/cupon/**", "/extra","/extra/**").hasAnyAuthority("administradorR")
                 .anyRequest().permitAll();
 
-        http.logout().deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        http.logout()
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
         System.out.println("configure");
     }
 

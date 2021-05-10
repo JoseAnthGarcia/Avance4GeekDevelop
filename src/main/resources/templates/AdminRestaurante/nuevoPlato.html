@@ -188,10 +188,11 @@
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Salir
-                            </a>
+                            <form id="cerrar" th:action="@{/logout}" method="post">
+                                <a class="nav-link" data-toggle="modal"
+                                   href="#logoutModal" data-target="#logoutModal">Cerrar Sesión
+                                </a>
+                            </form>
                         </div>
                     </li>
 
@@ -330,53 +331,26 @@
 
             <!-- Logout Modal-->
             <!-- Alerta cierre sesion-->
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
-                                continuar?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-primary"
-                               style="background-color: #701111; color: #FFFFFF; border: #701111"
-                               href="loginAR.html">Cerrar
-                                Sesión</a>
-                            <a class="btn" type="button"
-                               data-dismiss="modal">
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="cerrar" class="btn btn-primary">Sí</button>
                 </div>
             </div>
+        </div>
+    </div>
             <!-- Modal eliminar-->
-            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
-                                plato?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-footer">
-                            <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
-                            <a class="btn" type="button"
-                               data-dismiss="modal">
-                                No
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="modal fade" id="RegistroExitoso" tabindex="-1"
                  role="dialog"
                  aria-labelledby="exampleModalLabel"

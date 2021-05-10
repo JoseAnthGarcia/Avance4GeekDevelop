@@ -14,7 +14,7 @@ public class CategoriaExtra  implements Serializable {
     @Column(nullable = false)
     private String tipo;
 
-   @ManyToMany(mappedBy = "categoriaExtraList")
+    @ManyToMany(mappedBy = "categoriaExtraList")
     private List<Plato> platos;
 
 

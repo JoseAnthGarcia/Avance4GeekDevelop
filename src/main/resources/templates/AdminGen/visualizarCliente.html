@@ -350,7 +350,7 @@
                                    name="textoPedido"
                                    placeholder="Búsqueda por repartidor o restaurante">
                             <input th:unless="${fechaPedidoBuscador == null}" type="text" class="form-control"
-                                   name="textoPedido"
+                                   name="textoPedido" th:value="${fechaPedidoBuscador}"
                                    placeholder="Búsqueda por repartidor o restaurante">
                         </div>
                         <div class="col-sm-2 mb-1 ">
@@ -362,7 +362,8 @@
                                 <option value="4">4</option>
                                 <option value="5">5</option>
                             </select>
-                            <select th:unless="${valoracionBuscador == null}" class="form-control" name="valoracion">
+                            <select th:unless="${valoracionBuscador == null}"
+                                    class="form-control" name="valoracion">
                                 <option value="" disabled selected>Fecha de Registro</option>
                                 <option th:selected="${valoracionBuscador == 1}" value="1">1</option>
                                 <option th:selected="${valoracionBuscador == 2}" value="2">2</option>

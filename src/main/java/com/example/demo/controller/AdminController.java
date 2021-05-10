@@ -229,6 +229,11 @@ public class AdminController  {
         System.out.println(fechaPedido + "sfasdfasdfasfasfd");
         System.out.println(valoracion + "sfasdfasdfasfasfd");
 
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(idUsuario);
+        if(usuarioOptional.isPresent()){
+            Usuario cliente = usuarioOptional.get();
+            model.addAttribute("cliente", cliente);
+        }
         model.addAttribute("textoBuscador", texto);
         model.addAttribute("fechaPedidoBuscador", fechaPedido);
         model.addAttribute("valoracionBuscador", valoracion);

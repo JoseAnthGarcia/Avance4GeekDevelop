@@ -46,11 +46,11 @@ public class LoginController {
 
     @Autowired
     Usuario_has_distritoRepository usuario_has_distritoRepository;
+
     @GetMapping("/ClienteLogin")
-    public String loginForm(){
+    public String loginForm() {
         return "Cliente/login";
     }
-
 
 
     @GetMapping(value = "/redirectByRole")
@@ -68,19 +68,19 @@ public class LoginController {
 
         System.out.println(usuario.getApellidos());
 
-        session.setAttribute("usuario",usuario);
+        session.setAttribute("usuario", usuario);
         //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
         System.out.println(usuario);
 
 
         if (rol.equals("cliente")) {
             return "redirect:/cliente/listaRestaurantes";
-        } else{
-            if(rol.equals("administrador") || rol.equals("administradorG")){
+        } else {
+            if (rol.equals("administrador") || rol.equals("administradorG")) {
                 System.out.println("ingreso");
                 return "redirect:/admin/usuarios";
-            }else {
-                if(rol.equals("administradorR")){
+            } else {
+                if (rol.equals("administradorR")) {
                     return "redirect:/plato/";
                 }
                 return "redirect:/ClienteLogin";
@@ -94,7 +94,6 @@ public class LoginController {
     //REGISTRO CLIENTE
 
 
-
     @GetMapping("/ClienteNuevo")
     public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
         // String direccion;
@@ -106,14 +105,6 @@ public class LoginController {
         return "Cliente/registro";
 
     }
-
-
-
-
-
-
-
-
 
 
     @PostMapping("/ClienteGuardar")
@@ -137,9 +128,7 @@ public class LoginController {
         }
 
         Boolean usuario_direccion = usuario_has_distrito.getDireccion().equalsIgnoreCase("") || usuario_has_distrito.getDireccion() == null;
-        Boolean dist_u_val =true;
-
-
+        Boolean dist_u_val = true;
 
 
         try {
@@ -153,22 +142,25 @@ public class LoginController {
                     System.out.println("ENTRO A LA VAIDACION DE AQUI");
                 }
             }
-        } catch (NullPointerException n){
+        } catch (NullPointerException n) {
             System.out.println("No llegó nada");
             dist_u_val = true;
         }
+        Boolean fecha_naci = true;
+        try {
+            String[] parts = cliente.getFechanacimiento().split("-");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
 
-        String[] parts = cliente.getFechanacimiento().split("-");
-        int naci = Integer.parseInt(parts[0]);
-        Calendar fecha = new GregorianCalendar();
-        int anio = fecha.get(Calendar.YEAR);
-        Boolean fecha_naci=false;
-        if(anio-naci<18){
-            fecha_naci=true;
+            if (anio - naci >= 18) {
+                fecha_naci = false;
+            }
+        } catch (NumberFormatException n) {
         }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val|| fecha_naci
-         ) {
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
+        ) {
 
             //----------------------------------------
 

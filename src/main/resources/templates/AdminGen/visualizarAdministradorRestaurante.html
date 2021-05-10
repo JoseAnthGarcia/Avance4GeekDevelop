@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Visualizar Administrador Restaurante')"></head>
 
 <head>
 
@@ -9,22 +10,21 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Crear administrador</title>
+    <title>Visualizar Administrador Restaurante</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-    <link th:href="@{/cssAG/estilosAdmin.css}" rel="stylesheet" type="text/css">
+    <link href="../bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
 
 
+    <link href="estilosAdminRest.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-
+    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -35,13 +35,14 @@
 
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
+    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
+        id="accordionSidebar">
         <div class="">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-shopping-basket"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Food Delivery </div>
+                <div class="sidebar-brand-text mx-3">Food Delivery</div>
             </a>
         </div>
         <!-- Sidebar - Brand -->
@@ -60,7 +61,7 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html" >
+            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Solicitudes</span>
 
@@ -78,7 +79,7 @@
         <!-- Nav Item - Pages Collapse Menu -->
 
         <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
+            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Reportes</span>
 
@@ -103,8 +104,6 @@
         </li>
 
 
-
-
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
@@ -115,6 +114,7 @@
 
     </ul>
     <!-- End of Sidebar -->
+
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -130,6 +130,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                 </form>
+
 
 
                 <!-- Topbar Navbar -->
@@ -195,12 +196,13 @@
                     </li>
 
                     <div class="topbar-divider d-none d-sm-block"></div>
+
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -216,183 +218,177 @@
                             </a>
                         </div>
                     </li>
-
                 </ul>
 
             </nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container-fluid">
-
+            <div class="container-fluid ">
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
-                        <div class="d-sm-flex align-items-center justify-content-between">
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto "
-                                th:text="${usuario.getIdusuario() == 0? 'CREAR ADMINISTRADOR' : 'EDITAR ADMINISTRADOR'}"></h2>
-                        </div>
+                        <h5 class="font-weight-bold text-white  text-md-center">INFORMACION DE ADMINISTRADOR DE RESTAURANTE</h5>
+
+                        <style>
+                            .containerta {
+                                padding: 2rem 0rem;
+                            }
+
+                            h4 {
+                                margin: 2rem 0rem 1rem;
+                            }
+
+                            .table-image
+                            td, th {
+                                vertical-align: middle;
+                            }
+                            .posicion{
+                                position: relative;
+                                left: 150%;
+                            }
+
+                        </style>
                     </div>
-                    <div class="card-body">
-                        <form method="POST" id="nuevo" class="justify-content-left"
-                              th:action="@{/admin/guardar}" th:object="${usuario}">
 
-                            <input th:field="*{idusuario}" type="hidden"/>
+                    <div class="card-body"   >
 
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-2 mb-sm-0">
+                        <div class="container-fluid justify-content-center">
 
-                                    <label class="form-label text-dark text-lg">Nombres:</label>
-                                    <input th:field="*{nombres}"  type="text" class="form-control border-secondary">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
-                                         th:errors="*{nombres}"></div>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    <label class="form-label text-dark text-lg">Apellidos:</label>
-                                    <input th:field="*{apellidos}"  type="text" class="form-control border-secondary">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
-                                         th:errors="*{apellidos}"></div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <label class="form-label text-dark text-lg">Correo:</label>
-                                    <input th:field="*{correo}"  type="email" class="form-control border-secondary"
-                                          >
-                                    <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
-                                         th:errors="*{correo}"></div>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    <label class="form-label text-dark text-lg">Fecha de nacimiento:</label>
-                                    <input th:field="*{fechanacimiento}"  type="text" class="form-control border-secondary"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
-                                         th:errors="*{fechanacimiento}"></div>
-                                </div>
+                            <div class="w-25" align="center">
+                                <img src="imgAG/front-view-young-female-courier-in-blue-uniform-black-gloves-and-black-mask-holding-food-delivery-package%20(1).jpg" class="img-fluid img-thumbnail posicion" alt="Sheep">
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <label class="form-label text-dark text-lg">Sexo:</label>
-                                    <select class="form-control border-secondary" th:field="*{sexo}">
-                                        <option value="" disabled selected>Sexo</option>
-                                        <option value="femenino">Femenino</option>
-                                        <option value="masculino">Masculino</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6  mb-2 mb-sm-0">
-                                    <label class="form-label text-dark text-lg">Teléfono:</label>
-                                    <input th:field="*{telefono}"  type="text" class="form-control border-secondary">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
-                                         th:errors="*{telefono}"></div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                                    <label class="form-label text-dark text-lg">DNI:</label>
+                            <div class="containerta " >
 
-                                    <input th:field="*{dni}" type="text" class="form-control border-secondary">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
-                                         th:errors="*{dni}"></div>
-                                </div>
-                                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                                <div class="row">
 
-                                </div>
-
-                            </div>
+                                    <div class="col-12">
 
 
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <h4 style="color: black">Foto de perfil</h4>
-                                    <p>Adjunte una foto de perfil para su cuenta. Esta debe ser una fotografía en la que se visualice claramente su rostro</p>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                        <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
+
+                                        <div class="table-responsive">
+
+                                            <table class="table table-bordered table-image table-responsive" >
+
+                                                <tbody>
+                                                <tr >
+
+                                                    <td th:text="|Fecha de Registro: ${administradorRestaurante.fecharegistro}|" style="width: 1300px;" ></td>
+                                                    <td th:text="|Estado: ${administradorRestaurante.estado != 0 ? 'Activo' : 'Bloqueado'}|" style="width: 1300px;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="|Nombre: ${administradorRestaurante.nombres}|"></td>
+                                                    <td th:text="|Teléfono: ${administradorRestaurante.telefono}|"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="|Apellidos: ${administradorRestaurante.apellidos}|"></td>
+                                                    <td th:text="|Sexo: ${administradorRestaurante.sexo}|"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="|Correo: ${administradorRestaurante.correo}|"></td>
+                                                    <td th:text="|DNI: ${administradorRestaurante.dni}|"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="|Restaurante que Administra: ${administradorRestaurante.restaurante.nombre}|"></td>
+                                                    <td>
+                                                        <a th:href="@{/admin/usuarios}" class="btn btn-warning btn-icon-split">
+                                                            <span class="icon text-white-50">
+                                                                <i class="fas fa-reply"></i>
+                                                            </span>
+                                                            <span class="text">Volver</span>
+                                                        </a>
+                                                        <a href="#" class="btn btn-icon-split" style="background-color: #701111;">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-lock-open"></i>
+                                        </span>
+                                                            <span class="text text-white">Bloquear</span>
+                                                        </a>
+                                                        <a href="#" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-home"></i>
+                                        </span>
+                                                            <span class="text">Ver Restaurante</span>
+                                                        </a>
+
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
-
-
-                            <div class="form-group row">
-
-                            </div>
-                            <hr>
-                            <a th:href="@{'/admin'}" class="btn btn-danger">Cancelar</a>
-                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0? 'Registrar' : 'Actualizar'}">Reg/act</button>
-
-                        </form>
+                        </div>
                     </div>
 
                 </div>
-
-
             </div>
-            <!-- /.container-fluid -->
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="containerta my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="containerta my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Geek Developers &copy; 2021-1</span>
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-</div>
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
-            </div>
         </div>
     </div>
-</div>
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+    <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+    <!-- Custom scripts for all pages-->
+    <script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+    <!-- Page level plugins -->
+    <script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+    <!-- Page level custom scripts -->
+    <script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
 </body>
 
 </html>
-

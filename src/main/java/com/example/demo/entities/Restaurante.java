@@ -13,6 +13,10 @@ public class Restaurante {
     @Column(nullable = false)
     private String nombre;
 
+    @OneToOne
+    @JoinColumn(name = "idadministrador")
+    private Usuario administrador;
+
     public int getIdrestaurante() {
         return idrestaurante;
     }

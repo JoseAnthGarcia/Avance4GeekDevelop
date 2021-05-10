@@ -275,14 +275,15 @@
 
                                                             <div class="custom-file">
                                                                 <input type="file" name="photo"  accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+
                                                                 <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
                                                                 <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}" style="color: red; font-size: small; text-align: left"></h1>
                                                             </div>
 
 
-
                                                         </td>
                                                     <tr>
+
                                                     <td><label>Extras: </label></td>
                                                     <td colspan="2">
                                                         <div th:each="categoria :${listaCategoria}"

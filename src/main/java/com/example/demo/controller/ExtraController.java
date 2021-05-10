@@ -172,7 +172,7 @@ public class ExtraController {
     @PostMapping("/guardar")
     public String guardarExtra(@ModelAttribute("extra") @Valid Extra extra, BindingResult bindingResult,
                                RedirectAttributes attr,
-                               Model model,@RequestParam("photo") MultipartFile file) {
+                               Model model,@RequestParam(value = "photo",required = false) MultipartFile file) {
        /* Cupon cVal = extraRepository.buscarPorNombre(cupon.getNombre());
 
         if(cVal == null){
@@ -200,24 +200,19 @@ public class ExtraController {
             model.addAttribute("val","Este nombre ya está registrado");
             return "AdminRestaurante/nuevoCupon";
         }*/
-        if(file.isEmpty()){
-            model.addAttribute("mensajefoto", "Debe subir una imagen");
-            return "/AdminRestaurante/nuevoExtra";
+        String fileName ="";
+        if (file!=null){
+            if(file.isEmpty()){
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                return "/AdminRestaurante/nuevoPlato";
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/nuevoPlato";
+            }
         }
-        String fileName = file.getOriginalFilename();
-        if (fileName.contains("..")){
-            model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-            return "/AdminRestaurante/nuevoExtra";
-        }
-        try{
-            extra.setFoto(file.getBytes());
-            extra.setFotonombre(fileName);
-            extra.setFotocontenttype(file.getContentType());
-        }catch (IOException e){
-            e.printStackTrace();
-            model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
-            return "/AdminRestaurante/nuevoExtra";
-        }
+
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
         extra.setIdcategoriaextra(idcategoriaextra);
@@ -234,13 +229,26 @@ public class ExtraController {
             }
         } else {
             if (extra.getIdextra() == 0) {
+                try{
+                    extra.setFoto(file.getBytes());
+                    extra.setFotonombre(fileName);
+                    extra.setFotocontenttype(file.getContentType());
+                    attr.addFlashAttribute("msg", "Extra creado exitosamente");
+                    attr.addFlashAttribute("msg2", "Extra editado exitosamente");
+                    extraRepository.save(extra);
+                }catch (IOException e){
+                    e.printStackTrace();
+                    model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+                    return "/AdminRestaurante/nuevoExtra";
+                }
 
-                attr.addFlashAttribute("msg", "Extra creado exitosamente");
-                attr.addFlashAttribute("msg2", "Extra editado exitosamente");
-                extraRepository.save(extra);
             } else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
+                    Optional<Extra> extraOptional=extraRepository.findById(extra.getIdextra());
+                    extra.setFoto(extraOptional.get().getFoto());
+                    extra.setFotonombre(extraOptional.get().getFotonombre());
+                    extra.setFotocontenttype(extraOptional.get().getFotocontenttype());
                     extraRepository.save(extra);
                     attr.addFlashAttribute("msg2", "Extra editado exitosamente");
                     attr.addFlashAttribute("msg", "Extra creado exitosamente");

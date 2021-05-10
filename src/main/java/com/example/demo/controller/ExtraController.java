@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
+import com.example.demo.entities.Plato;
 import com.example.demo.repositories.ExtraRepository;
 import com.example.demo.service.ExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,9 @@ public class ExtraController {
 
 
     @GetMapping(value = {"/lista", ""})
-    public String listarExtra(Model model, @RequestParam(value = "textBuscador", required = false) String nombre
-            , @RequestParam(value = "textPrecio", required = false) String rango) {
+    public String listarExtra(Model model) {
         //model.addAttribute("listaExtras", extraRepository.listarExtra(idrestaurante));
-        return findPaginated(1,model);
+        return findPaginated("", 0, 1, model);
         /*
         int precios = 0;
         System.out.println(nombre);
@@ -114,13 +114,41 @@ public class ExtraController {
 
 
     @GetMapping("/page")
-    public String findPaginated(@RequestParam("pageNo") int pageNo, Model model) {
-
-        int pageSize = 2;
+    public String findPaginated(@RequestParam(value = "textBuscador", required = false) String nombre,
+                                @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
 
         System.out.println(pageNo);
-        Page<Extra> page = extraService.findPaginated(pageNo, pageSize);
-        List<Extra> listaExtras = page.getContent();
+        if(pageNo==null || pageNo==0){
+            pageNo=1;
+        }
+
+        int inputID = 1;
+        int pageSize = 1;
+        Page<Extra> page;
+        List<Extra> listaExtras;
+        System.out.println(nombre);
+        if(nombre==null){
+            nombre="";
+        }
+        System.out.println(inputPrecio);
+        if(inputPrecio==null){
+            inputPrecio=0;
+        }
+        int inputPMax;
+        int inputPMin;
+        if (inputPrecio==0){
+            inputPMin=0;
+            inputPMax=100;
+        }else {
+            inputPMax=inputPrecio;
+            inputPMin=inputPrecio;
+        }
+        page = extraService.findPaginated2(pageNo, pageSize, nombre, inputPMin*5, inputPMax*5-5);
+        listaExtras = page.getContent();
+
+        model.addAttribute("texto", nombre);
+        model.addAttribute("textoP", inputPrecio);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

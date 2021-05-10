@@ -270,7 +270,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="extra,v :${listaExtras}">
-                                                <td th:text="${extra.getIdextra()}"></td>
+                                                <td th:text="${v.index+1}"></td>
                                                 <td th:text="${extra.getNombre()}"></td>
                                                 <td th:text="${extra.getPreciounitario()}"></td>
                                                 <td>

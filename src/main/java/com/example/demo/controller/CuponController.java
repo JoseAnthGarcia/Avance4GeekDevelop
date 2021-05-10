@@ -38,7 +38,7 @@ public class CuponController {
         return "AdminRestaurante/nuevoCupon";
     }
 
-    @PostMapping("/guardar")
+    /*@PostMapping("/guardar")
     public String guardarCupon(@ModelAttribute("cupon") @Valid Cupon cupon, BindingResult bindingResult,
                                RedirectAttributes attributes,
                                Model model) {
@@ -59,7 +59,7 @@ public class CuponController {
                 attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
             }
 
-            /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
+            if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
                 cupon.setDisponible(false);
             }
 
@@ -68,8 +68,8 @@ public class CuponController {
         }else{
            model.addAttribute("val","Este nombre ya está registrado");
             return "AdminRestaurante/nuevoCupon";
-}
-    }*/
+}}*/
+
 
     @GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,

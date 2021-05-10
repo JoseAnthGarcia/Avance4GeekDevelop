@@ -43,6 +43,36 @@ public class Extra {
     private int idrestaurante;
     private int idcategoriaextra;
 
+    //FOTI
+    private String fotonombre;
+    private String fotocontenttype;
+    @Lob
+    private byte[] foto;
+
+    public String getFotonombre() {
+        return fotonombre;
+    }
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+//FIN FOTIU
 
 
     public int getIdrestaurante() {

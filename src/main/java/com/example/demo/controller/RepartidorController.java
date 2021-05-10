@@ -62,7 +62,7 @@ public class RepartidorController {
         Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
         Boolean errorMov = false;
-
+        Boolean errorDist=false;
 
         if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && !movilidad.getLicencia().equals("")&& !movilidad.getPlaca().equals("")) {
             errorMov= true;
@@ -70,7 +70,10 @@ public class RepartidorController {
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov){
+        if(usuario.getDistritos().size()>5){
+            errorDist=true;
+        }
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || errorDist){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -83,10 +86,13 @@ public class RepartidorController {
             if(usuario3!=null){
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
-
+            if(errorDist){
+                model.addAttribute("msg5", "Solo puede seleccionar 5 distritos");
+            }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }
+
             model.addAttribute("usuario", usuario);
             model.addAttribute("movilidad", movilidad);
             model.addAttribute("distritosSeleccionados", new ArrayList<>());

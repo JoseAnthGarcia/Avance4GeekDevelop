@@ -120,19 +120,24 @@ public class LoginController {
         }
 
         Boolean usuario_direccion = usuario_has_distrito.getDireccion().equalsIgnoreCase("") || usuario_has_distrito.getDireccion() == null;
-        Boolean dist_u_val =false;
+        Boolean dist_u_val =true;
         try {
-            Integer u_dist = usuario_has_distrito.getDistrito().getIddistrito();
+            Integer u_dist = cliente.getDistritos().get(0).getIddistrito();
+            System.out.println(u_dist + "ID DISTRITO");
             int dist_c = distritosRepository.findAll().size();
+            System.out.println(dist_c);
             for (int i = 1; i <= dist_c; i++) {
-                if (u_dist != i) {
-                    dist_u_val = true;
+                if (u_dist == i) {
+                    dist_u_val = false;
+                    System.out.println("ENTRO A LA VAIDACION DE AQUI");
                 }
             }
         } catch (NullPointerException n){
             System.out.println("No llegó nada");
             dist_u_val = true;
         }
+
+
         if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val) {
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
@@ -142,7 +147,7 @@ public class LoginController {
                 model.addAttribute("msg5", "Complete sus datos");
             }
             if (!contrasenia2.equals(cliente.getContrasenia())) {
-                model.addAttribute("msg", "Las contraseñas no coinciden");
+                model.addAttribute("msg", "usuario_direccion");
             }
 
             //   String direccion;
@@ -151,7 +156,7 @@ public class LoginController {
             model.addAttribute("distritosSeleccionados", new ArrayList<>());
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
-
+            model.addAttribute("direccion", usuario_has_distrito.getDireccion());
             return "Cliente/registro";
         } else {
             cliente.setEstado(1);
@@ -182,7 +187,5 @@ public class LoginController {
         }
 
     }
-
-
 
 }

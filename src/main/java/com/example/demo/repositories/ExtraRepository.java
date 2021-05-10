@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.entities.Extra;
+import com.example.demo.entities.Plato;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,14 @@ import java.util.List;
 
 @Repository
 public interface ExtraRepository extends JpaRepository<Extra, Integer> {
+
+    @Query(value= "select idextra, nombre, precioUnitario, disponible, idrestaurante, idcategoriaextra from extra where idrestaurante=?1", nativeQuery = true)
+    List<Extra> listarExtra(int idrestaurante);
+
+
+
+    Page<Extra> findByIdrestauranteAndDisponible(int idrestaurante,boolean disponible, Pageable pageable);
+
 
     @Query(value = "SELECT DISTINCT  e.idextra, e.nombre, e.precioUnitario FROM (extra e \n" +
             "inner join categoriaextra ce on ce.idcategoriaextra=e.idcategoriaExtra\n" +

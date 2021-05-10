@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
 import com.example.demo.repositories.ExtraRepository;
@@ -36,6 +37,9 @@ public class ExtraController {
     @GetMapping(value = {"/lista", ""})
     public String listarExtra(Model model, @RequestParam(value = "textBuscador", required = false) String nombre
             , @RequestParam(value = "textPrecio", required = false) String rango) {
+        //model.addAttribute("listaExtras", extraRepository.listarExtra(idrestaurante));
+        return findPaginated(1,model);
+        /*
         int precios = 0;
         System.out.println(nombre);
         try {
@@ -104,22 +108,24 @@ public class ExtraController {
         }
         model.addAttribute("texto", nombre);
         model.addAttribute("textoP", precios);
-        return "AdminRestaurante/listaExtras";
+         */
+        //return "AdminRestaurante/listaExtras";
     }
 
 
-    @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+    @GetMapping("/page")
+    public String findPaginated(@RequestParam("pageNo") int pageNo, Model model) {
 
-        int pageSize = 10;
+        int pageSize = 2;
 
+        System.out.println(pageNo);
         Page<Extra> page = extraService.findPaginated(pageNo, pageSize);
-        List<Extra> listExtras = page.getContent();
+        List<Extra> listaExtras = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listExtras", listExtras);
+        model.addAttribute("listaExtras", listaExtras);
 
         return "AdminRestaurante/listaExtras";
 

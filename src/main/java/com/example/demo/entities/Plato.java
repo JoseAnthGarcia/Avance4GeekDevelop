@@ -26,7 +26,7 @@ public class Plato {
     @Positive(message = "Ingrese una cantidad positiva")
     @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
     @NotNull(message = "Este campo es obligatorio")
-    private BigDecimal precio;
+    private double precio;
     @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;
     @Column(name="idrestaurante", nullable = false)
@@ -86,11 +86,11 @@ public class Plato {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 

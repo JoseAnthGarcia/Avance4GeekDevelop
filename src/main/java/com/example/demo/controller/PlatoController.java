@@ -122,7 +122,7 @@ public class    PlatoController {
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
-                    return "/AdminRestaurante/aja";
+                    return "/AdminRestaurante/nuevoPlato";
                 }else{
 
                     return "redirect:/plato/lista";

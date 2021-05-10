@@ -217,7 +217,7 @@
                                                     <input type="hidden" th:field="*{fechainicio}">
                                                     <input type="hidden" th:field="*{estado}">
                                                 </div>
-                                                <div class="form-group" th:if="${cupon.getIdcupon() == 0}">
+                                                <div class="form-group">
                                                     <label class="small mb-1" for="nombre">Nombre:</label>
                                                     <input type="text" class="form-control mb-2"  style="border-color: lightgray" th:field="*{nombre}">
                                                     <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></h1>

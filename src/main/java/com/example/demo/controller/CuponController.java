@@ -50,7 +50,7 @@ public class CuponController {
         }
         System.out.println(pageNo);
         int inputID = 1;
-        int pageSize = 1;
+        int pageSize = 2;
         Page<Cupon> page;
         List<Cupon> listaCupon;
 

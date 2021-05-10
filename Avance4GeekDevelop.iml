@@ -18,8 +18,8 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="Avance4GeekDevelop" />
-          <factory-entry name="entityManagerFactory" value="136180b1-d789-4b60-87ba-49373f154f42" />
+          <factory-entry name="Avance4GeekDevelop" value="488fe817-26a1-44f7-9337-536a84737259" />
+          <factory-entry name="entityManagerFactory" value="488fe817-26a1-44f7-9337-536a84737259" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>

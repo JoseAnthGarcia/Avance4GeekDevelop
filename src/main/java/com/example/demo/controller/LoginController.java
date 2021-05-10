@@ -119,20 +119,16 @@ public class LoginController {
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) {
 
 
-        int id = 0;
-        if (cliente.getIdusuario() != null) {
-            id = cliente.getIdusuario();
-        }
-        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreoAndIdusuarioNot(cliente.getCorreo(), id);
+        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
         if (!clientesxcorreo.isEmpty()) {
             bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
         }
-        List<Usuario> clientesxdni = clienteRepository.findUsuarioByDniAndIdusuarioNot(cliente.getDni(), id);
+        List<Usuario> clientesxdni = clienteRepository.findUsuarioByDni(cliente.getDni());
         if (!clientesxdni.isEmpty()) {
             bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
         }
 
-        List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefonoAndIdusuarioNot(cliente.getTelefono(), id);
+        List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefono(cliente.getTelefono());
         if (!clientesxtelefono.isEmpty()) {
             bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }

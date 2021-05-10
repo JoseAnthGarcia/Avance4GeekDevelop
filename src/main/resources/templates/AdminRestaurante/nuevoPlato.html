@@ -216,7 +216,8 @@
                                 <div class="tabel-responsive">
                                     <table class="table">
                                         <form method="POST" id="nuevo" class="justify-content-left"
-                                              th:action="@{/plato/guardar}" th:object="${plato}">
+                                              th:action="@{/plato/guardar}" th:object="${plato}"
+                                              enctype="multipart/form-data">
                                             <input hidden th:field="*{idplato}">
 
                                             <tr>
@@ -245,7 +246,7 @@
                                                         width="300"></td>
                                                 <td rowspan="3" colspan="3" th:if="${plato.idplato!=0}"><img
                                                         id="image_previe"
-                                                        src="https://upload.wikimedia.org/wikipedia/commons/3/39/Arroz-con-Pollo.jpg"
+                                                        th:src="@{${plato.photosImagePath}}"
                                                         width="300"></td>
                                             </tr>
                                             <tr>
@@ -267,7 +268,7 @@
                                             <tr th:if="${plato.idplato==0}">
                                                 <td><label>Imagen referencial:</label></td>
                                                 <td colspan="2"><br>
-                                                    <input type="file" class="form-control">
+                                                    <input type="file" name="foto"  class="form-control">
                                                 </td>
 
                                             </tr>
@@ -294,6 +295,11 @@
                                                        th:href="@{/plato/lista}"
                                                        role="button"
                                                     >Cancelar</a></td>
+                                                <td th:if="${plato.idplato!=0}"><a class="btn btn-block btn-danger" data-toggle="modal"
+                                                       href="#lModal1" data-target="#modalEliminar"
+                                                       >Eliminar
+                                                    Plato</a>
+                                                </td>
                                             </tr>
                                         </form>
                                     </table>
@@ -330,6 +336,28 @@
                     <a class="btn" type="button"
                        data-dismiss="modal">
                         Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal eliminar-->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
+                        plato?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
+                    <a class="btn" type="button"
+                       data-dismiss="modal">
+                        No
                     </a>
                 </div>
             </div>

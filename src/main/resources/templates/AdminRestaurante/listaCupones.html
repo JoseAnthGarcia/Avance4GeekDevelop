@@ -251,6 +251,7 @@
                                 <div class="table-responsive">
 
                                     <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
+                                    <div th:if="${activo != null}" th:text="${activo}" class="alert alert-success" role="alert"></div>
                                     <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning" role="alert"></div>
                                     <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger" role="alert"></div>
                                     <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info" role="alert"></div>
@@ -291,7 +292,7 @@
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>
-                                                    <div th:case="${1}" th:text="|Creado|"></div>
+                                                    <div th:case="${1}" th:text="|Activo|"></div>
                                                     <div th:case="${2}" th:text="|Publicado|"></div>
                                                 </td>
                                                 <td th:text="${cupon.politica}"></td>
@@ -304,12 +305,10 @@
                                                 </a></td>
                                                 <td th:if="${cupon.estado == 1}" style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-info btn-circle align"
-                                                                            th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
+                                                                            th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon}+ '&estado=2'}">
                                                     <i class="fas fa-book"></i>
                                                 </a></td>
-                                                <td th:unless="${cupon.estado != 1}" style="width: 160px"><a style="color: gray"
-                                                                                                         class="btn btn-info btn-circle align"
-                                                                                                         href="#">
+                                                <td th:unless="${cupon.estado == 1}" style="width: 160px"><a class="btn btn-info btn-circle align" style="background-color: gray" href="#">
                                                     <i class="fas fa-book"></i>
                                                 </a>
                                                 </td>

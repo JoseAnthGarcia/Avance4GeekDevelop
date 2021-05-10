@@ -249,10 +249,15 @@
                                                                    data-toggle="modal"
                                                                    data-target="#RegistroExitoso" -->
 
-                                                    <a th:if="${cupon.getIdcupon() != 0}" style="color: #dce3f9"
+                                                    <a th:if="${cupon.getIdcupon() != 0 && cupon.getEstado() != 0}" style="color: #dce3f9"
                                                        class="btn btn-danger mb-4"
-                                                       th:href="@{'/cupon/bloquear' + '?id=' + ${cupon.idcupon}}">
+                                                       th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon} + '&estado=0'}">
                                                         Bloquear
+                                                    </a>
+                                                    <a th:if="${cupon.getIdcupon() != 0 && cupon.getEstado() == 0}" style="color: #dce3f9"
+                                                       class="btn btn-danger mb-4"
+                                                       th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon} + '&estado=1'}">
+                                                        Desbloquear
                                                     </a>
                                                     <a class="btn btn-danger mb-4"
                                                            th:href="@{/cupon/lista}"

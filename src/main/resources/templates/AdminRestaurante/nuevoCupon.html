@@ -215,9 +215,9 @@
                                                 <div th:if="${cupon.getIdcupon() != 0}">
                                                     <input type="hidden" th:field="*{idcupon}">
                                                     <input type="hidden" th:field="*{fechainicio}">
-                                                    <input type="hidden" th:field="*{disponible}">
+                                                    <input type="hidden" th:field="*{estado}">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" th:if="${cupon.getIdcupon() == 0}">
                                                     <label class="small mb-1" for="nombre">Nombre:</label>
                                                     <input type="text" class="form-control mb-2"  style="border-color: lightgray" th:field="*{nombre}">
                                                     <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></h1>
@@ -248,7 +248,13 @@
                                                             th:text="${cupon.getIdcupon() == 0 ? 'Registrar Cupón' : 'Editar Cupón'}"></button> <!--
                                                                    data-toggle="modal"
                                                                    data-target="#RegistroExitoso" -->
-                                                        <a class="btn btn-danger mb-4"
+
+                                                    <a style="color: #dce3f9"
+                                                       class="btn btn-danger mb-4"
+                                                       th:href="@{'/cupon/bloquear' + '?id=' + ${cupon.idcupon}}">
+                                                        Bloquear
+                                                    </a>
+                                                    <a class="btn btn-danger mb-4"
                                                            th:href="@{/cupon/lista}"
                                                            role="button"
                                                            data-toggle="modal"

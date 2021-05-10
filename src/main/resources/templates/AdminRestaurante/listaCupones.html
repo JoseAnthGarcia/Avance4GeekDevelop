@@ -12,13 +12,13 @@
         <title>LISTA DE CUPONES</title>
 
         <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
                 href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
                 rel="stylesheet">
 
         <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
@@ -185,7 +185,8 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                                    <img class="img-profile rounded-circle"
+                                         src="../../static/bootstrap/img/undraw_profile.svg">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -204,34 +205,40 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form>
+                        <form method="get" th:action="@{/cupon/page}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="exampleCupon"
-                                           placeholder="Búsqueda por nombre">
+                                           th:value="${texto}"
+                                           placeholder="Búsqueda por nombre"
+                                           name="textBuscador">
                                 </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input placeholder="Caducidad" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+
+                                <div class="col-sm-2 mb-1" hidden>
+                                    <input placeholder="Caducidad" class="form-control" name="fechafin"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
+
                                 <div class="col-sm-2 mb-1">
-                                    <select class="form-control">
-                                        <option value="">Descuento</option>
-                                        <option value="">S./00.00 hasta S./5.00</option>
-                                        <option value="">S./5.00 hasta S./10.00</option>
-                                        <option value="">S./10.00 hasta S./15.00</option>
-                                        <option value="">S./15.00 hasta S./20.00</option>
+                                    <select class="form-control" id="textPrecio" name="textPrecio">
+                                        <option value="0" th:selected="${textoP==0}">Descuento</option>
+                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./5.00</option>
+                                        <option value="2" th:selected="${textoP==2}">S./5.00 hasta S./10.00</option>
+                                        <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
-                                    <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                    <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                            type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                                    <a class="btn btn-secondary">Quitar filtros</a>
+                                <div class="col-sm-6 mb-1 ml-0" style="text-align: right">
+                                    <a class="btn btn-secondary"
+                                       th:href="@{/cupon/lista}">Quitar filtros</a>
                                 </div>
 
                             </div>
@@ -250,10 +257,14 @@
                             <div class="card-body">
                                 <div class="table-responsive">
 
-                                    <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
-                                    <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning" role="alert"></div>
-                                    <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger" role="alert"></div>
-                                    <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info" role="alert"></div>
+                                    <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success"
+                                         role="alert"></div>
+                                    <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning"
+                                         role="alert"></div>
+                                    <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger"
+                                         role="alert"></div>
+                                    <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info"
+                                         role="alert"></div>
 
                                     <table class="table table-bordered">
                                         <thead>
@@ -286,7 +297,7 @@
                                         </thead>
                                         <tbody>
 
-                                            <tr th:each="cupon : ${listaCupon}" >
+                                            <tr th:each="cupon : ${listaCupon}">
                                                 <td th:text="${cuponStat.index}+1"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
@@ -302,14 +313,16 @@
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
-                                                <td th:if="${cupon.estado != 2}" style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-info btn-circle align"
-                                                                            th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
+                                                <td th:if="${cupon.estado != 2}" style="width: 160px"><a
+                                                        style="color: #dce3f9"
+                                                        class="btn btn-info btn-circle align"
+                                                        th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-book"></i>
                                                 </a></td>
-                                                <td th:unless="${cupon.estado == 2}" style="width: 160px"><a style="color: gray"
-                                                                                                         class="btn btn-info btn-circle align"
-                                                                                                         href="#">
+                                                <td th:unless="${cupon.estado == 2}" style="width: 160px"><a
+                                                        style="color: gray"
+                                                        class="btn btn-info btn-circle align"
+                                                        href="#">
                                                     <i class="fas fa-book"></i>
                                                 </a>
                                                 </td>
@@ -321,12 +334,12 @@
 
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&dateCaducidad='+ ${textoD} + '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2 no"></a>
+                                           class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"
                                            th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 
@@ -385,20 +398,20 @@
 
         <!-- Bootstrap core JavaScript-->
         <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
         <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
         <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
         <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
         <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
         <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <script th:src="@{/js/demo/datatables-demo.js}"></script>
 
     </body>
 

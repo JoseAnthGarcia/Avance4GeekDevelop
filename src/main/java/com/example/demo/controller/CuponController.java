@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Cupon;
+import com.example.demo.entities.Extra;
 import com.example.demo.repositories.CuponRepository;
+
 import java.time.LocalDate;
+
+import com.example.demo.service.CuponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,12 +30,66 @@ public class CuponController {
     @Autowired
     CuponRepository cuponRepository;
 
+    @Autowired
+    CuponService cuponService;
+
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model) {
-        model.addAttribute("listaCupon", cuponRepository.findAll());
-        return "AdminRestaurante/listaCupones";
+
+        return findPaginated("", LocalDate.parse("3000-05-21"), 0, 1, model);
     }
 
+    @GetMapping("/page")
+    public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
+                                @ModelAttribute @RequestParam(value = "fechafin", required = false) LocalDate fechafin,
+                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
+
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
+        }
+        System.out.println(pageNo);
+        int inputID = 1;
+        int pageSize = 1;
+        Page<Cupon> page;
+        List<Cupon> listaCupon;
+
+        if (textBuscador == null) {
+            textBuscador = "";
+        }
+        System.out.println(textBuscador);
+
+        if (fechafin == null) {
+            fechafin = LocalDate.parse("3000-05-21");
+        }
+
+        if (inputPrecio == null) {
+            inputPrecio = 0;
+        }
+        int inputPMax;
+        int inputPMin;
+        if (inputPrecio == 0) {
+            inputPMin = 0;
+            inputPMax = 100;
+        } else {
+            inputPMax = inputPrecio;
+            inputPMin = inputPrecio;
+        }
+        System.out.println(inputPrecio);
+        page = cuponService.findPaginated2(pageNo, pageSize, textBuscador, fechafin, inputPMin * 5 - 5, inputPMax * 5);
+        listaCupon = page.getContent();
+
+        model.addAttribute("texto", textBuscador);
+        model.addAttribute("textoP", inputPrecio);
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaCupon", listaCupon);
+
+        return "AdminRestaurante/listaCupones";
+
+    }
 
 
     @GetMapping("/nuevo")
@@ -44,7 +103,7 @@ public class CuponController {
                                Model model) {
         //Cupon cVal = cuponRepository.buscarPorNombre(cupon.getNombre());
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "AdminRestaurante/nuevoCupon";
         }
 
@@ -81,18 +140,19 @@ public class CuponController {
     }
 
     @GetMapping("/bloquear")
-    public String bloquearCupon(@RequestParam("id") int id, RedirectAttributes attr){
+    public String bloquearCupon(@RequestParam("id") int id, RedirectAttributes attr) {
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
             cupon.setEstado(0);
             cuponRepository.save(cupon);
-            attr.addFlashAttribute("bloqueo","Cupón bloqueado exitosamente");
+            attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
         }
         return "redirect:/cupon/lista";
     }
+
     @GetMapping("/publicar")
-    public String publicarCupon(@RequestParam("id") int id, RedirectAttributes attr){
+    public String publicarCupon(@RequestParam("id") int id, RedirectAttributes attr) {
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();

@@ -4,7 +4,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -12,34 +11,33 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario {
-
+    //tu misma eres mela :3
+    //nel mano
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idusuario;
+    private int idusuario;
 
     @Column(unique = true)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
+    //@Pattern(regexp = "[0-9]{8}",message = "Ingrese 8 dígitos")
     private String dni;
 
     @Column(nullable = false)
+    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "solo letras")
     private String apellidos;
 
     @Column(nullable = false)
-    @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Seleccione una de las opciones")
     private String sexo;
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[0-9]{9}",message = "Ingrese 9 dígitos")
+    //@Pattern(regexp = "[0-9]{9}",message = "Ingrese  dígitos")
     private String telefono;
 
     private int estado;
@@ -47,12 +45,9 @@ public class Usuario {
     @Column(nullable = false)
     private String fecharegistro;
 
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Ingrese una fecha")
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String fechanacimiento;
-
 
     private byte[] foto;
 
@@ -66,13 +61,9 @@ public class Usuario {
 
     //---credenciales-----
     @Column(nullable = false)
-    @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
     private String correo;
 
     @Column(nullable = false)
-    @NotBlank(message = "Complete su contraseña")
-    @Size(min = 8, message = "Ingrese como mínimo 8 caracteres")
     private String contrasenia;
     //-------
 
@@ -83,8 +74,7 @@ public class Usuario {
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
 
-    @OneToOne(mappedBy = "administrador")
-    private Restaurante restaurante;
+
 
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
@@ -92,33 +82,13 @@ public class Usuario {
 
     //private String addresselegido;
 
-
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
-    }
-
+    //borrar
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> listaPedidosPorUsuario;
-
-    @OneToMany(mappedBy = "repartidor")
-    private List<Pedido> listaPedidosPorRepartidor;
-
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 
     public void setListaPedidosPorUsuario(List<Pedido> listaPedidosPorUsuario) { this.listaPedidosPorUsuario = listaPedidosPorUsuario; }
-
-    public List<Pedido> getListaPedidosPorRepartidor() {
-        return listaPedidosPorRepartidor;
-    }
-
-    public void setListaPedidosPorRepartidor(List<Pedido> listaPedidosPorRepartidor) {
-        this.listaPedidosPorRepartidor = listaPedidosPorRepartidor;
-    }
 
     /*public String getAddresselegido() {
         return addresselegido;
@@ -132,11 +102,11 @@ public class Usuario {
 
     public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
 
-    public Integer getIdusuario() {
+    public int getIdusuario() {
         return idusuario;
     }
 
-    public void setIdusuario(Integer idusuario) {
+    public void setIdusuario(int idusuario) {
         this.idusuario = idusuario;
     }
 

@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.CategoriaExtra;
 import com.example.demo.entities.Plato;
-import com.example.demo.net.codejava.FileUploadUtil;
 import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.PlatoRepository;
 import com.example.demo.service.PlatoService;
@@ -10,17 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
-
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +21,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/plato")
-public class PlatoController {
+public class    PlatoController {
 
     @Autowired
     PlatoRepository platoRepository;
@@ -116,45 +109,23 @@ public class PlatoController {
     }
 
     @PostMapping("/guardar")
-    public RedirectView guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
-                                     BindingResult bindingResult, RedirectAttributes attr, Model model, @RequestParam("foto") MultipartFile multipartFile) throws IOException {
-
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        System.out.println(fileName+ "FOTOOOOOOOOOOOOOOOO");
-        plato.setFoto(fileName);
-        int tamanio=0;
-        ArrayList<Plato> lsita = (ArrayList<Plato>) platoRepository.findAll();
-        for(int i =0; i<lsita.size(); i++){
-            System.out.println(lsita.get(i).getIdplato());}
-        tamanio=lsita.get(lsita.size()-1).getIdplato();
-        //Plato savedUser = platoRepository.save(plato);
-        String uploadDir = "user-photos/" + (tamanio+1);
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-
-
-
+    public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
+                               BindingResult bindingResult, RedirectAttributes attr, Model model) {
 
         plato.setIdrestaurante(1); //Jarcodeado
         plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-
         model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
-        for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
-        System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
-
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
-                //return "/AdminRestaurante/nuevoPlato";
-                return new RedirectView("/plato/nuevo", true);
+                return "/AdminRestaurante/nuevoPlato";
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
-                    //return "/AdminRestaurante/nuevoPlato";
-                    return new RedirectView("/plato/nuevo", true);
+                    return "/AdminRestaurante/aja";
                 }else{
 
-                    //return "redirect:/plato/lista";
-                    return new RedirectView("/plato/lista", true);
+                    return "redirect:/plato/lista";
                 }
             }
         }else{
@@ -175,9 +146,9 @@ public class PlatoController {
                     attr.addFlashAttribute("msg", "Plato actualizado exitosamente");
                 }
             }
-            //return "redirect:/plato/lista";
-            return new RedirectView("/plato/lista", true);
+            return "redirect:/plato/lista";
         }
+
     }
 
 
@@ -216,7 +187,7 @@ public class PlatoController {
         return "/AdminRestaurante/prueba";
     }
 
-// IMAGEN
-public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
+    // IMAGEN
+    public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
 
 }

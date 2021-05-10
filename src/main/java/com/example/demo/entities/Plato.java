@@ -40,28 +40,6 @@ public class Plato {
     private List<CategoriaExtra> categoriaExtraList;
 
 
-
-
-
-    //foto
-
-    private String foto;
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
-    @Transient
-    public String getPhotosImagePath() {
-        if (foto == null || idplato == 0) return null;
-
-        return "/user-photos/" + idplato + "/" + foto;
-
-    }
-    //fin Foto
     public List<CategoriaExtra> getCategoriaExtraList() {
         return categoriaExtraList;
     }

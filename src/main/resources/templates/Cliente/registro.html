@@ -186,6 +186,8 @@
                                 <option value="0" selected>Distrito</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
+
+
                             </select>
                             <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
                             <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>

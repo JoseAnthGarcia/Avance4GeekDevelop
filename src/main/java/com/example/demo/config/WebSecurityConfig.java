@@ -28,6 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/cliente/**").hasAnyAuthority("cliente")
                 .antMatchers("/admin/**").hasAnyAuthority("administrador","administradorG")
+                .antMatchers("/cupon", "/extra", "/plato").hasAnyAuthority("administradorR")
+
                 .anyRequest().permitAll();
 
         http.logout().deleteCookies("JSESSIONID").invalidateHttpSession(true);

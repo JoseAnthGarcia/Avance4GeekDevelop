@@ -74,14 +74,24 @@ public class LoginController {
 
 
         if (rol.equals("cliente")) {
+            System.out.println("cliente");
             return "redirect:/cliente/listaRestaurantes";
         } else{
             if(rol.equals("administrador") || rol.equals("administradorG")){
-                System.out.println("ingreso");
+                System.out.println("admin");
                 return "redirect:/admin/usuarios";
             }else {
-                return "redirect:/ClienteLogin";
+                if(rol.equals("administradorR")){
+                    System.out.println("adminRest");
+                    return "redirect:/plato/lista";
+
+
+                }else{
+                    return "redirect:/Cliente/login";
+                }
             }
+
+
 
         }
 

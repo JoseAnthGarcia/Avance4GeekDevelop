@@ -104,6 +104,7 @@
                             <input th:field="*{fechanacimiento}" type="text" class="form-control"
                                    placeholder="Fecha de nacimiento"
                                    onfocus="(this.type='date')" onblur="(this.type='text')"/>
+                            <div th:if="${msg7 != null}" th:text="${msg7}" class="text-danger" ></div>
 
                             <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>
@@ -114,7 +115,7 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
 
-                            <select class="form-select" th:field="*{sexo}">
+                            <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
                                 <option value="" disabled selected>Sexo</option>
                                 <option th:value="Femenino">Femenino</option>
                                 <option th:value="Masculino">Masculino</option>
@@ -131,12 +132,16 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <div class="col-sm-6  mb-2 mb-sm-0">
+
+                            <input th:field="*{dni}" type="number" class="form-control" placeholder="DNI"/>
+                            <div th:if="${msg2 != null}" th:text="${msg2}" class="text-danger" ></div>
+                            <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                                 th:errors="*{dni}"></div>
+
+                        </div>
 
 
-                        <input th:field="*{dni}" type="number" class="form-control" placeholder="DNI"/>
-                        <div th:if="${msg2 != null}" th:text="${msg2}" class="text-danger" ></div>
-                        <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
-                             th:errors="*{dni}"></div>
                         <div class="col-sm-6 mb-2 mb-sm-0">
                         </div>
 
@@ -146,11 +151,11 @@
 
                         <div class="col-sm-6 mb-2 mb-sm-0" th:object="${movilidad}">
                             <h4 style="color: black">Transporte</h4>
-                            <p>Seleccione el tipo de transporte con el que realizará las entregas.</p>
+                            <p>Seleccione el tipo de transporte con el que realizará las entregas. Si selecciona bicicleta, omita los campos de placa y licencia.</p>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
-                                    <select class="form-select" name="tipoMovilidad">
+                                    <select class="form-control" style="border-color:lightgray" name="tipoMovilidad">
                                         <option th:each="tipo : ${listatipoMovilidad}"
                                                 th:value="${tipo.getIdtipomovilidad()}"
                                                 th:text="${tipo.getTipo()}"></option>
@@ -210,11 +215,12 @@
                             <p>Puede seleccionar hasta 5 distritos para la realización de los deliberys.</p>
 
 
-                            <select class="form-select" th:field="*{distritos}" multiple>
+                            <select class="form-control" style="border-color:lightgray" th:field="*{distritos}" multiple>
                                 <option value="-1" disabled selected>Distrito 1</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
                             </select>
+                            <div th:if="${msg5 != null}" th:text="${msg5}" class="text-danger" ></div>
 
 
                         </div>

@@ -13,10 +13,7 @@ import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/repartidor")
@@ -62,7 +59,7 @@ public class RepartidorController {
         Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
         Boolean errorMov = false;
-
+        Boolean errorDist=false;
 
         if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && !movilidad.getLicencia().equals("")&& !movilidad.getPlaca().equals("")) {
             errorMov= true;
@@ -70,7 +67,24 @@ public class RepartidorController {
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov){
+        if(usuario.getDistritos().size()>5){
+            errorDist=true;
+        }
+        Boolean errorFecha = true;
+        try {
+            String[] parts = usuario.getFechanacimiento().split("-");
+            System.out.println(parts[0]+"Año");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            if (anio - naci >18) {
+                errorFecha = false;
+            }
+        } catch (NumberFormatException n) {
+            errorFecha = true;
+        }
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
+                errorDist || errorFecha){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -83,10 +97,16 @@ public class RepartidorController {
             if(usuario3!=null){
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
-
+            if(errorDist){
+                model.addAttribute("msg5", "Solo puede seleccionar 5 distritos");
+            }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }
+            if(errorFecha){
+                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse.");
+            }
+
             model.addAttribute("usuario", usuario);
             model.addAttribute("movilidad", movilidad);
             model.addAttribute("distritosSeleccionados", new ArrayList<>());

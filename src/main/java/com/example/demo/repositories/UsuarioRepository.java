@@ -20,8 +20,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Usuario findByDni (String dni);
     @Query(value = "select * from usuario where telefono = ?1", nativeQuery = true)
     Usuario findByTelefono (String telefono);
-    @Query(value = "select * from usuario where correo = ?1", nativeQuery = true)
-    Usuario findByCorreo (String correo);
+
 
     @Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' " , nativeQuery = true)
     List<Usuario> listaUsuarios();
@@ -47,6 +46,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
             "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true)
     List<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad);
+
+    Usuario findByCorreo(String correo);
 
     List<Usuario> findUsuarioByCorreoAndIdusuarioNot(String correo, int id);
     List<Usuario> findUsuarioByDniAndIdusuarioNot(String dni, int id);

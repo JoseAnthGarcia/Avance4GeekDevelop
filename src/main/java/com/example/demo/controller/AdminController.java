@@ -196,7 +196,6 @@ public class AdminController  {
         model.addAttribute("fechaPedidoBuscador", fechaPedido);
         model.addAttribute("valoracionBuscador", valoracion);
 
-
         model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,fechaPedido,valoracion));
         return "redirect:/admin/detalle?idUsuario="+idUsuario;
     }

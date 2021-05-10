@@ -19,4 +19,12 @@ public class PlatoServiceImpl implements PlatoService{
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return this.platoRepository.findByDisponible(true, pageable);
     }
+
+    @Override
+    public Page<Plato> findPaginated2(int pageNo, int pageSize, String nombre, boolean disponibilidad, double inputPMin, double inputPMax) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return this.platoRepository.findByDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(disponibilidad, nombre, pageable, inputPMin, inputPMax);
+    }
+
+
 }

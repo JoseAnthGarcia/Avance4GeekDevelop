@@ -26,27 +26,27 @@ public class Plato {
     @Positive(message = "Ingrese una cantidad positiva")
     @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
     @NotNull(message = "Este campo es obligatorio")
-    private BigDecimal precio;
-    @Column(name="idcategoriaplato", nullable = false)
+    private double precio;
+    @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;
     @Column(name="idrestaurante", nullable = false)
     private int  idrestaurante;
     @Column(name="disponible", nullable = false)
     private boolean disponible;
-    @ManyToMany(mappedBy ="categoriaextra_has_plato")
-
-
-//    public void setCategoriaextra(List<CategoriaExtra> categoriaextra) {
-  //      this.categoriaextra = categoriaextra;
-   // }
-/*
     @ManyToMany
-    @JoinColumn(name="categoriaextra_has_plato",
-            joinColums=@JoinColumn(name="idplato"),
-            inverseJoinColums=@JoinColumn(name = "idcategoriaextra"))
-    private List<CategoriaExtra> categoriaExtraPorPlato;
-*/
+    @JoinTable(name = "categoriaextra_has_plato",
+            joinColumns = @JoinColumn(name = "idplato"),
+            inverseJoinColumns = @JoinColumn(name = "idcategoriaextra"))
+    private List<CategoriaExtra> categoriaExtraList;
 
+
+    public List<CategoriaExtra> getCategoriaExtraList() {
+        return categoriaExtraList;
+    }
+
+    public void setCategoriaExtraList(List<CategoriaExtra> categoriaExtraList) {
+        this.categoriaExtraList = categoriaExtraList;
+    }
 
     public int getIdplato() {
         return idplato;
@@ -64,11 +64,11 @@ public class Plato {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -105,11 +105,4 @@ public class Plato {
         this.disponible = disponible;
     }
 
-/*    public List<CategoriaExtra> getCategoriaExtraPorPlato() {
-        return categoriaExtraPorPlato;
-    }
-
-    public void setCategoriaExtraPorPlato(List<CategoriaExtra> categoriaExtraPorPlato) {
-        this.categoriaExtraPorPlato = categoriaExtraPorPlato;
-    }*/
 }

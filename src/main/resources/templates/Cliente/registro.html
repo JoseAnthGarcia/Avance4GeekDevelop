@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -12,19 +12,18 @@
     <title>Registro</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../bootstrap/css/sb-admin-2.css" rel="stylesheet">
+    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+    <link th:href="@{/cssC/estilosAdmin.css}" rel="stylesheet" type="text/css">
 
 
-    <link href="../estilosAdminRest.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this page -->
-    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" type="text/css" />
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
 
 </head>
 
@@ -34,21 +33,21 @@
 <div id="wrapper">
 
 
-
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column" >
+    <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
         <div id="content">
 
             <!-- Topbar -->
-            <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;" >
-                <a class="navbar-brand d-flex align-items-center justify-content-center" href="#" >
+            <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;">
+                <a class="navbar-brand d-flex align-items-center justify-content-center" href="#">
                     <div class="navbar-brand rotate-n-15">
                         <i class="fas fa-truck-loading" style="color: white"></i>
                     </div>
                     <div class="navbar-brand-text mx-3" style="color: white">
-                        Food Delivery</div>
+                        Food Delivery
+                    </div>
                 </a>
                 <!-- Sidebar Toggle (Topbar) -->
                 <form class="form-inline">
@@ -57,152 +56,177 @@
                     </button>
                 </form>
 
-
-
                 <!-- Topbar Navbar -->
-
 
                 <div class="topbar-divider d-none d-sm-block"></div>
 
-
                 </ul>
-
             </nav>
             <!-- End of Topbar -->
-
             <!-- Begin Page Content -->
             <div class="container">
 
-                <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal" style="position: relative; right:12%">
+                <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal"
+                   style="position: relative; right:12%">
                     <i class="fas fa-chevron-circle-left"></i>
                     Volver
                 </a>
                 <h1 style="color: black">Registro</h1>
-                <p>Complete el siguiente formulario para que pueda realizar pedidos.</p>
-                <form class="user">
-
+                <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
+                <form method="post"
+                      class="user" th:action="@{/cliente/guardar}" th:object="${cliente}">
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-
-                            <input type="text" class="form-control"
-                                   id="exampleNombre"
+                            <label style="color: black">Nombres</label>
+                            <input type="text" class="form-control" style="border-color:lightgray"
+                                   id="exampleNombre" th:field="*{nombres}"
                                    placeholder="Nombres">
+                            <!--
+                          <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                                 th:errors="*{nombres}"> </div>
+                                 -->
+
                         </div>
+
+
                         <div class="col-sm-6 mb-2">
-                            <input type="text" class="form-control"
-                                   id="exampleApellido"
+                            <label style="color: black">Apellidos</label>
+                            <input type="text" class="form-control" style="border-color:lightgray"
+                                   id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
+                            <!--
+                            <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                                 th:errors="*{apellidos}"></div>
+                                 -->
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-                            <input type="email" class="form-control"
-                                   id="exampleCorreo"
+                            <label style="color: black">Correo electrónico</label>
+
+                            <input type="text" class="form-control" style="border-color:lightgray"
+                                   id="exampleCorreo" th:field="*{correo}"
                                    placeholder="Correo electrónico">
                         </div>
-                        <div class="col-sm-6 mb-2">
-                            <input placeholder="Fecha de nacimiento" class="form-control" type="text"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
-                        </div>
+                    <div class="col-sm-6 mb-2">
+                        <label style="color: black">Fecha de nacimiento</label>
+                        <input th:field="*{fechanacimiento}" type="text" class="form-control" style="border-color:lightgray" placeholder="Fecha de nacimiento"
+                               onfocus="(this.type='date')" onblur="(this.type='text')"/>
                     </div>
+                </div>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-                            <select class="form-control">
+                            <label style="color: black">Sexo</label>
+                            <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
                                 <option value="" disabled selected>Sexo</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
-                            <input type="number" class="form-control"
+                            <label style="color: black">Teléfono</label>
+                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{telefono}"
                                    id="exampleTelefono" placeholder="Teléfono">
+                            <!--
+                            <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                                 th:errors="*{telefono}"></div>
+                                 -->
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <input type="number" class="form-control"
+                            <label style="color: black">DNI</label>
+                            <input type="number" class="form-control" style="border-color:lightgray" th:field="*{dni}"
                                    id="exampleDNI" placeholder="DNI">
+                            <!--
+                            <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                                 th:errors="*{dni}"></div>
+                                 -->
                         </div>
 
-                        <div class="col-sm-6  mb-2 mb-sm-0">
-                          <h6> </h6>
+<!--
+                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                            <label style="color: black">Foto de Perfil</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                <label class="custom-file-label" for="inputGroupFile03">Foto de Perfil</label>
+                                <input type="file" class="custom-file-input border-secondary" id="inputGroupFile03">
+                                <label class="custom-file-label border-secondary" for="inputGroupFile03">Foto de Perfil</label>
                             </div>
                         </div>
+                         -->
 
                     </div>
-                    <div class="form-group row">
 
-                        <div class="col-sm-6 mb-2 mb-sm-0">
-                            <h4 style="color: black">Dirección</h4>
-
-                            <div class="form-group row">
-                                <input type="text" class="form-control"
-                                       id="direccion" placeholder="Dirección">
-
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
-                                    <img src="images.jfif" width="350" height="150">
-                                </div>
-
-                            </div>
-
+                    <div class="form-group row"  th:object="${Usuario_has_distrito}">
+                        <div class="col-sm-6  mb-2 mb-sm-0">
+                            <label style="color: #000000">Dirección</label>
+                            <input type="text" class="form-control" style="border-color:lightgray"
+                                   id="direccion" placeholder="Dirección" th:field="*{direccion}" >
 
                         </div>
-                        <div class="col-sm-6 mb-2 mb-sm-0">
-                            <h4 style="color: black">Contraseña</h4>
-                            <p>La contraseña debe contar con al menos 8 caracteres.</p>
-                            <div class="form-group row">
-                                <div class="col-sm-12 mb-2 mb-sm-0">
-                                    <input type="password" class="form-control" id="inputPassword1" placeholder="Contraseña">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-12 mb-2 mb-sm-0">
-                                    <input type="password" class="form-control" id="inputPassword2" placeholder="Confirmar contraseña">
-                                </div>
-                            </div>
-
-                        </div>
-
                     </div>
 
 
 
-
-                    <div class="form-group row">
-
+                    <div class="col-sm-6  mb-2 mb-sm-0" >
+                        <select class="form-class" th:field="*{distritos}" >
+                            <option value="" disabled selected>Distrito </option>
+                            <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
+                                    th:text="${dist.nombre}"></option>
+                        </select>
                     </div>
-                    <hr>
-                    <a href="#" class="btn btn-primary btn-user btn-block "  data-toggle="modal" data-target="#registrarModal">
-                        Registrar
-                    </a>
-                </form>
 
 
-            </div>
-            <!-- /.container-fluid -->
+            <div class="form-group row">
+                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                    <label style="color: black">Contraseña</label>
+                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword1" th:field="*{contrasenia}"
+                           placeholder="La contraseña debe contar con al menos 8 caracteres.">
+                </div>
 
-        </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Geek Developers &copy; 2021-1</span>
+                <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
+                    <label style="color: black">Confirmar contraseña</label>
+                    <input type="password" class="form-control" style="border-color:lightgray" id="inputPassword2"
+                           placeholder="Confirmar contraseña" >
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
+            <div class="form-group row">
+                <div class="col-sm-12 mb-2 mb-sm-0 " style=text-align:center>
+                    <img src="https://www.marketinhouse.es/wp-content/uploads/2018/06/geolocalizacion.jpg.webp" width="350" height="150">
+                </div>
+            </div>
+
+            <div class="form-group row">
+
+            </div>
+            <hr>
+                    <button class="btn btn-primary btn-user btn-block"
+                            type="submit">
+                        Registrar
+
+                    </button>
+
+            </form>
+
+
+        </div>
+        <!-- /.container-fluid -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Geek Developers &copy; 2021-1</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+</div>
+<!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
@@ -242,7 +266,9 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la  revisión por parte del administrador.</div>
+            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por parte del
+                administrador.
+            </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <a class="btn btn-primary" href="registroValidacion.html">Enviar</a>
@@ -251,22 +277,22 @@
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+
 
 </body>
 

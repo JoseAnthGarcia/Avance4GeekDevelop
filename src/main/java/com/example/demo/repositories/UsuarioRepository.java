@@ -2,9 +2,12 @@ package com.example.demo.repositories;
 
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 
@@ -13,7 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
-    List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
+    Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
 
     @Query(value = "select * from usuario where dni = ?1", nativeQuery = true)

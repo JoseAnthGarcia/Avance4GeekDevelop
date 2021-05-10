@@ -184,7 +184,7 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
                                     <img class="img-profile rounded-circle"
-                                         src="../../static/bootstrap/img/undraw_profile.svg">
+                                         th:href="@{/static/img/undraw_profile.svg}">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -204,13 +204,13 @@
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         <form method="get" th:action="@{/extra/page}">
-
                             <div class="form-group row">
+
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
-                                           id="exampleCupon"
+                                           id="exampleExtra"
                                            th:value="${texto}"
-                                           placeholder="Búsqueda por nombre"
+                                           placeholder="Búsqueda extra"
                                            name="textBuscador">
                                 </div>
                                 <div class="col-sm-3 mb-1">
@@ -219,7 +219,7 @@
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.5.00</option>
                                         <option value="2" th:selected="${textoP==2}">S/.5.00 hasta S/.10.00</option>
                                         <option value="3" th:selected="${textoP==3}">S/.10.00 hasta S/.15.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/..20.00</option>
+                                        <option value="4" th:selected="${textoP==4}">S/.15.00 hasta S/.20.00</option>
                                     </select>
                                 </div>
 
@@ -285,16 +285,14 @@
                                     </table>
 
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination"
-                                     style=" margin-left: 630px ;align-content: center">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
-
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/extra/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white"></a>
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

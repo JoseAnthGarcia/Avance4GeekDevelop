@@ -252,14 +252,20 @@
 
                                     <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
                                     <div th:if="${editado != null}" th:text="${editado}" class="alert alert-warning" role="alert"></div>
+                                    <div th:if="${bloqueo != null}" th:text="${bloqueo}" class="alert alert-danger" role="alert"></div>
+                                    <div th:if="${publicado != null}" th:text="${publicado}" class="alert alert-info" role="alert"></div>
+
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    Código
+                                                    N°
                                                 </th>
                                                 <th>
                                                     Nombre del Cupón
+                                                </th>
+                                                <th>
+                                                    Estado
                                                 </th>
                                                 <th>
                                                     Política
@@ -273,14 +279,21 @@
                                                 <th>
                                                     Editar Cupón
                                                 </th>
+                                                <th>
+                                                    Publicar Cupón
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                             <tr th:each="cupon : ${listaCupon}" >
-                                                <div th:if="${cupon.disponible}">
-                                                <td th:text="${cupon.idcupon}"></td>
+                                                <td th:text="${cuponStat.index}+1"></td>
                                                 <td th:text="${cupon.nombre}"></td>
+                                                <td th:switch="${cupon.estado}">
+                                                    <div th:case="${0}" th:text="|Bloqueado|"></div>
+                                                    <div th:case="${1}" th:text="|Creado|"></div>
+                                                    <div th:case="${2}" th:text="|Publicado|"></div>
+                                                </td>
                                                 <td th:text="${cupon.politica}"></td>
                                                 <td th:text="${cupon.fechafin}"></td>
                                                 <td th:text="'S/.'+${cupon.descuento}"></td>
@@ -289,7 +302,17 @@
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
-                                                </div>
+                                                <td th:if="${cupon.estado != 2}" style="width: 160px"><a style="color: #dce3f9"
+                                                                            class="btn btn-info btn-circle align"
+                                                                            th:href="@{'/cupon/publicar' + '?id=' + ${cupon.idcupon}}">
+                                                    <i class="fas fa-book"></i>
+                                                </a></td>
+                                                <td th:unless="${cupon.estado == 2}" style="width: 160px"><a style="color: gray"
+                                                                                                         class="btn btn-info btn-circle align"
+                                                                                                         href="#">
+                                                    <i class="fas fa-book"></i>
+                                                </a>
+                                                </td>
                                             </tr>
 
                                         </tbody>
@@ -297,15 +320,17 @@
                                     </table>
 
                                 </div>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a href="#">&laquo;</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&dateCaducidad='+ ${textoD} + '&textPrecio='+ ${textoP}}"
+                                           th:utext="${i}"
+                                           class="active mt-2 no"></a>
+                                        <a th:unless="${currentPage != i}"
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

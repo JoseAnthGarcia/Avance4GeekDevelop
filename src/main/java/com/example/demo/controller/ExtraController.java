@@ -27,7 +27,7 @@ import java.util.Optional;
 @RequestMapping("/extra")
 public class ExtraController {
     int idrestaurante = 1;
-    int idcategoriaextra=1;
+    int idcategoriaextra = 1;
     //ELIMINAR ESTO
     @Autowired
     ExtraRepository extraRepository;
@@ -115,8 +115,8 @@ public class ExtraController {
 
 
     @GetMapping("/page")
-    public String findPaginated(@RequestParam(value = "textBuscador", required = false) String nombre,
-                                @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+    public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
+                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
         System.out.println(pageNo);
         if (pageNo == null || pageNo == 0) {
@@ -126,9 +126,9 @@ public class ExtraController {
         int pageSize = 1;
         Page<Extra> page;
         List<Extra> listaExtras;
-        System.out.println(nombre);
-        if (nombre == null) {
-            nombre = "";
+        System.out.println(textBuscador);
+        if (textBuscador == null) {
+            textBuscador = "";
         }
         System.out.println(inputPrecio);
         if (inputPrecio == null) {
@@ -143,10 +143,10 @@ public class ExtraController {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
-        page = extraService.findPaginated2(pageNo, pageSize, nombre, inputPMin * 5, inputPMax * 5 - 5);
+        page = extraService.findPaginated2(pageNo, pageSize, textBuscador, inputPMin * 5 - 5, inputPMax * 5);
         listaExtras = page.getContent();
 
-        model.addAttribute("texto", nombre);
+        model.addAttribute("texto", textBuscador);
         model.addAttribute("textoP", inputPrecio);
 
         model.addAttribute("currentPage", pageNo);
@@ -225,6 +225,7 @@ public class ExtraController {
             return "redirect:/extra/lista";
         }
     }
+
     @GetMapping("/editar")
     public String editarExtra(@RequestParam("id") int id,
                               Model model,
@@ -238,8 +239,9 @@ public class ExtraController {
             return "redirect:/extra/lista";
         }
     }
+
     @GetMapping("/borrar")
-    public String borrarExtra(@RequestParam("id") int id ,RedirectAttributes attr) {
+    public String borrarExtra(@RequestParam("id") int id, RedirectAttributes attr) {
         Optional<Extra> extraOptional = extraRepository.findById(id);
         if (extraOptional.isPresent()) {
             Extra extra = extraOptional.get();

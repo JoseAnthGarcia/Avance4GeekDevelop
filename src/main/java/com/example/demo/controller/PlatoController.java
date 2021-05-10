@@ -7,13 +7,19 @@ import com.example.demo.repositories.PlatoRepository;
 import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +37,7 @@ public class    PlatoController {
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
 
-    @GetMapping(value={"/lista",""})
+    @GetMapping(value = {"/lista", ""})
     public String listaPlatos(Model model) {
         return findPaginated("", 1, 0, 1, model);
     }
@@ -109,13 +115,38 @@ public class    PlatoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,
-                               BindingResult bindingResult, RedirectAttributes attr, Model model) {
-
+    public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,BindingResult bindingResult,
+                               @RequestParam("photo") MultipartFile file,RedirectAttributes attr, Model model) {
+        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+        if(file.isEmpty()){
+            model.addAttribute("mensajefoto", "Debe subir una imagen");
+            return "/AdminRestaurante/nuevoPlato";
+        }
+        String fileName = file.getOriginalFilename();
+        if (fileName.contains("..")){
+            model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+            return "/AdminRestaurante/nuevoPlato";
+        }
+        System.out.println(file.getContentType()+" e xtemcion   del archivo");
+        /*if (!file.getContentType().equals("image/webp")||
+                !file.getContentType().equals("image/jpeg")||
+                !file.getContentType().equals("png")){
+            model.addAttribute("mensajefoto","Solo puede ingresar imágenes tipo webp, jpeg y png");
+            return "/AdminRestaurante/nuevoPlato";
+        }*/
+        try{
+            plato.setFoto(file.getBytes());
+            plato.setFotonombre(fileName);
+            plato.setFotocontenttype(file.getContentType());
+        }catch (IOException e){
+            e.printStackTrace();
+            model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+            return "/AdminRestaurante/nuevoPlato";
+        }
         plato.setIdrestaurante(1); //Jarcodeado
         plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+
         if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
                 return "/AdminRestaurante/nuevoPlato";
@@ -123,13 +154,14 @@ public class    PlatoController {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
                     return "/AdminRestaurante/nuevoPlato";
-                }else{
+                } else {
 
                     return "redirect:/plato/lista";
                 }
             }
-        }else{
+        } else {
             if (plato.getIdplato() == 0) {
+
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
                 platoRepository.save(plato);
@@ -147,7 +179,19 @@ public class    PlatoController {
     }
 
 
-
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id){
+        Optional<Plato> optionalPlato=platoRepository.findById(id);
+        if (optionalPlato.isPresent()){
+            Plato p = optionalPlato.get();
+            byte[] imagenBytes=p.getFoto();
+            HttpHeaders httpHeaders= new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(p.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
+        }else {
+            return null;
+        }
+    }
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,
                               Model model,
@@ -156,7 +200,7 @@ public class    PlatoController {
         if (platoOptional.isPresent()) {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
-            model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+            model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
             return "/AdminRestaurante/nuevoPlato";
         } else {
             return "redirect:/plato/lista";
@@ -182,7 +226,5 @@ public class    PlatoController {
         return "/AdminRestaurante/prueba";
     }
 
-    // IMAGEN
-    public static String directoriofoto= System.getProperty("user.dir")+"/src/main/resources/static/imagenDeRestaurante";
 
 }

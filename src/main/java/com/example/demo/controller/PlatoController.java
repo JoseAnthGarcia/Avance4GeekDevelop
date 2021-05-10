@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.CategoriaExtra;
 import com.example.demo.entities.Plato;
+import com.example.demo.net.codejava.FileUploadUtil;
 import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.PlatoRepository;
 import com.example.demo.service.PlatoService;
@@ -39,7 +40,7 @@ public class PlatoController {
 
     @GetMapping("/lista")
     public String listaPlatos(Model model) {
-        return findPaginated(1, model);
+        return findPaginated("", 1, 0, 1, model);
     }
 
     /*@PostMapping("/textSearch")
@@ -136,12 +137,12 @@ public class PlatoController {
         plato.setIdrestaurante(1); //Jarcodeado
         plato.setIdcategoriaplato(2); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        platoRepository.save(plato);
+
         model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
         for(int i =0; i<plato.getCategoriaExtraList().size(); i++){
         System.out.println(plato.getCategoriaExtraList().get(i).getTipo());}
 
-        /*if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()){
             if (plato.getIdplato() == 0) {
                 //return "/AdminRestaurante/nuevoPlato";
                 return new RedirectView("/plato/nuevo", true);
@@ -165,8 +166,6 @@ public class PlatoController {
 
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
-                String uploadDir = "user-photos/" + platoRepository.save(plato).getIdplato();
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 platoRepository.save(plato);
             } else {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
@@ -178,8 +177,7 @@ public class PlatoController {
             }
             //return "redirect:/plato/lista";
             return new RedirectView("/plato/lista", true);
-        }*/
-        return new RedirectView("/plato/lista", true);
+        }
     }
 
 

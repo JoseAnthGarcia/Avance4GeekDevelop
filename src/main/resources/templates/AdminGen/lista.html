@@ -135,8 +135,13 @@
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
                                     <td th:text="${v.index + 1}" class="text-center" style="width: 150px"></td>
                                     <td th:text="${usuario.nombres} +' '+${usuario.apellidos}" class="text-center" style="width: 450px"></td>
-                                    <td th:text="${usuario.rol.tipo}" class="text-center" style="width: 450px"></td>
-                                    <td th:text="${usuario.ultimoingreso}" class="text-center" style="width: 250px">01/05/2021 04:20:23</td>
+                                    <td th:switch="${usuario.rol.tipo}" class="text-center" style="width: 450px">
+                                        <div th:case="cliente" th:text="|Cliente|"></div>
+                                        <div th:case="administradorR" th:text="|Administrador de Restaurante|"></div>
+                                        <div th:case="administrador" th:text="|Administrador|"></div>
+                                        <div th:case="repartidor" th:text="|Repartidor${usuario.sexo == 'femenino' ? 'a':''}|"></div>
+                                    </td>
+                                    <td th:text="${usuario.ultimoingreso}" class="text-center" style="width: 250px"></td>
                                     <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
                                     <td><a href="#" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a></td>
                                     <td><a th:href="@{'/admin/detalle?idUsuario='+${usuario.idusuario}}" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>

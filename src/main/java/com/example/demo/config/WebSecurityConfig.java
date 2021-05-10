@@ -28,9 +28,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/cliente/**").hasAnyAuthority("cliente")
                 .antMatchers("/admin","/admin/**").hasAnyAuthority("administrador","administradorG")
+                .antMatchers("/plato","/plato/**","/cupon","/cupon/**", "/extra","/extra/**").hasAnyAuthority("administradorR")
                 .anyRequest().permitAll();
+        http.exceptionHandling().accessDeniedPage("/accessDenied");
 
-        http.logout().deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        http.logout()
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
         System.out.println("configure");
     }
 

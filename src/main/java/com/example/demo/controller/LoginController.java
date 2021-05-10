@@ -49,9 +49,15 @@ public class LoginController {
 
     @GetMapping("/ClienteLogin")
     public String loginForm() {
+
         return "Cliente/login";
     }
 
+
+    @GetMapping("/accessDenied")
+    public String acces(){
+        return "/accessDenied";
+    }
 
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
@@ -87,7 +93,6 @@ public class LoginController {
             }
 
         }
-
 
     }
 

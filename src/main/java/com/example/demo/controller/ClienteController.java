@@ -41,10 +41,6 @@ public class ClienteController {
     Usuario_has_distritoRepository usuario_has_distritoRepository;
 
 
-    @GetMapping("/login")
-    public String loginCliente() {
-        return "Cliente/login";
-    }
 
 
 

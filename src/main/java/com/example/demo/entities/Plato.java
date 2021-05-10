@@ -39,7 +39,37 @@ public class Plato {
             inverseJoinColumns = @JoinColumn(name = "idcategoriaextra"))
     private List<CategoriaExtra> categoriaExtraList;
 
+    //FOTO
+    private String fotonombre;
+    private String fotocontenttype;
+    @Lob
+    private byte[] foto;
 
+    public String getFotonombre() {
+        return fotonombre;
+    }
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    //FIN FOTO
     public List<CategoriaExtra> getCategoriaExtraList() {
         return categoriaExtraList;
     }

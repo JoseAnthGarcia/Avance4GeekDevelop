@@ -218,12 +218,13 @@
                                         <form method="POST" id="nuevo" class="justify-content-left"
                                               th:action="@{/plato/guardar}" th:object="${plato}"
                                               enctype="multipart/form-data">
+
                                             <input hidden th:field="*{idplato}">
 
                                             <tr>
                                                 <td><label>Nombre:</label></td>
                                                 <td colspan="2"><br><input type="text" class="form-control c"
-                                                                           th:field="*{nombre}">
+                                                                           th:field="*{nombre}" placeholder="Nombre del plato">
                                                     <h1 style="color: red; font-size: small; text-align: left"
                                                         th:if="${#fields.hasErrors('nombre')}"
                                                         th:errors="*{nombre}">Debes insertar como máximo 40
@@ -235,7 +236,7 @@
                                                 <td colspan="2">
                                                     <br><textarea class="form-control" type="text"
                                                                   th:field="*{descripcion}"
-                                                                  placeholder="Ingrese una descripcion"></textarea>
+                                                                  placeholder="Ingrese una descripción"></textarea>
                                                     <h1 style="color: red; font-size: small; text-align: left"
                                                         th:if="${#fields.hasErrors('descripcion')}"
                                                         th:errors="*{descripcion}">Debes insertar como máximo 100
@@ -244,9 +245,10 @@
                                                         id="image_preview"
                                                         src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
                                                         width="300"></td>
-                                                <td rowspan="3" colspan="3" th:if="${plato.idplato!=0}"><img
+                                                <td rowspan="3" colspan="3" th:if="${plato.idplato!=0}">
+                                                    <img
                                                         id="image_previe"
-                                                        th:src="htt"
+                                                        th:src="@{|imagen/${plato.idplato}|}"
                                                         width="300"></td>
                                             </tr>
                                             <tr>
@@ -268,9 +270,16 @@
                                             <tr th:if="${plato.idplato==0}">
                                                 <td><label>Imagen referencial:</label></td>
                                                 <td colspan="2"><br>
-                                                    <input type="file" name="foto"  class="form-control">
-                                                </td>
 
+                                                        <div class="custom-file">
+                                                            <input type="file" name="photo"  accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                                            <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                                            <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}" style="color: red; font-size: small; text-align: left"></h1>
+                                                        </div>
+
+
+
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td><label>Extras: </label></td>
@@ -408,6 +417,13 @@
 
 </div>
 </body>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 <script>$(document).ready(function () {
     function readURL(input) {
         if (input.files && input.files[0]) {

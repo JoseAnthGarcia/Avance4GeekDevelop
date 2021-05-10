@@ -53,6 +53,11 @@ public class LoginController {
     }
 
 
+    @GetMapping("/accessDenied")
+    public String acces(){
+        return "/accessDenied";
+    }
+
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";

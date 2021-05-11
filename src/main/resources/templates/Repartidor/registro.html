@@ -116,10 +116,11 @@
                         <div class="col-sm-6 mb-2 mb-sm-0">
 
                             <select class="form-control" style="border-color:lightgray" th:field="*{sexo}">
-                                <option value="" disabled selected>Sexo</option>
-                                <option th:value="Femenino">Femenino</option>
-                                <option th:value="Masculino">Masculino</option>
+                                <option value="" selected>Sexo</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Masculino">Masculino</option>
                             </select>
+                            <div th:if="${msg8 != null}" th:text="${msg8}" class="text-danger" ></div>
 
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
@@ -134,7 +135,7 @@
                     <div class="form-group row">
                         <div class="col-sm-6  mb-2 mb-sm-0">
 
-                            <input th:field="*{dni}" type="number" class="form-control" placeholder="DNI"/>
+                            <input th:field="*{dni}" type="text" class="form-control" placeholder="DNI"/>
                             <div th:if="${msg2 != null}" th:text="${msg2}" class="text-danger" ></div>
                             <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
@@ -216,7 +217,7 @@
 
 
                             <select class="form-control" style="border-color:lightgray" th:field="*{distritos}" multiple>
-                                <option value="-1" disabled selected>Distrito 1</option>
+                                <option value="-1" disabled selected>Distritos</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
                             </select>

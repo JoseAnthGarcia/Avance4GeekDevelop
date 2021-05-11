@@ -60,16 +60,23 @@ public class RepartidorController {
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
         Boolean errorMov = false;
         Boolean errorDist=false;
+        Boolean errorSexo= false;
+        System.out.println(usuario.getSexo());
+        System.out.println(usuario.getDistritos());
+        System.out.println(movilidad.getTipoMovilidad().getIdtipomovilidad());
+        System.out.println(movilidad.getLicencia() + movilidad.getPlaca());
 
-        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && !movilidad.getLicencia().equals("")&& !movilidad.getPlaca().equals("")) {
+
+        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
             errorMov= true;
         }
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(usuario.getDistritos().size()>5){
+        if(usuario.getDistritos().size()>5 || usuario.getDistritos().isEmpty()){
             errorDist=true;
         }
+
         Boolean errorFecha = true;
         try {
             String[] parts = usuario.getFechanacimiento().split("-");
@@ -83,8 +90,11 @@ public class RepartidorController {
         } catch (NumberFormatException n) {
             errorFecha = true;
         }
+        if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
+            errorSexo=true;
+        }
         if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
-                errorDist || errorFecha){
+                errorDist || errorFecha || errorSexo){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -98,13 +108,16 @@ public class RepartidorController {
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
             if(errorDist){
-                model.addAttribute("msg5", "Solo puede seleccionar 5 distritos");
+                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
             }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }
             if(errorFecha){
-                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse.");
+                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse");
+            }
+            if(errorSexo){
+                model.addAttribute("msg8", "Seleccione una opción");
             }
 
             model.addAttribute("usuario", usuario);

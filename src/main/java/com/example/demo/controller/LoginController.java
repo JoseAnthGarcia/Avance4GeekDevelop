@@ -48,14 +48,37 @@ public class LoginController {
     Usuario_has_distritoRepository usuario_has_distritoRepository;
 
     @GetMapping("/ClienteLogin")
-    public String loginForm() {
+    public String loginForm(Authentication auth, HttpSession session) {
+        try {
+            String rol = "";
+            for (GrantedAuthority role : auth.getAuthorities()) {
+                rol = role.getAuthority();
+                break;
+            }
+            System.out.println(rol);
 
+            String correo = auth.getName();
+            Usuario usuario = usuarioRepository.findByCorreo(correo);
+            System.out.println(usuario.getNombres());
+
+            System.out.println(usuario.getApellidos());
+
+            session.setAttribute("usuario", usuario);
+            //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
+            System.out.println(usuario);
+
+
+            if (rol.equals("cliente")) {
+                return "redirect:/cliente/listaRestaurantes";
+            }
+        } catch (NullPointerException n) {
+        }
         return "Cliente/login";
     }
 
 
     @GetMapping("/accessDenied")
-    public String acces(){
+    public String acces() {
         return "/accessDenied";
     }
 

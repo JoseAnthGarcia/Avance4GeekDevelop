@@ -58,24 +58,28 @@ public class ClienteController {
     }
     @PostMapping("/guardarEditar")
     public String guardarEdicion(@ModelAttribute("usuario") @Valid Usuario usuario , BindingResult bindingResult, HttpSession httpSession
-                    ,RedirectAttributes ra){
+                    , Model model) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        boolean valContra = true;
+        if (BCrypt.checkpw(usuario.getContrasenia(), usuario1.getContrasenia())) {
+            valContra = false;
+        }
 
-        if( BCrypt.checkpw(usuario.getContrasenia(),usuario1.getContrasenia())){
+        if (valContra || bindingResult.hasErrors()) {
             System.out.println("ENTRO AEA");
-
-            if (bindingResult.hasErrors()) {
-                return "Cliente/editarPerfil";
+            if(valContra){
+            model.addAttribute("msg", "Contraseña incorrecta");
             }
+            return "Cliente/editarPerfil";
+
+        } else {
             usuario1.setTelefono(usuario.getTelefono()); //usar save para actualizar
             clienteRepository.save(usuario1);
-
             return "Cliente/listaRestaurantes";
         }
 
-            ra.addFlashAttribute("msj","las contraseñas no coinciden");
-        return "Cliente/editarPerfil";
+
     }
 
     @GetMapping("/listaRestaurantes")

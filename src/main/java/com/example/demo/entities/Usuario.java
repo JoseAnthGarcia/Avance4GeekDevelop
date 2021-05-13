@@ -61,6 +61,10 @@ public class Usuario implements Serializable {
 
     private String ultimoingreso;
 
+    @NotBlank(message = "ingrese su dirección")
+    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    private String direccionactual;
+
     @ManyToOne
     @JoinColumn(name = "idrol", nullable = false)
     private Rol rol;
@@ -88,12 +92,23 @@ public class Usuario implements Serializable {
     @OneToOne(mappedBy = "administrador")
     private Restaurante restaurante;
 
+
+
+
     /*@OneToOne
     @JoinColumn(name = "credencial", nullable = false)
     private Credenciales credencial;*/
 
     //private String addresselegido;
 
+
+    public String getDireccionactual() {
+        return direccionactual;
+    }
+
+    public void setDireccionactual(String direccionactual) {
+        this.direccionactual = direccionactual;
+    }
 
     public Restaurante getRestaurante() {
         return restaurante;

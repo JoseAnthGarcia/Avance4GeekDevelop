@@ -98,6 +98,9 @@ public class LoginController {
         System.out.println(usuario.getApellidos());
 
         session.setAttribute("usuario", usuario);
+
+        List<Usuario_has_distrito> listaDirecciones = usuario_has_distritoRepository.findByUsuario(usuario);
+        session.setAttribute("poolDirecciones", listaDirecciones);
         //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
         System.out.println(usuario);
 

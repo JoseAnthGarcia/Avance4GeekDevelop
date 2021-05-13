@@ -56,7 +56,7 @@ public class ClienteController {
         return "Cliente/editarPerfil";
 
     }
-    @PostMapping("/cliente/guardarEditar")
+    @PostMapping("/guardarEditar")
     public String guardarEdicion(@ModelAttribute("usuario") @Valid Usuario usuario , BindingResult bindingResult, HttpSession httpSession
                     ,RedirectAttributes ra){
 

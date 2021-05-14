@@ -53,7 +53,7 @@ public class AdminController  {
     private TemplateEngine templateEngine;
 
     @Autowired
-    Usuario_has_distritoRepository usuario_has_distritoRepository;
+    UbicacionRepository ubicacionRepository;
 
     @Autowired
     RepartidorService repartidorService;

@@ -1,33 +1,21 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Usuario;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.demo.entities.Usuario_has_distrito;
-import com.example.demo.entities.Usuario_has_distritoKey;
 import com.example.demo.repositories.DistritosRepository;
 import com.example.demo.repositories.RolRepository;
 import com.example.demo.repositories.UsuarioRepository;
-import com.example.demo.repositories.Usuario_has_distritoRepository;
-import org.apache.tomcat.util.modeler.BaseAttributeFilter;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import com.example.demo.repositories.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 
@@ -44,7 +32,7 @@ public class ClienteController {
     DistritosRepository distritosRepository;
 
     @Autowired
-    Usuario_has_distritoRepository usuario_has_distritoRepository;
+    UbicacionRepository ubicacionRepository;
 
 
 

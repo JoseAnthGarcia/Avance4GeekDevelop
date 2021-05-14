@@ -5,31 +5,43 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "usuario_has_distrito")
-public class Usuario_has_distrito implements Serializable {
+@Table(name = "ubicacion")
+public class Ubicacion implements Serializable {
 
-    @EmbeddedId
-    Usuario_has_distritoKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idubicacion;
 
     @ManyToOne
-    @MapsId("idusuario")
-    @JoinColumn(name = "idusuario")
+    @JoinColumn(name="idusuario")
     private Usuario usuario;
 
     @ManyToOne
-    @MapsId("iddistrito")
-    @JoinColumn(name = "iddistrito")
+    @JoinColumn(name="iddistrito")
     private Distrito distrito;
+
+    @ManyToOne
+    @JoinColumn(name="codigopedido")
+    private Pedido pedido;
 
     private String direccion;
     private String coordenadas;
 
-    public Usuario_has_distritoKey getId() {
-        return id;
+
+    public int getIdubicacion() {
+        return idubicacion;
     }
 
-    public void setId(Usuario_has_distritoKey id) {
-        this.id = id;
+    public void setIdubicacion(int idubicacion) {
+        this.idubicacion = idubicacion;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public Usuario getUsuario() {

@@ -7,9 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +33,7 @@ public class RepartidorController {
     RolRepository rolRepository;
 
     @Autowired
-    Usuario_has_distritoRepository usuario_has_distritoRepository;
+    UbicacionRepository ubicacionRepository;
 
     @GetMapping("/registroRepartidor")
     public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
@@ -51,7 +49,11 @@ public class RepartidorController {
     }
 
     @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario, BindingResult bindingResult, Movilidad movilidad, Model model, @RequestParam("contrasenia2") String contrasenia2) {
+    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
+                                    BindingResult bindingResult,
+                                    Movilidad movilidad, Model model,
+                                    @RequestParam("contrasenia2") String contrasenia2,
+                                    @RequestParam("distritos") ArrayList<Distrito> distritos) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
         String correo =  usuario.getCorreo();
@@ -61,11 +63,6 @@ public class RepartidorController {
         Boolean errorMov = false;
         Boolean errorDist=false;
         Boolean errorSexo= false;
-        System.out.println(usuario.getSexo());
-        System.out.println(usuario.getDistritos());
-        System.out.println(movilidad.getTipoMovilidad().getIdtipomovilidad());
-        System.out.println(movilidad.getLicencia() + movilidad.getPlaca());
-
 
         if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
             errorMov= true;
@@ -73,7 +70,7 @@ public class RepartidorController {
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(usuario.getDistritos().size()>5 || usuario.getDistritos().isEmpty()){
+        if(distritos.size()>5 || distritos.isEmpty()){
             errorDist=true;
         }
 
@@ -122,7 +119,7 @@ public class RepartidorController {
 
             model.addAttribute("usuario", usuario);
             model.addAttribute("movilidad", movilidad);
-            model.addAttribute("distritosSeleccionados", new ArrayList<>());
+            model.addAttribute("distritosSeleccionados", distritos);
 
             model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
             model.addAttribute("listaDistritos", distritosRepository.findAll());
@@ -150,20 +147,13 @@ public class RepartidorController {
             //
 
             //--------
-
-            usuario.setIdusuario(51); //harcodeaoooooooooooooooooooooooooooooooooooo
             usuario = usuarioRepository.save(usuario);
 
-            for (Distrito distrito : usuario.getDistritos()) {
-                Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
-                usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
-                usuario_has_distritoKey.setIdusuario(usuario.getIdusuario());
-
-                Usuario_has_distrito usuario_has_distrito = new Usuario_has_distrito();
-                usuario_has_distrito.setId(usuario_has_distritoKey);
-                usuario_has_distrito.setDistrito(distrito);
-                usuario_has_distrito.setUsuario(usuario);
-                usuario_has_distritoRepository.save(usuario_has_distrito);
+            for (Distrito distrito : distritos) {
+                Ubicacion ubicacion = new Ubicacion();
+                ubicacion.setUsuario(usuario);
+                ubicacion.setDistrito(distrito);
+                ubicacionRepository.save(ubicacion);
             }
             return "redirect:/repartidor/registroRepartidor";
         }

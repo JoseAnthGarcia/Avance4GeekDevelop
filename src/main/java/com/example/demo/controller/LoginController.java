@@ -2,12 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Usuario;
-import com.example.demo.entities.Usuario_has_distrito;
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario_has_distritoKey;
 import com.example.demo.repositories.DistritosRepository;
 import com.example.demo.repositories.RolRepository;
 import com.example.demo.repositories.UsuarioRepository;
-import com.example.demo.repositories.Usuario_has_distritoRepository;
+import com.example.demo.repositories.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,7 +45,7 @@ public class LoginController {
     DistritosRepository distritosRepository;
 
     @Autowired
-    Usuario_has_distritoRepository usuario_has_distritoRepository;
+    UbicacionRepository ubicacionRepository;
 
     @GetMapping("/ClienteLogin")
     public String loginForm(Authentication auth, HttpSession session) {
@@ -55,24 +55,22 @@ public class LoginController {
                 rol = role.getAuthority();
                 break;
             }
-            System.out.println(rol);
 
             String correo = auth.getName();
             Usuario usuario = usuarioRepository.findByCorreo(correo);
-            System.out.println(usuario.getNombres());
-
-            System.out.println(usuario.getApellidos());
 
             session.setAttribute("usuario", usuario);
-            //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
-            System.out.println(usuario);
 
-
-            if (rol.equals("cliente")) {
-                return "redirect:/cliente/listaRestaurantes";
+            switch (rol){
+                case "cliente":
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/solicitudes";
             }
+
         } catch (NullPointerException n) {
         }
+
         return "Cliente/login";
     }
 
@@ -99,9 +97,9 @@ public class LoginController {
 
         session.setAttribute("usuario", usuario);
 
-        List<Usuario_has_distrito> listaDirecciones = usuario_has_distritoRepository.findByUsuario(usuario);
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
         session.setAttribute("poolDirecciones", listaDirecciones);
-        //<Usuario_has_distrito> listaDirecciones=Usuario_has_distritoRepository.
+        //<ubicacion> listaDirecciones=Usuario_has_distritoRepository.
         System.out.println(usuario);
 
 
@@ -128,7 +126,7 @@ public class LoginController {
     @GetMapping("/ClienteNuevo")
     public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
         // String direccion;
-        model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
+        model.addAttribute("ubicacion", new Ubicacion());
         //distritos
         model.addAttribute("distritosSeleccionados", new ArrayList<>());
         //distritos -->
@@ -140,7 +138,7 @@ public class LoginController {
 
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
-                                 @ModelAttribute("Usuario_has_distrito") @Valid Usuario_has_distrito usuario_has_distrito,
+                                 @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) {
 
 
@@ -158,12 +156,12 @@ public class LoginController {
             bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
-        Boolean usuario_direccion = usuario_has_distrito.getDireccion().equalsIgnoreCase("") || usuario_has_distrito.getDireccion() == null;
+        Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
 
 
         try {
-            Integer u_dist = cliente.getDistritos().get(0).getIddistrito();
+            Integer u_dist = ubicacion.getDistrito().getIddistrito();
             System.out.println(u_dist + "ID DISTRITO");
             int dist_c = distritosRepository.findAll().size();
             System.out.println(dist_c);
@@ -212,12 +210,12 @@ public class LoginController {
             }
 
             //   String direccion;
-            model.addAttribute("Usuario_has_distrito", new Usuario_has_distrito());
+            model.addAttribute("Usuario_has_distrito", new Ubicacion());
             //distritos
             model.addAttribute("distritosSeleccionados", new ArrayList<>());
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
-            model.addAttribute("direccion", usuario_has_distrito.getDireccion());
+            model.addAttribute("direccion", ubicacion.getDireccion());
             return "Cliente/registro";
         } else {
             cliente.setEstado(1);
@@ -240,18 +238,8 @@ public class LoginController {
 
             clienteRepository.save(cliente);
 
-            for (Distrito distrito : cliente.getDistritos()) {
-                Usuario_has_distritoKey usuario_has_distritoKey = new Usuario_has_distritoKey();
-                usuario_has_distritoKey.setIddistrito(distrito.getIddistrito());
-                usuario_has_distritoKey.setIdusuario(cliente.getIdusuario());
-
-
-                usuario_has_distrito.setId(usuario_has_distritoKey);
-                usuario_has_distrito.setDistrito(distrito);
-                usuario_has_distrito.setUsuario(cliente);
-
-                usuario_has_distritoRepository.save(usuario_has_distrito);
-            }
+            ubicacion.setUsuario(cliente);
+            ubicacionRepository.save(ubicacion);
 
             return "redirect:/cliente/login";
 

@@ -216,7 +216,7 @@
                             <p>Puede seleccionar hasta 5 distritos para la realización de los deliberys.</p>
 
 
-                            <select class="form-control" style="border-color:lightgray" th:field="*{distritos}" multiple>
+                            <select class="form-control" style="border-color:lightgray" name="distritos" multiple>
                                 <option value="-1" disabled selected>Distritos</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>

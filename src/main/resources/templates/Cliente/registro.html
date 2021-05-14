@@ -173,7 +173,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <div  class="col-sm-6 mb-2 mt-2 mb-sm-0" th:object="${Usuario_has_distrito}">
+                        <div  class="col-sm-6 mb-2 mt-2 mb-sm-0" th:object="${ubicacion}">
                                 <label style="color: #000000">Dirección</label>
                                 <input type="text" class="form-control" style="border-color:lightgray"
                                        id="direccion" placeholder="Dirección" th:field="*{direccion}">
@@ -182,12 +182,10 @@
 
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Distritos</label>
-                            <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
+                            <select class="form-control" th:field="*{distrito}" style="border-color:lightgray">
                                 <option value="0" selected>Distrito</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
-
-
                             </select>
                             <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
                             <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>

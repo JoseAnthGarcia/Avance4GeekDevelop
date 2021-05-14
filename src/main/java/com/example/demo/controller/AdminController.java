@@ -1,11 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Pedido;
-import com.example.demo.entities.Plato;
-import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
-import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +17,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -52,7 +47,7 @@ public class AdminController  {
     private TemplateEngine templateEngine;
 
     @Autowired
-    Usuario_has_distritoRepository usuario_has_distritoRepository;
+    UbicacionRepository ubicacionRepository;
 
     @Autowired
     RepartidorService repartidorService;
@@ -265,14 +260,14 @@ public class AdminController  {
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
+                    model.addAttribute("direcciones", ubicacionRepository.findByUsuario(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
+                    model.addAttribute("direcciones", ubicacionRepository.findByUsuario(usuario));
                     return "/AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);

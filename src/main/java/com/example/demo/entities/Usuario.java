@@ -61,7 +61,7 @@ public class Usuario implements Serializable {
 
     private String ultimoingreso;
 
-    @NotBlank(message = "ingrese su dirección")
+    //@NotBlank(message = "ingrese su dirección")
     @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
     private String direccionactual;
 
@@ -81,9 +81,6 @@ public class Usuario implements Serializable {
     private String contrasenia;
     //---------------------
 
-    @ManyToMany(mappedBy = "usuariosDistrito")
-    private List<Distrito> distritos;
-
     @OneToOne
     @JoinColumn(name = "idmovilidad")
     private Movilidad movilidad;
@@ -91,14 +88,11 @@ public class Usuario implements Serializable {
     @OneToOne(mappedBy = "administrador")
     private Restaurante restaurante;
 
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> listaPedidosPorUsuario;
 
-
-
-    /*@OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;*/
-
-    //private String addresselegido;
+    @OneToMany(mappedBy = "repartidor")
+    private List<Pedido> listaPedidosPorRepartidor;
 
 
     public String getDireccionactual() {
@@ -117,12 +111,6 @@ public class Usuario implements Serializable {
         this.restaurante = restaurante;
     }
 
-    @OneToMany(mappedBy = "cliente")
-    private List<Pedido> listaPedidosPorUsuario;
-
-    @OneToMany(mappedBy = "repartidor")
-    private List<Pedido> listaPedidosPorRepartidor;
-
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
 
@@ -135,18 +123,6 @@ public class Usuario implements Serializable {
     public void setListaPedidosPorRepartidor(List<Pedido> listaPedidosPorRepartidor) {
         this.listaPedidosPorRepartidor = listaPedidosPorRepartidor;
     }
-
-    /*public String getAddresselegido() {
-        return addresselegido;
-    }
-
-    public void setAddresselegido(String addresselegido) {
-        this.addresselegido = addresselegido;
-    }*/
-    /*
-    public Credenciales getCredencial() { return credencial; }
-
-    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
 
     public Integer getIdusuario() {
         return idusuario;
@@ -277,11 +253,4 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
-    public List<Distrito> getDistritos() {
-        return distritos;
-    }
-
-    public void setDistritos(List<Distrito> distritos) {
-        this.distritos = distritos;
-    }
 }

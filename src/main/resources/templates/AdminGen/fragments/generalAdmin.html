@@ -41,7 +41,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" href="lista.html">
+        <a class="nav-link" th:href="@{'/admin/usuarios'}">
             <i class="fas fa-fw fa-list"></i>
             <span>Listas</span></a>
     </li>
@@ -49,11 +49,12 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link nav-link collapsed text-truncate" th:href="@{/admin/solicitudes}" >
+        <a class="nav-link" th:href="@{'/admin/tipoSolicitud'}">
             <i class="fas fa-fw fa-folder"></i>
             <span>Solicitudes</span>
 
         </a>
+
 
     </li>
     <!-- Nav Item - Utilities Collapse Menu -->

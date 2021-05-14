@@ -5,6 +5,7 @@ import com.example.demo.entities.Plato;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
+import com.example.demo.service.AdminRestService;
 import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +59,20 @@ public class AdminController  {
     RepartidorService repartidorService;
 
     @Autowired
+    AdminRestService adminRestService;
+
+    @Autowired
     PedidoRepository pedidoRepository;
+    @GetMapping("tipoSolicitud")
+    public String tipoSolicitud(){
+        return "AdminGen/tipoSolicitudes";
+    }
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
                                      @RequestParam(value = "numPag", required = false) Integer numPag, Model model){
+
+
         if(tipo == null){
             tipo = "repartidor";//TODO: cambiar a "tipo = "adminRest";"
         }
@@ -83,6 +93,15 @@ public class AdminController  {
             case "adminRest":
                 //model.addAttribute("listaAdminRestSolicitudes",
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
+                Page<Usuario> pagina1 = adminRestService.adminRestPaginacion(numPag, tamPag);
+                List<Usuario> listaAdminRest = pagina1.getContent();
+                model.addAttribute("tamPag",tamPag);
+                model.addAttribute("currentPage",numPag);
+                model.addAttribute("totalPages", pagina1.getTotalPages());
+                model.addAttribute("totalItems", pagina1.getTotalElements());
+                model.addAttribute("listaAdminRestSolicitudes", listaAdminRest);
+
+
                 return "/AdminGen/solicitudAR";
             case "repartidor":
                 Page<Usuario> pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
@@ -101,6 +120,38 @@ public class AdminController  {
                 //mandar a la vista principal
         }
     }
+
+    @PostMapping("/buscadorSAdminRest")
+    public String buscarAdminRest(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
+                              @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                              @RequestParam(value = "dni", required = false) Integer dni1,
+                              Model model){
+        model.addAttribute("nombreUsuario1", nombreUsuario1);
+
+        model.addAttribute("fechaRegistro1", fechaRegistro1);
+
+        model.addAttribute("dni1",dni1);
+        if(fechaRegistro1==null){
+            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        }
+
+
+        model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+
+
+        //BORRAR
+        model.addAttribute("currentPage",1);
+        model.addAttribute("tamPag",0);
+        model.addAttribute("totalPages", 3);
+        model.addAttribute("totalItems", 4);
+
+
+        return "/AdminGen/solicitudAR";
+
+    }
+
+
+
 
     @PostMapping("/buscadorSR")
     public String aceptarSolitud(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
@@ -138,7 +189,8 @@ public class AdminController  {
     }
 
     @GetMapping("/aceptarSolicitud")
-    public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id){
+    public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
+                                 @RequestParam(value = "tipo", required = false) String tipo){
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -154,7 +206,7 @@ public class AdminController  {
                 usuario.setFechaadmitido(hourdateFormat.format(date));
                 //
                 usuarioRepository.save(usuario);
-                return "redirect:/admin/solicitudes?tipo=repartidor";
+                return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
             }
@@ -163,7 +215,8 @@ public class AdminController  {
     }
 
     @GetMapping("/rechazarSolicitud")
-    public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id){
+    public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
+                                    @RequestParam(value = "tipo", required = false) String tipo){
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -174,12 +227,25 @@ public class AdminController  {
                 Usuario usuario = usuarioOpt.get();
                 usuario.setEstado(3);
                 usuarioRepository.save(usuario);
-                return "redirect:/admin/solicitudes?tipo=repartidor";
+                return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
             }
         }
 
+    }
+    @GetMapping("/detalleAdminSoli")
+    public String detalleAdminSOli(@RequestParam("idUsuario") int idUsuario,
+                                   Model model){
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            model.addAttribute("administradorRestaurante", usuario);
+            return "/AdminGen/detalleAdminR";
+
+        }else {
+            return "redirect:/admin/solicitudes?tipo=adminRest";
+        }
     }
 
     @GetMapping("/usuarios")
@@ -257,30 +323,34 @@ public class AdminController  {
                 totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
             }
 
-            switch (usuario.getRol().getTipo()) {
-                case "administrador":
-                    model.addAttribute("administrador",usuario);
-                    return "/AdminGen/visualizarAdministrador";
-                case "repartidor":
-                    model.addAttribute("repartidor",usuario);
-                    model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
-                    model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
-               //     model.addAttribute("totalIngresos", totalIngresos);
-                    return "/AdminGen/visualizarRepartidor";
-                case "cliente":
-                    //TODO ver que solo sean los pedidos entregados
-                    model.addAttribute("cliente",usuario);
-                    model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones",usuario_has_distritoRepository.findByUsuario(usuario));
-                    return "/AdminGen/visualizarCliente";
-                case "administradorR":
-                    model.addAttribute("administradorRestaurante",usuario);
-                   return "/AdminGen/visualizarAdministradorRestaurante";
-                default:
-                    //TODO ver si enviar con mensaje de alerta
-                    return "redirect:/admin/usuarios";
-            }
+
+
+
+                switch (usuario.getRol().getTipo()) {
+                    case "administrador":
+                        model.addAttribute("administrador", usuario);
+                        return "/AdminGen/visualizarAdministrador";
+                    case "repartidor":
+                        model.addAttribute("repartidor", usuario);
+                        model.addAttribute("ganancia", usuarioRepository.gananciaRepartidor(idUsuario));
+                        model.addAttribute("valoracion", usuarioRepository.valoracionRepartidor(idUsuario));
+                        model.addAttribute("direcciones", usuario_has_distritoRepository.findByUsuario(usuario));
+                        //     model.addAttribute("totalIngresos", totalIngresos);
+                        return "/AdminGen/visualizarRepartidor";
+                    case "cliente":
+                        //TODO ver que solo sean los pedidos entregados
+                        model.addAttribute("cliente", usuario);
+                        model.addAttribute("totalIngresos", totalIngresos);
+                        model.addAttribute("direcciones", usuario_has_distritoRepository.findByUsuario(usuario));
+                        return "/AdminGen/visualizarCliente";
+                    case "administradorR":
+                        model.addAttribute("administradorRestaurante", usuario);
+                        return "/AdminGen/visualizarAdministradorRestaurante";
+                    default:
+                        //TODO ver si enviar con mensaje de alerta
+                        return "redirect:/admin/usuarios";
+                }
+
         }else {
             //TODO ver si enviar con mensaje de alerta
             return "redirect:/admin/usuarios";

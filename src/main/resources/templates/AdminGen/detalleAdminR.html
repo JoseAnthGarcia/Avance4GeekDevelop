@@ -258,7 +258,7 @@
                         <div class="container-fluid justify-content-center">
 
                             <div class="w-25" align="center">
-                                <img src="imgAG/front-view-young-female-courier-in-blue-uniform-black-gloves-and-black-mask-holding-food-delivery-package%20(1).jpg" class="img-fluid img-thumbnail posicion" alt="Sheep">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail posicion" alt="Sheep">
                             </div>
 
                             <div class="containerta " >
@@ -277,7 +277,7 @@
                                                 <tr >
 
                                                     <td th:text="|Fecha de Registro: ${administradorRestaurante.fecharegistro}|" style="width: 1300px;" ></td>
-                                                    <td th:text="|Estado: ${administradorRestaurante.estado != 0 ? 'Activo' : 'Bloqueado'}|" style="width: 1300px;"></td>
+                                                    <td th:text="|DNI: ${administradorRestaurante.dni}|"></td>
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Nombre: ${administradorRestaurante.nombres}|"></td>
@@ -289,33 +289,19 @@
                                                 </tr>
                                                 <tr>
                                                     <td th:text="|Correo: ${administradorRestaurante.correo}|"></td>
-                                                    <td th:text="|DNI: ${administradorRestaurante.dni}|"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td th:text="|Restaurante que Administra: ${administradorRestaurante.restaurante.nombre}|"></td>
                                                     <td>
-                                                        <a th:href="@{/admin/usuarios}" class="btn btn-warning btn-icon-split">
+                                                        <a th:href="@{'/admin/solicitudes?tipo=adminRest'}" class="btn btn-warning btn-icon-split">
                                                             <span class="icon text-white-50">
                                                                 <i class="fas fa-reply"></i>
                                                             </span>
                                                             <span class="text">Volver</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-icon-split" style="background-color: #701111;">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-lock-open"></i>
-                                        </span>
-                                                            <span class="text text-white">Bloquear</span>
-                                                        </a>
-                                                        <a href="#" class="btn btn-primary btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-home"></i>
-                                        </span>
-                                                            <span class="text">Ver Restaurante</span>
-                                                        </a>
+
 
                                                     </td>
 
                                                 </tr>
+
                                                 </tbody>
 
                                             </table>

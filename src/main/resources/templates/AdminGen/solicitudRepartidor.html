@@ -341,14 +341,14 @@
                                                 <tr>
                                                         <td th:text="|Movilidad: ${repartidor.movilidad.tipoMovilidad.tipo}|">Movilidad: moto </td>
                                                     <td>
-                                                        <a th:href="@{'/admin/aceptarSolicitud?id='+${repartidor.idusuario}}"
+                                                        <a th:href="@{'/admin/aceptarSolicitud?id='+${repartidor.idusuario}+'&tipo=repartidor'}"
                                                            data-target="#modalAceptarSolicitud" class="btn btn-success btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>
                                                             <span class="text">Aceptar</span>
                                                         </a>
-                                                        <a th:href="@{'/admin/rechazarSolicitud?id='+${repartidor.idusuario}}" class="btn btn-danger btn-icon-split">
+                                                        <a th:href="@{'/admin/rechazarSolicitud?id='+${repartidor.idusuario}+'&tipo=repartidor'}" class="btn btn-danger btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-times"></i>
                                         </span>
@@ -372,21 +372,21 @@
                                 </table>
                             </div>
                         </div>
-                        <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3">
-                            <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
-                                <a th:if="${currentPage != i}"
-                                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}}"
-                                   th:utext="${i}"
-                                   class="active mt-2 no"></a>
-                                <a th:unless="${currentPage != i}"
-                                   th:utext="${i}" class="text-white" style="pointer-events: none"></a>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div><div th:if="${ totalPages >= 1}" class="pagination text-center ml-3">
+            <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                <a th:if="${currentPage != i}"
+                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}}"
+                   th:utext="${i}"
+                   class="active mt-2 no"></a>
+                <a th:unless="${currentPage != i}"
+                   th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
             </div>
+        </div>
             <!-- /.container-fluid -->
 
         </div>

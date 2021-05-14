@@ -52,6 +52,7 @@ public class ClienteController {
     public String editarPerfil(HttpSession httpSession, Model model) {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
 
         return "Cliente/editarPerfil";
 

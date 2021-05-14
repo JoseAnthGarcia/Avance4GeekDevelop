@@ -37,46 +37,45 @@
                             </div>
                             <div class="card-header py-3">
 
-                                <form method="POST" th:action="@{/cliente/guardarEditar}">
+                                <form method="POST" th:action="@{/cliente/guardarEditar}" th:object="${usuario}">
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="nombre">Nombres </label>
-                                            <input type="text" class="form-control " name="dniC"
-                                                   id="nombre" th:value="${session.usuario.nombres}" disabled >
+                                            <label>Nombres </label>
+                                            <input type="text" class="form-control">
 
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="apellido">Apellido </label>
-                                            <input type="text" class="form-control " name="apellido"  id="apellido"
-                                                   th:value="${session.usuario.apellidos}" disabled >
-
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="correo">Correo </label>
-                                            <input type="text" class="form-control " id="correo" th:value="${session.usuario.correo}" disabled>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="fecha">Fecha de Nacimiento</label>
-                                            <input type="text" class="form-control " id="fecha" th:value="${session.usuario.fechanacimiento}" disabled>
+                                            <label>Apellido </label>
+                                            <input type="text" class="form-control "
+                                                   th:field="*{apellidos}" >
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="celular">N° de celular</label>
-                                            <input type="text" class="form-control" name="telefono" id="celular"  th:value="${session.usuario.telefono}">
-                                       <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}" th:errors="${usuario.telefono}"></h1>
+                                            <label>Correo </label>
+                                            <input type="text" class="form-control" th:field="*{correo}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="contrasenia">Contraseña (Confirmación)</label>
-                                            <input type="password" class="form-control " id="contrasenia" name="contrasenia">
+                                            <label>Fecha de Nacimiento</label>
+                                            <input type="text" class="form-control"
+                                                   th:field="*{fechanacimiento}" disabled>
+
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>N° de celular</label>
+                                            <input type="text" class="form-control" th:field="*{telefono}" >
+                                       <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></h1>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Contraseña (Confirmación)</label>
+                                            <input type="password" class="form-control " th:field="*{contrasenia}" >
                                             <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
 
                                         </div>
-
 
                                         <div class="col-md-12 mb-3">
                                             <div style=text-align:center>

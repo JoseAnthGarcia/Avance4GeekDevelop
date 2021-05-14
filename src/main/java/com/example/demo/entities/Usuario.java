@@ -78,7 +78,6 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     @NotBlank(message = "Complete su contraseña")
     //@Pattern(regexp = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$",message = "Ingrese una contraseña válida.")
-
     private String contrasenia;
     //---------------------
 

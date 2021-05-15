@@ -41,7 +41,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "u.estado = 2 and\n" +
             "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
             "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)", nativeQuery = true)
-    List<Usuario> buscarRepartidoresSinMovilidad(String nombres,String apellidos, int fechaRegistro);
+    Page<Usuario> buscarRepartidoresSinMovilidad(String nombres, String apellidos, int fechaRegistro, Pageable pageable);
 
     @Query(value = "select u.* from usuario u\n" +
             "left join movilidad m on u.idmovilidad = m.idmovilidad\n" +
@@ -49,7 +49,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "u.estado = 2 and\n" +
             "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
             "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true)
-    List<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad);
+    Page<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad, Pageable pageable);
 
     Usuario findByCorreo(String correo);
 

@@ -115,8 +115,6 @@ public class AdminController  {
                 if(nombreUsuario1.equals("") && tipoMovilidad1==null && fechaRegistro1==null){
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
-                    pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
-                    /*
                     model.addAttribute("nombreUsuario1", nombreUsuario1);
                     model.addAttribute("tipoMovilidad1", tipoMovilidad1);
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
@@ -131,7 +129,7 @@ public class AdminController  {
                         pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1);
                     }else{
                         pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1);
-                    }*/
+                    }
                 }
 
                 List<Usuario> listaRepartidores = pagina.getContent();

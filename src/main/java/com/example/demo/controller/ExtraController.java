@@ -129,7 +129,7 @@ public class ExtraController {
             pageNo = 1;
         }
         int inputID = 1;
-        int pageSize = 1;
+        int pageSize = 5;
         Page<Extra> page;
         List<Extra> listaExtras;
         System.out.println(textBuscador);

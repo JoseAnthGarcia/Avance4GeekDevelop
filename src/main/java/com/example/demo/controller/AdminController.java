@@ -63,6 +63,7 @@ public class AdminController  {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
     @GetMapping("tipoSolicitud")
     public String tipoSolicitud(){
         return "AdminGen/tipoSolicitudes";
@@ -70,7 +71,11 @@ public class AdminController  {
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
-                                     @RequestParam(value = "numPag", required = false) Integer numPag, Model model){
+                                     @RequestParam(value = "numPag", required = false) Integer numPag,
+                                     Model model,
+                                     @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
+                                     @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
+                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1){
 
 
         if(tipo == null){
@@ -104,7 +109,31 @@ public class AdminController  {
 
                 return "/AdminGen/solicitudAR";
             case "repartidor":
-                Page<Usuario> pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
+
+                Page<Usuario> pagina;
+
+                if(nombreUsuario1.equals("") && tipoMovilidad1==null && fechaRegistro1==null){
+                    pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
+                }else{
+                    pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
+                    /*
+                    model.addAttribute("nombreUsuario1", nombreUsuario1);
+                    model.addAttribute("tipoMovilidad1", tipoMovilidad1);
+                    model.addAttribute("fechaRegistro1", fechaRegistro1);
+
+                    if(fechaRegistro1==null){
+                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }
+
+
+                    model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+                    if(tipoMovilidad1==null){
+                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1);
+                    }else{
+                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1);
+                    }*/
+                }
+
                 List<Usuario> listaRepartidores = pagina.getContent();
                 model.addAttribute("tamPag",tamPag);
                 model.addAttribute("currentPage",numPag);
@@ -148,44 +177,6 @@ public class AdminController  {
 
         return "/AdminGen/solicitudAR";
 
-    }
-
-
-
-
-    @PostMapping("/buscadorSR")
-    public String aceptarSolitud(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                                 @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                 @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
-                                 Model model){
-        System.out.println(nombreUsuario1+", "+tipoMovilidad1+", "+fechaRegistro1);
-        model.addAttribute("nombreUsuario1", nombreUsuario1);
-        model.addAttribute("tipoMovilidad1", tipoMovilidad1);
-        model.addAttribute("fechaRegistro1", fechaRegistro1);
-
-        if(fechaRegistro1==null){
-            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
-        }
-
-
-        model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
-        if(tipoMovilidad1==null){
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1));
-        }else{
-            model.addAttribute("listaRepartidorSolicitudes", usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1));
-        }
-
-        //BORRAR
-        model.addAttribute("currentPage",1);
-        model.addAttribute("tamPag",0);
-        model.addAttribute("totalPages", 3);
-        model.addAttribute("totalItems", 4);
-
-        System.out.println("------------");
-        System.out.println(nombreUsuario1+", "+tipoMovilidad1+", "+fechaRegistro1);
-        System.out.println("------------");
-
-        return "/AdminGen/solicitudRepartidor";
     }
 
     @GetMapping("/aceptarSolicitud")

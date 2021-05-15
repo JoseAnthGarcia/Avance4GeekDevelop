@@ -112,7 +112,8 @@ public class AdminController  {
 
                 Page<Usuario> pagina;
 
-                if(nombreUsuario1.equals("") && tipoMovilidad1==null && fechaRegistro1==null){
+                if((nombreUsuario1==null || nombreUsuario1.equals(""))
+                        && tipoMovilidad1==null && fechaRegistro1==null){
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
                     model.addAttribute("nombreUsuario1", nombreUsuario1);

@@ -298,7 +298,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3">
-                                                            <a th:text="${plato.idplato ==0? 'Registrar plato':'Editar plato'}"
+                                                            <a th:if="${plato.disponible==true or plato.idplato==0}" th:text="${plato.idplato ==0? 'Registrar plato':'Actualizar plato'}"
                                                                class="btn btn-primary mb-4 mr-2"
                                                                data-toggle="modal"
                                                                data-target="#RegistroExitoso"
@@ -308,9 +308,9 @@
                                                                th:href="@{/plato/lista}"
                                                                role="button">Cancelar</a>
 
-                                                            <a th:if="${plato.idplato!=0}"
+                                                            <a th:if="${plato.idplato!=0 and plato.disponible==true}"
                                                                class="btn btn-danger mb-4 mr-2" data-toggle="modal"
-                                                               href="#lModal1" data-target="#modalEliminar">Eliminar
+                                                               href="#modalEliminar" data-target="#modalEliminar">Eliminar
                                                                 Plato</a>
                                                         </td>
                                                     </tr>
@@ -378,6 +378,28 @@
                     </div>
                 </div>
             </div>
+    <!-- Modal1-->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea eliminar el
+                        plato?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <a th:href="@{'/plato/borrar?id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
+                    <a class="btn" type="button"
+                       data-dismiss="modal">
+                        No
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
             <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
             <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 

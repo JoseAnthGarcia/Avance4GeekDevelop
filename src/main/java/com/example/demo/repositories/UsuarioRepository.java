@@ -35,12 +35,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select min(movilidad) from usuario", nativeQuery = true)
     int buscarIdMovilidadMinimaRepartidor();
 
-    @Query(value = "select u.* from usuario u\n" +
-            "left join movilidad m on u.idmovilidad = m.idmovilidad\n" +
-            "where u.idrol=4 and\n" +
-            "u.estado = 2 and\n" +
-            "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
-            "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)", nativeQuery = true)
+    @Query(value = "select us.* from usuario us \n" +
+            "left join movilidad m on us.idmovilidad = m.idmovilidad\n" +
+            "where us.idrol=4 and\n" +
+            "us.estado = 2 and\n" +
+            "(lower(us.nombres) like %?1% or lower(us.apellidos) like %?2%) and\n" +
+            "us.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)", nativeQuery = true)
     Page<Usuario> buscarRepartidoresSinMovilidad(String nombres, String apellidos, int fechaRegistro, Pageable pageable);
 
     @Query(value = "select u.* from usuario u\n" +

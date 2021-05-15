@@ -26,11 +26,11 @@ public class RepartidorService {
 
     public Page<Usuario> repartidorPaginacionBusqueda1(int numeroPag, int tamPag, String nombreUsuario1, String apellidoUsuario1, int fechaRegistro1){
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
-        return usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1,apellidoUsuario1, fechaRegistro1*-1, pageable);
+        return usuarioRepository.buscarRepartidoresSinMovilidad(nombreUsuario1,apellidoUsuario1, fechaRegistro1, pageable);
     }
 
     public Page<Usuario> repartidorPaginacionBusqueda2(int numeroPag, int tamPag, String nombreUsuario1, String apellidoUsuario1, int fechaRegistro1, int tipoMovilidad1){
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
-        return usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,apellidoUsuario1, fechaRegistro1*-1, tipoMovilidad1, pageable);
+        return usuarioRepository.buscarRepartidoresConMovilidad(nombreUsuario1,apellidoUsuario1, fechaRegistro1, tipoMovilidad1, pageable);
     }
 }

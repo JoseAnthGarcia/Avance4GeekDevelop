@@ -54,8 +54,8 @@ public class ClienteController {
                                  Model model) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        boolean valContra = true;
-        boolean telfValid = true;
+        boolean valContra = false;
+        boolean telfValid = false;
 
         int telfInt;
         try{
@@ -65,18 +65,22 @@ public class ClienteController {
         }
 
         if(telfInt==-1 || telefonoNuevo.trim().equals("") || telefonoNuevo.length()!=9){
-            telfValid =false;
+            telfValid =true;
         }
 
         if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
-            valContra = false;
+            valContra = true;
         }
 
-        if (valContra || !telfValid){
+        if (valContra || telfValid){
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
             }
+            if(telfValid){
+            model.addAttribute("msg2", "Ingrese 9 caracteres");
+            }
             return "Cliente/editarPerfil";
+
 
         } else {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
@@ -139,10 +143,13 @@ public class ClienteController {
     }
 
     @PostMapping("/agregarDireccion")
-    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession ){
-        boolean valNul=true;
+    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession,Model model ){
+        boolean valNul=false;
         if(direccion.isEmpty()){
-            valNul=false;
+            valNul=true;
+        }
+        if(valNul){
+            model.addAttribute("msg", "No ingreso dirección");
             return "/cliente/listaDirecciones";
         }else{
             Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -173,6 +180,27 @@ public class ClienteController {
     @GetMapping("/listaReportes")
     public String listaReportes(){
         return "Cliente/listaReportes";
+    }
+
+
+    //LISTA CATEGORIAS
+    @GetMapping("/categorias")
+    public String categorias(){
+        return "Cliente/categorías";
+    }
+
+    //PEDIDO ACTUAL
+    @GetMapping("/pedidoActual")
+    public String pedidoActual(){
+        return "Cliente/listaPedidoActual";
+    }
+
+
+
+    //HISTORIAL PEDIDOS
+    @GetMapping("/historialPedidos")
+    public String historialPedidos(){
+        return "Cliente/listaHistorialPedidos";
     }
 
 

@@ -70,7 +70,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" th:href="@{cliente/listaRestaurantes}">Restaurantes</a>
 
-                <a class="collapse-item" href="categorías.html">Categorías</a>
+                <a class="collapse-item" th:href="@{cliente/categorias}">Categorías</a>
             </div>
         </div>
     </li>
@@ -85,15 +85,15 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="listaPedidoActual.html">Pedido Actual</a>
-                <a class="collapse-item" href="listaHistorialPedidos.html">Historial de Pedidos</a>
-                <a class="collapse-item" href="listaReportes.html">Generar Reportes</a>
+                <a class="collapse-item" th:href="@{cliente/pedidoActual}">Pedido Actual</a>
+                <a class="collapse-item" th:href="@{cliente/historialPedidos}">Historial de Pedidos</a>
+                <a class="collapse-item" th:href="@{cliente/listaReportes}">Generar Reportes</a>
             </div>
         </div>
     </li>
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="editarPerfil.html">
+        <a class="nav-link" th:href="@{/cliente/editarPerfil}">
             <i class="fas fa-user-circle"></i>
             <span>Editar Perfil</span>
         </a>
@@ -170,7 +170,7 @@
                 </a>
             </li>
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                <a class="nav-link dropdown-toggle"  th:href="@{/cliente/listaCupones}">
                     <i class="fas fa-tags"></i>
                 </a>
             </li>

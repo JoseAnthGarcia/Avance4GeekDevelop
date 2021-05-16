@@ -54,6 +54,7 @@
                                             <div style=text-align:center>
                                             <label for="direcc">Ingrese una dirección</label>
                                             <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
+                                                <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
                                             </div>
 
                                             <h2>   </h2>

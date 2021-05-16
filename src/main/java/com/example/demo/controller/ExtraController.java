@@ -43,10 +43,16 @@ public class ExtraController {
     RestauranteRepository restauranteRepository;
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
-
-    @GetMapping(value = {"/lista", ""})
-    public String listarExtra(Model model,@RequestParam(value = "idcategoria") int id, HttpSession session) {
-        return findPaginated("", 0, 1,id,model, session);
+    @GetMapping(value = {"/categoria",""})
+    public  String listaCategorias(Model model, @RequestParam(value = "idcategoria",required = false) Integer id, HttpSession session){
+        return "AdminRestaurante/extras";
+    }
+    @GetMapping("/lista")
+    public String listarExtra(Model model,@RequestParam(value = "idcategoria",required = false) Integer id, HttpSession session) {
+        if (id==null){
+            return "redirect:/extra/categoria";
+        }else {
+        return findPaginated("", 0, 1,id,model, session);}
     }
 
 
@@ -112,22 +118,35 @@ public class ExtraController {
     public String guardarExtra(@ModelAttribute("extra") @Valid Extra extra, BindingResult bindingResult,
                                RedirectAttributes attr,
                                Model model,@RequestParam(value = "photo",required = false) MultipartFile file
-            ,HttpSession session,@RequestParam(value = "idcategoria") int id) {
+            ,HttpSession session,@RequestParam(value = "idcategoria") int idc) {
         Usuario adminRest=(Usuario)session.getAttribute("usuario");
         int idadmin=adminRest.getIdusuario();
         Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
         int idrestaurante=restaurante.getIdrestaurante();
-        model.addAttribute("idcategoria",id);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaa "+idc);
+        System.out.println("id categoriaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa "+idc);
+
         String fileName ="";
         if (file!=null){
             if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
-
+                model.addAttribute("idcategoria",idc);
                 return "/AdminRestaurante/nuevoPlato";
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")){
-
+                model.addAttribute("idcategoria",idc);
                 model.addAttribute("mensajefoto","No se premite '..' een el archivo");
                 return "/AdminRestaurante/nuevoPlato";
             }
@@ -135,16 +154,19 @@ public class ExtraController {
 
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
-        extra.setIdcategoriaextra(id);
+        extra.setIdcategoriaextra(idc);
         if (bindingResult.hasErrors()) {
             if (extra.getIdextra() == 0) {
+                model.addAttribute("idcategoria",idc);
                 return "/AdminRestaurante/nuevoExtra";
             } else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
+                    model.addAttribute("idcategoria",idc);
                     return "/AdminRestaurante/nuevoExtra";
                 } else {
-                    return "redirect:/extra/lista";
+                    model.addAttribute("idcategoria",idc);
+                    return "redirect:/extra/lista?idcategoria="+idc;
                 }
             }
         } else {
@@ -155,9 +177,11 @@ public class ExtraController {
                     extra.setFotocontenttype(file.getContentType());
                     attr.addFlashAttribute("msg", "Extra creado exitosamente");
                     attr.addFlashAttribute("msg2", "Extra editado exitosamente");
+                    model.addAttribute("idcategoria",idc);
                     extraRepository.save(extra);
                 }catch (IOException e){
                     e.printStackTrace();
+                    model.addAttribute("idcategoria",idc);
                     model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
                     return "/AdminRestaurante/nuevoExtra";
                 }
@@ -174,7 +198,8 @@ public class ExtraController {
                     attr.addFlashAttribute("msg", "Extra creado exitosamente");
                 }
             }
-            return "redirect:/extra/lista";
+            model.addAttribute("idcategoria",idc);
+            return "redirect:/extra/lista?idcategoria="+idc;
         }
     }
 

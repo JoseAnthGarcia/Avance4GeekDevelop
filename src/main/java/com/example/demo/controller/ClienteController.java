@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -99,8 +100,11 @@ public class ClienteController {
 
 
     @PostMapping("/guardarDireccion")
-    public String guardarDirecciones(){
-
+    public String guardarDirecciones(HttpSession httpSession, @RequestParam("direccionactual") String direccionActual){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        usuario.setDireccionactual(direccionActual);
+        httpSession.setAttribute("usuario",usuario);
+        clienteRepository.save(usuario);
         return "redirect:/cliente/listaDirecciones";
     }
     @PostMapping("/agregarDireccion")
@@ -110,9 +114,17 @@ public class ClienteController {
             valNul=false;
             return "/cliente/listaDirecciones";
         }else{
-
+            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
             List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");
-
+            Ubicacion ubicacion = new Ubicacion();
+            ubicacion.setUsuario(usuario);
+            ubicacion.setDireccion(direccion);
+            //TODO: @JOHAM QUE PEDOS
+            Distrito distrito = distritosRepository.getOne(1);
+            ubicacion.setDistrito(distrito);
+            listaDirecciones.add(ubicacion);
+            ubicacionRepository.save(ubicacion);
+            httpSession.setAttribute("listaDirecciones",listaDirecciones);
             return "redirect:/cliente/listaDirecciones";
         }
 

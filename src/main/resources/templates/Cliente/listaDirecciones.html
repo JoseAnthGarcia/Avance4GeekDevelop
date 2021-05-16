@@ -55,7 +55,7 @@
                                             <label for="direcc">Ingrese una dirección</label>
                                             <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
                                             </div>
-                                            </form>
+
                                             <h2>   </h2>
                                             <div class="col-md-12 mb-3"  style=text-align:center>
                                                 <button  class="btn btn-primary" type="submit">Agregar</button>
@@ -63,6 +63,7 @@
                                                 <a  class="btn btn-danger" th:href="@{/cliente/listaRestaurantes}" type="submit">Cancelar</a>
 
                                             </div>
+                                            </form>
                         <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
                                             <div class="card-body">
                                             <div class="table-responsive">
@@ -82,27 +83,9 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Av.1</td>
-                                                        <td> <input type="checkbox"> </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Av. 2</td>
-                                                        <td><input type="checkbox">  </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Av. 3</td>
-                                                        <td> <input type="checkbox"> </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td>Av .4</td>
+                                                    <tr th:each="direcciones,info:${listaDirecciones}">
+                                                        <td th:text="${info.index + 1}"></td>
+                                                        <td th:text="${direcciones.direccion}"></td>
                                                         <td> <input type="checkbox"> </td>
 
                                                     </tr>
@@ -128,14 +111,18 @@
 
                                                 <div class="card shadow mb-4">
                                                     <!-- Card Body -->
-                                                    <form method="post" th:action="@{/cliente/guardarDirecActual}">
+                                                    <form method="post" th:action="@{/cliente/guardarDireccion}">
                                                     <div class="card-body">
                                                         <div style=text-align:center>
-                                                            <label for="direc">Dirección Actual</label>
-                                                            <input type="text" class="form-control ph-center" style=text-align:center th:value="${session.usuario.direccionactual}"  id="direc" aria-label="Disabled input example" disabled>
-
-
-
+                                                            <label for="direccionactual">Dirección Actual</label>
+                                                            <select class="form-control" id="direccionactual" name="direccionactual" style="border-color:lightgray">
+                                                                <option value="0" selected disabled>Direcciones</option>
+                                                                <option th:each="direc : ${listaDirecciones}" th:value="${direc.getIdubicacion()}"
+                                                                        th:text="${direc.direccion}"></option>
+                                                            </select>
+                                                            <div class="col-sm-2" style="margin-right: 10px" >
+                                                                <button class="btn btn-secondary" type="submit"> Seleccionar </button>
+                                                            </div>
                                                         </div>
                                                         <h1>       </h1>
                                                         <div style=text-align:center>

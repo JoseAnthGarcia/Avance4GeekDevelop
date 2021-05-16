@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 
@@ -108,10 +110,8 @@ public class ClienteController {
             valNul=false;
             return "/cliente/listaDirecciones";
         }else{
-            Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-            httpSession.setAttribute("usuario",usuario1);
-            clienteRepository.save(usuario1);
+            List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");
 
             return "redirect:/cliente/listaDirecciones";
         }

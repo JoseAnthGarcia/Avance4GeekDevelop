@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.entities.Rol;
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,4 +87,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
             "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) ",nativeQuery = true)
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
+
+
+
 }

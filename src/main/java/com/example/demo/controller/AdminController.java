@@ -377,6 +377,43 @@ public class AdminController  {
 
     }
 
+    /*
+
+    @GetMapping("/actualizar")
+    public String actualizarEstado(@RequestParam("idUsuario") int id, RedirectAttributes attr){
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if(usuarioOpt.isPresent()){
+            Usuario usuario = usuarioOpt.get();
+            // ESTADOS
+            /*
+                0 - BLOQUEDO
+                1 - ACTIVO
+                2 - PENDIENTE
+                DESBLOQUEAR: DE 0 - 1
+
+            switch (usuario.getEstado()){
+        case 0:
+            // de bloqueado a aceptado
+            usuario.setEstado(1);
+            usuarioRepository.save(usuario);
+            attr.addFlashAttribute("msgAceptado", "Usuario Desbloqueado exitosamente");
+            return "redirect:/admin/usuarios";
+        case 1:
+            // de activo a bloquado
+            usuario.setEstado(0);
+            usuarioRepository.save(usuario);
+            attr.addFlashAttribute("msgBloqueado", "Usuario Bloqueado exitosamente");
+            return "redirect:/admin/usuarios";
+        default:
+            return "redirect:/admin/ususarios";
+    }
+}
+
+        return "";
+                }
+     */
 
     @GetMapping("/crear")
     public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario) {

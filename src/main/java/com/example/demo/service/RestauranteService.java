@@ -14,7 +14,13 @@ public class RestauranteService {
     @Autowired
     RestauranteRepository restauranteRepository;
 
-
-
+    public Page<Restaurante> restaurantePaginacion(int numeroPag, int tamPag){
+        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
+        return restauranteRepository.findByEstadoOrderByFecharegistroAsc(2, pageable);
+    }
+    public Page<Restaurante> restBusqueda(int numeroPag, int tamPag, String nombreRest, String ruc){
+        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
+        return restauranteRepository.buscarRest(nombreRest,ruc, pageable);
+    }
 
 }

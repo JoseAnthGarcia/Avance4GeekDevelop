@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Pedido;
-import com.example.demo.entities.Plato;
-import com.example.demo.entities.Rol;
-import com.example.demo.entities.Usuario;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.AdminRestService;
 import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RepartidorService;
+import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
@@ -64,6 +62,9 @@ public class AdminController  {
     @Autowired
     PedidoRepository pedidoRepository;
 
+    @Autowired
+    RestauranteService restauranteService;
+
     @GetMapping("tipoSolicitud")
     public String tipoSolicitud(){
         return "AdminGen/tipoSolicitudes";
@@ -76,7 +77,9 @@ public class AdminController  {
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
                                      @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
-                                     @RequestParam(value = "dni", required = false) String dni1){
+                                     @RequestParam(value = "dni", required = false) String dni1,
+                                     @RequestParam(value = "nombreRest", required = false) String nombreRest1,
+                                     @RequestParam(value = "ruc", required = false) String ruc1){
 
 
         if(tipo == null){
@@ -95,7 +98,27 @@ public class AdminController  {
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
-                return "1";
+                Page<Restaurante> pagina2;
+
+                if((nombreRest1==null || nombreRest1.equals(""))
+                        && (ruc1==null || ruc1.equals(""))){
+                    pagina2 = restauranteService.restaurantePaginacion(numPag, tamPag);
+                }else{
+                    model.addAttribute("nombreRest1", nombreRest1);
+                    model.addAttribute("ruc1", ruc1);
+
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1);
+                }
+
+                List<Restaurante> listaRestaurantes = pagina2.getContent();
+                model.addAttribute("tamPag",tamPag);
+                model.addAttribute("currentPage",numPag);
+                model.addAttribute("totalPages", pagina2.getTotalPages());
+                model.addAttribute("totalItems", pagina2.getTotalElements());
+
+                model.addAttribute("listaRestaurantes", listaRestaurantes);
+
+                return "/AdminGen/solicitudRestaurante";
             case "adminRest":
                 //model.addAttribute("listaAdminRestSolicitudes",
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));

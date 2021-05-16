@@ -1,32 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Solicitudes de restaurantes</title>
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
-
-
-    <!-- Custom styles for this page -->
-    <link href="bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes Restaurante')"></head>
 
 <body id="page-top">
 
@@ -234,55 +209,40 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
-
+                <form th:action="@{'/admin/solicitudes?tipo=restaurante'}" method="get">
+                    <input type="hidden" name="tipo" value="restaurante">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
                             <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Búsqueda por usuario">
+                                   name="nombreRest"
+                                   placeholder="Búsqueda por nombre"
+                                   th:if="${nombreRest1 == null || nombreRest1.equals('')}">
+                            <input type="text" class="form-control"
+                                   name="nombreRest"
+                                   th:unless="${nombreRest1 == null || nombreRest1.equals('')}"
+                                   th:value="${nombreRest1}">
+
                         </div>
 
-                        <!-- <div class="col-sm-2 mb-1 ">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Rol</option>
-                                <option value="Pendiente">Administrador</option>
-                                <option value="Pendiente">Administrador de Restaurante</option>
-
-                                <option value="Entregado">Repartidor</option>
-
-                                <option value="Cancelado" selected>Restaurante</option>
-
-                                <option value="Cancelado">Cliente</option>
-
-                            </select>
-                        </div>-->
 
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Ultima fecha de ingreso</option>
-                                <option value="">Última Hora</option>
-                                <option value="">Hoy</option>
-                                <option value="">Esta semana</option>
-                                <option value="">Este mes</option>
-                                <option value="">Este año</option>
-                            </select>
+                            <input type="text" class="form-control"
+                                   name="ruc"
+                                   placeholder="Búsqueda por nombre"
+                                   th:if="${ruc1 == null || ruc1.equals('')}">
+                            <input type="text" class="form-control"
+                                   name="ruc"
+                                   th:unless="${ruc1 == null || ruc1.equals('')}"
+                                   th:value="${ruc1}">
                         </div>
-                        <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Estado</option>
-                                <option value="">Bloqueado</option>
-                                <option value="">Operativo</option>
 
-                            </select>
-                        </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/solicitudes?tipo=restaurante'}">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -323,8 +283,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td scope="row">1</td>
+                                    <tr th:each="rest, v : ${listaRestaurantes}">
+                                        <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
                                             <img src="imgAG/fondo.jpg" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
@@ -334,8 +294,8 @@
                                                 <tbody>
                                                 <tr>
 
-                                                    <td>Fecha de Registro: 20/01/3113  10:30:12</td>
-                                                    <td>Estado: Aceptado 01/05/2021 04:20:23</td>
+                                                    <td th:text="|Nombre: ${rest.nombre}|">Fecha de Registro: 20/01/3113 10:30:12</td>
+                                                    <td th:text="|RUC: ${rest.ruc}|">DNI: 12345678</td>
                                                 </tr>
                                                 <tr>
 

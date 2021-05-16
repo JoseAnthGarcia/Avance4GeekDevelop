@@ -93,6 +93,9 @@ public class Usuario implements Serializable {
 
     @OneToMany(mappedBy = "repartidor")
     private List<Pedido> listaPedidosPorRepartidor;
+    private String fotonombre;
+    private String fotocontenttype;
+
 
 
     public String getDireccionactual() {
@@ -253,4 +256,19 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
+    public String getFotonombre() {
+        return fotonombre;
+    }
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
 }

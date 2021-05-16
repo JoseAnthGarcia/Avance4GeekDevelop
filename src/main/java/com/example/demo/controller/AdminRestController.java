@@ -3,16 +3,24 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/restaurante")
@@ -46,8 +54,20 @@ public class AdminRestController {
 
     @PostMapping("/guardarAdminR")
     public String guardarAdminRest(@ModelAttribute("adminRest") @Valid Usuario adminRest, BindingResult bindingResult,
-                                   @RequestParam("confcontra") String contra2) {
+                                   @RequestParam("confcontra") String contra2, @RequestParam("photo")MultipartFile file, Model model) {
 
+        String fileName ="";
+        if (file!=null){
+            if(file.isEmpty()){
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                return "/AdminRestaurante/registroAR";
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/registroAR";
+            }
+        }
         System.out.println(contra2);
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
@@ -61,7 +81,16 @@ public class AdminRestController {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
             adminRest.setContrasenia(hashedPassword);
-            adminRestRepository.save(adminRest);
+            try{
+                adminRest.setFoto(file.getBytes());
+                adminRest.setFotonombre(fileName);
+                adminRest.setFotocontenttype(file.getContentType());
+                adminRestRepository.save(adminRest);
+            }catch (IOException e){
+                e.printStackTrace();
+                model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+                return "/AdminRestaurante/registroAR";
+            }
             return "redirect:/login";
         }
     }
@@ -92,5 +121,20 @@ public class AdminRestController {
     public String paginaBienvenida(){
         return "AdminRestaurante/adminCreado";
     }
+
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id){
+        Optional<Usuario> optionalUsuario=adminRestRepository.findById(id);
+        if (optionalUsuario.isPresent()){
+            Usuario adminR = optionalUsuario.get();
+            byte[] imagenBytes=adminR.getFoto();
+            HttpHeaders httpHeaders= new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(adminR.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
+        }else {
+            return null;
+        }
+    }
+
 
 }

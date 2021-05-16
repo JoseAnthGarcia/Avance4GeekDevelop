@@ -60,12 +60,12 @@ public class ExtraController {
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idcategoria") int id, Model model,HttpSession session) {
+                                @RequestParam(value = "idcategoria") int id, Model model, HttpSession session) {
 
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int idadmin=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
-        int idrestaurante=restaurante.getIdrestaurante();
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        int idrestaurante = restaurante.getIdrestaurante();
         System.out.println(pageNo);
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -86,14 +86,17 @@ public class ExtraController {
         int inputPMin;
         if (inputPrecio == 0) {
             inputPMin = 0;
-            inputPMax = 100;
+            inputPMax = 1000;
+        } else if (inputPrecio == 4) {
+            inputPMin = inputPrecio;
+            inputPMax = 1000;
         } else {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
-        page = extraService.findPaginated2(pageNo, pageSize,idrestaurante, id,textBuscador, inputPMin * 5 - 5, inputPMax * 5);
+        page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, id, textBuscador, inputPMin * 15 - 15, inputPMax * 15);
         listaExtras = page.getContent();
-        List<CategoriaExtra> listaCategoriaExtra=categoriaExtraRepository.findAll();
+        List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoP", inputPrecio);
 
@@ -101,16 +104,16 @@ public class ExtraController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaExtras", listaExtras);
-        model.addAttribute("listaCategoria",listaCategoriaExtra);
-        model.addAttribute("idcategoria",id);
+        model.addAttribute("listaCategoria", listaCategoriaExtra);
+        model.addAttribute("idcategoria", id);
 
         return "AdminRestaurante/listaExtras";
 
     }
 
     @GetMapping("/nuevo")
-    public String nuevoExtra(@ModelAttribute("extra") Extra extra,@RequestParam(value = "idcategoria") int id,Model model) {
-        model.addAttribute("idcategoria",id);
+    public String nuevoExtra(@ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int id, Model model) {
+        model.addAttribute("idcategoria", id);
         return "AdminRestaurante/nuevoExtra";
     }
 

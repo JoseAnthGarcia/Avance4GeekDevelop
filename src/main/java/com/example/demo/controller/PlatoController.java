@@ -98,7 +98,10 @@ public class    PlatoController {
         if (inputPrecio==0){
             inputPMin=0;
             inputPMax=100;
-        }else {
+        } else if (inputPrecio == 4) {
+            inputPMin = inputPrecio;
+            inputPMax = 1000;
+        } else {
             inputPMax=inputPrecio;
             inputPMin=inputPrecio;
         }

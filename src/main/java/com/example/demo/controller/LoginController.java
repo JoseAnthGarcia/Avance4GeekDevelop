@@ -234,13 +234,13 @@ public class LoginController {
 
     @RequestMapping("/olvidoContrasenia")
     public String olvidoContrasenia(){
-        return "";
+        return "olvidoContrasenia";
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
     public String envioCorreo(@RequestParam("correo") String correo){
         //TODO: validar que sea correo
-        Rol rol = rolRepository.findByTipo("usuario");
+        Rol rol = rolRepository.findByTipo("cliente");
         Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
         if(cliente!=null){
             Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
@@ -279,22 +279,46 @@ public class LoginController {
     }
 
     @GetMapping("/cambioContra")
-    public String cambiarContra(@RequestParam("id") String id){
+    public String cambiarContra(@RequestParam("id") String id, Model model){
         List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
         Boolean redireccionar = false;
         for(Urlcorreo urlcorreo : listaUrlCorreo){
             String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
-            if(BCrypt.checkpw(id, comparar)){
+            if(BCrypt.checkpw(comparar,id)){
                 redireccionar = true;
-                urlCorreoRepository.delete(urlcorreo);
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                id = passwordEncoder.encode(comparar);
+
+                model.addAttribute("id", id);
             }
         }
 
         if(redireccionar){
-            return "";
+            return "actuContraOlv";
         }else{
             return "redirect:/login";
         }
+    }
+
+    @PostMapping("/actualizarContraOlvidada")
+    public String actualizarContraOlvidada(@RequestParam("id") String id,
+                                           @RequestParam("contra1") String contra1,
+                                           @RequestParam("contra2") String contra2){
+        //TODO: validaciones
+        List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
+        for(Urlcorreo urlcorreo : listaUrlCorreo){
+            String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
+            if(BCrypt.checkpw(comparar, id)){
+                //TODO: MANDAR CODIGO EXPIRADO Y BORRAR SI YA ESTA EXPIRADO
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String nuevaContra = passwordEncoder.encode(contra1);
+                urlcorreo.getUsuario().setContrasenia(nuevaContra);
+                usuarioRepository.save(urlcorreo.getUsuario());
+                urlCorreoRepository.delete(urlcorreo);
+            }
+        }
+        return "redirect:/login";
     }
 
 

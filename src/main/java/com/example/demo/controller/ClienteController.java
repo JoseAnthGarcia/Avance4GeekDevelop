@@ -56,18 +56,24 @@ public class ClienteController {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
-        /*boolean telfValid = true;
+        boolean telfValid = true;
 
-        if( telefonoNuevo.equals('') || telefonoNuevo.length()!=9){
+        int telfInt;
+        try{
+            telfInt = Integer.parseInt(telefonoNuevo);
+        }catch (NumberFormatException e){
+            telfInt = -1;
+        }
+
+        if(telfInt==-1 || telefonoNuevo.trim().equals("") || telefonoNuevo.length()!=9){
             telfValid =false;
-        }*/
+        }
 
         if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
             valContra = false;
         }
 
-        if (valContra) {
-            System.out.println("ENTRO AEA");
+        if (valContra || !telfValid){
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
             }
@@ -75,9 +81,9 @@ public class ClienteController {
 
         } else {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
-            httpSession.setAttribute("usuario",usuario1); //sesion -> actualizar la sesion
-            clienteRepository.save(usuario1); //actualizar la base datos
-            return "Cliente/listaRestaurantes";
+            httpSession.setAttribute("usuario",usuario1); //TODO: preguntar profe
+            clienteRepository.save(usuario1);
+            return "redirect:/cliente/listaRestaurantes";
         }
 
 

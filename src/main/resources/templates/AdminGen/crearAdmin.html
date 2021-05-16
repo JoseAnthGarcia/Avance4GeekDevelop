@@ -33,7 +33,7 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto "
-                                th:text="${usuario.getIdusuario() == 0? 'CREAR ADMINISTRADOR' : 'EDITAR ADMINISTRADOR'}"></h2>
+                                th:text="${usuario.getIdusuario() == 0? 'EDITAR ADMINISTRADOR' : 'CREAR ADMINISTRADOR'}"></h2>
                         </div>
                     </div>
                     <div class="card-body">
@@ -125,7 +125,7 @@
                             </div>
                             <hr>
                             <a th:href="@{'/admin'}" class="btn btn-danger">Cancelar</a>
-                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0? 'Registrar' : 'Actualizar'}">Reg/act</button>
+                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0?  'Actualizar' :'Registrar' }">Reg/act</button>
 
                         </form>
                     </div>

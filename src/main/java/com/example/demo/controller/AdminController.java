@@ -427,7 +427,7 @@ public class AdminController  {
 
 
     @PostMapping("/guardarAdmin")
-    public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario, BindingResult bindingResult,
+    public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr) {
 
         List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());

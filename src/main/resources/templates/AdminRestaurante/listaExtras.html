@@ -206,7 +206,8 @@
                     <div class="container-fluid">
                         <form method="get" th:action="@{'/extra/page?idcategoria='+${idcategoria}}">
                             <div class="form-group row">
-
+                                <input hidden th:field="*{idcategoria}" name="idcategoria">
+                                <input hidden name="idcategoria" th:value="${idcategoria}">
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="exampleExtra"
@@ -242,15 +243,20 @@
                             <div class="card-header py-3 " style="background-color: #701111;">
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
-                                    <a class="btn btn-warning" th:href="@{'/extra/nuevo?idcategoria='+${idcategoria}}"><i
+                                    <a class="btn btn-warning"
+                                       th:href="@{'/extra/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo Extra</a>
-                                    <h5 th:if="${idcategoria==1}" class="font-weight-bold text-white text-lg-center mx-auto"
+                                    <h5 th:if="${idcategoria==1}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="${'Lista de Bebidas'}"></h5>
-                                    <h5 th:if="${idcategoria==3}" class="font-weight-bold text-white text-lg-center mx-auto"
+                                    <h5 th:if="${idcategoria==3}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="${'Lista de Ensaladas'}"></h5>
-                                    <h5 th:if="${idcategoria==4}" class="font-weight-bold text-white text-lg-center mx-auto"
+                                    <h5 th:if="${idcategoria==4}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="${'Lista de Guarniciones'}"></h5>
-                                    <h5 th:if="${idcategoria==2}" class="font-weight-bold text-white text-lg-center mx-auto"
+                                    <h5 th:if="${idcategoria==2}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="${'Lista de Cubiertos'}"></h5>
 
                                 </div>
@@ -277,7 +283,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="extra,v :${listaExtras}">
-                                                <td th:text="${(v.index+1)*currentPage}"></td>
+                                                <td th:text="${(v.index + 1)+(5*(currentPage - 1))}"></td>
                                                 <td th:text="${extra.getNombre()}"></td>
                                                 <td th:text="${extra.getPreciounitario()}"></td>
                                                 <td>
@@ -293,9 +299,9 @@
 
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/extra/page?idcategoria='+${id}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/extra/page?idcategoria=' + ${idcategoria} +'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

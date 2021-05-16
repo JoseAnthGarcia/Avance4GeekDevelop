@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Pedido;
-import com.example.demo.entities.Plato;
-import com.example.demo.entities.Rol;
-import com.example.demo.entities.Usuario;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.AdminRestService;
 import com.example.demo.service.RepartidorService;
@@ -12,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,14 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -406,9 +406,7 @@ public class AdminController  {
 
                 String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
                 sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-
                 //sendEmailHtml(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
-
 
 
                 /////-----------------------------------------------/////
@@ -427,6 +425,79 @@ public class AdminController  {
     }
 
 
+
+    @PostMapping("/guardarAdmin")
+    public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario, BindingResult bindingResult,
+                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) {
+
+        List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());
+        if (!usuarioxcorreo.isEmpty()) {
+            bindingResult2.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
+        }
+        List<Usuario> usuarioxdni = usuarioRepository.findUsuarioByDni(usuario.getDni());
+        if (!usuarioxdni.isEmpty()) {
+            bindingResult2.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
+        }
+
+        List<Usuario> usuarioxtelefono = usuarioRepository.findUsuarioByTelefono(usuario.getTelefono());
+        if (!usuarioxtelefono.isEmpty()) {
+            bindingResult2.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
+        }
+
+
+        Boolean fecha_naci = true;
+        try {
+            String[] parts = usuario.getFechanacimiento().split("-");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+
+            if (anio - naci >= 18) {
+                fecha_naci = false;
+            }
+        } catch (NumberFormatException n) {
+        }
+
+        if (bindingResult2.hasErrors() || fecha_naci
+        ) {
+            System.out.println("siguen errores");
+
+            //----------------------------------------
+
+
+            if (fecha_naci) {
+                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+            }
+
+            return "/AdminGen" +
+                    "/crearAdmin";
+        } else {
+            usuario.setEstado(1);
+            usuario.setRol(rolRepository.findById(5).get());
+            String fechanacimiento = LocalDate.now().toString();
+            usuario.setFecharegistro(fechanacimiento);
+
+            attr.addFlashAttribute("msg", "Usuario creado exitosamente");
+
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            usuario.setFecharegistro(hourdateFormat.format(date));
+
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(usuario.getDni()+usuario.getNombres());
+            System.out.println(hashedPassword);
+            usuario.setContrasenia(hashedPassword);
+
+
+            usuarioRepository.save(usuario);
+
+            return "redirect:/admin/usuarios";
+
+        }
+
+    }
+
     //Pasamos por parametro: destinatario, asunto y el mensaje
     public void sendEmail(String to, String subject, String content) {
 
@@ -439,22 +510,17 @@ public class AdminController  {
         mailSender.send(email);
     }
 
-    public void sendEmailHtml(String to, String subject, Usuario usuario) {
-
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(to);
-        email.setSubject(subject);
-        // Crear cuerpo del mensaje
+    public void sendHtmlMail(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
         String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
-        email.setText(emailContent);
-        mailSender.send(email);
-
-
-
+        helper.setText(emailContent, true);
+        mailSender.send(message);
     }
-
 
 }

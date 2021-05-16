@@ -9,10 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UbicacionRepository extends JpaRepository<Ubicacion, Usuario_has_distritoKey> {
+public interface UbicacionRepository extends JpaRepository<Ubicacion, Integer> {
 
     List<Ubicacion> findByUsuario(Usuario usuario);
-
-
 
 }

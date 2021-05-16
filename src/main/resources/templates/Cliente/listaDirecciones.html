@@ -65,6 +65,7 @@
                                             </div>
                                             </form>
                         <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
+                                            <form th:action="@{/cliente/eliminarDireccion}" method="post">
                                             <div class="card-body">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered">
@@ -77,17 +78,16 @@
                                                             Direcciones
                                                         </th>
                                                         <th>
-
                                                         </th>
-
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="direcciones,info:${listaDirecciones}">
+                                                    <tr th:each="direcciones,info:${direccionesSinActual}">
                                                         <td th:text="${info.index + 1}"></td>
                                                         <td th:text="${direcciones.direccion}"></td>
-                                                        <td> <input type="checkbox"> </td>
-
+                                                        <td> <input type="checkbox"
+                                                                name="listaIdDireccionesAeliminar"
+                                                                th:value="${direcciones.idubicacion}"> </td>
                                                     </tr>
 
                                                     </tbody>
@@ -95,16 +95,16 @@
                                                 </table>
 
                                                 <div class="col-md-12 mb-4"  >
-                                                    <a type="button" class="btn btn-dark" >
+                                                    <button type="submit" class="btn btn-dark" >
                                                          <i class="fas fa-trash"></i>
-                                                    </a>
+                                                    </button>
 
                                                 </div>
 
                                             </div>
+
                                         </div>
-
-
+                                        </form>
 
                                         </div>
                                         <div class="col-md-6 mb-3">
@@ -117,8 +117,10 @@
                                                             <label for="direccionactual">Dirección Actual</label>
                                                             <select class="form-control" id="direccionactual" name="direccionactual" style="border-color:lightgray">
                                                                 <option value="0" selected disabled>Direcciones</option>
-                                                                <option th:each="direc : ${listaDirecciones}" th:value="${direc.getIdubicacion()}"
-                                                                        th:text="${direc.direccion}"></option>
+                                                                <option th:each="direc : ${listaDirecciones}"
+                                                                        th:value="${direc.direccion}"
+                                                                        th:text="${direc.direccion}"
+                                                                        th:selected="${session.usuario.direccionactual.equals(direc.direccion)}"></option>
                                                             </select>
                                                             <div class="col-sm-2" style="margin-right: 10px" >
                                                                 <button class="btn btn-secondary" type="submit"> Seleccionar </button>

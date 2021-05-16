@@ -141,7 +141,9 @@
                                         <tr th:each="tarjeta,v : ${listaTarjetas}">
                                             <td th:text="${v.index+1}">1</td>
                                             <td th:text="|${tarjeta.numerotarjeta.substring(0,6)}******${tarjeta.numerotarjeta.substring(6,9)}|">xxxxxxxxxxxxxxxx</td>
-                                            <td> <input type="checkbox" name="listaTarjetasSelecciones" th:value="${tarjeta.idtarjeta}"> </td>
+                                            <td> <input type="checkbox"
+                                                        name="listaTarjetasSelecciones"
+                                                        th:value="${tarjeta.idtarjeta}"> </td>
                                         </tr>
 
                                         </tbody>

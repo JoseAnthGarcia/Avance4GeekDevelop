@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,8 +37,6 @@ public class ClienteController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
-
-
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -98,8 +97,19 @@ public class ClienteController {
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model,HttpSession httpSession){
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        model.addAttribute("usuario", usuario);
-        model.addAttribute("listaDirecciones", ubicacionRepository.findByUsuario(usuario));
+
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+        model.addAttribute("listaDirecciones", listaDirecciones);
+
+        ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
+
+        for(Ubicacion ubicacion: listaDirecciones){
+            if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
+                listaUbicacionesSinActual.add(ubicacion);
+            }
+        }
+
+        model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
 
         return "Cliente/listaDirecciones";
     }
@@ -113,6 +123,21 @@ public class ClienteController {
         clienteRepository.save(usuario);
         return "redirect:/cliente/listaDirecciones";
     }
+
+    @PostMapping("/eliminarDireccion")
+    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar){
+
+        for(String idUbicacion : listaIdDireccionesAeliminar){
+            //validad int idUbicacion:
+            int idUb = Integer.parseInt(idUbicacion);
+            Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
+            ubicacionRepository.delete(ubicacion);
+        }
+
+        return "redirect:/cliente/listaDirecciones";
+
+    }
+
     @PostMapping("/agregarDireccion")
     public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession ){
         boolean valNul=true;

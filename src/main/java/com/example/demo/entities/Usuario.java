@@ -59,10 +59,6 @@ public class Usuario implements Serializable {
     private String fotonombre;
     private String fotocontenttype;
 
-    public String getFotonombre() {
-        return fotonombre;
-    }
-
     public void setFotonombre(String fotonombre) {
         this.fotonombre = fotonombre;
     }
@@ -111,8 +107,6 @@ public class Usuario implements Serializable {
 
     @OneToMany(mappedBy = "repartidor")
     private List<Pedido> listaPedidosPorRepartidor;
-    private String fotonombre;
-    private String fotocontenttype;
 
 
 
@@ -152,7 +146,6 @@ public class Usuario implements Serializable {
     public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
-
 
     public int getEstado() {
         return estado;
@@ -278,15 +271,5 @@ public class Usuario implements Serializable {
         return fotonombre;
     }
 
-    public void setFotonombre(String fotonombre) {
-        this.fotonombre = fotonombre;
-    }
 
-    public String getFotocontenttype() {
-        return fotocontenttype;
-    }
-
-    public void setFotocontenttype(String fotocontenttype) {
-        this.fotocontenttype = fotocontenttype;
-    }
 }

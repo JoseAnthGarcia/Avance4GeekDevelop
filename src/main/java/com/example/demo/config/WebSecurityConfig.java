@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/cliente/**").hasAnyAuthority("cliente")
                 .antMatchers("/admin","/admin/**").hasAnyAuthority("administrador","administradorG")
-                .antMatchers("/plato","/plato/**","/cupon","/cupon/**", "/extra","/extra/**","/restaurante","/restaurante/**").hasAnyAuthority("administradorR")
+                .antMatchers("/plato","/plato/**","/cupon","/cupon/**", "/extra","/extra/**").hasAnyAuthority("administradorR")
                 .anyRequest().permitAll();
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 

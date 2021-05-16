@@ -76,7 +76,7 @@
                         </a>
                         <h1 style="color: black">REGÍSTRESE</h1>
                         <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de administrador.</p>
-                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}" th:object="${adminRest}" enctype="multipart/form-data">
+                        <form id="nuevo" method="post" th:action="@{/restaurante/guardarAdminR}" th:object="${adminRest}" enctype="multipart/form-data">
 
                             <div class="form-group row">
                                 <input th:field="*{idusuario}" type="hidden"/>
@@ -173,7 +173,7 @@
                             </div>
 
                             <hr>
-                            <a href="#" class="btn btn-primary btn-user btn-block mb-5 "  data-toggle="modal" data-target="#registrarModal">
+                            <a href="#registrarModal" class="btn btn-primary btn-user btn-block mb-5 "  data-toggle="modal" data-target="#registrarModal">
                                 Registrar
                             </a>
                         </form>

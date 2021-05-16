@@ -11,6 +11,7 @@ import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,55 +61,59 @@ public class ExtraController {
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idcategoria") int id, Model model, HttpSession session) {
+                                @RequestParam(value = "idcategoria", required = false) Integer id, Model model, HttpSession session) {
+        System.out.println(id);
+        if (id==null){
+            return "redirect:/extra";
+        }else {
+            Usuario adminRest = (Usuario) session.getAttribute("usuario");
+            int idadmin = adminRest.getIdusuario();
+            Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+            int idrestaurante = restaurante.getIdrestaurante();
+            System.out.println(id);
+            System.out.println(pageNo);
+            if (pageNo == null || pageNo == 0) {
+                pageNo = 1;
+            }
+            int inputID = 1;
+            int pageSize = 5;
+            Page<Extra> page;
+            List<Extra> listaExtras;
+            System.out.println(textBuscador);
+            if (textBuscador == null) {
+                textBuscador = "";
+            }
+            System.out.println(inputPrecio);
+            if (inputPrecio == null) {
+                inputPrecio = 0;
+            }
+            int inputPMax;
+            int inputPMin;
+            if (inputPrecio == 0) {
+                inputPMin = 0;
+                inputPMax = 1000;
+            } else if (inputPrecio == 4) {
+                inputPMin = inputPrecio;
+                inputPMax = 1000;
+            } else {
+                inputPMax = inputPrecio;
+                inputPMin = inputPrecio;
+            }
+            page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, id, textBuscador, inputPMin * 15 - 15, inputPMax * 15);
+            listaExtras = page.getContent();
+            List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
+            model.addAttribute("texto", textBuscador);
+            model.addAttribute("textoP", inputPrecio);
 
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        int idadmin = adminRest.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
-        int idrestaurante = restaurante.getIdrestaurante();
-        System.out.println(pageNo);
-        if (pageNo == null || pageNo == 0) {
-            pageNo = 1;
-        }
-        int inputID = 1;
-        int pageSize = 5;
-        Page<Extra> page;
-        List<Extra> listaExtras;
-        System.out.println(textBuscador);
-        if (textBuscador == null) {
-            textBuscador = "";
-        }
-        System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
-        int inputPMax;
-        int inputPMin;
-        if (inputPrecio == 0) {
-            inputPMin = 0;
-            inputPMax = 1000;
-        } else if (inputPrecio == 4) {
-            inputPMin = inputPrecio;
-            inputPMax = 1000;
-        } else {
-            inputPMax = inputPrecio;
-            inputPMin = inputPrecio;
-        }
-        page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, id, textBuscador, inputPMin * 15 - 15, inputPMax * 15);
-        listaExtras = page.getContent();
-        List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
-        model.addAttribute("texto", textBuscador);
-        model.addAttribute("textoP", inputPrecio);
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("totalPages", page.getTotalPages());
+            model.addAttribute("totalItems", page.getTotalElements());
+            model.addAttribute("listaExtras", listaExtras);
+            model.addAttribute("listaCategoria", listaCategoriaExtra);
+            model.addAttribute("idcategoria", id);
 
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listaExtras", listaExtras);
-        model.addAttribute("listaCategoria", listaCategoriaExtra);
-        model.addAttribute("idcategoria", id);
-
-        return "AdminRestaurante/listaExtras";
-
+            return "AdminRestaurante/listaExtras";
+        }
     }
 
     @GetMapping("/nuevo")

@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.*;
-import com.example.demo.repositories.RolRepository;
-import com.example.demo.repositories.UsuarioRepository;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -10,17 +9,27 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/restaurante")
 public class AdminRestController {
     @Autowired
     UsuarioRepository adminRestRepository;
 
     @Autowired
     RolRepository rolRepository;
+    @Autowired
+    DistritosRepository distritosRepository;
+
+    @Autowired
+    RestauranteRepository restauranteRepository;
+
+    @Autowired
+    CategoriasRestauranteRepository categoriasRestauranteRepository;
 
 
     @GetMapping("/login")
@@ -56,4 +65,32 @@ public class AdminRestController {
             return "redirect:/login";
         }
     }
+    @PostMapping("/guardarRestaurante")
+    public String guardarAdminRest(@ModelAttribute("restaurante") @Valid  Restaurante restaurante, BindingResult bindingResult, HttpSession session, Model model){
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        restaurante.setAdministrador(adminRest);
+        List<Categorias> listaCategorias =restaurante.getCategoriasRestaurante();
+        if(bindingResult.hasErrors() || listaCategorias.size()!=4){
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+            model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+            if(listaCategorias.size()!=4){
+                model.addAttribute("msg", "Se deben seleccionar 4 categorías");
+            }
+            return "/AdminRestaurante/registroResturante";
+        }else {
+            restauranteRepository.save(restaurante);
+            return "redirect:/plato/";
+        }
+    }
+    @GetMapping("/registroRest")
+    public String registrarRestaurante(@ModelAttribute("restaurante") Restaurante restaurante,Model model){
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+        return "AdminRestaurante/registroResturante";
+    }
+    @GetMapping("/paginabienvenida")
+    public String paginaBienvenida(){
+        return "AdminRestaurante/adminCreado";
+    }
+
 }

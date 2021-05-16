@@ -1,13 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Distrito;
-import com.example.demo.entities.Usuario;
-import com.example.demo.entities.Ubicacion;
-import com.example.demo.entities.Usuario_has_distritoKey;
-import com.example.demo.repositories.DistritosRepository;
-import com.example.demo.repositories.RolRepository;
-import com.example.demo.repositories.UsuarioRepository;
-import com.example.demo.repositories.UbicacionRepository;
+import com.example.demo.entities.*;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,6 +40,8 @@ public class LoginController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
+    @Autowired
+    RestauranteRepository restauranteRepository;
 
     @GetMapping("/ClienteLogin")
     public String loginForm(Authentication auth, HttpSession session) {
@@ -66,11 +62,11 @@ public class LoginController {
                     return "redirect:/cliente/listaRestaurantes";
                 case "administradorG":
                     return "redirect:/admin/solicitudes";
+                case "administradorR":
+                    return "redirect:/plato/";
             }
-
         } catch (NullPointerException n) {
         }
-
         return "Cliente/login";
     }
 
@@ -97,12 +93,16 @@ public class LoginController {
 
         session.setAttribute("usuario", usuario);
 
-        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-        session.setAttribute("poolDirecciones", listaDirecciones);
+        //List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+       //session.setAttribute("poolDirecciones", listaDirecciones);
         //<ubicacion> listaDirecciones=Usuario_has_distritoRepository.
-        System.out.println(usuario);
-
-
+       // System.out.println(usuario);
+        Restaurante restaurante=null;
+        try {
+            restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
+        }catch(NullPointerException e){
+            System.out.println("Fallo");
+        }
         if (rol.equals("cliente")) {
             return "redirect:/cliente/listaRestaurantes";
         } else {
@@ -111,7 +111,11 @@ public class LoginController {
                 return "redirect:/admin/usuarios";
             } else {
                 if (rol.equals("administradorR")) {
-                    return "redirect:/plato/";
+                    if(restaurante==null){
+                        return "redirect:/restaurante/paginabienvenida";
+                    }else{
+                        return "redirect:/plato/";
+                    }
                 }
                 return "redirect:/ClienteLogin";
             }

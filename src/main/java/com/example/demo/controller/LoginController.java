@@ -49,9 +49,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode("joham.hector");
-        System.out.println(hashedPassword);
         return "Cliente/login";
     }
 

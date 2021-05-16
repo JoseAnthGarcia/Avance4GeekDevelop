@@ -45,23 +45,28 @@
 
                             <div class="card-header py-3">
 
-                                <form method="POST" action="">
+
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
+                                            <!-- ################################################################ -->
+                                            <form method="POST" th:action="@{/cliente/agregarDireccion}">
                                             <div style=text-align:center>
                                             <label for="direcc">Ingrese una dirección</label>
-                                            <input type="text" class="form-control " name="direcc"  id="direcc" value="" placeholder="" >
+                                            <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
+                                                <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
                                             </div>
+
                                             <h2>   </h2>
                                             <div class="col-md-12 mb-3"  style=text-align:center>
-                                                <a  class="btn btn-primary" href="listaDireccionesVal.html" type="submit">Agregar</a>
+                                                <button  class="btn btn-primary" type="submit">Agregar</button>
 
-
-                                                <a  class="btn btn-danger" href="listaRestaurantes.html" type="submit">Cancelar</a>
+                                                <a  class="btn btn-danger" th:href="@{/cliente/listaRestaurantes}" type="submit">Cancelar</a>
 
                                             </div>
+                                            </form>
                         <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
+                                            <form th:action="@{/cliente/eliminarDireccion}" method="post">
                                             <div class="card-body">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered">
@@ -74,35 +79,16 @@
                                                             Direcciones
                                                         </th>
                                                         <th>
-
                                                         </th>
-
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Av.1</td>
-                                                        <td> <input type="checkbox"> </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Av. 2</td>
-                                                        <td><input type="checkbox">  </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Av. 3</td>
-                                                        <td> <input type="checkbox"> </td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td>Av .4</td>
-                                                        <td> <input type="checkbox"> </td>
-
+                                                    <tr th:each="direcciones,info:${direccionesSinActual}">
+                                                        <td th:text="${info.index + 1}"></td>
+                                                        <td th:text="${direcciones.direccion}"></td>
+                                                        <td> <input type="checkbox"
+                                                                name="listaIdDireccionesAeliminar"
+                                                                th:value="${direcciones.idubicacion}"> </td>
                                                     </tr>
 
                                                     </tbody>
@@ -110,40 +96,52 @@
                                                 </table>
 
                                                 <div class="col-md-12 mb-4"  >
-                                                    <a type="button" class="btn btn-dark" >
+                                                    <button type="submit" class="btn btn-dark" >
                                                          <i class="fas fa-trash"></i>
-                                                    </a>
+                                                    </button>
 
                                                 </div>
 
                                             </div>
+
                                         </div>
-
-
+                                        </form>
 
                                         </div>
                                         <div class="col-md-6 mb-3">
 
                                                 <div class="card shadow mb-4">
                                                     <!-- Card Body -->
+                                                    <form method="post" th:action="@{/cliente/guardarDireccion}">
                                                     <div class="card-body">
                                                         <div style=text-align:center>
-                                                            <label for="direc">Dirección Actual</label>
-                                                            <input type="text" class="form-control ph-center" placeholder="Av. Carlos Izaguirre, Los Olivos"  id="direc" aria-label="Disabled input example" disabled>
+                                                            <label for="direccionactual">Dirección Actual</label>
+                                                            <select class="form-control" id="direccionactual" name="direccionactual" style="border-color:lightgray">
+                                                                <option value="0" selected disabled>Direcciones</option>
+                                                                <option th:each="direc : ${listaDirecciones}"
+                                                                        th:value="${direc.direccion}"
+                                                                        th:text="${direc.direccion}"
+                                                                        th:selected="${session.usuario.direccionactual.equals(direc.direccion)}"></option>
+                                                            </select>
+                                                            <h1> </h1>
+                                                            <button class="btn btn-secondary" type="submit"> Seleccionar </button>
+
                                                         </div>
                                                         <h1>       </h1>
                                                         <div style=text-align:center>
-                                                            <img src="images.jfif" width="200" height="150">
+                                                            <img href="https://tuwebtecno.com/wp-content/uploads/2020/10/1603606268_Se-corrigio-que-Google-Maps-no-actualizara-la-ubicacion.png"
+                                                                 width="200" height="150">
                                                         </div>
 
                                                     </div>
+                                                    </form>
 
                                                 </div>
 
                                         </div>
 
                                     </div>
-                                </form>
+
                             </div>
 
                         </div>
@@ -194,7 +192,10 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

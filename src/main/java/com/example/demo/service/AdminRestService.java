@@ -20,4 +20,8 @@ public class AdminRestService {
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
         return usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get(), pageable);
     }
+    public Page<Usuario> administradorRestBusqueda(int numeroPag, int tamPag, String nombreUsuario1, String apellidoUsuario1, String dni, int fechaRegistro1){
+        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
+        return usuarioRepository.buscarAdministradorR(nombreUsuario1,apellidoUsuario1, dni, fechaRegistro1, pageable);
+    }
 }

@@ -42,19 +42,19 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nombres </label>
-                                            <input type="text" class="form-control">
+                                            <input type="text" class="form-control" th:field="*{nombres}" disabled>
 
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label>Apellido </label>
                                             <input type="text" class="form-control "
-                                                   th:field="*{apellidos}" >
+                                                   th:field="*{apellidos}"  disabled>
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Correo </label>
-                                            <input type="text" class="form-control" th:field="*{correo}">
+                                            <input type="text" class="form-control" th:field="*{correo}" disabled>
                                         </div>
 
                                         <div class="col-md-6 mb-3">

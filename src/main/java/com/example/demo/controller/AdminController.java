@@ -406,9 +406,7 @@ public class AdminController  {
 
                 String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
                 sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-
                 //sendEmailHtml(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
-
 
 
                 /////-----------------------------------------------/////
@@ -429,24 +427,21 @@ public class AdminController  {
 
 
     @PostMapping("/guardarAdmin")
-    public String guardarDa(@ModelAttribute("usuario") @Valid Usuario usuario, BindingResult bindingResult,
+    public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr) {
-
-
-
 
         List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());
         if (!usuarioxcorreo.isEmpty()) {
-            bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
+            bindingResult2.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
         }
         List<Usuario> usuarioxdni = usuarioRepository.findUsuarioByDni(usuario.getDni());
         if (!usuarioxdni.isEmpty()) {
-            bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
+            bindingResult2.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
         }
 
         List<Usuario> usuarioxtelefono = usuarioRepository.findUsuarioByTelefono(usuario.getTelefono());
         if (!usuarioxtelefono.isEmpty()) {
-            bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
+            bindingResult2.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
 
@@ -463,7 +458,7 @@ public class AdminController  {
         } catch (NumberFormatException n) {
         }
 
-        if (bindingResult.hasErrors() || fecha_naci
+        if (bindingResult2.hasErrors() || fecha_naci
         ) {
             System.out.println("siguen errores");
 
@@ -502,9 +497,6 @@ public class AdminController  {
         }
 
     }
-
-
-
 
     //Pasamos por parametro: destinatario, asunto y el mensaje
     public void sendEmail(String to, String subject, String content) {

@@ -54,7 +54,7 @@ public class ClienteController {
                                  Model model) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        boolean valContra = false;
+        boolean valContra = true;
         boolean telfValid = false;
 
         int telfInt;
@@ -69,7 +69,7 @@ public class ClienteController {
         }
 
         if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
-            valContra = true;
+            valContra = false;
         }
 
         if (valContra || telfValid){
@@ -77,7 +77,7 @@ public class ClienteController {
             model.addAttribute("msg", "Contraseña incorrecta");
             }
             if(telfValid){
-            model.addAttribute("msg2", "Ingrese 9 caracteres");
+            model.addAttribute("msg2", "Ingrese sus datos");
             }
             return "Cliente/editarPerfil";
 
@@ -149,8 +149,23 @@ public class ClienteController {
             valNul=true;
         }
         if(valNul){
+            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+
+            List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+            model.addAttribute("listaDirecciones", listaDirecciones);
+
+            ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
+
+            for(Ubicacion ubicacion: listaDirecciones){
+                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
+                    listaUbicacionesSinActual.add(ubicacion);
+                }
+            }
+
+            model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
             model.addAttribute("msg", "No ingreso dirección");
-            return "/cliente/listaDirecciones";
+            return "Cliente/listaDirecciones";
+
         }else{
             Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
             List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");

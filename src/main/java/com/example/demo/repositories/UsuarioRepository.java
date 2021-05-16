@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.entities.Rol;
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

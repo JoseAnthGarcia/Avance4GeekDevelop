@@ -72,8 +72,8 @@ public class ClienteController {
 
         } else {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
-            httpSession.setAttribute("usuario",usuario1);
-            clienteRepository.save(usuario1);
+            httpSession.setAttribute("usuario",usuario1); //sesion -> actualizar la sesion
+            clienteRepository.save(usuario1); //actualizar la base datos
             return "Cliente/listaRestaurantes";
         }
 
@@ -85,6 +85,57 @@ public class ClienteController {
 
         return "Cliente/listaRestaurantes";
     }
+
+    @GetMapping("/listaDirecciones")
+    public String listaDirecciones(Model model,HttpSession httpSession){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("listaDirecciones", ubicacionRepository.findByUsuario(usuario));
+
+        return "Cliente/listaDirecciones";
+    }
+
+
+    @PostMapping("/guardarDireccion")
+    public String guardarDirecciones(){
+
+        return "redirect:/cliente/listaDirecciones";
+    }
+    @PostMapping("/agregarDireccion")
+    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession ){
+        boolean valNul=true;
+        if(direccion.isEmpty()){
+            valNul=false;
+            return "/cliente/listaDirecciones";
+        }else{
+            Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+            httpSession.setAttribute("usuario",usuario1);
+            clienteRepository.save(usuario1);
+
+            return "redirect:/cliente/listaDirecciones";
+        }
+
+    }
+
+
+
+
+    @GetMapping("/listaCupones")
+    public String listacupones(){
+
+        return "Cliente/listaCupones";
+    }
+
+    @GetMapping("/listaReportes")
+    public String listaReportes(){
+        return "Cliente/listaReportes";
+    }
+
+
+
+
+
 
 
 

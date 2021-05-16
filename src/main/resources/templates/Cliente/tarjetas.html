@@ -42,24 +42,12 @@
                             </div>
                             <div class="card-header py-3">
 
-                                <form method="POST" action="">
+                                <form method="POST" th:action="@{/tarjeta/guardar}">
                                     <div class="form-row">
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="dniC">Numero de Tarjeta</label>
-                                            <input type="text" class="form-control " name="dniC"  id="dniC" value="" placeholder="xxxxxxxxxx" >
-
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="idTipoTarjeta">Tarjeta</label>
-                                            <select class="form-control " id="idTipoTarjeta">
-                                                <option selected disabled value="0">Tipo de Tarjeta</option>
-                                                <option  value="1">VISA</option>
-                                                <option  value="2">MASTERCARD</option>
-
-
-                                            </select>
-
+                                        <div class="col-md-12 mb-3">
+                                            <label >Numero de Tarjeta</label>
+                                            <input type="text" class="form-control " name="numeroTarjeta" placeholder="Número de tarjeta">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -72,7 +60,6 @@
                                             <input type="text" class="form-control " id="apellidoC">
 
                                         </div>
-
 
                                         <div class="col-md-6 mb-3">
                                             <label for="apellidoC">Fecha de Caducación</label>
@@ -110,9 +97,8 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3" >
-                                            <a  class="btn btn-primary" href="tarjetasValidaciones.html" type="submit">Agregar</a>
-                                            <a  class="btn btn-danger" href="listaRestaurantes.html" type="submit">Cancelar</a>
-
+                                            <button  class="btn btn-primary" type="submit">Agregar</button>
+                                            <a  class="btn btn-danger">Cancelar</a>
                                         </div>
                                     </div>
                                 </form>
@@ -127,57 +113,53 @@
                     <div class="col-xl-4 col-lg-5">
                         <h3 >                    </h3>
                         <img
-                                src="tj1.PNG" width="300" height=" 150">
+                                src="https://tarjetasdecredito.es/images/product/tarjeta-de-credito-despues-bbva.png" width="300" height=" 150">
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>
-                                            N°
-                                        </th>
-                                        <th>
-                                            Tarjeta
-                                        </th>
-                                        <th>
+                        <div th:if="${listaTarjetas.size()==0}">
+                            <h3>No hay tarjetas registradas</h3>
+                        </div>
 
-                                        </th>
+                        <form th:action="@{/tarjeta/eliminar}" method="post">
+                            <div class="card-body mt-2" th:unless="${listaTarjetas.size()==0}">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                N°
+                                            </th>
+                                            <th>
+                                                Tarjeta
+                                            </th>
+                                            <th>
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td> <input type="checkbox"> </td>
+                                            </th>
 
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td><input type="checkbox"> </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tarjeta,v : ${listaTarjetas}">
+                                            <td th:text="${v.index+1}">1</td>
+                                            <td th:text="|${tarjeta.numerotarjeta.substring(0,6)}******${tarjeta.numerotarjeta.substring(6,9)}|">xxxxxxxxxxxxxxxx</td>
+                                            <td> <input type="checkbox"
+                                                        name="listaTarjetasSelecciones"
+                                                        th:value="${tarjeta.idtarjeta}"> </td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td> <input type="checkbox"> </td>
+                                        </tbody>
 
-                                    </tr>
+                                    </table>
+                                    <div class="col-md-12 mb-4"  >
+                                        <button type="button" class="btn btn-dark" th:type="submit">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
 
-                                    </tbody>
-
-                                </table>
-                                <div class="col-md-12 mb-4"  >
-                                    <a type="button" class="btn btn-dark" >
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    </div>
 
                                 </div>
-
                             </div>
-                        </div>
+                        </form>
+
                     </div>
                 </div>
 

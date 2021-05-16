@@ -47,6 +47,35 @@ public class Restaurante  implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "idcategoria"))
     private List<Categorias> categoriasRestaurante;
 
+
+    private String fotonombre;
+    private String fotocontenttype;
+    private byte[] foto;
+
+    public String getFotonombre() {
+        return fotonombre;
+    }
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
     public Usuario getAdministrador() {
         return administrador;
     }

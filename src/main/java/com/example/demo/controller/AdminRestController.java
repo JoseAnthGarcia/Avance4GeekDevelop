@@ -3,16 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/restaurante")
@@ -66,7 +73,21 @@ public class AdminRestController {
         }
     }
     @PostMapping("/guardarRestaurante")
-    public String guardarAdminRest(@ModelAttribute("restaurante") @Valid  Restaurante restaurante, BindingResult bindingResult, HttpSession session, Model model){
+    public String guardarRestaurante(@ModelAttribute("restaurante") @Valid  Restaurante restaurante,
+                                     BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file){
+        String fileName ="";
+        if (file!=null){
+            if(file.isEmpty()){
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                return "/AdminRestaurante/registroResturante";
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/registroResturante";
+            }
+        }
+
         Usuario adminRest=(Usuario)session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
         List<Categorias> listaCategorias =restaurante.getCategoriasRestaurante();
@@ -78,7 +99,17 @@ public class AdminRestController {
             }
             return "/AdminRestaurante/registroResturante";
         }else {
-            restauranteRepository.save(restaurante);
+            try{
+                restaurante.setFoto(file.getBytes());
+                restaurante.setFotonombre(fileName);
+                restaurante.setFotocontenttype(file.getContentType());
+                restauranteRepository.save(restaurante);
+            } catch (IOException e){
+                e.printStackTrace();
+                model.addAttribute("mensajeFoto", "Ocurrió un error al subir el archivo");
+                return "/AdminRestaurante/registroResturante";
+            }
+
             return "redirect:/plato/";
         }
     }
@@ -93,4 +124,17 @@ public class AdminRestController {
         return "AdminRestaurante/adminCreado";
     }
 
+    @GetMapping("/imagenRest/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id){
+        Optional<Restaurante> optional=restauranteRepository.findById(id);
+        if (optional.isPresent()){
+            Restaurante p = optional.get();
+            byte[] imagenBytes=p.getFoto();
+            HttpHeaders httpHeaders= new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(p.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
+        }else {
+            return null;
+        }
+    }
 }

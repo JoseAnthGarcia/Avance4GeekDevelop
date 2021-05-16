@@ -215,14 +215,13 @@
                     <div class="col-sm-6 mb-4"
                          style="margin-left: 270px; margin-top: 30px">
                       <div class="container2 shadow">
-                        <img src="imagenesAR/extraBebida.jpg" alt="Avatar"
+                        <img th:src="@{/imagenes/extra/bebidas.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" href="listaExtras.html">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=1'}">
                           <H1 class="text2 font-weight-bolder">BEBIDAS</H1>
                         </a>
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -230,10 +229,10 @@
                   <div class="col-sm-6">
                     <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
                       <div class="container2 shadow">
-                        <img src="imagenesAR/extraGuarniciones.jpg" alt="Avatar"
+                        <img th:src="@{/imagenes/extra/guarniciones.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" href="listaExtras.html">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=4'}">
                           <H1 class="text2 font-weight-bolder">GUARNICIONES</H1>
                         </a>
                       </div>
@@ -247,10 +246,10 @@
                     <div class="col-sm-6 mb-4"
                          style="margin-left: 270px; margin-top: 10px; margin-bottom: 200px">
                       <div class="container2 shadow">
-                        <img src="imagenesAR/extraCubiertos.jpg" alt="Avatar"
+                        <img  th:src="@{/imagenes/extra/cubiertos.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" href="listaExtras.html">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=2'}">
                           <H1 class="text2 font-weight-bolder">CUBIERTOS</H1>
                         </a>
                       </div>
@@ -263,11 +262,11 @@
                     <div class="col-sm-6 mb-4"
                          style="margin-left: 260px; margin-top: 10px; margin-bottom: 70px">
                       <div class="container2 shadow">
-                        <img src="imagenesAR/extraSalsas.jpg" alt="Avatar"
+                        <img th:src="@{/imagenes/extra/ensaladas.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px">
-                          <H1 class="text2 font-weight-bolder">SALSAS</H1>
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=3'}">
+                          <H1 class="text2 font-weight-bolder">ENSALADAS</H1>
                         </a>
                       </div>
                     </div>

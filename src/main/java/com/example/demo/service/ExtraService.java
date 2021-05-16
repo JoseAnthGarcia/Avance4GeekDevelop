@@ -9,5 +9,5 @@ public interface ExtraService {
 
     Page<Extra> findPaginated(int pageNo, int pageSize);
 
-    Page<Extra> findPaginated2(int pageNo, int pageSize, String nombre, double inputPMin, double inputPMax);
+    Page<Extra> findPaginated2(int pageNo, int pageSize,int idrestaurante,int idcategoria, String nombre, double inputPMin, double inputPMax);
 }

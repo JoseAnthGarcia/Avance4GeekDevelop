@@ -65,6 +65,9 @@ public class AdminController  {
     @Autowired
     RestauranteService restauranteService;
 
+    @Autowired
+    RestauranteRepository restauranteRepository;
+
     @GetMapping("tipoSolicitud")
     public String tipoSolicitud(){
         return "AdminGen/tipoSolicitudes";
@@ -217,6 +220,64 @@ public class AdminController  {
 
         return "/AdminGen/solicitudAR";
 
+    }
+    @GetMapping("/aceptarSolicitudRest")
+    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
+
+        if(id == null){
+            return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
+        }else {
+            Optional<Restaurante> restauranteOpt =restauranteRepository.findById(id);
+
+            if(restauranteOpt.isPresent()){
+                Restaurante restaurante = restauranteOpt.get();
+                restaurante.setEstado(1);
+                //Fecha de registro:
+                //Date date = new Date();
+                //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                //restaurante.setFechaadmitido(hourdateFormat.format(date));
+                //
+                restauranteRepository.save(restaurante);
+
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }else{
+                return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
+            }
+        }
+
+    }
+    @GetMapping("/rechazarSolicitudRest")
+    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
+
+        if(id == null){
+            return "redirect:/admin/solicitudes?tipo=restaurante";
+        }else {
+            Optional<Restaurante> restauranteOpt =restauranteRepository.findById(id);
+
+            if(restauranteOpt.isPresent()){
+                Restaurante restaurante = restauranteOpt.get();
+                restaurante.setEstado(3);
+                restauranteRepository.save(restaurante);
+
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }else{
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }
+        }
+
+    }
+    @GetMapping("/detalleRestSoli")
+    public String detalleRestSoli(@RequestParam("idRest") int idRest,
+                                   Model model){
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            model.addAttribute("restaurante", restaurante);
+            return "/AdminGen/detalleRest";
+
+        }else {
+            return "redirect:/admin/solicitudes?tipo=restaurante";
+        }
     }
 
     @GetMapping("/aceptarSolicitud")

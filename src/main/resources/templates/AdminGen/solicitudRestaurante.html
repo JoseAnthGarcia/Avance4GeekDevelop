@@ -299,21 +299,21 @@
                                                 </tr>
                                                 <tr>
 
-                                                    <td>Nombre: Martin Alvaro</td>
-                                                    <td>RUC: 12345678
+                                                    <td th:text="|Administrador(a): ${rest.administrador.nombres + ' '+ rest.administrador.apellidos}|">Fecha de Registro: 20/01/3113 10:30:12</td>
+                                                    <td th:text="|Teléfono: ${rest.telefono}|">DNI: 12345678</td>
                                                     </td>
                                                 </tr>
                                                 <tr>
 
-                                                    <td>Distrito: San miguel</td>
-                                                    <td>Dicección: Av. Los Galvez 214 </td>
+                                                    <td th:text="|Distrito: ${rest.distrito.nombre}|">Fecha de Registro: 20/01/3113 10:30:12</td>
+                                                    <td th:text="|Dirección: ${rest.direccion}|">DNI: 12345678</td>
 
                                                 </tr>
 
 
                                                 <tr>
 
-                                                    <td>Categoria: Polleria,Chifa, Asiatica, Marina</td>
+                                                    <td th:text="|Categoría: ${rest.categoria}|">Fecha de Registro: 20/01/3113 10:30:12</td>
                                                     <td>
 
                                                         <a href="#" class="btn btn-success btn-icon-split">
@@ -322,14 +322,14 @@
                                         </span>
                                                             <span class="text">Aceptar</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-secondary btn-icon-split">
+                                                        <a th:href="@{'/admin/aceptarSolicitudRest?id='+${rest.idrestaurante}}" class="btn btn-secondary btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-times"></i>
                                         </span>
                                                             <span class="text">Rechazar</span>
                                                         </a>
 
-                                                        <a href="#" class="btn btn-warning btn-icon-split">
+                                                        <a  <a th:href="@{'/admin/rechazarSolicitudRest?id='+${rest.idrestaurante}}" class="btn btn-warning btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-info"></i>
                                         </span>

@@ -8,8 +8,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
+        <link rel="icon" th:href="@{/static/img/icono_shop.ico}" type="image/x-icon">
 
-        <title>LISTA BEBIDAS</title>
+            <title th:if="${idcategoria==1}"
+            th:text="${'LISTA DE BEBIDAS'}"></title>
+            <title th:if="${idcategoria==3}"
+            th:text="${'LISTA DE ENSALADAS'}"></title>
+            <title th:if="${idcategoria==4}"
+            th:text="${'LISTA DE GUARNICIONES'}"></title>
+            <title th:if="${idcategoria==2}"
+            th:text="${'LISTA DE CUBIERTOS'}"></title>
 
         <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
@@ -23,6 +31,7 @@
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this page -->
         <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
     </head>
 
     <body id="page-top">

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 
@@ -91,6 +93,55 @@ public class ClienteController {
 
         return "Cliente/listaRestaurantes";
     }
+
+    @GetMapping("/listaDirecciones")
+    public String listaDirecciones(Model model,HttpSession httpSession){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("listaDirecciones", ubicacionRepository.findByUsuario(usuario));
+
+        return "Cliente/listaDirecciones";
+    }
+
+
+    @PostMapping("/guardarDireccion")
+    public String guardarDirecciones(){
+
+        return "redirect:/cliente/listaDirecciones";
+    }
+    @PostMapping("/agregarDireccion")
+    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession ){
+        boolean valNul=true;
+        if(direccion.isEmpty()){
+            valNul=false;
+            return "/cliente/listaDirecciones";
+        }else{
+
+            List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");
+
+            return "redirect:/cliente/listaDirecciones";
+        }
+
+    }
+
+
+
+
+    @GetMapping("/listaCupones")
+    public String listacupones(){
+
+        return "Cliente/listaCupones";
+    }
+
+    @GetMapping("/listaReportes")
+    public String listaReportes(){
+        return "Cliente/listaReportes";
+    }
+
+
+
+
+
 
 
 

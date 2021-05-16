@@ -68,7 +68,7 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="listaRestaurantes.html">Restaurantes</a>
+                <a class="collapse-item" th:href="@{cliente/listaRestaurantes}">Restaurantes</a>
 
                 <a class="collapse-item" href="categorías.html">Categorías</a>
             </div>
@@ -165,7 +165,7 @@
                 </a>
             </li>
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
+                <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
                     <i class="fas fa-map-marker-alt"></i>
                 </a>
             </li>

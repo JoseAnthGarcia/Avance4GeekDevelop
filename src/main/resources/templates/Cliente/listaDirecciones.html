@@ -45,20 +45,22 @@
 
                             <div class="card-header py-3">
 
-                                <form method="POST" action="">
+
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
+                                            <!-- ################################################################ -->
+                                            <form method="POST" th:action="@{/cliente/agregarDireccion}">
                                             <div style=text-align:center>
                                             <label for="direcc">Ingrese una dirección</label>
-                                            <input type="text" class="form-control " name="direcc"  id="direcc" value="" placeholder="" >
+                                            <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
                                             </div>
+                                            </form>
                                             <h2>   </h2>
                                             <div class="col-md-12 mb-3"  style=text-align:center>
-                                                <a  class="btn btn-primary" href="listaDireccionesVal.html" type="submit">Agregar</a>
+                                                <button  class="btn btn-primary" type="submit">Agregar</button>
 
-
-                                                <a  class="btn btn-danger" href="listaRestaurantes.html" type="submit">Cancelar</a>
+                                                <a  class="btn btn-danger" th:href="@{/cliente/listaRestaurantes}" type="submit">Cancelar</a>
 
                                             </div>
                         <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
@@ -126,24 +128,29 @@
 
                                                 <div class="card shadow mb-4">
                                                     <!-- Card Body -->
+                                                    <form method="post" th:action="@{/cliente/guardarDirecActual}">
                                                     <div class="card-body">
                                                         <div style=text-align:center>
                                                             <label for="direc">Dirección Actual</label>
-                                                            <input type="text" class="form-control ph-center" placeholder="Av. Carlos Izaguirre, Los Olivos"  id="direc" aria-label="Disabled input example" disabled>
+                                                            <input type="text" class="form-control ph-center" style=text-align:center th:value="${session.usuario.direccionactual}"  id="direc" aria-label="Disabled input example" disabled>
+
+
+
                                                         </div>
                                                         <h1>       </h1>
                                                         <div style=text-align:center>
-                                                            <img src="images.jfif" width="200" height="150">
+                                                            <img th:src="@{/img/images.jfif}" width="200" height="150">
                                                         </div>
 
                                                     </div>
+                                                    </form>
 
                                                 </div>
 
                                         </div>
 
                                     </div>
-                                </form>
+
                             </div>
 
                         </div>
@@ -194,7 +201,10 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

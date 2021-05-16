@@ -13,4 +13,6 @@ public interface UbicacionRepository extends JpaRepository<Ubicacion, Usuario_ha
 
     List<Ubicacion> findByUsuario(Usuario usuario);
 
+
+
 }

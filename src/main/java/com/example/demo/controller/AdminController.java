@@ -75,7 +75,8 @@ public class AdminController  {
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1){
+                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                                     @RequestParam(value = "dni", required = false) String dni1){
 
 
         if(tipo == null){
@@ -98,7 +99,24 @@ public class AdminController  {
             case "adminRest":
                 //model.addAttribute("listaAdminRestSolicitudes",
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
-                Page<Usuario> pagina1 = adminRestService.adminRestPaginacion(numPag, tamPag);
+                Page<Usuario> pagina1 ;
+                if((nombreUsuario1==null || nombreUsuario1.equals(""))
+                        && (dni1==null || dni1.equals("") && fechaRegistro1==null)){
+                    pagina1 = adminRestService.adminRestPaginacion(numPag, tamPag);
+                }else{
+                    model.addAttribute("nombreUsuario1", nombreUsuario1);
+                    model.addAttribute("dni1", dni1);
+                    model.addAttribute("fechaRegistro1", fechaRegistro1);
+
+                    if(fechaRegistro1==null){
+                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }
+
+                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
+
+
+                }
+
                 List<Usuario> listaAdminRest = pagina1.getContent();
                 model.addAttribute("tamPag",tamPag);
                 model.addAttribute("currentPage",numPag);

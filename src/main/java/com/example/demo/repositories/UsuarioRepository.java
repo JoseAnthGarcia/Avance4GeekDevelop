@@ -35,6 +35,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select min(movilidad) from usuario", nativeQuery = true)
     int buscarIdMovilidadMinimaRepartidor();
 
+    @Query(value = "select * from usuario \n" +
+            "where idrol=3 and estado = 2 and\n" +
+            "(lower(nombres) like %?1% or lower(apellidos) like %?2%) and (dni like %?3%)\n" +
+            "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?4 DAY))", nativeQuery = true)
+    Page<Usuario> buscarAdministradorR(String nombres, String apellidos, String dni, int fechaRegistro, Pageable pageable);
+
+
     @Query(value = "select us.* from usuario us \n" +
             "left join movilidad m on us.idmovilidad = m.idmovilidad\n" +
             "where us.idrol=4 and\n" +

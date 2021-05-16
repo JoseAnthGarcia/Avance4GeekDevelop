@@ -361,7 +361,7 @@ public class AdminController  {
 
     }
 
-    @GetMapping("/bloqueado")
+    /* @GetMapping("/bloqueado")
     public String bloquearUsuario(Model model,
                                   @RequestParam("id") int id) {
 
@@ -375,9 +375,7 @@ public class AdminController  {
         }
         return "redirect:/admin/solicitudes";
 
-    }
-
-    /*
+    }*/
 
     @GetMapping("/actualizar")
     public String actualizarEstado(@RequestParam("idUsuario") int id, RedirectAttributes attr){
@@ -392,7 +390,7 @@ public class AdminController  {
                 1 - ACTIVO
                 2 - PENDIENTE
                 DESBLOQUEAR: DE 0 - 1
-
+            */
             switch (usuario.getEstado()){
         case 0:
             // de bloqueado a aceptado
@@ -413,7 +411,7 @@ public class AdminController  {
 
         return "";
                 }
-     */
+
 
     @GetMapping("/crear")
     public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario) {

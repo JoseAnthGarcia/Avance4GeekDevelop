@@ -18,7 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.formLogin()
-                .loginPage("/ClienteLogin")
+                .loginPage("/login")
                 .loginProcessingUrl("/processLogin")
                 .usernameParameter("correo")
                 .passwordParameter("contrasenia")
@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true);
-        System.out.println("configure");
+
     }
 
 

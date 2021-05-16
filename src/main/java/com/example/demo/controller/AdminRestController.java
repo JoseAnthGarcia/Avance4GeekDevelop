@@ -31,11 +31,11 @@ public class AdminRestController {
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
-
-    @GetMapping("/login")
+    //oe ya pes ><
+    /*@GetMapping("/login")
     public String loginAdminRest() {
         return "AdminRestaurante/loginAR";
-    }
+    }*/
 
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {

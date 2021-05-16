@@ -1,7 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.*;
-import com.example.demo.repositories.*;
+import com.example.demo.entities.Distrito;
+import com.example.demo.entities.Usuario;
+import com.example.demo.entities.Ubicacion;
+import com.example.demo.entities.Usuario_has_distritoKey;
+import com.example.demo.repositories.DistritosRepository;
+import com.example.demo.repositories.RolRepository;
+import com.example.demo.repositories.UsuarioRepository;
+import com.example.demo.repositories.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,33 +46,9 @@ public class LoginController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
-    @Autowired
-    RestauranteRepository restauranteRepository;
 
-    @GetMapping("/ClienteLogin")
-    public String loginForm(Authentication auth, HttpSession session) {
-        try {
-            String rol = "";
-            for (GrantedAuthority role : auth.getAuthorities()) {
-                rol = role.getAuthority();
-                break;
-            }
-
-            String correo = auth.getName();
-            Usuario usuario = usuarioRepository.findByCorreo(correo);
-
-            session.setAttribute("usuario", usuario);
-
-            switch (rol){
-                case "cliente":
-                    return "redirect:/cliente/listaRestaurantes";
-                case "administradorG":
-                    return "redirect:/admin/solicitudes";
-                case "administradorR":
-                    return "redirect:/plato/";
-            }
-        } catch (NullPointerException n) {
-        }
+    @GetMapping("/login")
+    public String loginForm() {
         return "Cliente/login";
     }
 
@@ -83,45 +65,33 @@ public class LoginController {
             rol = role.getAuthority();
             break;
         }
-        System.out.println(rol);
 
         String correo = auth.getName();
         Usuario usuario = usuarioRepository.findByCorreo(correo);
-        System.out.println(usuario.getNombres());
-
-        System.out.println(usuario.getApellidos());
 
         session.setAttribute("usuario", usuario);
 
-        //List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-       //session.setAttribute("poolDirecciones", listaDirecciones);
-        //<ubicacion> listaDirecciones=Usuario_has_distritoRepository.
-       // System.out.println(usuario);
-        Restaurante restaurante=null;
-        try {
-            restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-        }catch(NullPointerException e){
-            System.out.println("Fallo");
-        }
-        if (rol.equals("cliente")) {
-            return "redirect:/cliente/listaRestaurantes";
-        } else {
-            if (rol.equals("administrador") || rol.equals("administradorG")) {
-                System.out.println("ingreso");
+
+        //redirect:
+        switch (rol){
+            case "cliente":
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                session.setAttribute("poolDirecciones", listaDirecciones);
+                return "redirect:/cliente/listaRestaurantes";
+            case "administradorG":
                 return "redirect:/admin/usuarios";
-            } else {
-                if (rol.equals("administradorR")) {
-                    if(restaurante==null){
-                        return "redirect:/restaurante/paginabienvenida";
-                    }else{
-                        return "redirect:/plato/";
-                    }
-                }
-                return "redirect:/ClienteLogin";
-            }
-
+            case "administrador":
+                return "redirect:/admin/usuarios";
+            case "administradorR":
+                return "redirect:/plato/";
+            case "repartidor":
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                session.setAttribute("poolDirecciones", listaDirecciones1);
+                //TODO: agregar redireccion a repartidor
+                return "somewhere";
+            default:
+                return "somewhere"; //no tener en cuenta
         }
-
     }
 
     //REGISTRO CLIENTE
@@ -131,9 +101,6 @@ public class LoginController {
     public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
         // String direccion;
         model.addAttribute("ubicacion", new Ubicacion());
-        //distritos
-        model.addAttribute("distritosSeleccionados", new ArrayList<>());
-        //distritos -->
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         return "Cliente/registro";
 
@@ -239,6 +206,8 @@ public class LoginController {
             System.out.println(hashedPassword);
             cliente.setContrasenia(hashedPassword);
 
+            //guardamos direccion actual:
+            cliente.setDireccionactual(ubicacion.getDireccion());
 
             clienteRepository.save(cliente);
 

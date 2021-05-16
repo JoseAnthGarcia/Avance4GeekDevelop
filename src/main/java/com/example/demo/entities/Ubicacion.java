@@ -20,10 +20,6 @@ public class Ubicacion implements Serializable {
     @JoinColumn(name="iddistrito")
     private Distrito distrito;
 
-    @ManyToOne
-    @JoinColumn(name="codigopedido")
-    private Pedido pedido;
-
     private String direccion;
     private String coordenadas;
 
@@ -34,14 +30,6 @@ public class Ubicacion implements Serializable {
 
     public void setIdubicacion(int idubicacion) {
         this.idubicacion = idubicacion;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
 
     public Usuario getUsuario() {

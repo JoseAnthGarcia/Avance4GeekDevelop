@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>NUEVO EXTRA</title>
+        <title th:text="${extra.idextra == 0? 'REGISTRAR EXTRA' : 'EDITAR EXTRA'}"></title>
 
         <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
@@ -218,10 +218,11 @@
                                     <div class="container-fluid">
                                         <div class="tabel-responsive">
                                             <table class="table">
-                                                <form method="POST" id="nuevo" class="justify-content-left"
-                                                      th:action="@{/extra/guardar}" th:object="${extra}"
+                                                <form method="post" id="nuevo" class="justify-content-left"
+                                                      th:action="@{'/extra/guardar'}" th:object="${extra}"
                                                       enctype="multipart/form-data">
                                                     <input hidden th:field="*{idextra}">
+                                                    <input hidden name="idcategoria" th:value="${idcategoria}">
                                                     <tr>
                                                         <td><label for="nombre">Nombre:</label></td>
                                                         <td colspan="2"><input type="text" class="form-control"
@@ -274,13 +275,13 @@
                                                     <tr>
                                                     <tr>
                                                         <td colspan="3"><a
-                                                                th:text="${extra.idextra ==0? 'Registrar Extra':'Editar Extra'}"
+                                                                th:text="${extra.idextra ==0? 'Registrar Extra':'Actualizar'}"
                                                                 class="btn btn-primary mb-4 mr-2 "
                                                                 data-toggle="modal"
                                                                 data-target="#RegistroExitoso"
                                                                 href="#RegistroExitoso"></a>
                                                             <a class="btn btn-info mb-4 mr-2"
-                                                               th:href="@{/extra/lista}"
+                                                               th:href="@{'/extra/lista?idcategoria='+${idcategoria}}"
                                                                role="button">Cancelar</a>
                                                             <a th:if="${extra.idextra!=0}"
                                                                class="btn btn-danger mb-4 mr-2"
@@ -363,7 +364,7 @@
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <a th:href="@{'/extra/borrar?id='+${extra.getIdextra()}}" class="btn btn-primary">Sí</a>
+                        <a th:href="@{'/extra/borrar?idcategoria='+${idcategoria}+'&id='+${extra.getIdextra()}}" class="btn btn-primary">Sí</a>
                         <a class="btn" type="button"
                            data-dismiss="modal">
                             No

@@ -46,16 +46,24 @@ public class ClienteController {
 
     }
     @PostMapping("/guardarEditar")
-    public String guardarEdicion(@ModelAttribute("usuario") @Valid Usuario usuario , BindingResult bindingResult, HttpSession httpSession
-                    , Model model) {
+    public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
+                                 @RequestParam("telefonoNuevo") String telefonoNuevo,
+                                 HttpSession httpSession,
+                                 Model model) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
-        if (BCrypt.checkpw(usuario.getContrasenia(), usuario1.getContrasenia())) {
+        /*boolean telfValid = true;
+
+        if( telefonoNuevo.equals('') || telefonoNuevo.length()!=9){
+            telfValid =false;
+        }*/
+
+        if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
             valContra = false;
         }
 
-        if (valContra || bindingResult.hasErrors()) {
+        if (valContra) {
             System.out.println("ENTRO AEA");
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
@@ -63,7 +71,8 @@ public class ClienteController {
             return "Cliente/editarPerfil";
 
         } else {
-            usuario1.setTelefono(usuario.getTelefono()); //usar save para actualizar
+            usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
+            httpSession.setAttribute("usuario",usuario1);
             clienteRepository.save(usuario1);
             return "Cliente/listaRestaurantes";
         }

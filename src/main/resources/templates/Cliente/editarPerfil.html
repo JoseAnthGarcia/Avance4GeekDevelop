@@ -37,43 +37,41 @@
                             </div>
                             <div class="card-header py-3">
 
-                                <form method="POST" th:action="@{/cliente/guardarEditar}" th:object="${usuario}">
+                                <form method="POST" th:action="@{/cliente/guardarEditar}">
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nombres </label>
-                                            <input type="text" class="form-control">
+                                            <input type="text" class="form-control"th:value="${session.usuario.nombres}" disabled>
 
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label>Apellido </label>
-                                            <input type="text" class="form-control "
-                                                   th:field="*{apellidos}" >
+                                            <input type="text" class="form-control" th:value="${session.usuario.apellidos}" disabled>
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Correo </label>
-                                            <input type="text" class="form-control" th:field="*{correo}">
+                                            <input type="text" class="form-control" th:value="${session.usuario.correo}" disabled>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Fecha de Nacimiento</label>
                                             <input type="text" class="form-control"
-                                                   th:field="*{fechanacimiento}" disabled>
+                                                   th:value="${session.usuario.fechanacimiento}" disabled>
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>N° de celular</label>
-                                            <input type="text" class="form-control" th:field="*{telefono}" >
-                                       <h1 style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></h1>
+                                            <input type="text" class="form-control" th:value="${session.usuario.telefono}" name="telefonoNuevo" >
+
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Contraseña (Confirmación)</label>
-                                            <input type="password" class="form-control " th:field="*{contrasenia}" >
-                                            <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
+                                            <input type="password" class="form-control " name="contraseniaConf" >
 
                                         </div>
 

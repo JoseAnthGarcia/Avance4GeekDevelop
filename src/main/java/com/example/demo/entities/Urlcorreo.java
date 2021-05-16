@@ -4,13 +4,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "urlcorreo")
-public class urlcorreo {
+public class Urlcorreo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idurlcorreo;
     @Column(nullable = false)
-    private String num;
+    private String codigo;
     @OneToOne
     @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
@@ -25,12 +25,12 @@ public class urlcorreo {
         this.idurlcorreo = idurlcorreo;
     }
 
-    public String getNum() {
-        return num;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setCodigo(String num) {
+        this.codigo = num;
     }
 
     public Usuario getUsuario() {

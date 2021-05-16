@@ -3,16 +3,16 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -42,6 +42,12 @@ public class LoginController {
     UbicacionRepository ubicacionRepository;
     @Autowired
     RestauranteRepository restauranteRepository;
+
+    @Autowired
+    UrlCorreoRepository urlCorreoRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @GetMapping("/login")
     public String loginForm() {
@@ -224,6 +230,96 @@ public class LoginController {
 
         }
 
+    }
+
+    @RequestMapping("/olvidoContrasenia")
+    public String olvidoContrasenia(){
+        return "";
+    }
+
+    @PostMapping("/enviarCorreoOlvidoContra")
+    public String envioCorreo(@RequestParam("correo") String correo){
+        //TODO: validar que sea correo
+        Rol rol = rolRepository.findByTipo("usuario");
+        Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
+        if(cliente!=null){
+            Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
+            if(urlcorreo1!=null){
+                urlCorreoRepository.delete(urlcorreo1);
+            }
+            String codigoAleatorio = "";
+            while(true){
+                codigoAleatorio = generarCodigAleatorio();
+                Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
+                if (urlcorreo2==null){
+                    break;
+                }
+            }
+            Urlcorreo urlcorreo3 = new Urlcorreo();
+            urlcorreo3.setCodigo(codigoAleatorio);
+            urlcorreo3.setUsuario(cliente);
+
+            //genero fecha:
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            urlcorreo3.setFecha(hourdateFormat.format(date));
+            urlCorreoRepository.save(urlcorreo3);
+
+            //genero url:
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String urlPart = passwordEncoder.encode(cliente.getDni()+codigoAleatorio);
+            String url = "http://localhost:8080/avance6/cambioContra?id="+urlPart;
+            String content = "Para cambio de contraseña:\n" +url;
+
+            String subject = "OLVIDE MI CONTRASEÑA";
+
+            sendEmail(correo, subject, content);
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/cambioContra")
+    public String cambiarContra(@RequestParam("id") String id){
+        List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
+        Boolean redireccionar = false;
+        for(Urlcorreo urlcorreo : listaUrlCorreo){
+            String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
+            if(BCrypt.checkpw(id, comparar)){
+                redireccionar = true;
+                urlCorreoRepository.delete(urlcorreo);
+            }
+        }
+
+        if(redireccionar){
+            return "";
+        }else{
+            return "redirect:/login";
+        }
+    }
+
+
+    //generar codigo aleatorio:
+    public String generarCodigAleatorio(){
+        char [] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        int charsLength = chars.length;
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int tamCodigo = 5;
+        for (int i=0;i<tamCodigo;i++){
+            buffer.append(chars[random.nextInt(charsLength)]);
+        }
+        return buffer.toString();
+    }
+
+    //Pasamos por parametro: destinatario, asunto y el mensaje
+    public void sendEmail(String to, String subject, String content) {
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(to);
+        email.setSubject(subject);
+        email.setText(content);
+
+        javaMailSender.send(email);
     }
 
 }

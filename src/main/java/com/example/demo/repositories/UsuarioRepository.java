@@ -86,4 +86,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +
             "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) ",nativeQuery = true)
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
+
+    Usuario findByCorreoAndRol(String correo, Rol rol);
+
 }

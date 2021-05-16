@@ -58,7 +58,7 @@ public class ClienteController {
         int telfInt;
         try{
             telfInt = Integer.parseInt(telefonoNuevo);
-        }catch (NullPointerException e){
+        }catch (NumberFormatException e){
             telfInt = -1;
         }
 
@@ -71,7 +71,6 @@ public class ClienteController {
         }
 
         if (valContra || !telfValid){
-            System.out.println("ENTRO AEA");
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
             }
@@ -81,7 +80,7 @@ public class ClienteController {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
             httpSession.setAttribute("usuario",usuario1); //TODO: preguntar profe
             clienteRepository.save(usuario1);
-            return "Cliente/listaRestaurantes";
+            return "redirect:/cliente/listaRestaurantes";
         }
 
 

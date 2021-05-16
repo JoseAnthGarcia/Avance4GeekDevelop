@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 
@@ -46,16 +48,24 @@ public class ClienteController {
 
     }
     @PostMapping("/guardarEditar")
-    public String guardarEdicion(@ModelAttribute("usuario") @Valid Usuario usuario , BindingResult bindingResult, HttpSession httpSession
-                    , Model model) {
+    public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
+                                 @RequestParam("telefonoNuevo") String telefonoNuevo,
+                                 HttpSession httpSession,
+                                 Model model) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
-        if (BCrypt.checkpw(usuario.getContrasenia(), usuario1.getContrasenia())) {
+        /*boolean telfValid = true;
+
+        if( telefonoNuevo.equals('') || telefonoNuevo.length()!=9){
+            telfValid =false;
+        }*/
+
+        if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
             valContra = false;
         }
 
-        if (valContra || bindingResult.hasErrors()) {
+        if (valContra) {
             System.out.println("ENTRO AEA");
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
@@ -63,8 +73,9 @@ public class ClienteController {
             return "Cliente/editarPerfil";
 
         } else {
-            usuario1.setTelefono(usuario.getTelefono()); //usar save para actualizar
-            clienteRepository.save(usuario1);
+            usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
+            httpSession.setAttribute("usuario",usuario1); //sesion -> actualizar la sesion
+            clienteRepository.save(usuario1); //actualizar la base datos
             return "Cliente/listaRestaurantes";
         }
 
@@ -76,6 +87,55 @@ public class ClienteController {
 
         return "Cliente/listaRestaurantes";
     }
+
+    @GetMapping("/listaDirecciones")
+    public String listaDirecciones(Model model,HttpSession httpSession){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("listaDirecciones", ubicacionRepository.findByUsuario(usuario));
+
+        return "Cliente/listaDirecciones";
+    }
+
+
+    @PostMapping("/guardarDireccion")
+    public String guardarDirecciones(){
+
+        return "redirect:/cliente/listaDirecciones";
+    }
+    @PostMapping("/agregarDireccion")
+    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession ){
+        boolean valNul=true;
+        if(direccion.isEmpty()){
+            valNul=false;
+            return "/cliente/listaDirecciones";
+        }else{
+
+            List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");
+
+            return "redirect:/cliente/listaDirecciones";
+        }
+
+    }
+
+
+
+
+    @GetMapping("/listaCupones")
+    public String listacupones(){
+
+        return "Cliente/listaCupones";
+    }
+
+    @GetMapping("/listaReportes")
+    public String listaReportes(){
+        return "Cliente/listaReportes";
+    }
+
+
+
+
+
 
 
 

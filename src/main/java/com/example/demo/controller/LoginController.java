@@ -47,30 +47,11 @@ public class LoginController {
     @Autowired
     UbicacionRepository ubicacionRepository;
 
-    @GetMapping("/ClienteLogin")
-    public String loginForm(Authentication auth, HttpSession session) {
-        try {
-            String rol = "";
-            for (GrantedAuthority role : auth.getAuthorities()) {
-                rol = role.getAuthority();
-                break;
-            }
-
-            String correo = auth.getName();
-            Usuario usuario = usuarioRepository.findByCorreo(correo);
-
-            session.setAttribute("usuario", usuario);
-
-            switch (rol){
-                case "cliente":
-                    return "redirect:/cliente/listaRestaurantes";
-                case "administradorG":
-                    return "redirect:/admin/solicitudes";
-            }
-
-        } catch (NullPointerException n) {
-        }
-
+    @GetMapping("/login")
+    public String loginForm() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode("joham.hector");
+        System.out.println(hashedPassword);
         return "Cliente/login";
     }
 
@@ -87,37 +68,33 @@ public class LoginController {
             rol = role.getAuthority();
             break;
         }
-        System.out.println(rol);
 
         String correo = auth.getName();
         Usuario usuario = usuarioRepository.findByCorreo(correo);
-        System.out.println(usuario.getNombres());
-
-        System.out.println(usuario.getApellidos());
 
         session.setAttribute("usuario", usuario);
 
-        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-        session.setAttribute("poolDirecciones", listaDirecciones);
-        //<ubicacion> listaDirecciones=Usuario_has_distritoRepository.
-        System.out.println(usuario);
 
-
-        if (rol.equals("cliente")) {
-            return "redirect:/cliente/listaRestaurantes";
-        } else {
-            if (rol.equals("administrador") || rol.equals("administradorG")) {
-                System.out.println("ingreso");
+        //redirect:
+        switch (rol){
+            case "cliente":
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                session.setAttribute("poolDirecciones", listaDirecciones);
+                return "redirect:/cliente/listaRestaurantes";
+            case "administradorG":
                 return "redirect:/admin/usuarios";
-            } else {
-                if (rol.equals("administradorR")) {
-                    return "redirect:/plato/";
-                }
-                return "redirect:/ClienteLogin";
-            }
-
+            case "administrador":
+                return "redirect:/admin/usuarios";
+            case "administradorR":
+                return "redirect:/plato/";
+            case "repartidor":
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                session.setAttribute("poolDirecciones", listaDirecciones1);
+                //TODO: agregar redireccion a repartidor
+                return "somewhere";
+            default:
+                return "somewhere"; //no tener en cuenta
         }
-
     }
 
     //REGISTRO CLIENTE
@@ -127,9 +104,6 @@ public class LoginController {
     public String nuevoCliente(@ModelAttribute("cliente") Usuario cliente, Model model) {
         // String direccion;
         model.addAttribute("ubicacion", new Ubicacion());
-        //distritos
-        model.addAttribute("distritosSeleccionados", new ArrayList<>());
-        //distritos -->
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         return "Cliente/registro";
 
@@ -235,6 +209,8 @@ public class LoginController {
             System.out.println(hashedPassword);
             cliente.setContrasenia(hashedPassword);
 
+            //guardamos direccion actual:
+            cliente.setDireccionactual(ubicacion.getDireccion());
 
             clienteRepository.save(cliente);
 

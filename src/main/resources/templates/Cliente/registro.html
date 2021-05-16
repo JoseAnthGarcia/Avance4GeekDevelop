@@ -182,7 +182,7 @@
 
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Distritos</label>
-                            <select class="form-control" th:field="*{distrito}" style="border-color:lightgray">
+                            <select class="form-control" name="distrito" style="border-color:lightgray">
                                 <option value="0" selected>Distrito</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>

@@ -64,7 +64,7 @@
 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
+                    <a class="nav-link" th:href="@{/extra}">
                         <i class="fas fa-utensils"></i>
                         <span>Extras</span>
                     </a>
@@ -78,7 +78,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
+                    <a class="nav-link " th:href="@{/cupon}">
                         <i class="fas fa-ticket-alt"></i>
                         <span>Cupones</span>
                     </a>
@@ -183,17 +183,18 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
                                     <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
 
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesión
-                                    </a>
+                                    <form id="cerrar" th:action="@{/logout}" method="post">
+                                        <a class="nav-link" data-toggle="modal"
+                                           href="#logoutModal" data-target="#logoutModal">Cerrar Sesión
+                                        </a>
+                                    </form>
                                 </div>
                             </li>
 
@@ -231,7 +232,7 @@
                                     <div class="col-sm-6">
                                         <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
                                             <div class="container2 shadow">
-                                                <img th:src="@{|imagenC/${listaCategorias.get(1).getIdcategoria()}|}" alt="Avatar"
+                                                <img th:src="@{|/plato/imagenC/${listaCategorias.get(1).getIdcategoria()}|}" alt="Avatar"
                                                      class="image2 shadow"
                                                      style="height: 300px; width: 400px">
                                                 <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/plato/lista?idcategoria='+${listaCategorias.get(1).getIdcategoria()}}">
@@ -248,7 +249,7 @@
                                         <div class="col-sm-6 mb-4"
                                              style="margin-left: 270px; margin-top: 10px; margin-bottom: 200px">
                                             <div class="container2 shadow">
-                                                <img th:src="@{|imagenC/${listaCategorias.get(2).getIdcategoria()}|}" alt="Avatar"
+                                                <img th:src="@{|/plato/imagenC/${listaCategorias.get(2).getIdcategoria()}|}" alt="Avatar"
                                                      class="image2 shadow"
                                                      style="height: 300px; width: 400px">
                                                 <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/plato/lista?idcategoria='+${listaCategorias.get(2).getIdcategoria()}}">
@@ -264,7 +265,7 @@
                                         <div class="col-sm-6 mb-4"
                                              style="margin-left: 260px; margin-top: 10px; margin-bottom: 70px">
                                             <div class="container2 shadow">
-                                                <img th:src="@{|imagenC/${listaCategorias.get(3).getIdcategoria()}|}" alt="Avatar"
+                                                <img th:src="@{|/plato/imagenC/${listaCategorias.get(3).getIdcategoria()}|}" alt="Avatar"
                                                      class="image2 shadow"
                                                      style="height: 300px; width: 400px">
                                                 <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/plato/lista?idcategoria='+${listaCategorias.get(3).getIdcategoria()}}">
@@ -316,7 +317,7 @@
                     <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111" href="loginAR.html">Cerrar Sesión</a>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Sí</button>
                     </div>
                 </div>
             </div>

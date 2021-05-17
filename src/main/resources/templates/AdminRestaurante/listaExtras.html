@@ -57,7 +57,7 @@
 
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link" href="categorias.html">
+                    <a class="nav-link" th:href="@{/plato}">
                         <i class="fas fa-fw fa-list"></i>
                         <span>Categorias</span></a>
                 </li>
@@ -192,7 +192,7 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
                                     <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
                                          type="image/png" alt="avatar">
                                 </a>

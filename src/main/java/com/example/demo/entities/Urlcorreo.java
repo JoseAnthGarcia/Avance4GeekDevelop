@@ -12,7 +12,7 @@ public class Urlcorreo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idurlcorreo;
     @Column(nullable = false)
-    private String num;
+    private String codigo;
     @OneToOne
     @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
@@ -27,12 +27,12 @@ public class Urlcorreo {
         this.idurlcorreo = idurlcorreo;
     }
 
-    public String getNum() {
-        return num;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setCodigo(String num) {
+        this.codigo = num;
     }
 
     public Usuario getUsuario() {

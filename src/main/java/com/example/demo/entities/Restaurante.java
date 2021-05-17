@@ -34,6 +34,8 @@ public class Restaurante  implements Serializable {
     @Pattern(regexp = "[a-zA-Z ]{2,254},message = Solo puede ingresar letras")
     private String direccion;
 
+    private String fecharegistro;
+
     @OneToOne
     @JoinColumn(name = "idadministrador")
     private Usuario administrador;
@@ -155,5 +157,13 @@ public class Restaurante  implements Serializable {
 
     public void setIddistrito(String iddistrito) {
         this.iddistrito = iddistrito;
+    }
+
+    public String getFecharegistro() {
+        return fecharegistro;
+    }
+
+    public void setFecharegistro(String fecharegistro) {
+        this.fecharegistro = fecharegistro;
     }
 }

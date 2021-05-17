@@ -103,6 +103,7 @@ public class AdminRestController {
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
 
 
+
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());

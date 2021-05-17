@@ -15,6 +15,16 @@ public class Categorias {
     @Lob
     private byte[] foto;
     private String fotonombre;
+    private String fotocontenttype;
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
+
     @ManyToMany(mappedBy = "categoriasRestaurante")
     private List<Restaurante> restaurantes;
 

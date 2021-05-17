@@ -24,8 +24,8 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form th:action="@{/admin/buscadorSAdminRest}" method="post">
-
+                <form th:action="@{'/admin/solicitudes?tipo=adminRest'}" method="get">
+                    <input type="hidden" name="tipo" value="adminRest">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
                             <input type="text" class="form-control"
@@ -40,7 +40,7 @@
                         <div class="col-sm-2 mb-1">
                             <input type="text" class="form-control"
                                    name="dni"
-                                   placeholder="Búsqueda por usuario"
+                                   placeholder="DNI"
                                    th:if="${dni1 == null || dni1.equals('')}">
                             <input type="text" class="form-control"
                                    name="dni"
@@ -71,12 +71,12 @@
                         </div>
 
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/solicitudes?tipo=adminRest'}">Quitar filtros</a>
                         </div>
                     </div>
 

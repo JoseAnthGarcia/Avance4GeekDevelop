@@ -23,16 +23,18 @@ public class Restaurante  implements Serializable {
     private String nombre;
 
     private String coordenadas;
-    @Pattern(regexp = "[0-9]{11}",message = "Ingrese 11 dígitos")
+    @Pattern(regexp ="[0-9]{11},message = Ingrese 11 dígitos")
     @Column(nullable = false)
     private String ruc;
-    @Pattern(regexp = "[0-9]{9}",message = "Ingrese 9 dígitos")
+    @Pattern(regexp = "[0-9]{9},message = Ingrese 9 dígitos")
     @Column(nullable = false)
     private String telefono;
 
     @Column(nullable = false)
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[a-zA-Z ]{2,254},message = Solo puede ingresar letras")
     private String direccion;
+
+    private String fecharegistro;
 
     @OneToOne
     @JoinColumn(name = "idadministrador")
@@ -51,6 +53,15 @@ public class Restaurante  implements Serializable {
     private String fotonombre;
     private String fotocontenttype;
     private byte[] foto;
+    private int estado;
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 
     public String getFotonombre() {
         return fotonombre;
@@ -146,5 +157,13 @@ public class Restaurante  implements Serializable {
 
     public void setIddistrito(String iddistrito) {
         this.iddistrito = iddistrito;
+    }
+
+    public String getFecharegistro() {
+        return fecharegistro;
+    }
+
+    public void setFecharegistro(String fecharegistro) {
+        this.fecharegistro = fecharegistro;
     }
 }

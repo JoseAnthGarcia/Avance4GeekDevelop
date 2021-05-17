@@ -259,14 +259,4 @@ public class LoginController {
     }
 
 
-    /****RECUPERAR CONTRASEÑA***/
-    @GetMapping("/recuperarContrasenia")
-    public  String recuperarContra(){
-        return "Cliente/olvi";
-    }
-
-
-
-
-
 }

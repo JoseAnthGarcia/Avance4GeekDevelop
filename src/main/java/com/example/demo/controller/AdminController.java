@@ -119,7 +119,7 @@ public class AdminController  {
                         fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1, fechaRegistro1,ruc1);
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();

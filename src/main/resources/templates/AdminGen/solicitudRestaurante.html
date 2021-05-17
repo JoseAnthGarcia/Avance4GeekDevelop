@@ -43,7 +43,7 @@
                         <div class="col-sm-2 mb-1">
                             <input type="text" class="form-control"
                                    name="ruc"
-                                   placeholder="Búsqueda por nombre"
+                                   placeholder="Búsqueda por ruc"
                                    th:if="${ruc1 == null || ruc1.equals('')}">
                             <input type="text" class="form-control"
                                    name="ruc"
@@ -148,6 +148,7 @@
                                                 <tr>
                                                     <td th:text="|Fecha de Registro: ${rest.fecharegistro}|">Fecha de Registro: 20/01/3113 10:30:12</td>
                                                     <td>
+                                                        <p>Categorías:</p>
                                                         <p th:each="cat : ${rest.categoriasRestaurante}" th:text="${cat.nombre}"><br></p>
                                                     </td>
                                                 </tr>
@@ -155,7 +156,7 @@
                                                     <td>
 
                                                     </td>
-                                                    <td>
+
                                                     <td>
 
                                                         <a th:href="@{'/admin/aceptarSolicitudRest?id='+${rest.idrestaurante}}" class="btn btn-success btn-icon-split">
@@ -179,7 +180,7 @@
                                                         </a>
 
                                                     </td>
-                                                    </td>
+
                                                 </tr>
                                                 </tbody>
 

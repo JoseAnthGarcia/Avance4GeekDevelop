@@ -192,7 +192,7 @@ public class ClienteController {
             }
 
             if(valLong){
-                model.addAttribute("msg2", "Solo puede registrar 5 tarjetas");
+                model.addAttribute("msg2", "Solo puede registrar 6 tarjetas");
             }
 
            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");

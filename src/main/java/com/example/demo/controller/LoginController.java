@@ -3,9 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +39,6 @@ public class LoginController {
 
     @Autowired
     RolRepository rolRepository;
-    @Autowired  //////------------importante para enviar correo
-    private JavaMailSender mailSender;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -363,7 +364,7 @@ public class LoginController {
 
 
     public void sendHtmlMailREgistrado(String to, String subject, Usuario usuario) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(to);
         helper.setSubject(subject);
@@ -372,7 +373,7 @@ public class LoginController {
         context.setVariable("id", usuario.getDni());
         String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
-        mailSender.send(message);
+        javaMailSender.send(message);
     }
 
 }

@@ -185,14 +185,14 @@ public class ClienteController {
 
         if(valNul|| valNew || valLong){
             if(valNul){
-                model.addAttribute("msg", "No ingreso dirección");
+                model.addAttribute("msg", "No ingresó dirección");
             }
             if(valNew){
-                model.addAttribute("msg1", "La direccion ingresda ya está registrada");
+                model.addAttribute("msg1", "La dirección ingresda ya está registrada");
             }
 
             if(valLong){
-                model.addAttribute("msg2", "Solo puede registrar 6 tarjetas");
+                model.addAttribute("msg2", "Solo puede registrar 6 direcciones");
             }
 
            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");

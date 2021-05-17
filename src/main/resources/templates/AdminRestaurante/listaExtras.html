@@ -295,7 +295,7 @@
                                             <tr th:each="extra,v :${listaExtras}">
                                                 <td th:text="${(v.index + 1)+(5*(currentPage - 1))}"></td>
                                                 <td th:text="${extra.getNombre()}"></td>
-                                                <td th:text="${extra.getPreciounitario()}"></td>
+                                                <td th:text="${'S/. '+extra.getPreciounitario()}"></td>
                                                 <td>
                                                     <a style="color: #dce3f9"
                                                        class="btn btn-warning btn-circle align"

@@ -49,7 +49,7 @@
 
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link" href="categorias.html">
+                    <a class="nav-link" th:href="@{/plato}">
                         <i class="fas fa-fw fa-list"></i>
                         <span>Categorias</span></a>
                 </li>
@@ -205,9 +205,10 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form method="get" th:action="@{/plato/page}">
-                            <div class="form-group row">
+                        <form method="get" th:action="@{'/plato/page?idcategoria='+${idcategoria}}">
 
+                            <div class="form-group row">
+                                <input hidden name="idcategoria" th:value="${idcategoria}">
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="examplePlato"
@@ -248,7 +249,7 @@
                                 </div>
                                 <div class="col-sm-3 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
-                                       th:href="@{/plato/lista}">Quitar filtros</a>
+                                       th:href="@{'/plato/lista?idcategoria='+${idcategoria}}">Quitar filtros</a>
                                 </div>
                             </div>
                         </form>
@@ -259,9 +260,20 @@
                             <div class="card-header py-3 " style="background-color: #701111;">
 
                                 <div class="d-sm-flex align-items-center">
-                                    <a class="btn btn-warning" th:href="@{'/plato/nuevo'}"><i
+                                    <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
-                                    <h5 class="font-weight-bold text-white mx-auto">PLATOS</h5>
+                                    <h5 th:if="${idcategoria==1}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
+                                    <h5 th:if="${idcategoria==3}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
+                                    <h5 th:if="${idcategoria==4}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
+                                    <h5 th:if="${idcategoria==2}"
+                                        class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
 
                                 </div>
 
@@ -304,7 +316,7 @@
                                                 <td th:text="${platos.descripcion}"></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
-                                                                            th:href="@{'/plato/editar?id='+ ${platos.idplato}}"><i
+                                                                            th:href="@{'/plato/editar?idcategoria='+${idcategoria}+'&id='+ ${platos.idplato}}"><i
                                                         class="fas fa-pen text-white"></i></a></td>
                                             </tr>
                                         </tbody>
@@ -314,7 +326,7 @@
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/plato/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2 no"></a>
                                         <a th:unless="${currentPage != i}"

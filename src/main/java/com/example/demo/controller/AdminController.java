@@ -262,7 +262,7 @@ public class AdminController  {
             return "redirect:/admin/solicitudes?tipo=restaurante";
         }
     }
-
+// HOLA
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
                                  @RequestParam(value = "tipo", required = false) String tipo){

@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +16,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.DateFormat;
@@ -34,6 +40,11 @@ public class LoginController {
 
     @Autowired
     RolRepository rolRepository;
+    @Autowired  //////------------importante para enviar correo
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Autowired
     DistritosRepository distritosRepository;
@@ -116,7 +127,7 @@ public class LoginController {
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) {
+                                 BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -220,11 +231,33 @@ public class LoginController {
             ubicacion.setUsuario(cliente);
             ubicacionRepository.save(ubicacion);
 
+            /////----------------Envio Correo--------------------/////
+
+            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado html", cliente);
+
+
+            /////-----------------------------------------  ------/////
+
+
             return "redirect:/cliente/login";
 
         }
 
     }
+
+    public void sendHtmlMailREgistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
 
     /****RECUPERAR CONTRASEÑA***/
     @GetMapping("/recuperarContrasenia")

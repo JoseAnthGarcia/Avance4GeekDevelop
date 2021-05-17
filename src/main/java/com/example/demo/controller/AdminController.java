@@ -361,7 +361,7 @@ public class AdminController  {
 
     }
 
-    @GetMapping("/bloqueado")
+    /* @GetMapping("/bloqueado")
     public String bloquearUsuario(Model model,
                                   @RequestParam("id") int id) {
 
@@ -375,9 +375,7 @@ public class AdminController  {
         }
         return "redirect:/admin/solicitudes";
 
-    }
-
-    /*
+    }*/
 
     @GetMapping("/actualizar")
     public String actualizarEstado(@RequestParam("idUsuario") int id, RedirectAttributes attr){
@@ -392,7 +390,7 @@ public class AdminController  {
                 1 - ACTIVO
                 2 - PENDIENTE
                 DESBLOQUEAR: DE 0 - 1
-
+            */
             switch (usuario.getEstado()){
         case 0:
             // de bloqueado a aceptado
@@ -413,7 +411,7 @@ public class AdminController  {
 
         return "";
                 }
-     */
+
 
     @GetMapping("/crear")
     public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario) {
@@ -465,7 +463,7 @@ public class AdminController  {
 
     @PostMapping("/guardarAdmin")
     public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) {
+                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) throws MessagingException {
 
         List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());
         if (!usuarioxcorreo.isEmpty()) {
@@ -503,7 +501,7 @@ public class AdminController  {
 
 
             if (fecha_naci) {
-                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+                model.addAttribute("msg7", "Solo pueden registrarse m   ayores de edad");
             }
 
             return "/AdminGen" +
@@ -522,9 +520,19 @@ public class AdminController  {
 
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(usuario.getDni()+usuario.getNombres());
+            String hashedPassword = passwordEncoder.encode(usuario.getDni());
             System.out.println(hashedPassword);
             usuario.setContrasenia(hashedPassword);
+
+            /////----------------Envio Correo--------------------/////
+
+            String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            sendHtmlMail(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+
+
+            /////-----------------------------------------  ------/////
+
 
 
             usuarioRepository.save(usuario);
@@ -556,6 +564,19 @@ public class AdminController  {
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
         String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+    public void sendHtmlMailREgistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

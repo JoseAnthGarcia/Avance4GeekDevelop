@@ -107,16 +107,15 @@ public class AdminController  {
                 Page<Restaurante> pagina2;
 
                 if((nombreRest1==null || nombreRest1.equals(""))
-                        && (ruc1==null || ruc1.equals(""))){
+                        && (ruc1==null || ruc1.equals(""))&& fechaRegistro1==null){
                     pagina2 = restauranteService.restaurantePaginacion(numPag, tamPag);
                 }else{
                     model.addAttribute("nombreRest1", nombreRest1);
 
-
                     model.addAttribute("ruc1", ruc1);
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
                     }
 
                     pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1);

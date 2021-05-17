@@ -17,6 +17,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
     @Query(value = "select * from restaurante where idadministrador = ?1", nativeQuery = true)
     Restaurante encontrarRest (int id);
 
+    ;
 
     @Query(value = "select datediff(now(),min(fechaRegistro)) from restaurante", nativeQuery = true)
     int buscarFechaMinimaRestaurante();

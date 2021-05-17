@@ -8,8 +8,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
+        <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon" />
 
-        <title>LISTA BEBIDAS</title>
+        <title th:if="${idcategoria==1}"
+               th:text="${'LISTA DE BEBIDAS'}"></title>
+        <title th:if="${idcategoria==3}"
+               th:text="${'LISTA DE ENSALADAS'}"></title>
+        <title th:if="${idcategoria==4}"
+               th:text="${'LISTA DE GUARNICIONES'}"></title>
+        <title th:if="${idcategoria==2}"
+               th:text="${'LISTA DE CUBIERTOS'}"></title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
@@ -23,6 +32,7 @@
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this page -->
         <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
     </head>
 
     <body id="page-top">
@@ -183,8 +193,8 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle"
-                                         th:href="@{/static/img/undraw_profile.svg}">
+                                    <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
+                                         type="image/png" alt="avatar">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

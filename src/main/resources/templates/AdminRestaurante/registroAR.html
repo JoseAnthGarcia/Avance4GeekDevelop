@@ -112,6 +112,8 @@
                                            onfocus="(this.type='date')" onblur="(this.type='text')"/>
                                     <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
                                          th:errors="*{fechanacimiento}"></div>
+                                    <h1 th:if="${msg7!=null}" th:text="${msg7}"
+                                        style="color: red; font-size: small; text-align: left"></h1>
                                 </div>
                             </div>
 

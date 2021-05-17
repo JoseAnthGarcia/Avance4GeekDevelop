@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,11 +41,6 @@ public class AdminRestController {
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
-    //oe ya pes ><
-    /*@GetMapping("/login")
-    public String loginAdminRest() {
-        return "AdminRestaurante/loginAR";
-    }*/
 
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
@@ -57,25 +54,48 @@ public class AdminRestController {
                                    @RequestParam("confcontra") String contra2, @RequestParam("photo") MultipartFile file, Model model) {
 
         String fileName = "";
-        if (file != null) {
-            if (file.isEmpty()) {
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-                return "/AdminRestaurante/registroAR";
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "/AdminRestaurante/registroAR";
-            }
-        }
+
         System.out.println(contra2);
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
-        String fechanacimiento = LocalDate.now().toString();
-        adminRest.setFecharegistro(fechanacimiento);
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())) {
+        String fecharegistro = LocalDate.now().toString();
+        adminRest.setFecharegistro(fecharegistro);
+        Boolean fecha_naci = true;
+        try {
+            String[] parts = adminRest.getFechanacimiento().split("-");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            System.out.println("AÑOOOOOOO " + anio);
+            System.out.println("Naciiiiii " + naci);
+            if (anio - naci >= 18) {
+                fecha_naci = false;
+            }
+        } catch (NumberFormatException n) {
+            n.printStackTrace();
+        }
+        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci "+fecha_naci);
+
+        System.out.println("");
+        if (file != null) {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+            }
+        }
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
+            if (fecha_naci) {
+                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+            }
+            if (!contra2.equals(adminRest.getContrasenia())) {
+                model.addAttribute("msg", "Las contraseñas no coinciden");
+            }
             return "/AdminRestaurante/registroAR";
         } else {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

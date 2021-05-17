@@ -52,6 +52,7 @@ public class Restaurante  implements Serializable {
 
     private String fotonombre;
     private String fotocontenttype;
+    @Lob
     private byte[] foto;
     private int estado;
 

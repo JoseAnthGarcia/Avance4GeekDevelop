@@ -141,13 +141,18 @@ public class ClienteController {
     }
 
     @PostMapping("/eliminarDireccion")
-    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar){
+    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session){
 
         for(String idUbicacion : listaIdDireccionesAeliminar){
             //validad int idUbicacion:
             int idUb = Integer.parseInt(idUbicacion);
             Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
-            ubicacionRepository.delete(ubicacion);
+            Usuario usuarioS = (Usuario) session.getAttribute("usuario");
+
+            if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
+                ubicacionRepository.delete(ubicacion);
+            }
+
         }
 
         return "redirect:/cliente/listaDirecciones";

@@ -6,6 +6,8 @@ import javax.persistence.*;
 @Table(name = "urlcorreo")
 public class Urlcorreo {
 
+    //cOMMET
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idurlcorreo;

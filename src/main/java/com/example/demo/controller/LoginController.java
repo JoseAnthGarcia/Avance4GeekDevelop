@@ -311,7 +311,7 @@ public class LoginController {
         }
 
         if(redireccionar){
-            return "actuContraOlv";
+            return "recuperarContra";
         }else{
             return "redirect:/login";
         }
@@ -320,21 +320,66 @@ public class LoginController {
     @PostMapping("/actualizarContraOlvidada")
     public String actualizarContraOlvidada(@RequestParam("id") String id,
                                            @RequestParam("contra1") String contra1,
-                                           @RequestParam("contra2") String contra2){
-        //TODO: validaciones
-        List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
-        for(Urlcorreo urlcorreo : listaUrlCorreo){
-            String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
-            if(BCrypt.checkpw(comparar, id)){
-                //TODO: MANDAR CODIGO EXPIRADO Y BORRAR SI YA ESTA EXPIRADO
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String nuevaContra = passwordEncoder.encode(contra1);
-                urlcorreo.getUsuario().setContrasenia(nuevaContra);
-                usuarioRepository.save(urlcorreo.getUsuario());
-                urlCorreoRepository.delete(urlcorreo);
-            }
+                                           @RequestParam("contra2") String contra2, Model model){
+
+        boolean valLong1=false;
+        boolean valLong2=false;
+        boolean valIguales=false;
+        boolean valVacio1=false;
+        boolean valVacio2=false;
+        if(contra1.isEmpty()){
+            valVacio1=true;
         }
-        return "redirect:/login";
+        if(contra2.isEmpty()){
+            valVacio2=true;
+        }
+        if(contra1.length()<8){
+            valLong1=true;
+        }
+        if(contra2.length()<8){
+            valLong2=true;
+        }
+
+        if(contra1.equals(contra2)){
+            valIguales=false;
+        }
+
+        if(valLong1 || valLong2 || valIguales || valVacio1 || valVacio2){
+
+            if(valLong1){
+                model.addAttribute("msg1","Ingrese de 8 caracteres a mas");
+            }
+            if(valLong2){
+                model.addAttribute("msg2","Ingrese de 8 caracteres a mas");
+            }
+            if (valIguales){
+                model.addAttribute("msg3","Las contraseñas no coinciden");
+            }
+            if (valVacio1){
+                model.addAttribute("msg4","Recuadro vacio");
+            }
+            if (valVacio2){
+                model.addAttribute("msg5","Recuadro vacio");
+            }
+
+
+            return "recuperarContra";
+        }else {
+
+            List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
+            for (Urlcorreo urlcorreo : listaUrlCorreo) {
+                String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
+                if (BCrypt.checkpw(comparar, id)) {
+                    //TODO: MANDAR CODIGO EXPIRADO Y BORRAR SI YA ESTA EXPIRADO
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    String nuevaContra = passwordEncoder.encode(contra1);
+                    urlcorreo.getUsuario().setContrasenia(nuevaContra);
+                    usuarioRepository.save(urlcorreo.getUsuario());
+                    urlCorreoRepository.delete(urlcorreo);
+                }
+            }
+            return "redirect:/login";
+        }
     }
 
 
@@ -375,5 +420,14 @@ public class LoginController {
         helper.setText(emailContent, true);
         javaMailSender.send(message);
     }
+
+    /****   RECUPERAR CONTRASEÑA ***/
+    @GetMapping("/recuperarContrasenia")
+    public  String recuperar (){
+        return "olvidoContrasenia";
+    }
+
+
+
 
 }

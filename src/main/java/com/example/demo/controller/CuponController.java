@@ -2,10 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
+import com.example.demo.entities.Restaurante;
+import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CuponRepository;
 
 import java.time.LocalDate;
 
+import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.CuponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.jws.WebParam;
 import javax.naming.Binding;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
@@ -32,6 +36,8 @@ public class CuponController {
 
     @Autowired
     CuponService cuponService;
+    @Autowired
+    RestauranteRepository restauranteRepository;
 
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model) {
@@ -100,14 +106,17 @@ public class CuponController {
     @PostMapping("/guardar")
     public String guardarCupon(@ModelAttribute("cupon") @Valid Cupon cupon, BindingResult bindingResult,
                                RedirectAttributes attributes,
-                               Model model) {
+                               Model model, HttpSession session) {
         //Cupon cVal = cuponRepository.buscarPorNombre(cupon.getNombre());
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
 
         if (bindingResult.hasErrors()) {
             return "AdminRestaurante/nuevoCupon";
         }
 
-        cupon.setIdrestaurante(2);
+        cupon.setIdrestaurante(restaurante.getIdrestaurante());
 
         if (cupon.getIdcupon() == 0) {
             cupon.setFechainicio(LocalDate.now());

@@ -11,16 +11,20 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer> {
-    Page<Restaurante> findByEstadoOrderByFecharegistroAsc(int estado, Pageable pageable);
+    Page<Restaurante> findByEstado(int estado, Pageable pageable);
 
 
     @Query(value = "select * from restaurante where idadministrador = ?1", nativeQuery = true)
     Restaurante encontrarRest (int id);
 
+
+    @Query(value = "select datediff(now(),min(fechaRegistro)) from restaurante", nativeQuery = true)
+    int buscarFechaMinimaRestaurante();
     //estado 2= pendiente
     //estado 1= aceptado
     //estado 3= rechazado
     @Query(value = "select * from restaurante where estado=2 and\n" +
-            "(lower(nombre) like %?1% ) and (ruc like %?2%)", nativeQuery = true)
-    Page<Restaurante> buscarRest(String nombreRest, String ruc, Pageable pageable);
+            "(lower(nombre) like %?1% ) and (ruc like %?2%)\n" +
+            "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY))", nativeQuery = true)
+    Page<Restaurante> buscarRest(String nombreRest, String ruc,int fechaRegistro, Pageable pageable);
 }

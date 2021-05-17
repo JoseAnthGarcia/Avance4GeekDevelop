@@ -111,9 +111,15 @@ public class AdminController  {
                     pagina2 = restauranteService.restaurantePaginacion(numPag, tamPag);
                 }else{
                     model.addAttribute("nombreRest1", nombreRest1);
-                    model.addAttribute("ruc1", ruc1);
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1);
+
+                    model.addAttribute("ruc1", ruc1);
+                    model.addAttribute("fechaRegistro1", fechaRegistro1);
+                    if(fechaRegistro1==null){
+                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }
+
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1, fechaRegistro1,ruc1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();
@@ -126,8 +132,7 @@ public class AdminController  {
 
                 return "/AdminGen/solicitudRestaurante";
             case "adminRest":
-                //model.addAttribute("listaAdminRestSolicitudes",
-                //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
+
                 Page<Usuario> pagina1 ;
                 if((nombreUsuario1==null || nombreUsuario1.equals(""))
                         && (dni1==null || dni1.equals("") && fechaRegistro1==null)){
@@ -196,34 +201,7 @@ public class AdminController  {
         }
     }
 
-    @PostMapping("/buscadorSAdminRest")
-    public String buscarAdminRest(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                              @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
-                              @RequestParam(value = "dni", required = false) Integer dni1,
-                              Model model){
-        model.addAttribute("nombreUsuario1", nombreUsuario1);
 
-        model.addAttribute("fechaRegistro1", fechaRegistro1);
-
-        model.addAttribute("dni1",dni1);
-        if(fechaRegistro1==null){
-            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
-        }
-
-
-        model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
-
-
-        //BORRAR
-        model.addAttribute("currentPage",1);
-        model.addAttribute("tamPag",0);
-        model.addAttribute("totalPages", 3);
-        model.addAttribute("totalItems", 4);
-
-
-        return "/AdminGen/solicitudAR";
-
-    }
     @GetMapping("/aceptarSolicitudRest")
     public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
 

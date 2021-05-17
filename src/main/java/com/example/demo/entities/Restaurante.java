@@ -39,9 +39,11 @@ public class Restaurante  implements Serializable {
     @OneToOne
     @JoinColumn(name = "idadministrador")
     private Usuario administrador;
-    @Column(name="iddistrito", nullable = false)
-    @NotBlank(message = "Este campo es obligatorio")
-    private String iddistrito;
+
+    @OneToOne
+    @JoinColumn(name="iddistrito", nullable = false)
+    //@NotBlank(message = "Este campo es obligatorio")
+    private Distrito distrito;
 
     @ManyToMany
     @JoinTable(name = "restaurante_has_categoriarestaurante",
@@ -152,12 +154,12 @@ public class Restaurante  implements Serializable {
         this.telefono = telefono;
     }
 
-    public String getIddistrito() {
-        return iddistrito;
+    public Distrito getDistrito() {
+        return distrito;
     }
 
-    public void setIddistrito(String iddistrito) {
-        this.iddistrito = iddistrito;
+    public void setDistrito(Distrito distrito) {
+        this.distrito = distrito;
     }
 
     public String getFecharegistro() {

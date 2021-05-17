@@ -28,4 +28,6 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "(lower(nombre) like %?1% ) and (ruc like %?2%)\n" +
             "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY))", nativeQuery = true)
     Page<Restaurante> buscarRest(String nombreRest, String ruc,int fechaRegistro, Pageable pageable);
+
+
 }

@@ -118,7 +118,9 @@ public class AdminController  {
                         fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
                     }
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1);
+                    System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
+
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1*-1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();
@@ -144,6 +146,7 @@ public class AdminController  {
                     if(fechaRegistro1==null){
                         fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }
+                    System.out.println(fechaRegistro1);
 
                     pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
 

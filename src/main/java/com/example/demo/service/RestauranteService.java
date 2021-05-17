@@ -21,6 +21,10 @@ public class RestauranteService {
     public Page<Restaurante> restBusqueda(int numeroPag, int tamPag, String nombreRest1, String ruc1,int fechaRegistro1){
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
         return restauranteRepository.buscarRest(nombreRest1,ruc1,fechaRegistro1, pageable);
+
+
+
     }
+
 
 }

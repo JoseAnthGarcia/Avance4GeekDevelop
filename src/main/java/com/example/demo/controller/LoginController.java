@@ -254,44 +254,75 @@ public class LoginController {
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
-    public String envioCorreo(@RequestParam("correo") String correo){
-        //TODO: validar que sea correo
-        Rol rol = rolRepository.findByTipo("cliente");
-        Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
-        if(cliente!=null){
-            Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
-            if(urlcorreo1!=null){
-                urlCorreoRepository.delete(urlcorreo1);
-            }
-            String codigoAleatorio = "";
-            while(true){
-                codigoAleatorio = generarCodigAleatorio();
-                Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
-                if (urlcorreo2==null){
-                    break;
-                }
-            }
-            Urlcorreo urlcorreo3 = new Urlcorreo();
-            urlcorreo3.setCodigo(codigoAleatorio);
-            urlcorreo3.setUsuario(cliente);
+    public String envioCorreo(@RequestParam("correo") String correo, Model model){
 
-            //genero fecha:
-            Date date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            urlcorreo3.setFecha(hourdateFormat.format(date));
-            urlCorreoRepository.save(urlcorreo3);
-
-            //genero url:
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String urlPart = passwordEncoder.encode(cliente.getDni()+codigoAleatorio);
-            String url = "http://localhost:8080/avance6/cambioContra?id="+urlPart;
-            String content = "Para cambio de contraseña:\n" +url;
-
-            String subject = "OLVIDE MI CONTRASEÑA";
-
-            sendEmail(correo, subject, content);
+        boolean valcorreo=false;
+        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(correo);
+        if(clientesxcorreo.isEmpty()){
+            valcorreo=true;
         }
-        return "redirect:/login";
+
+        boolean valVacio=false;
+        if(correo.isEmpty()){
+            System.out.println("VACIO");
+            valVacio=true;
+        }
+
+        if( valVacio || valcorreo) {
+            if(valcorreo){
+                System.out.println("validacion correo");
+                model.addAttribute("msg1","El correo no está registrado");
+            }
+
+            if(valVacio){
+                model.addAttribute("msg2","Ingrese su correo");
+            }
+
+            return "olvidoContrasenia";
+
+        }else {
+
+            Rol rol = rolRepository.findByTipo("cliente");
+            Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
+            if (cliente != null) {
+                Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
+                if (urlcorreo1 != null) {
+                    urlCorreoRepository.delete(urlcorreo1);
+                }
+                String codigoAleatorio = "";
+                while (true) {
+                    codigoAleatorio = generarCodigAleatorio();
+                    Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
+                    if (urlcorreo2 == null) {
+                        break;
+                    }
+                }
+                Urlcorreo urlcorreo3 = new Urlcorreo();
+                urlcorreo3.setCodigo(codigoAleatorio);
+                urlcorreo3.setUsuario(cliente);
+
+                //genero fecha:
+                Date date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                urlcorreo3.setFecha(hourdateFormat.format(date));
+                urlCorreoRepository.save(urlcorreo3);
+
+                //genero url:
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
+                String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
+                String content = "Para cambio de contraseña:\n" + url;
+
+                String subject = "OLVIDE MI CONTRASEÑA";
+
+                sendEmail(correo, subject, content);
+            }
+            return "redirect:/login";
+        }
+
+
+
+
     }
 
     @GetMapping("/cambioContra")
@@ -324,7 +355,7 @@ public class LoginController {
 
         boolean valLong1=false;
         boolean valLong2=false;
-        boolean valIguales=false;
+        boolean valIguales=true;
         boolean valVacio1=false;
         boolean valVacio2=false;
         if(contra1.isEmpty()){
@@ -340,7 +371,7 @@ public class LoginController {
             valLong2=true;
         }
 
-        if(contra1.equals(contra2)){
+        if(contra1.equalsIgnoreCase(contra2)){
             valIguales=false;
         }
 

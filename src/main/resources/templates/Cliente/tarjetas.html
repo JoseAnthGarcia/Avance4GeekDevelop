@@ -34,9 +34,9 @@
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/listaRestaurantes}">Restaurantes</a>
+                    <a class="collapse-item" th:href="@{/cliente/listaRestaurantes}">Restaurantes</a>
 
-                    <a class="collapse-item" th:href="@{cliente/categorias}">Categorías</a>
+                    <a class="collapse-item" th:href="@{/cliente/categorias}">Categorías</a>
                 </div>
             </div>
         </li>
@@ -51,9 +51,9 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/pedidoActual}">Pedido Actual</a>
-                    <a class="collapse-item" th:href="@{cliente/historialPedidos}">Historial de Pedidos</a>
-                    <a class="collapse-item" th:href="@{cliente/listaReportes}">Generar Reportes</a>
+                    <a class="collapse-item" th:href="@{/cliente/pedidoActual}">Pedido Actual</a>
+                    <a class="collapse-item" th:href="@{/cliente/historialPedidos}">Historial de Pedidos</a>
+                    <a class="collapse-item" th:href="@{/cliente/listaReportes}">Generar Reportes</a>
                 </div>
             </div>
         </li>
@@ -426,7 +426,10 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

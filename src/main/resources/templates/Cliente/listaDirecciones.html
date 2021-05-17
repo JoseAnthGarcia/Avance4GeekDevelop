@@ -275,6 +275,8 @@
                                             <label for="direcc">Ingrese una dirección</label>
                                             <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
                                                 <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
+                                                <div th:if="${msg1 != null}" th:text="${msg1}" style="color: red; font-size: small; text-align: left" ></div>
+                                                <div th:if="${msg2 != null}" th:text="${msg2}" style="color: red; font-size: small; text-align: left" ></div>
                                             </div>
 
                                             <h2>   </h2>
@@ -409,9 +411,9 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <form th:action="@{/logout}" method="post">
                     <button class="btn btn-primary" type="submit">Cerrar Sesión
                     </button>

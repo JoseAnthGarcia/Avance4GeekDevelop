@@ -18,11 +18,11 @@ import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @RequestMapping("/restaurante")
@@ -76,8 +76,6 @@ public class AdminRestController {
         } catch (NumberFormatException n) {
             n.printStackTrace();
         }
-        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci "+fecha_naci);
 
         System.out.println("");
         if (file != null) {
@@ -122,17 +120,35 @@ public class AdminRestController {
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
 
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        restaurante.setFecharegistro(hourdateFormat.format(date));
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-
+        restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        Distrito distrito =restaurante.getDistrito();
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null) {
+        boolean dist_u_val=true;
+        try {
+            Integer id_distrito = distrito.getIddistrito();
+            int dist_c = distritosRepository.findAll().size();
+            for (int i = 1; i <= dist_c; i++) {
+                if (id_distrito == i) {
+                    dist_u_val = false;
+                }
+            }
+        } catch (NullPointerException n) {
+            dist_u_val = true;
+        }
+
+
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val) {
             if (file.isEmpty()) {
                 model.addAttribute("mensajeFoto", "Debe subir una imagen");
             }
@@ -140,7 +156,10 @@ public class AdminRestController {
             if (fileName.contains("..")) {
                 model.addAttribute("mensajeFoto", "No se premite '..' een el archivo");
             }
-
+            if (dist_u_val) {
+                model.addAttribute("msg3", "Seleccione una de las opciones");
+                model.addAttribute("msg5", "Complete sus datos");
+            }
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
             if (listaCategorias.size() != 4) {
@@ -160,7 +179,6 @@ public class AdminRestController {
                 model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
                 return "/AdminRestaurante/registroResturante";
             }
-
             return "redirect:/plato/";
         }
     }

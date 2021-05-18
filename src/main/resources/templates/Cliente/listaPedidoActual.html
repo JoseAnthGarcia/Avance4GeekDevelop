@@ -482,7 +482,10 @@
           <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn" style="background-color:#701111; color:white" href="/html/login.html">Cerrar Sesión</a>
+              <form th:action="@{/logout}" method="post">
+                  <button class="btn btn-primary" type="submit">Cerrar Sesión
+                  </button>
+              </form>
           </div>
         </div>
       </div>

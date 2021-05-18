@@ -16,11 +16,15 @@ public class RestauranteService {
 
     public Page<Restaurante> restaurantePaginacion(int numeroPag, int tamPag){
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
-        return restauranteRepository.findByEstadoOrderByFecharegistroAsc(2, pageable);
+        return restauranteRepository.findByEstado(2, pageable);
     }
-    public Page<Restaurante> restBusqueda(int numeroPag, int tamPag, String nombreRest, String ruc){
+    public Page<Restaurante> restBusqueda(int numeroPag, int tamPag, String nombreRest1, String ruc1,int fechaRegistro1){
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
-        return restauranteRepository.buscarRest(nombreRest,ruc, pageable);
+        return restauranteRepository.buscarRest(nombreRest1,ruc1,fechaRegistro1, pageable);
+
+
+
     }
+
 
 }

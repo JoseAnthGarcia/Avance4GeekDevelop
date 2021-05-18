@@ -56,6 +56,14 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
         boolean telfValid = false;
+        boolean telfUnico=true;
+
+        List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefonoAndIdusuarioNot(telefonoNuevo, usuario1.getIdusuario());
+        if (clientesxtelefono.isEmpty() ) {
+            telfUnico=false;
+        }
+
+
 
         int telfInt;
         try{
@@ -72,12 +80,16 @@ public class ClienteController {
             valContra = false;
         }
 
-        if (valContra || telfValid){
+        if (valContra || telfValid || telfUnico){
+
+            if(telfUnico){
+                model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+            }
             if(valContra){
             model.addAttribute("msg", "Contraseña incorrecta");
             }
             if(telfValid){
-            model.addAttribute("msg2", "Ingrese sus datos");
+            model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
             }
             return "Cliente/editarPerfil";
 
@@ -145,11 +157,45 @@ public class ClienteController {
     @PostMapping("/agregarDireccion")
     public  String registrarNewDireccion(@RequestParam("direccion") String direccion, HttpSession httpSession,Model model ){
         boolean valNul=false;
+        boolean valNew=false;
+        boolean valLong= false;
+
+
         if(direccion.isEmpty()){
             valNul=true;
         }
-        if(valNul){
-            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        List<Ubicacion> listaDir = ubicacionRepository.findByUsuario(usuario1);
+
+
+        for(Ubicacion u:listaDir){
+            if(u.getDireccion().equalsIgnoreCase(direccion)){
+                valNew=true;
+            }
+        }
+        if(listaDir.size()>5){
+            valLong=true;
+        }
+
+
+
+
+
+
+        if(valNul|| valNew || valLong){
+            if(valNul){
+                model.addAttribute("msg", "No ingresó dirección");
+            }
+            if(valNew){
+                model.addAttribute("msg1", "La dirección ingresda ya está registrada");
+            }
+
+            if(valLong){
+                model.addAttribute("msg2", "Solo puede registrar 6 direcciones");
+            }
+
+           Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
             List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
             model.addAttribute("listaDirecciones", listaDirecciones);
@@ -163,7 +209,7 @@ public class ClienteController {
             }
 
             model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
-            model.addAttribute("msg", "No ingreso dirección");
+
             return "Cliente/listaDirecciones";
 
         }else{

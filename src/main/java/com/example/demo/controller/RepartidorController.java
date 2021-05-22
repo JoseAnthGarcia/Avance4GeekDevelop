@@ -37,7 +37,7 @@ public class RepartidorController {
 
     @GetMapping("/listaPedidos")
     public String verListaPedidos(){
-        return "/Repartidor/solicitudPedidos";
+        return "Repartidor/solicitudPedidos";
     }
 
     @GetMapping("/registroRepartidor")

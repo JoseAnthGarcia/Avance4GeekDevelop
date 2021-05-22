@@ -40,9 +40,6 @@
 
     <!-- Page level custom scripts -->
     <script  th:src="@{/js/demo/datatables-demo.js}"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -214,7 +211,7 @@
                             <span class="font-weight-bold">La Rosa Náutica</span>
                         </div>
                     </a>
-                    <a class="dropdown-item text-center small text-gray-500" href="listaPedidoActual.html">Mostrar todos mis pedidos pendientes</a>
+                    <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">Mostrar todos mis pedidos pendientes</a>
                 </div>
             </li>
 
@@ -253,7 +250,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                    <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                    <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -282,7 +279,30 @@
     </nav>
     <!-- End of Topbar -->
 
+<div th:fragment="down" class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sesión</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
 
 <!-- End of Sidebar -->
 </body>

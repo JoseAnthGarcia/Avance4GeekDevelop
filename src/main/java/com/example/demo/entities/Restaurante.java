@@ -23,7 +23,7 @@ public class Restaurante  implements Serializable {
     private String nombre;
 
     private String coordenadas;
-    @Pattern(regexp = "[0-9]{11}",message = "Ingrese 11 dígitos")
+    @Pattern(regexp ="[0-9]{11}",message = "Ingrese 11 dígitos")
     @Column(nullable = false)
     private String ruc;
     @Pattern(regexp = "[0-9]{9}",message = "Ingrese 9 dígitos")
@@ -34,12 +34,19 @@ public class Restaurante  implements Serializable {
     @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
     private String direccion;
 
+    private String fecharegistro;
+
     @OneToOne
     @JoinColumn(name = "idadministrador")
     private Usuario administrador;
-    @Column(name="iddistrito", nullable = false)
-    @NotBlank(message = "Este campo es obligatorio")
-    private String iddistrito;
+
+    //TODO: crear relacion con tabla distrito
+
+
+    @ManyToOne
+    @JoinColumn(name="iddistrito", nullable = false)
+
+    private Distrito distrito;
 
     @ManyToMany
     @JoinTable(name = "restaurante_has_categoriarestaurante",
@@ -50,7 +57,18 @@ public class Restaurante  implements Serializable {
 
     private String fotonombre;
     private String fotocontenttype;
+    @Lob
     private byte[] foto;
+    private int estado;
+
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 
     public String getFotonombre() {
         return fotonombre;
@@ -140,11 +158,19 @@ public class Restaurante  implements Serializable {
         this.telefono = telefono;
     }
 
-    public String getIddistrito() {
-        return iddistrito;
+    public Distrito getDistrito() {
+        return distrito;
     }
 
-    public void setIddistrito(String iddistrito) {
-        this.iddistrito = iddistrito;
+    public void setDistrito(Distrito distrito) {
+        this.distrito = distrito;
+    }
+
+    public String getFecharegistro() {
+        return fecharegistro;
+    }
+
+    public void setFecharegistro(String fecharegistro) {
+        this.fecharegistro = fecharegistro;
     }
 }

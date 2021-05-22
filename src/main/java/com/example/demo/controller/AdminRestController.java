@@ -18,9 +18,11 @@ import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @RequestMapping("/restaurante")
@@ -39,11 +41,6 @@ public class AdminRestController {
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
-    //oe ya pes ><
-    /*@GetMapping("/login")
-    public String loginAdminRest() {
-        return "AdminRestaurante/loginAR";
-    }*/
 
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
@@ -57,25 +54,46 @@ public class AdminRestController {
                                    @RequestParam("confcontra") String contra2, @RequestParam("photo") MultipartFile file, Model model) {
 
         String fileName = "";
-        if (file != null) {
-            if (file.isEmpty()) {
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-                return "/AdminRestaurante/registroAR";
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "/AdminRestaurante/registroAR";
-            }
-        }
+
         System.out.println(contra2);
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
-        String fechanacimiento = LocalDate.now().toString();
-        adminRest.setFecharegistro(fechanacimiento);
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())) {
+        String fecharegistro = LocalDate.now().toString();
+        adminRest.setFecharegistro(fecharegistro);
+        Boolean fecha_naci = true;
+        try {
+            String[] parts = adminRest.getFechanacimiento().split("-");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            System.out.println("AÑOOOOOOO " + anio);
+            System.out.println("Naciiiiii " + naci);
+            if (anio - naci >= 18) {
+                fecha_naci = false;
+            }
+        } catch (NumberFormatException n) {
+            n.printStackTrace();
+        }
+
+        System.out.println("");
+        if (file != null) {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+            }
+        }
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
+            if (fecha_naci) {
+                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+            }
+            if (!contra2.equals(adminRest.getContrasenia())) {
+                model.addAttribute("msg", "Las contraseñas no coinciden");
+            }
             return "/AdminRestaurante/registroAR";
         } else {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -102,16 +120,35 @@ public class AdminRestController {
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
 
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        restaurante.setFecharegistro(hourdateFormat.format(date));
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-
+        restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        Distrito distrito =restaurante.getDistrito();
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null) {
+        boolean dist_u_val=true;
+        try {
+            Integer id_distrito = distrito.getIddistrito();
+            int dist_c = distritosRepository.findAll().size();
+            for (int i = 1; i <= dist_c; i++) {
+                if (id_distrito == i) {
+                    dist_u_val = false;
+                }
+            }
+        } catch (NullPointerException n) {
+            dist_u_val = true;
+        }
+
+
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val) {
             if (file.isEmpty()) {
                 model.addAttribute("mensajeFoto", "Debe subir una imagen");
             }
@@ -119,7 +156,10 @@ public class AdminRestController {
             if (fileName.contains("..")) {
                 model.addAttribute("mensajeFoto", "No se premite '..' een el archivo");
             }
-
+            if (dist_u_val) {
+                model.addAttribute("msg3", "Seleccione una de las opciones");
+                model.addAttribute("msg5", "Complete sus datos");
+            }
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
             if (listaCategorias.size() != 4) {
@@ -139,7 +179,6 @@ public class AdminRestController {
                 model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
                 return "/AdminRestaurante/registroResturante";
             }
-
             return "redirect:/plato/";
         }
     }

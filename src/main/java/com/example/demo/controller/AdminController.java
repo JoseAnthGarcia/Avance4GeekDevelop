@@ -5,6 +5,7 @@ import com.example.demo.repositories.*;
 import com.example.demo.service.AdminRestService;
 import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RepartidorService;
+import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
@@ -65,6 +66,12 @@ public class AdminController  {
     @Autowired
     PedidoRepository pedidoRepository;
 
+    @Autowired
+    RestauranteService restauranteService;
+
+    @Autowired
+    RestauranteRepository restauranteRepository;
+
     @GetMapping("tipoSolicitud")
     public String tipoSolicitud(){
         return "AdminGen/tipoSolicitudes";
@@ -76,7 +83,10 @@ public class AdminController  {
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1){
+                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                                     @RequestParam(value = "dni", required = false) String dni1,
+                                     @RequestParam(value = "nombreRest", required = false) String nombreRest1,
+                                     @RequestParam(value = "ruc", required = false) String ruc1){
 
 
         if(tipo == null){
@@ -95,11 +105,55 @@ public class AdminController  {
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
-                return "1";
+                Page<Restaurante> pagina2;
+
+                if((nombreRest1==null || nombreRest1.equals(""))
+                        && (ruc1==null || ruc1.equals(""))&& fechaRegistro1==null){
+                    pagina2 = restauranteService.restaurantePaginacion(numPag, tamPag);
+                }else{
+                    model.addAttribute("nombreRest1", nombreRest1);
+
+                    model.addAttribute("ruc1", ruc1);
+                    model.addAttribute("fechaRegistro1", fechaRegistro1);
+                    if(fechaRegistro1==null){
+                        fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                    }
+
+                    System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
+
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1*-1);
+                }
+
+                List<Restaurante> listaRestaurantes = pagina2.getContent();
+                model.addAttribute("tamPag",tamPag);
+                model.addAttribute("currentPage",numPag);
+                model.addAttribute("totalPages", pagina2.getTotalPages());
+                model.addAttribute("totalItems", pagina2.getTotalElements());
+
+                model.addAttribute("listaRestaurantes", listaRestaurantes);
+
+                return "/AdminGen/solicitudRestaurante";
             case "adminRest":
-                //model.addAttribute("listaAdminRestSolicitudes",
-                //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(3).get()));
-                Page<Usuario> pagina1 = adminRestService.adminRestPaginacion(numPag, tamPag);
+
+                Page<Usuario> pagina1 ;
+                if((nombreUsuario1==null || nombreUsuario1.equals(""))
+                        && (dni1==null || dni1.equals("") && fechaRegistro1==null)){
+                    pagina1 = adminRestService.adminRestPaginacion(numPag, tamPag);
+                }else{
+                    model.addAttribute("nombreUsuario1", nombreUsuario1);
+                    model.addAttribute("dni1", dni1);
+                    model.addAttribute("fechaRegistro1", fechaRegistro1);
+
+                    if(fechaRegistro1==null){
+                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }
+                    System.out.println(fechaRegistro1);
+
+                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
+
+
+                }
+
                 List<Usuario> listaAdminRest = pagina1.getContent();
                 model.addAttribute("tamPag",tamPag);
                 model.addAttribute("currentPage",numPag);
@@ -150,35 +204,66 @@ public class AdminController  {
         }
     }
 
-    @PostMapping("/buscadorSAdminRest")
-    public String buscarAdminRest(@RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                              @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
-                              @RequestParam(value = "dni", required = false) Integer dni1,
-                              Model model){
-        model.addAttribute("nombreUsuario1", nombreUsuario1);
 
-        model.addAttribute("fechaRegistro1", fechaRegistro1);
+    @GetMapping("/aceptarSolicitudRest")
+    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
 
-        model.addAttribute("dni1",dni1);
-        if(fechaRegistro1==null){
-            fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        if(id == null){
+            return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
+        }else {
+            Optional<Restaurante> restauranteOpt =restauranteRepository.findById(id);
+
+            if(restauranteOpt.isPresent()){
+                Restaurante restaurante = restauranteOpt.get();
+                restaurante.setEstado(1);
+                //Fecha de registro:
+                //Date date = new Date();
+                //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                //restaurante.setFechaadmitido(hourdateFormat.format(date));
+                //
+                restauranteRepository.save(restaurante);
+
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }else{
+                return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
+            }
         }
 
+    }
+    @GetMapping("/rechazarSolicitudRest")
+    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
 
-        model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+        if(id == null){
+            return "redirect:/admin/solicitudes?tipo=restaurante";
+        }else {
+            Optional<Restaurante> restauranteOpt =restauranteRepository.findById(id);
 
+            if(restauranteOpt.isPresent()){
+                Restaurante restaurante = restauranteOpt.get();
+                restaurante.setEstado(3);
+                restauranteRepository.save(restaurante);
 
-        //BORRAR
-        model.addAttribute("currentPage",1);
-        model.addAttribute("tamPag",0);
-        model.addAttribute("totalPages", 3);
-        model.addAttribute("totalItems", 4);
-
-
-        return "/AdminGen/solicitudAR";
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }else{
+                return "redirect:/admin/solicitudes?tipo=restaurante";
+            }
+        }
 
     }
+    @GetMapping("/detalleRestSoli")
+    public String detalleRestSoli(@RequestParam("idRest") int idRest,
+                                   Model model){
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            model.addAttribute("restaurante", restaurante);
+            return "/AdminGen/detalleRest";
 
+        }else {
+            return "redirect:/admin/solicitudes?tipo=restaurante";
+        }
+    }
+// HOLA
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
                                  @RequestParam(value = "tipo", required = false) String tipo){
@@ -362,7 +447,7 @@ public class AdminController  {
 
     }
 
-    @GetMapping("/bloqueado")
+    /* @GetMapping("/bloqueado")
     public String bloquearUsuario(Model model,
                                   @RequestParam("id") int id) {
 
@@ -376,9 +461,7 @@ public class AdminController  {
         }
         return "redirect:/admin/solicitudes";
 
-    }
-
-    /*
+    }*/
 
     @GetMapping("/actualizar")
     public String actualizarEstado(@RequestParam("idUsuario") int id, RedirectAttributes attr){
@@ -393,7 +476,7 @@ public class AdminController  {
                 1 - ACTIVO
                 2 - PENDIENTE
                 DESBLOQUEAR: DE 0 - 1
-
+            */
             switch (usuario.getEstado()){
         case 0:
             // de bloqueado a aceptado
@@ -414,7 +497,7 @@ public class AdminController  {
 
         return "";
                 }
-     */
+
 
     @GetMapping("/crear")
     public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario,HttpSession httpSession,Model model) {

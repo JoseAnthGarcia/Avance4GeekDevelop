@@ -20,6 +20,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
+    //List<Usuario> findEmployeesByEmailAndEmployeeIdNot(String email,int id);
+
+    List<Usuario> findUsuarioByTelefonoAndIdusuarioNot(String telefono, int id);
 
     @Query(value = "select * from usuario where dni = ?1", nativeQuery = true)
     Usuario findByDni (String dni);
@@ -35,6 +38,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Query(value = "select min(movilidad) from usuario", nativeQuery = true)
     int buscarIdMovilidadMinimaRepartidor();
+
+    @Query(value = "select * from usuario \n" +
+            "where idrol=3 and estado = 2 and\n" +
+            "(lower(nombres) like %?1% or lower(apellidos) like %?2%) and (dni like %?3%)\n" +
+            "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?4 DAY))", nativeQuery = true)
+    Page<Usuario> buscarAdministradorR(String nombres, String apellidos, String dni, int fechaRegistro, Pageable pageable);
+
 
     @Query(value = "select us.* from usuario us \n" +
             "left join movilidad m on us.idmovilidad = m.idmovilidad\n" +
@@ -57,6 +67,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findUsuarioByCorreo(String correo);
     List<Usuario> findUsuarioByDni(String dni);
     List<Usuario> findUsuarioByTelefono(String telefono);
+
+
+
 
     //muestra la ganancia de un repartidor - la ganancia de un repartidor depende del atributo mismo distrito, entonces la ganancia sería
     //la cantidad de pedidos que tiene en un distrito *4 + la cantidad de pedidos que tiene fuera *6
@@ -88,6 +101,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "and (u.fechaRegistro >= DATE_ADD(now(), INTERVAL ?2 DAY)) ",nativeQuery = true)
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
 
-
+    Usuario findByCorreoAndRol(String correo, Rol rol);
 
 }

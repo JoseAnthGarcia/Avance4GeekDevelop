@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.CategoriaExtra;
-import com.example.demo.entities.Plato;
-import com.example.demo.entities.Restaurante;
-import com.example.demo.entities.Usuario;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.CategoriaExtraRepository;
+import com.example.demo.repositories.CategoriasRestauranteRepository;
 import com.example.demo.repositories.PlatoRepository;
 import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.PlatoService;
@@ -32,7 +30,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/plato")
-public class    PlatoController {
+public class PlatoController {
 
     @Autowired
     PlatoRepository platoRepository;
@@ -43,83 +41,107 @@ public class    PlatoController {
     CategoriaExtraRepository categoriaExtraRepository;
     @Autowired
     RestauranteRepository restauranteRepository;
+    @Autowired
+    CategoriasRestauranteRepository categoriaRespository;
 
+    @GetMapping(value = {"/categoria", ""})
+    public String listaCategorias(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
 
-    @GetMapping(value = {"/lista", ""})
-    public String listaPlatos(Model model, HttpSession session) {
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int id=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(id);
-        System.out.println(adminRest.getIdusuario());
-        System.out.println(restaurante.getIdrestaurante());
-        return findPaginated("", 1, 0, 1,restaurante.getIdrestaurante(), model,session);
+        return "AdminRestaurante/categorias";
     }
 
-    /*@PostMapping("/textSearch")
-    public String buscador(@RequestParam("textBuscador") String textBuscador,
-                           @RequestParam("textDisponible") Integer inputDisponible,
-                           @RequestParam("textPrecio") Integer inputPrecio, Model model){
-        model.addAttribute("texto", textBuscador);
-        model.addAttribute("textoD", inputDisponible);
-        model.addAttribute("textoP", inputPrecio);
-        return findPaginated(textBuscador, inputDisponible, inputPrecio, 1, model);
-    }*/
+    @GetMapping("/lista")
+    public String listaPlatos(Model model, HttpSession session, @RequestParam(value = "idcategoria", required = false) Integer idcategoria) {
+        if (idcategoria == null) {
+            return "redirect:/plato/categoria";
+        }
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        System.out.println(adminRest.getIdusuario());
+        System.out.println(restaurante.getIdrestaurante());
+        model.addAttribute("idcategoria", idcategoria);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
+            }
+        }
+        System.out.println("SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOY idcateeeeeeee" + idcategoria);
+        return findPaginated("", 1, 0, 1, idcategoria, restaurante.getIdrestaurante(), model, session);
+    }
+
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textDisponible", required = false) Integer inputDisponible,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idrestaurante",required = false) Integer idrestaurante, Model model,HttpSession session){
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo, @RequestParam(value = "idcategoria", required = false) Integer idcategoria,
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
-        if(pageNo==null || pageNo==0){
-            pageNo=1;
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
         }
-
+        if (idcategoria == null) {
+            return "redirect:/plato/categoria";
+        }
         int inputID = 1;
         int pageSize = 5;
         Page<Plato> page;
         List<Plato> listaPlatos;
         System.out.println(textBuscador);
-        if(textBuscador==null){
-            textBuscador="";
+        if (textBuscador == null) {
+            textBuscador = "";
         }
-        if(inputDisponible==null){
-            inputDisponible=1;
+        if (inputDisponible == null) {
+            inputDisponible = 1;
         }
         boolean disponibilidad;
-        disponibilidad= inputDisponible != 0;
+        disponibilidad = inputDisponible != 0;
         System.out.println(inputPrecio);
-        if(inputPrecio==null){
-            inputPrecio=0;
+        if (inputPrecio == null) {
+            inputPrecio = 0;
         }
         int inputPMax;
         int inputPMin;
-        if (inputPrecio==0){
-            inputPMin=0;
-            inputPMax=100;
+        if (inputPrecio == 0) {
+            inputPMin = 0;
+            inputPMax = 100;
         } else if (inputPrecio == 4) {
             inputPMin = inputPrecio;
             inputPMax = 1000;
         } else {
-            inputPMax=inputPrecio;
-            inputPMin=inputPrecio;
+            inputPMax = inputPrecio;
+            inputPMin = inputPrecio;
         }
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int id=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(id);
-        System.out.println("-----Esto----"+adminRest.getIdusuario());
-        System.out.println("------Esto2----"+restaurante.getIdrestaurante());
-        page = platoService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(),1,textBuscador, disponibilidad, inputPMin*5-5, inputPMax*5);//harcodeado
-        listaPlatos= page.getContent();
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        page = platoService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), idcategoria, textBuscador, disponibilidad, inputPMin * 5 - 5, inputPMax * 5);//harcodeado
+        listaPlatos = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoD", inputDisponible);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" +inputPMax);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+        model.addAttribute("idcategoria", idcategoria);
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
+            }
+        }
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" + inputPMax);
 
-        model.addAttribute("currentPage",pageNo);
+        model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaPlatos", listaPlatos);
@@ -130,42 +152,62 @@ public class    PlatoController {
 
     @GetMapping("/nuevo")
     public String crearPlato(@ModelAttribute("plato") Plato plato,
-                             Model model) {
-        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
+                             Model model, @RequestParam(value = "idcategoria", required = false) Integer idcategoria, HttpSession session) {
+        model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
+        model.addAttribute("idcategoria", idcategoria);
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
+            }
+        }
         return "/AdminRestaurante/nuevoPlato";
     }
 
     @PostMapping("/guardar")
-    public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato,BindingResult bindingResult,
-                               @RequestParam(value = "photo",required = false) MultipartFile file,RedirectAttributes attr, Model model, HttpSession session) {
-        model.addAttribute("listaCategoria",categoriaExtraRepository.findAll());
-        String fileName ="";
-        if (file!=null){
-            if(file.isEmpty()){
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-                return "/AdminRestaurante/nuevoPlato";
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")){
-                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-                return "/AdminRestaurante/nuevoPlato";
+    public String guardarPlato(@ModelAttribute("plato") @Valid Plato plato, BindingResult bindingResult,
+                               @RequestParam(value = "photo", required = false) MultipartFile file, RedirectAttributes attr, Model model,
+                               HttpSession session, @RequestParam(value = "idcategoria", required = false) Integer idcategoria) {
+        model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
+        String fileName = "";
+        model.addAttribute("idcategoria", idcategoria);
+
+
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        System.out.println(adminRest.getIdusuario());
+        System.out.println(restaurante.getIdrestaurante());
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
             }
         }
 
-
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int id=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(id);
-        System.out.println(adminRest.getIdusuario());
-        System.out.println(restaurante.getIdrestaurante());
-
-
         plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
-        plato.setIdcategoriaplato(1); //Jarcodeado
+        plato.setIdcategoriaplato(idcategoria); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
+        if (file == null) {
+            model.addAttribute("mensajefoto", "Debe subir una imagen");
+        } else {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+            }
+        }
 
-
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             if (plato.getIdplato() == 0) {
                 System.out.println("estoy 1");
                 return "/AdminRestaurante/nuevoPlato";
@@ -176,7 +218,7 @@ public class    PlatoController {
                     return "/AdminRestaurante/nuevoPlato";
                 } else {
 
-                    return "redirect:/plato/lista";
+                    return "redirect:/plato/lista?idcategoria=" + idcategoria;
                 }
             }
         } else {
@@ -185,14 +227,14 @@ public class    PlatoController {
                 attr.addFlashAttribute("msg", "Plato creado exitosamente");
                 attr.addFlashAttribute("tipo", "saved");
                 System.out.println("estoy 3");
-                try{
+                try {
                     plato.setFoto(file.getBytes());
                     plato.setFotonombre(fileName);
                     plato.setFotocontenttype(file.getContentType());
                     platoRepository.save(plato);
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                    model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
+                    model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
                     return "/AdminRestaurante/nuevoPlato";
                 }
 
@@ -200,7 +242,7 @@ public class    PlatoController {
                 Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
                 if (optPlato.isPresent()) {
                     System.out.println("estoy 4");
-                    Optional<Plato> platoOptional=platoRepository.findById(plato.getIdplato());
+                    Optional<Plato> platoOptional = platoRepository.findById(plato.getIdplato());
                     plato.setFoto(platoOptional.get().getFoto());
                     plato.setFotonombre(platoOptional.get().getFotonombre());
                     plato.setFotocontenttype(platoOptional.get().getFotocontenttype());
@@ -209,30 +251,59 @@ public class    PlatoController {
                     attr.addFlashAttribute("msg", "Plato actualizado exitosamente");
                 }
             }
-            return "redirect:/plato/lista";
+            return "redirect:/plato/lista?idcategoria=" + idcategoria;
         }
 
     }
 
 
     @GetMapping("/imagen/{id}")
-    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id){
-        Optional<Plato> optionalPlato=platoRepository.findById(id);
-        if (optionalPlato.isPresent()){
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id) {
+        Optional<Plato> optionalPlato = platoRepository.findById(id);
+        if (optionalPlato.isPresent()) {
             Plato p = optionalPlato.get();
-            byte[] imagenBytes=p.getFoto();
-            HttpHeaders httpHeaders= new HttpHeaders();
+            byte[] imagenBytes = p.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.parseMediaType(p.getFotocontenttype()));
-            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
-        }else {
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
             return null;
         }
     }
+
+    @GetMapping("/imagenC/{id}")
+    public ResponseEntity<byte[]> mostrarImagenCategoria(@PathVariable("id") int id) {
+        Optional<Categorias> optional = categoriaRespository.findById(id);
+        if (optional.isPresent()) {
+            Categorias p = optional.get();
+            byte[] imagenBytes = p.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(p.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
+
     @GetMapping("/editar")
     public String editarPlato(@RequestParam("id") int id,
                               Model model,
-                              @ModelAttribute("plato") Plato plato) {
+                              @ModelAttribute("plato") Plato plato,
+                              @RequestParam(value = "idcategoria", required = false) Integer idcategoria, HttpSession session) {
         Optional<Plato> platoOptional = platoRepository.findById(id);
+        Optional<Categorias> listaca = categoriaRespository.findById(idcategoria);
+        model.addAttribute("idcategoria", idcategoria);
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
+            }
+        }
         if (platoOptional.isPresent()) {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
@@ -244,8 +315,22 @@ public class    PlatoController {
     }
 
     @GetMapping("/borrar")
-    public String borrarPlato(@RequestParam("id") int id ,RedirectAttributes attr) {
+    public String borrarPlato(@RequestParam("id") int id,
+                              RedirectAttributes attr, @RequestParam(value = "idcategoria", required = false) Integer idcategoria,
+                              Model model, HttpSession session) {
         Optional<Plato> platoOptional = platoRepository.findById(id);
+        model.addAttribute("idcategoria", idcategoria);
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+        for (Categorias lista : listaCategorias) {
+            if (lista.getIdcategoria() == idcategoria) {
+                model.addAttribute("nombreCate", lista.getNombre());
+                break;
+            }
+        }
         if (platoOptional.isPresent()) {
             Plato plato = platoOptional.get();
             plato.setDisponible(false);
@@ -256,11 +341,5 @@ public class    PlatoController {
 
         return "redirect:/plato/lista";
     }
-
-    @GetMapping("/prueba")
-    public String borrarPlato() {
-        return "/AdminRestaurante/prueba";
-    }
-
 
 }

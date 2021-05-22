@@ -56,16 +56,14 @@
         <a class="nav-link" th:href="@{'/admin/tipoSolicitud'}">
             <i class="fas fa-fw fa-folder"></i>
             <span>Solicitudes</span>
-
         </a>
-
-
     </li>
+
     <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item" th:if="|${session.usuario.getRol().getIdrol() == 2}|">
         <a class="nav-link" th:href="@{'/admin/crear'}">
             <i class="fas fa-fw fa-user-edit"></i>
-            <span>Crear Administrador</span>
+            <span  >Crear Administrador</span>
         </a>
     </li>
 
@@ -217,7 +215,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                    <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                    <img class="img-profile rounded-circle" th:src="@{../bootstrap/img/undraw_profile.svg}">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

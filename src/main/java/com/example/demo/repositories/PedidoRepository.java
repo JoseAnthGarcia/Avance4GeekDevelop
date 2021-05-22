@@ -23,4 +23,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (p.fechapedido >= DATE_ADD(now(), INTERVAL ?4 DAY)) ", nativeQuery = true)
     List<Pedido> pedidosPorCliente(int idCliente, String texto, int valoracion, int fechaPedido);
 
+
+
 }

@@ -48,6 +48,10 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "idrestaurante")
     private Restaurante restaurante;
 
+    @ManyToOne
+    @JoinColumn(name = "idubicacion", nullable = false)
+    private Ubicacion ubicacion;
+
 
     public String getComentariorestaurante() {
         return comentariorestaurante;
@@ -149,4 +153,11 @@ public class Pedido implements Serializable {
         this.mismodistrito = mismodistrito;
     }
 
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
 }

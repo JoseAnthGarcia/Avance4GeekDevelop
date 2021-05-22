@@ -35,6 +35,11 @@ public class RepartidorController {
     @Autowired
     UbicacionRepository ubicacionRepository;
 
+    @GetMapping("/listaPedidos")
+    public String verListaPedidos(){
+        return "";
+    }
+
     @GetMapping("/registroRepartidor")
     public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
         model.addAttribute("usuario", new Usuario());

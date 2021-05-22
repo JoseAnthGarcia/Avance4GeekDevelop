@@ -107,8 +107,7 @@ public class LoginController {
             case "repartidor":
                 List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
-                //TODO: agregar redireccion a repartidor
-                return "somewhere";
+                return "redirect:/";
             default:
                 return "somewhere"; //no tener en cuenta
         }

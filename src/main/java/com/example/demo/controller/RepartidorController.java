@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,9 +36,22 @@ public class RepartidorController {
     @Autowired
     UbicacionRepository ubicacionRepository;
 
+    @Autowired
+    PedidoRepository pedidoRepository;
+
     @GetMapping("/listaPedidos")
-    public String verListaPedidos(){
+    public String verListaPedidos(Model model,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        List<Pedido> pedidos = pedidoRepository.findByRepartidorAndUbicacion_Distrito(repartidor,
+                ((Ubicacion) session.getAttribute("ubicacionActual")).getDistrito());
+        model.addAttribute("listaPedidos", pedidos);
         return "Repartidor/solicitudPedidos";
+    }
+
+    @PostMapping("/seleccionarDistrito")
+    public  String distritoActual(HttpSession session){
+        session.setAttribute("ubicacionActual", new Ubicacion());
+        return "redirect:/repartidor/listaPedido";
     }
 
     @GetMapping("/registroRepartidor")

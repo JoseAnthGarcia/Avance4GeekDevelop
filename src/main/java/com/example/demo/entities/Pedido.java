@@ -30,7 +30,9 @@ public class Pedido implements Serializable {
     private String estado;
     private int tiempoentrega;
     private boolean mismodistrito;
-    private LocalDateTime fechapedido;
+    //private LocalDateTime fechapedido;
+
+    private String fechapedido;
 
     private String comentariorestaurante;
 
@@ -101,9 +103,25 @@ public class Pedido implements Serializable {
         this.restaurante = restaurante;
     }
 
-    public LocalDateTime getFechapedido() { return fechapedido; }
+    /*public LocalDateTime getFechapedido() { return fechapedido; }
 
-    public void setFechapedido(LocalDateTime fechapedido) { this.fechapedido = fechapedido; }
+    public void setFechapedido(LocalDateTime fechapedido) { this.fechapedido = fechapedido; }*/
+
+    public String getFechapedido() {
+        return fechapedido;
+    }
+
+    public void setFechapedido(String fechapedido) {
+        this.fechapedido = fechapedido;
+    }
+
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
 
     public String getCodigo() {
         return codigo;
@@ -153,11 +171,6 @@ public class Pedido implements Serializable {
         this.mismodistrito = mismodistrito;
     }
 
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
 
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
+
 }

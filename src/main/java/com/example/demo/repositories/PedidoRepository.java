@@ -1,6 +1,8 @@
 package com.example.demo.repositories;
 
+import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Pedido;
+import com.example.demo.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (p.fechapedido >= DATE_ADD(now(), INTERVAL ?4 DAY)) ", nativeQuery = true)
     List<Pedido> pedidosPorCliente(int idCliente, String texto, int valoracion, int fechaPedido);
 
-
+    List<Pedido> findByRepartidorAndUbicacion_Distrito(Usuario repartidor, Distrito distrito);
 
 }

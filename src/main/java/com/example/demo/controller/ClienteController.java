@@ -1,15 +1,13 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
+import com.example.demo.repositories.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import com.example.demo.repositories.DistritosRepository;
-import com.example.demo.repositories.RolRepository;
-import com.example.demo.repositories.UsuarioRepository;
-import com.example.demo.repositories.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +23,9 @@ import java.util.List;
 
 @RequestMapping("/cliente")
 public class ClienteController {
+
+    @Autowired
+    RestauranteRepository restauranteRepository;
 
     @Autowired
     UsuarioRepository clienteRepository;
@@ -105,8 +106,23 @@ public class ClienteController {
     }
 
     @GetMapping("/listaRestaurantes")
-    public String listaRestaurantes(){
+    public String listaRestaurantes(Model model, HttpSession httpSession){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        String direccionactual = usuario.getDireccionactual();
 
+        int iddistritoactual=1;
+        //buscar que direccion de milista de direcciones coincide con mi direccion actual
+
+        List<ClienteDTO> listadirecc= clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+
+        for(ClienteDTO cl:listadirecc){
+            if(cl.getDireccion().equalsIgnoreCase(direccionactual)){
+                iddistritoactual= cl.getIddistrito();
+                break;
+            }
+        }
+
+        model.addAttribute("listaRestaurante", restauranteRepository.listaRestaurante(iddistritoactual));
         return "Cliente/listaRestaurantes";
     }
 

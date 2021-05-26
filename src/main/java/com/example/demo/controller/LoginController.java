@@ -71,7 +71,7 @@ public class LoginController {
 
             session.setAttribute("usuario", usuario);
 
-            switch (rol){
+            switch (rol) {
                 case "cliente":
                     List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
                     session.setAttribute("poolDirecciones", listaDirecciones);
@@ -81,15 +81,15 @@ public class LoginController {
                 case "administrador":
                     return "redirect:/admin/usuarios";
                 case "administradorR":
-                    Restaurante restaurante=null;
+                    Restaurante restaurante = null;
                     try {
                         restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                    }catch(NullPointerException e){
+                    } catch (NullPointerException e) {
                         System.out.println("Fallo");
                     }
-                    if(restaurante==null){
+                    if (restaurante == null) {
                         return "redirect:/restaurante/paginabienvenida";
-                    }else{
+                    } else {
                         return "redirect:/plato/";
                     }
                 case "repartidor":
@@ -127,7 +127,7 @@ public class LoginController {
 
 
         //redirect:
-        switch (rol){
+        switch (rol) {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
@@ -137,15 +137,15 @@ public class LoginController {
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":
-                Restaurante restaurante=null;
+                Restaurante restaurante = null;
                 try {
                     restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if(restaurante==null){
+                if (restaurante == null) {
                     return "redirect:/restaurante/paginabienvenida";
-                }else{
+                } else {
                     return "redirect:/plato/";
                 }
             case "repartidor":
@@ -293,38 +293,38 @@ public class LoginController {
     }
 
     @RequestMapping("/olvidoContrasenia")
-    public String olvidoContrasenia(){
+    public String olvidoContrasenia() {
         return "olvidoContrasenia";
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
-    public String envioCorreo(@RequestParam("correo") String correo, Model model){
+    public String envioCorreo(@RequestParam("correo") String correo, Model model) {
 
-        boolean valcorreo=false;
+        boolean valcorreo = false;
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(correo);
-        if(clientesxcorreo.isEmpty()){
-            valcorreo=true;
+        if (clientesxcorreo.isEmpty()) {
+            valcorreo = true;
         }
 
-        boolean valVacio=false;
-        if(correo.isEmpty()){
+        boolean valVacio = false;
+        if (correo.isEmpty()) {
             System.out.println("VACIO");
-            valVacio=true;
+            valVacio = true;
         }
 
-        if( valVacio || valcorreo) {
-            if(valcorreo){
+        if (valVacio || valcorreo) {
+            if (valcorreo) {
                 System.out.println("validacion correo");
-                model.addAttribute("msg1","El correo no está registrado");
+                model.addAttribute("msg1", "El correo no está registrado");
             }
 
-            if(valVacio){
-                model.addAttribute("msg2","Ingrese su correo");
+            if (valVacio) {
+                model.addAttribute("msg2", "Ingrese su correo");
             }
 
             return "olvidoContrasenia";
 
-        }else {
+        } else {
 
             Rol rol = rolRepository.findByTipo("cliente");
             Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
@@ -365,17 +365,15 @@ public class LoginController {
         }
 
 
-
-
     }
 
     @GetMapping("/cambioContra")
-    public String cambiarContra(@RequestParam("id") String id, Model model){
+    public String cambiarContra(@RequestParam("id") String id, Model model) {
         List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
         Boolean redireccionar = false;
-        for(Urlcorreo urlcorreo : listaUrlCorreo){
-            String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
-            if(BCrypt.checkpw(comparar,id)){
+        for (Urlcorreo urlcorreo : listaUrlCorreo) {
+            String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
+            if (BCrypt.checkpw(comparar, id)) {
                 redireccionar = true;
 
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -385,9 +383,9 @@ public class LoginController {
             }
         }
 
-        if(redireccionar){
+        if (redireccionar) {
             return "recuperarContra";
-        }else{
+        } else {
             return "redirect:/login";
         }
     }
@@ -395,51 +393,52 @@ public class LoginController {
     @PostMapping("/actualizarContraOlvidada")
     public String actualizarContraOlvidada(@RequestParam("id") String id,
                                            @RequestParam("contra1") String contra1,
-                                           @RequestParam("contra2") String contra2, Model model){
+                                           @RequestParam("contra2") String contra2, Model model) {
 
-        boolean valLong1=false;
-        boolean valLong2=false;
-        boolean valIguales=true;
-        boolean valVacio1=false;
-        boolean valVacio2=false;
-        if(contra1.isEmpty()){
-            valVacio1=true;
+        boolean valLong1 = false;
+        boolean valLong2 = false;
+        boolean valIguales = true;
+        boolean valVacio1 = false;
+        boolean valVacio2 = false;
+        if (contra1.isEmpty()) {
+            valVacio1 = true;
         }
-        if(contra2.isEmpty()){
-            valVacio2=true;
+        if (contra2.isEmpty()) {
+            valVacio2 = true;
         }
-        if(contra1.length()<8){
-            valLong1=true;
+        if (contra1.length() < 8) {
+            valLong1 = true;
         }
-        if(contra2.length()<8){
-            valLong2=true;
-        }
-
-        if(contra1.equalsIgnoreCase(contra2)){
-            valIguales=false;
+        if (contra2.length() < 8) {
+            valLong2 = true;
         }
 
-        if(valLong1 || valLong2 || valIguales || valVacio1 || valVacio2){
+        if (contra1.equalsIgnoreCase(contra2)) {
+            valIguales = false;
+        }
 
-            if(valLong1){
-                model.addAttribute("msg1","Ingrese de 8 caracteres a mas");
-            }
-            if(valLong2){
-                model.addAttribute("msg2","Ingrese de 8 caracteres a mas");
-            }
-            if (valIguales){
-                model.addAttribute("msg3","Las contraseñas no coinciden");
-            }
-            if (valVacio1){
-                model.addAttribute("msg4","Recuadro vacio");
-            }
-            if (valVacio2){
-                model.addAttribute("msg5","Recuadro vacio");
-            }
+        if (valLong1 || valLong2 || valIguales || valVacio1 || valVacio2) {
 
+            if (valLong1) {
+                model.addAttribute("msg1", "Ingrese de 8 caracteres a mas");
+            }
+            if (valLong2) {
+                model.addAttribute("msg2", "Ingrese de 8 caracteres a mas");
+            }
+            if (valIguales) {
+                model.addAttribute("msg3", "Las contraseñas no coinciden");
+            }
+            if (valVacio1) {
+                model.addAttribute("msg4", "Recuadro vacio");
+            }
+            if (valVacio2) {
+                model.addAttribute("msg5", "Recuadro vacio");
+            }
+            model.addAttribute("id", id);
 
             return "recuperarContra";
-        }else {
+        } else {
+
             List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
             for (Urlcorreo urlcorreo : listaUrlCorreo) {
                 String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
@@ -458,13 +457,13 @@ public class LoginController {
 
 
     //generar codigo aleatorio:
-    public String generarCodigAleatorio(){
-        char [] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+    public String generarCodigAleatorio() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int charsLength = chars.length;
         Random random = new Random();
         StringBuffer buffer = new StringBuffer();
         int tamCodigo = 5;
-        for (int i=0;i<tamCodigo;i++){
+        for (int i = 0; i < tamCodigo; i++) {
             buffer.append(chars[random.nextInt(charsLength)]);
         }
         return buffer.toString();
@@ -497,11 +496,9 @@ public class LoginController {
 
     /****   RECUPERAR CONTRASEÑA ***/
     @GetMapping("/recuperarContrasenia")
-    public  String recuperar (){
+    public String recuperar() {
         return "olvidoContrasenia";
     }
-
-
 
 
 }

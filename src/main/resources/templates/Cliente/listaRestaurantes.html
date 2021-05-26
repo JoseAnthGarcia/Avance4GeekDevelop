@@ -283,6 +283,7 @@
 
             </nav>
             <!-- End of Topbar -->
+
             <!-- -------------------------------------------------------------------------------------------------------------------------------------------------->
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -338,15 +339,9 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th width="10">
-
-                                        N°
-
-                                    </th>
+                                    <th width="10"> N° </th>
                                     <th width="50" height="60">
-                                        <div style=text-align:center>
-                                            Restaurante
-                                        </div>
+                                        <div style=text-align:center> Restaurante</div>
                                     </th>
                                     <th width="380">
                                         <div style=text-align:center>
@@ -368,10 +363,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="rest, info:${listaRestaurantesTotal}">
-                                    <td th:text="${info.index +1}"></td>
-
-                                    <td >
+                                <tr th:each="rest, v : ${listaRestaurante}">
+                                    <td th:text="${v.index + 1}"></td>
+                                    <td>
                                         <div style=text-align:center>
                                             <img WIDTH="110"
                                                  HEIGHT="100" src="http://cdn2.dineroenimagen.com/media/dinero/styles/xlarge/public/images/2020/05/little-caesars.jpg">
@@ -380,24 +374,22 @@
                                     <!-- --------------------------------------------------------------------- -->
                                     <td>
                                         <div style=text-align:center>
-                                            <input class="form-control ph-center" type="text" th:placeholder="${rest.getNombre()} " aria-label="Disabled input example" disabled>
-
+                                            <h5 class="mb-2" th:text="${rest.getNombre()}"></h5>
                                             <div class="row">
-                                                <div class="col">
-                                                    <input type="text" class="form-control ph-center" placeholder=" Valoración: 5" aria-label="Disabled input example" disabled >
+                                                <div class="col-6">
+                                                    <h6 th:if="${rest.getValoracion() == null}" th:text="|Valoración: 0|"></h6>
+                                                    <h6 th:unless="${rest.getValoracion() == null}" th:text="|Valoración: ${rest.getValoracion()}|"></h6>
                                                 </div>
-                                                <div class="col">
-                                                    <input type="text" class="form-control ph-center" placeholder="15 Calificaciones"  aria-label="Disabled input example" disabled>
+                                                <div class="col-6">
+                                                    <h6 th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </td>
 
                                     <td >
-                                        <div style=text-align:center
-                                             th:each="categorias: ${rest.getCategoriasRestaurante()}" th:text="${categorias.getNombre()}" >
-
+                                        <div style=text-align:center>
+                                            Pizzas
                                         </div>
                                     </td>
 
@@ -411,8 +403,6 @@
                                     </td>
 
                                 </tr>
-
-
                                 </tbody>
                             </table>
                         </div>

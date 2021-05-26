@@ -1,8 +1,7 @@
 package com.example.demo.dtos;
 
 public interface ClienteDTO {
-    int getIddistrito();
-    String getDireccionactual();
-    int getIdUsuario();
-
+    Integer getIddistrito();
+    String getDireccion();
+    Integer getIdUsuario();
 }

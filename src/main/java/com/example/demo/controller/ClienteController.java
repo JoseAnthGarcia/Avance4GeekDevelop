@@ -3,11 +3,9 @@ package com.example.demo.controller;
 
 import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.entities.Distrito;
-import com.example.demo.entities.Restaurante;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.*;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,9 @@ import java.util.List;
 public class ClienteController {
 
     @Autowired
+    RestauranteRepository restauranteRepository;
+
+    @Autowired
     UsuarioRepository clienteRepository;
 
     @Autowired
@@ -37,9 +38,6 @@ public class ClienteController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
-
-    @Autowired
-    RestauranteRepository restauranteRepository;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -108,58 +106,24 @@ public class ClienteController {
     }
 
     @GetMapping("/listaRestaurantes")
-    public String listaRestaurantes(HttpSession httpSession,
-                                    Model model){
-        //ejecutar el query
-        //obtner direccion actual
-        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        String direccionactual = usuario1.getDireccionactual();
+    public String listaRestaurantes(Model model, HttpSession httpSession){
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        String direccionactual = usuario.getDireccionactual();
+
         int iddistritoactual=1;
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
-        List<ClienteDTO> listadirecc= clienteRepository.listaParaCompararDirecciones(usuario1.getIdusuario());
-        Distrito distrito=distritosRepository.findByIddistrito(iddistritoactual);
+        List<ClienteDTO> listadirecc= clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
 
         for(ClienteDTO cl:listadirecc){
-            if(cl.getDireccionactual().equalsIgnoreCase(direccionactual)){
+            if(cl.getDireccion().equalsIgnoreCase(direccionactual)){
                 iddistritoactual= cl.getIddistrito();
                 break;
             }
         }
 
-        List<Restaurante> listaRestaurantes1= new ArrayList<Restaurante>();
-        List<Restaurante> listaRestaurantesFinal= new ArrayList<Restaurante>();
-        List<Restaurante> listaRestaurantesxDistrito= restauranteRepository.findAllByDistrito(distrito);
-        List<Restaurante> listaRestaurantesTotal= restauranteRepository.findAll(Sort.by("iddistrito").ascending());
-
-        if(listaRestaurantesxDistrito.size()>0){
-            for(Restaurante rest:listaRestaurantesTotal){
-                if(rest.getDistrito().getIddistrito()!=iddistritoactual){
-                    listaRestaurantes1.add(rest);
-                }
-            }
-
-            for(Restaurante restaurante:listaRestaurantesxDistrito){
-                listaRestaurantesFinal.add(restaurante);
-
-            }
-
-            for(Restaurante restaurante2:listaRestaurantes1){
-                listaRestaurantesFinal.add(restaurante2);
-
-            }
-            model.addAttribute("listaRestaurantesTotal",listaRestaurantesTotal);
-
-
-            return "Cliente/listaRestaurantes";
-        }else{
-
-            model.addAttribute("listaRestaurantesTotal",listaRestaurantesTotal);
-            return "Cliente/listaRestaurantes";
-
-        }
-
-
+        model.addAttribute("listaRestaurante", restauranteRepository.listaRestaurante(iddistritoactual));
+        return "Cliente/listaRestaurantes";
     }
 
     @GetMapping("/listaDirecciones")
@@ -193,13 +157,18 @@ public class ClienteController {
     }
 
     @PostMapping("/eliminarDireccion")
-    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar){
+    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session){
 
         for(String idUbicacion : listaIdDireccionesAeliminar){
             //validad int idUbicacion:
             int idUb = Integer.parseInt(idUbicacion);
             Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
-            ubicacionRepository.delete(ubicacion);
+            Usuario usuarioS = (Usuario) session.getAttribute("usuario");
+
+            if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
+                ubicacionRepository.delete(ubicacion);
+            }
+
         }
 
         return "redirect:/cliente/listaDirecciones";

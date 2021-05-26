@@ -79,7 +79,7 @@ public class TarjetaController {
         if (!mat.matches()) {
             valNumaA = true;
         }
-        if (nombreC.length() == 0) {
+        if (apellidoC.length() == 0) {
             valNumaA = true;
         }
         //

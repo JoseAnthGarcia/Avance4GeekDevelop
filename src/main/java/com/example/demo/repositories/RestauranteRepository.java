@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Restaurante;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer> {
@@ -29,5 +32,6 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY))", nativeQuery = true)
     Page<Restaurante> buscarRest(String nombreRest, String ruc,int fechaRegistro, Pageable pageable);
 
+    List<Restaurante>  findAllByDistrito(Distrito distrito);
 
 }

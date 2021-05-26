@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
@@ -102,5 +103,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
 
     Usuario findByCorreoAndRol(String correo, Rol rol);
+
+    @Query(value = "select ub.iddistrito, ub.direccion, u.idusuario  from usuario u inner join ubicacion ub\n" +
+            "on u.idusuario=ub.idusuario where u.idusuario=?;\n"
+            ,nativeQuery = true)
+    List<ClienteDTO> listaParaCompararDirecciones(int idusuario);
+
+
 
 }

@@ -23,6 +23,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -262,7 +263,7 @@ public class AdminController  {
             return "redirect:/admin/solicitudes?tipo=restaurante";
         }
     }
-
+// HOLA
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
                                  @RequestParam(value = "tipo", required = false) String tipo){
@@ -499,9 +500,34 @@ public class AdminController  {
 
 
     @GetMapping("/crear")
-    public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario) {
+    public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario,HttpSession httpSession,Model model) {
+
+        Usuario usuario2 = (Usuario) httpSession.getAttribute("usuario");
+
+        if (usuario2.getRol().getIdrol()!=2){
+            model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
+            return "/AdminGen/lista";
+
+        }else{
+            return "/AdminGen/crearAdmin";
+
+        }
+
+
+
+
+    }
+
+
+    @GetMapping("/editarPerfil")
+    public String editarAdministrador(HttpSession httpSession, Model model) {
+
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+
         return "/AdminGen/crearAdmin";
     }
+
 
 
     @PostMapping("/guardar")

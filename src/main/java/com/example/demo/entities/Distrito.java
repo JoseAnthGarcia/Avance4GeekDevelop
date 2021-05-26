@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class Distrito  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotBlank(message="Tiene que ingresar un distrito")
     private int iddistrito;
     @Column(nullable = false)
     private String nombre;

@@ -265,7 +265,6 @@
 
                             <div class="card-header py-3">
 
-
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
@@ -331,11 +330,8 @@
 
                                         </div>
                                         <div class="col-md-6 mb-3">
-
-                                                <div class="card shadow mb-4">
-                                                    <!-- Card Body -->
-                                                    <form method="post" th:action="@{/cliente/guardarDireccion}">
-                                                    <div class="card-body">
+                                                <form method="post" th:action="@{/cliente/guardarDireccion}">
+                                                    <div class="container">
                                                         <div style=text-align:center>
                                                             <label for="direccionactual">Dirección Actual</label>
                                                             <select class="form-control" id="direccionactual" name="direccionactual" style="border-color:lightgray">
@@ -346,19 +342,14 @@
                                                                         th:selected="${session.usuario.direccionactual.equals(direc.direccion)}"></option>
                                                             </select>
                                                             <h1> </h1>
-                                                            <button class="btn btn-secondary" type="submit"> Seleccionar </button>
-
+                                                            <button class="btn btn-secondary mb-5" type="submit"> Seleccionar </button>
                                                         </div>
-                                                        <h1>       </h1>
                                                         <div style=text-align:center>
-                                                            <img scr="https://tuwebtecno.com/wp-content/uploads/2020/10/1603606268_Se-corrigio-que-Google-Maps-no-actualizara-la-ubicacion.png"
+                                                            <img src="https://tuwebtecno.com/wp-content/uploads/2020/10/1603606268_Se-corrigio-que-Google-Maps-no-actualizara-la-ubicacion.png"
                                                                  width="200" height="150">
                                                         </div>
-
                                                     </div>
-                                                    </form>
-
-                                                </div>
+                                                </form>
 
                                         </div>
 

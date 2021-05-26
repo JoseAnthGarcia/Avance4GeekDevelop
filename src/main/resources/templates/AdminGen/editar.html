@@ -61,7 +61,7 @@
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <label class="form-label text-dark text-lg">Correo:</label>
                                     <input th:field="*{correo}"  type="email" class="form-control border-secondary"
-                                          >
+                                    >
                                     <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
                                          th:errors="*{correo}"></div>
                                 </div>
@@ -124,7 +124,7 @@
 
                             </div>
                             <hr>
-                            <a th:href="@{'/admin/usuarios'}" class="btn btn-danger">Cancelar</a>
+                            <a th:href="@{'/admin'}" class="btn btn-danger">Cancelar</a>
                             <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0?  'Actualizar' :'Registrar' }">Reg/act</button>
 
                         </form>

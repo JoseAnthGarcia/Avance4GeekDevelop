@@ -363,11 +363,9 @@
                                     <td th:text="${v.index + 1}"></td>
                                     <td>
                                         <div style=text-align:center>
-                                            <img WIDTH="110"
-                                                 HEIGHT="100" src="http://cdn2.dineroenimagen.com/media/dinero/styles/xlarge/public/images/2020/05/little-caesars.jpg">
+                                            <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdRestaurante()}}">
                                         </div>
                                     </td>
-                                    <!-- --------------------------------------------------------------------- -->
                                     <td>
                                         <div style=text-align:center>
                                             <h5 class="mb-2" th:text="${rest.getNombre()}"></h5>
@@ -385,14 +383,14 @@
 
                                     <td >
                                         <div style=text-align:center>
-                                            Pizzas
+                                            <h6 th:text="${rest.getCategorias()}"></h6>
                                         </div>
                                     </td>
 
                                     <td  class="align-content-center">
                                         <div style=text-align:center>
                                             <a class="btn btn-danger btn-circle"
-                                               href="listaProductos.html">
+                                               th:href="@{'/cliente/listaPlatos?idRest='+${rest.getIdRestaurante()}}">
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>

@@ -2,10 +2,13 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dtos.ClienteDTO;
-import com.example.demo.entities.Distrito;
-import com.example.demo.entities.Ubicacion;
-import com.example.demo.entities.Usuario;
+import com.example.demo.dtos.PlatosDTO;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -15,10 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 
@@ -40,6 +47,9 @@ public class ClienteController {
     @Autowired
     UbicacionRepository ubicacionRepository;
 
+    @Autowired
+    PlatoRepository platoRepository;
+
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
 
@@ -58,47 +68,47 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
         boolean telfValid = false;
-        boolean telfUnico=true;
+        boolean telfUnico = true;
 
         List<Usuario> clientesxtelefono = clienteRepository.findUsuarioByTelefonoAndIdusuarioNot(telefonoNuevo, usuario1.getIdusuario());
-        if (clientesxtelefono.isEmpty() ) {
-            telfUnico=false;
+        if (clientesxtelefono.isEmpty()) {
+            telfUnico = false;
         }
 
 
 
         int telfInt;
-        try{
+        try {
             telfInt = Integer.parseInt(telefonoNuevo);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             telfInt = -1;
         }
 
-        if(telfInt==-1 || telefonoNuevo.trim().equals("") || telefonoNuevo.length()!=9){
-            telfValid =true;
+        if (telfInt == -1 || telefonoNuevo.trim().equals("") || telefonoNuevo.length() != 9) {
+            telfValid = true;
         }
 
-        if (BCrypt.checkpw(contraseniaConf,usuario1.getContrasenia())) {
+        if (BCrypt.checkpw(contraseniaConf, usuario1.getContrasenia())) {
             valContra = false;
         }
 
-        if (valContra || telfValid || telfUnico){
+        if (valContra || telfValid || telfUnico) {
 
-            if(telfUnico){
+            if (telfUnico) {
                 model.addAttribute("msg1", "El telefono ingresado ya está registrado");
             }
-            if(valContra){
-            model.addAttribute("msg", "Contraseña incorrecta");
+            if (valContra) {
+                model.addAttribute("msg", "Contraseña incorrecta");
             }
-            if(telfValid){
-            model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
+            if (telfValid) {
+                model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
             }
             return "Cliente/editarPerfil";
 
 
         } else {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
-            httpSession.setAttribute("usuario",usuario1); //TODO: preguntar profe
+            httpSession.setAttribute("usuario", usuario1); //TODO: preguntar profe
             clienteRepository.save(usuario1);
             return "redirect:/cliente/listaRestaurantes";
         }
@@ -107,18 +117,18 @@ public class ClienteController {
     }
 
     @GetMapping("/listaRestaurantes")
-    public String listaRestaurantes(Model model, HttpSession httpSession){
+    public String listaRestaurantes(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         String direccionactual = usuario.getDireccionactual();
 
-        int iddistritoactual=1;
+        int iddistritoactual = 1;
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
-        List<ClienteDTO> listadirecc= clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+        List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
 
-        for(ClienteDTO cl:listadirecc){
-            if(cl.getDireccion().equalsIgnoreCase(direccionactual)){
-                iddistritoactual= cl.getIddistrito();
+        for (ClienteDTO cl : listadirecc) {
+            if (cl.getDireccion().equalsIgnoreCase(direccionactual)) {
+                iddistritoactual = cl.getIddistrito();
                 break;
             }
         }
@@ -128,7 +138,7 @@ public class ClienteController {
     }
 
     @GetMapping("/listaDirecciones")
-    public String listaDirecciones(Model model,HttpSession httpSession){
+    public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
@@ -136,8 +146,8 @@ public class ClienteController {
 
         ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
-        for(Ubicacion ubicacion: listaDirecciones){
-            if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
+        for (Ubicacion ubicacion : listaDirecciones) {
+            if (!ubicacion.getDireccion().equals(usuario.getDireccionactual())) {
                 listaUbicacionesSinActual.add(ubicacion);
             }
         }
@@ -162,7 +172,7 @@ public class ClienteController {
     @PostMapping("/eliminarDireccion")
     public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session, Model model){
 
-        for(String idUbicacion : listaIdDireccionesAeliminar){
+        for (String idUbicacion : listaIdDireccionesAeliminar) {
             //validad int idUbicacion:
             int idUb = Integer.parseInt(idUbicacion);
             Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
@@ -185,8 +195,8 @@ public class ClienteController {
         boolean valLong= false;
 
 
-        if(direccion.isEmpty()){
-            valNul=true;
+        if (direccion.isEmpty()) {
+            valNul = true;
         }
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -208,13 +218,13 @@ public class ClienteController {
             dist_u_val = true;
         }
 
-        for(Ubicacion u:listaDir){
-            if(u.getDireccion().equalsIgnoreCase(direccion)){
-                valNew=true;
+        for (Ubicacion u : listaDir) {
+            if (u.getDireccion().equalsIgnoreCase(direccion)) {
+                valNew = true;
             }
         }
-        if(listaDir.size()>5){
-            valLong=true;
+        if (listaDir.size() > 5) {
+            valLong = true;
         }
 
         if(valNul|| valNew || valLong || dist_u_val){
@@ -268,30 +278,111 @@ public class ClienteController {
 
     }
 
+    @GetMapping("/images")
+    public ResponseEntity<byte[]> mostrarRestaurante(@RequestParam("id") int id) {
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(id);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            byte[] image = restaurante.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(
+                    MediaType.parseMediaType(restaurante.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("/imagesPlato")
+    public ResponseEntity<byte[]> mostrarPlatos(@RequestParam("id") int id) {
+        Optional<Plato> platoOpt = platoRepository.findById(id);
+        if (platoOpt.isPresent()) {
+            Plato plato = platoOpt.get();
+            byte[] image = plato.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(plato.getFotocontenttype()));
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 
 
+    @GetMapping("/listaPlatos")
+    public String listaplatos(@RequestParam("idRest") int idRest,
+                              @RequestParam(value = "texto",required = false) String texto,
+                              @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                              Model model) {
+        Integer limitInf = 0;
+        Integer limitSup = 5000;
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
+
+        if(idPrecio == null || idPrecio.equals("")){
+            idPrecio = "6";
+        }
+
+        if(restauranteOpt.isPresent()){
+           Restaurante restaurante = restauranteOpt.get();
+            model.addAttribute("nombreRest", restaurante.getNombre());
+        }
+
+        switch (idPrecio){
+            case "1":
+                limitInf = 0;
+                limitSup = 10;
+                break;
+            case "2":
+                limitInf = 10;
+                limitSup = 20;
+                break;
+            case "3":
+                limitInf = 20;
+                limitSup = 30;
+                break;
+            case "4":
+                limitInf = 30;
+                limitSup = 40;
+                break;
+            case "5":
+                limitInf = 40;
+                limitSup = 50;
+                break;
+            default:
+                limitInf = 0;
+                limitSup = 5000;
+        }
+
+        List<PlatosDTO> listaPlato = platoRepository.listaPlato(idRest, texto, limitInf, limitSup);
+        model.addAttribute("listaPlato",listaPlato);
+        model.addAttribute("idRest",idRest);
+         return "/Cliente/listaProductos";
+    }
 
     @GetMapping("/listaCupones")
-    public String listacupones(){
+    public String listacupones() {
 
         return "Cliente/listaCupones";
     }
 
     @GetMapping("/listaReportes")
-    public String listaReportes(){
+    public String listaReportes() {
         return "Cliente/listaReportes";
     }
 
 
     //LISTA CATEGORIAS
     @GetMapping("/categorias")
-    public String categorias(){
+    public String categorias() {
         return "Cliente/categorías";
     }
 
     //PEDIDO ACTUAL
     @GetMapping("/pedidoActual")
-    public String pedidoActual(){
+    public String pedidoActual() {
         return "Cliente/listaPedidoActual";
     }
 
@@ -299,7 +390,7 @@ public class ClienteController {
 
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
-    public String historialPedidos(){
+    public String historialPedidos() {
         return "Cliente/listaHistorialPedidos";
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import com.example.demo.dtos.PlatosDTO;
 import com.example.demo.dtos.RestauranteDTO;
 import com.example.demo.entities.Restaurante;
 import com.example.demo.entities.Rol;
@@ -30,18 +31,24 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY))", nativeQuery = true)
     Page<Restaurante> buscarRest(String nombreRest, String ruc,int fechaRegistro, Pageable pageable);
 
-    @Query(value = "SELECT r.idrestaurante as 'id' \n" +
-            "        , r.iddistrito as 'distrito' \n" +
-            "        , r.estado as 'estado' \n" +
-            "        , r.nombre as 'nombre' \n" +
-            "        , r.direccion as 'direccion' \n" +
-            "        , ceil(avg(p.valoracionrestaurante)) as 'valoracion' \n" +
-            "        , count(p.valoracionrestaurante) as 'calificaciones' \n" +
+    @Query(value = "SELECT r.idrestaurante as 'idRestaurante'\n" +
+            "        , r.fotonombre as 'fotonombre'\n" +
+            "        , r.fotocontenttype as 'fotocontenttype'\n" +
+            "        , r.foto as 'foto'\n" +
+            "        , r.iddistrito as 'distrito'\n" +
+            "        , r.estado as 'estado'\n" +
+            "        , r.nombre as 'nombre'\n" +
+            "        , r.direccion as 'direccion'\n" +
+            "        , ceil(avg(p.valoracionrestaurante)) as 'valoracion'\n" +
+            "        , truncate((count(p.valoracionrestaurante))/4 , 0) as 'calificaciones' \n" +
+            "        , group_concat(DISTINCT c.nombre separator ' - ') as 'categorias'\n" +
             "from restaurante r \n" +
-            "left join pedido p on (r.idrestaurante = p.idrestaurante) \n" +
+            "left join pedido p on (r.idrestaurante = p.idrestaurante)\n" +
+            "inner join restaurante_has_categoriarestaurante rhc on r.idrestaurante = rhc.idrestaurante\n" +
+            "inner join categoriarestaurante c on rhc.idcategoria = c.idcategoria\n" +
             "where r.estado = 1 \n" +
-            "group by r.idrestaurante \n" +
-            "order by r.iddistrito = ?1 DESC ", nativeQuery = true)
+            "group by r.idrestaurante\n" +
+            "order by r.iddistrito = ?1 DESC;", nativeQuery = true)
     List<RestauranteDTO> listaRestaurante(int iddistrito);
 
 }

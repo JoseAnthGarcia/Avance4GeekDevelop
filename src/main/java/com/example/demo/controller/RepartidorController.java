@@ -42,10 +42,32 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model,HttpSession session){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        List<Pedido> pedidos = pedidoRepository.findByRepartidorAndUbicacion_Distrito(repartidor,
-                ((Ubicacion) session.getAttribute("ubicacionActual")).getDistrito());
-        model.addAttribute("listaPedidos", pedidos);
-        return "Repartidor/solicitudPedidos";
+        Pedido pedidoVal = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoVal==null){
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("listaPedidos", pedidos);
+            return "Repartidor/solicitudPedidos";
+        }else{
+            //TODO: rediriguir al pedido actual
+            return "Redirect:/Repartidor/solicitudPedidos";
+        }
+    }
+
+    @GetMapping("/aceptarPedido")
+    public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
+                                HttpSession session){
+        if(codigo!=null){
+            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
+            if(pedidoOpt.isPresent()){
+                Pedido pedido = pedidoOpt.get();
+                pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
+                pedido.setEstado(5);
+                //TODO: TIEMPO DE ENTREGA??
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/repartidor/aceptarPedido";
     }
 
     @PostMapping("/seleccionarDistrito")

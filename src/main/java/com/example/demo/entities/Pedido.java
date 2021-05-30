@@ -26,8 +26,8 @@ public class Pedido implements Serializable {
     @Column(name = "preciototal", nullable = false)
     private double preciototal;
 
-    //TODO definir
-    private String estado;
+    //TODO definir - lo defini como int (JOSE)
+    private int estado;
     private int tiempoentrega;
     private boolean mismodistrito;
     //private LocalDateTime fechapedido;
@@ -147,11 +147,11 @@ public class Pedido implements Serializable {
         this.preciototal = preciototal;
     }
 
-    public String getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 

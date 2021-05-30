@@ -83,13 +83,15 @@
                                     </strong>
                                 </div>
 
-                                <div class="container2">
-                                    <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdPlato()}" alt="Avatar"
-                                         class="image2 shadow"  style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"  style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
-                                    </a>
-                                </div>
+
+                                    <div class="container2">
+                                        <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
+                                             class="image2 shadow"  style="height: 200px; width: 300px">
+                                        <a class="overlay2" href="../Cliente/detalleProducto.html"  style="height: 200px; width: 300px">
+                                            <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
+                                        </a>
+                                    </div>
+
 
                                 <div class="form-check-inline">
                                     <label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>

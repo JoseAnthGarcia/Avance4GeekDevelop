@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -287,9 +288,7 @@ public class ClienteController {
 
             // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(
-                    MediaType.parseMediaType(restaurante.getFotocontenttype()));
-
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
             return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
 
         } else {
@@ -355,7 +354,6 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
-
         List<PlatosDTO> listaPlato = platoRepository.listaPlato(idRest, texto, limitInf, limitSup);
         model.addAttribute("listaPlato",listaPlato);
         model.addAttribute("idRest",idRest);

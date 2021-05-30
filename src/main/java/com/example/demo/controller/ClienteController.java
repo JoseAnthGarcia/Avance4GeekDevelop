@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dtos.ClienteDTO;
+import com.example.demo.dtos.PedidoDTO;
 import com.example.demo.dtos.PlatosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,9 @@ public class ClienteController {
 
     @Autowired
     PlatoRepository platoRepository;
+
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -120,7 +125,6 @@ public class ClienteController {
     public String listaRestaurantes(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         String direccionactual = usuario.getDireccionactual();
-
         int iddistritoactual = 1;
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
@@ -369,6 +373,7 @@ public class ClienteController {
 
     @GetMapping("/listaReportes")
     public String listaReportes() {
+
         return "Cliente/listaReportes";
     }
 
@@ -381,21 +386,36 @@ public class ClienteController {
 
     //PEDIDO ACTUAL
     @GetMapping("/pedidoActual")
-    public String pedidoActual() {
+    public String pedidoActual(Model model, HttpSession httpSession) {
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+      String texto= "";
+
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
+        for(PedidoDTO ped: listaPedidos){
+            if(ped.getEstado()==1 || ped.getEstado()==3 || ped.getEstado()==4 || ped.getEstado()==5 ){
+                listaPedidoActual.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos",listaPedidoActual);
+
         return "Cliente/listaPedidoActual";
     }
 
 
+    @GetMapping("/detallePedidoActual")
+    public String detallePedidoActual(@RequestParam("codigo") String codigo){
 
+
+        return "Cliente/detallePedidoActual";
+    }
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
     public String historialPedidos() {
         return "Cliente/listaHistorialPedidos";
     }
-
-
-
-
 
 
 

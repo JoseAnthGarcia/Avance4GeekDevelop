@@ -106,12 +106,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
 
     Usuario findByCorreoAndRol(String correo, Rol rol);
-
+/*
     @Query(value = "select ub.iddistrito, ub.direccion, u.idusuario  from usuario u inner join ubicacion ub\n" +
             "on u.idusuario=ub.idusuario where u.idusuario=?;\n"
             ,nativeQuery = true)
     List<ClienteDTO> listaParaCompararDirecciones(int idusuario);
 
+
+ */
 
 
 }

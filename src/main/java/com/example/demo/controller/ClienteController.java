@@ -287,8 +287,7 @@ public class ClienteController {
 
             // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(
-                    MediaType.parseMediaType(restaurante.getFotocontenttype()));
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
 
             return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
 

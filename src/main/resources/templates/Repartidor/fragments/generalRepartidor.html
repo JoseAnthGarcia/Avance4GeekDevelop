@@ -94,11 +94,16 @@
 <nav th:fragment="navbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <div class="form-group row">
         <div class="col-sm-12 mb-2 mb-sm-0 " style="position: relative; left: 330%; bottom: 5%">
-            <span>Distrito actual:</span>
-            <select class="form-control">
-                <option value="Moto">Los Olivos</option>
-                <option value="Bicicleta">La Molina</option>
-            </select>
+            <div class="col-sm-2">
+                <label class="form-label">Direccion actual:</label>
+            </div>
+            <div class="col-sm-10">
+                <select class="form-select" aria-label="Default select example">
+                    <option value="1">San Miguel</option>
+                    <option value="2" selected>Pueblo libre</option>
+                    <option value="3">Los Olivos</option>
+                </select>
+            </div>
         </div>
 
     </div>
@@ -109,18 +114,7 @@
         </button>
     </form>
     <!-- Select direcciones -->
-    <div class="container">
-        <div class="col-sm-2">
-            <label class="form-label">Direccion actual:</label>
-        </div>
-        <div class="col-sm-10">
-            <select class="form-select" aria-label="Default select example">
-                <option value="1">San Miguel</option>
-                <option value="2" selected>Pueblo libre</option>
-                <option value="3">Los Olivos</option>
-            </select>
-        </div>
-    </div>
+
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">

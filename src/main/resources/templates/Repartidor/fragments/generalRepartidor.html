@@ -92,7 +92,16 @@
 
 
 <nav th:fragment="navbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <div class="form-group row">
+        <div class="col-sm-12 mb-2 mb-sm-0 " style="position: relative; left: 330%; bottom: 5%">
+            <span>Distrito actual:</span>
+            <select class="form-control">
+                <option value="Moto">Los Olivos</option>
+                <option value="Bicicleta">La Molina</option>
+            </select>
+        </div>
 
+    </div>
     <!-- Sidebar Toggle (Topbar) -->
     <form class="form-inline">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">

@@ -91,7 +91,7 @@
 
 
 
-<nav th:fragment="navbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav th:fragment="navbar(listaDistritos)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <div class="form-group row">
         <div class="col-sm-12 mb-2 mb-sm-0 " style="position: relative; left: 330%; bottom: 5%">
             <div class="col-sm-2">
@@ -99,10 +99,10 @@
             </div>
             <div class="col-sm-10">
 
-                <select class="form-select" style="border-color:lightgray" name="distritos" multiple>
+                <select class="form-select" style="border-color:lightgray" name="distritos">
 
                     <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
-                            th:text="${dist.nombre}"></option>
+                            th:text="${dist.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dist.nombre}"></option>
                 </select>
             </div>
         </div>

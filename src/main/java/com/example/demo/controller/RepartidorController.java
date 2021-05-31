@@ -45,8 +45,10 @@ public class RepartidorController {
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         if(pedidoAct==null){
             Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
             model.addAttribute("listaPedidos", pedidos);
+            model.addAttribute("listaDistritos", listaDistritos);
             return "Repartidor/solicitudPedidos";
         }else{
             return "redirect:/repartidor/pedidoActual";
@@ -58,6 +60,8 @@ public class RepartidorController {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         if(pedidoAct!=null){
+            List<Distrito> listaDistritos = distritosRepository.findAll();
+            model.addAttribute("listaDistritos", listaDistritos);
             model.addAttribute("pedidoAct", pedidoAct);
             return "Repartidor/pedidoActual";
         }else{

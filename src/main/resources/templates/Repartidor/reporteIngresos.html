@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reporte ingresos')"></head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- DataTales Example -->
+                <form>
+                    <div class=" form-group row" >
+                        <div class="col-sm-4 mb-2 " style="position: relative; left: 33.5%" >
+                           Ingreso total : S/. 1176.00
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control  ">
+                                <option value="" disabled selected>Año</option>
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control  ">
+                                <option value="" disabled selected>Mes</option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 mb-2 mb-sm-0">
+                            <select class="form-control  ">
+                                <option value="" disabled selected>Entregas a un</option>
+                                <option value="1">Mismo distrito</option>
+                                <option value="2">Diferente distrito</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1 mb-2 mb-sm-0">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2 mb-1" style="text-align: right">
+                            <a class="btn btn-secondary">Quitar filtros</a>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+
+                        <div class="d-sm-flex align-items-center justify-content-between">
+
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE INGRESOS - 2021</h5>
+                            <a class="btn btn-warning mr-1">Exportar</a>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Mes
+                                    </th>
+                                    <th class="text-center">
+                                        Entregas a un mismo distrito
+                                    </th>
+                                    <th class="text-center">
+                                        Entregas a un diferente distrito
+                                    </th>
+                                    <th class="text-center">
+                                        Total del mes
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="width: 300px">Enero</td>
+                                    <td style="width: 250px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Febrero</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Marzo</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Enero</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Abril</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Mayo</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Junio</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Julio</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Agosto</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Septiembre</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Octubre</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Noviembre</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px">Diciembre</td>
+                                    <td style="width: 700px">S/.50</td>
+                                    <td style="width: 250px">S/.48</td>
+                                    <td style="width: 160px">S/.98</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 300px"></td>
+                                    <td style="width: 700px"></td>
+                                    <td style="width: 250px">TOTAL:</td>
+                                    <td style="width: 160px">S/.1176</td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
+                            <a  href="#">&laquo;</a>
+                            <a  href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#">6</a>
+                            <a href="#">&raquo;</a>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <footer class="sticky-footer bg-white">
+                        <div class="container my-auto">
+                            <div class="copyright text-center my-auto">
+                                <span>Geek Developers &copy; 2021-1</span>
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- End of Footer -->
+                </div>
+
+            </div>
+
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/html/login.html">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
+</body>
+
+</html>

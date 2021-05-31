@@ -22,42 +22,36 @@
             <!-- Topbar -->
             <nav th:replace="Cliente/fragments/general.html :: navbar"></nav>
             <!-- End of Topbar -->
-            <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form method="get" th:action="@{'/cliente/listaPlatos'}">
                     <div class="form-group row mt-3">
-
                         <div class="col-sm-3 mb-1 ">
-                            <div class="input-group">
-                                <div class="form-check-label">
-                                    <div class="input-group-append">
-                                        <input id="buscador" type="text" class="form-control bg-light small"
-                                               placeholder="Búsqueda por plato..." style="border-color: lightgray">
-                                        <button class="btn" style="background-color:#701111; color:white" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
+                            <input id="idRest" name="idRest" type="hidden" th:value="${idRest}">
+                            <input id="texto" name="texto" type="text" class="form-control bg-light small"
+                                   th:value="${texto.equals('')?'':texto}"
+                                   th:placeholder="${texto.equals('')?'Búsqueda por plato...':texto}"
+                                   style="border-color: lightgray">
                         </div>
                         <div class="col-sm-3 mb-1">
-                            <select id="buscadorPrecios" class="form-control" style="border-color: lightgray">
-                                <option value="">Precio</option>
-                                <option value="">S./00.00 hasta S./5.00</option>
-                                <option value="">S./5.00 hasta S./10.00</option>
-                                <option value="">S./10.00 hasta S./15.00</option>
-                                <option value="">S./15.00 hasta S./20.00</option>
-                                <option value="">S./20.00 a más</option>
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control"
+                                    style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
+                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-2 mb-1 mt-md-auto">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar
+                                filtros</a>
                         </div>
                     </div>
                 </form>
@@ -66,165 +60,55 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
+                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus"
+                                                                             style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
-                                <h5 class="font-weight-bold text-white text-center">LITTLE CEASERS</h5>
+                                <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
                             </div>
                         </div>
                     </div>
 
                     <div class="container mt-4 mb-4">
 
-                        <div class="alert alert-info ml-2 mr-2" role="alert">
-                            Se agregó un plato al carrito
-                        </div>
+                        <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
+                               Se agregó un plato al carrito
+                           </div>-->
                         <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
                             <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
                                 No se encontraron resultados en la búsqueda
                             </div> -->
 
                         <div class="row mb-5">
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
+
+                            <div class="col text-center" th:each="plato : ${listaPlato}">
+                                <div style="color:#000000;" class="ml-3 mt-1 text-left">
+                                    <strong>Precio:</strong>
+                                    <h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
+                                </div>
+
 
                                 <div class="container2">
-                                    <img src="img/pizza.jpg" alt="Avatar"
-                                         class="image2 shadow"  style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"  style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">PIZZA AMERICANA</h1>
+                                    <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
+                                         class="image2 shadow" style="height: 200px; width: 300px">
+                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
+                                       style="height: 200px; width: 300px">
+                                        <h1 class="text2 font-weight-bolder text-left"
+                                            th:text="${plato.getNombre()}"></h1>
                                     </a>
                                 </div>
 
+
                                 <div class="form-check-inline">
-                                    <label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
+                                    <label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br>
+                                        número</label>
                                     <div class="form-check-inline">
                                         <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
                                                style="border-color: lightgray">
                                         <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
+                                                class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
-
-                                <div class="container2">
-                                    <img src="img/4-sabores.jpg" alt="Avatar"
-                                         class="image2 shadow"  style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"  style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">PIZZA 4 SABORES</h1>
-                                    </a>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad2" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad2" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
-
-                                <div class="container2">
-                                    <img src="img/lasagna.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">LASAGNA</h1>
-                                    </a>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad3" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad3" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
-
-                                <div class="container2">
-                                    <img src="img/pizza.jpg" alt="Avatar" style="height: 200px; width: 300px"
-                                         class="image2 shadow">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">PIZZA AMERICANA</h1>
-                                    </a>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad4" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad4" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
-
-                                <div class="container2">
-                                    <img src="img/pizza.jpg" alt="Avatar" style="height: 200px; width: 300px"
-                                         class="image2 shadow">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">PIZZA AMERICANA</h1>
-                                    </a>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad5" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad5" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col text-center">
-                                <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Precio: </strong>
-                                    S/.15.00</h6>
-
-                                <div class="container2">
-                                    <img src="img/pizza.jpg" alt="Avatar" style="height: 200px; width: 300px"
-                                         class="image2 shadow">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left">PIZZA AMERICANA</h1>
-                                    </a>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad6" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad6" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-shopping-cart"></i></button>
-                                    </div>
-                                </div>
-
                             </div>
 
                         </div>
@@ -250,6 +134,7 @@
                                 <a href="#">6</a>
                                 <a href="#">&raquo;</a>
                             </div>
+
                         </div>
 
                     </div>

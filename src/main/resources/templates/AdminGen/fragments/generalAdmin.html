@@ -62,10 +62,10 @@
 
     </li>
     <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item" th:if="|${session.usuario.getRol().getIdrol() == 2}|">
         <a class="nav-link" th:href="@{'/admin/crear'}">
             <i class="fas fa-fw fa-user-edit"></i>
-            <span>Crear Administrador</span>
+            <span  >Crear Administrador</span>
         </a>
     </li>
 
@@ -217,7 +217,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                    <img class="img-profile rounded-circle" src="https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png">
+                    <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

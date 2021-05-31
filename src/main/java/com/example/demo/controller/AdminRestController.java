@@ -120,7 +120,7 @@ public class AdminRestController {
 
     @PostMapping("/guardarRestaurante")
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
-                                     BindingResult bindingResult, HttpServletRequest session, Model model, @RequestParam("photo") MultipartFile file) {
+                                     BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
         String fileName = "";
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());

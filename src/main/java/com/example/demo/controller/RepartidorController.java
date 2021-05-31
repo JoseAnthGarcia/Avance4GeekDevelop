@@ -42,15 +42,26 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model,HttpSession session){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Pedido pedidoVal = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
-        if(pedidoVal==null){
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct==null){
             Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
             model.addAttribute("listaPedidos", pedidos);
             return "Repartidor/solicitudPedidos";
         }else{
-            //TODO: rediriguir al pedido actual
-            return "Redirect:/Repartidor/solicitudPedidos";
+            return "redirect:/repartidor/pedidoActual";
+        }
+    }
+
+    @GetMapping("/pedidoActual")
+    public String verPedidoActual(Model model,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct!=null){
+            model.addAttribute("pedidoAct", pedidoAct);
+            return "Repartidor/pedidoActual";
+        }else{
+            return "redirect:/repartidor/listaPedidos";
         }
     }
 

@@ -20,9 +20,11 @@ public class Pedido implements Serializable {
     private Usuario cliente;
 
     /*
-    private int idcupon;
-    private int idmetodopago;
-*/
+    private int idcupon;*/
+    @ManyToOne
+    @JoinColumn(name = "idmetodopago", nullable = false)
+    private MetodoDePago metodopago;
+
     @Column(name = "preciototal", nullable = false)
     private double preciototal;
 
@@ -36,11 +38,11 @@ public class Pedido implements Serializable {
 
     private String comentariorestaurante;
 
-    private int valoracionrestaurante;
+    private Integer valoracionrestaurante;
 
     private String comentariorepartidor;
 
-    private int valoracionrepartidor;
+    private Integer valoracionrepartidor;
 
     @ManyToOne
     @JoinColumn(name = "idrepartidor")
@@ -63,11 +65,19 @@ public class Pedido implements Serializable {
         this.comentariorestaurante = comentariorestaurante;
     }
 
-    public int getValoracionrestaurante() {
+    public MetodoDePago getComentariorestaurante() {
+        return metodopago;
+    }
+
+    public void setComentariorestaurante(MetodoDePago metodopago) {
+        this.metodopago = metodopago;
+    }
+
+    public Integer getValoracionrestaurante() {
         return valoracionrestaurante;
     }
 
-    public void setValoracionrestaurante(int valoracionrestaurante) {
+    public void setValoracionrestaurante(Integer valoracionrestaurante) {
         this.valoracionrestaurante = valoracionrestaurante;
     }
 
@@ -79,11 +89,11 @@ public class Pedido implements Serializable {
         this.comentariorepartidor = comentariorepartidor;
     }
 
-    public int getValoracionrepartidor() {
+    public Integer getValoracionrepartidor() {
         return valoracionrepartidor;
     }
 
-    public void setValoracionrepartidor(int valoracionrepartidor) {
+    public void setValoracionrepartidor(Integer valoracionrepartidor) {
         this.valoracionrepartidor = valoracionrepartidor;
     }
 

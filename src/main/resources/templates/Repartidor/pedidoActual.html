@@ -10,7 +10,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -41,10 +41,16 @@
                         <div class="container-fluid">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-6" th:object="${pedidoAct}">
                                         <div class="row">
-                                            <h1 class="card-title" style="color: black">Ceviche - Restaurante Marino</h1>
-                                            <p class="card-text">Dirección de restaurante: Av. Universitaria 345<br>
+                                            <h1 class="card-title"
+                                                style="color: black"
+                                                th:text="|${pedidoAct.cliente.nombres} - ${pedidoAct.ubicacion.distrito.nombre}|">Ceviche - Restaurante Marino</h1>
+                                            <p class="card-text"
+                                               th:utext="'Dirección de restaurante: '+${pedidoAct.restaurante.direccion}
+                                            +'<br>Direción de envio: '+${pedidoAct.ubicacion.direccion}+
+                                            +'<br>Hora de registro de pedido: '+${pedidoAct.fechapedido}+
+                                            +'<br>Método de pago : '+${pedidoAct.meto}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>
                                                 Producto: Ceviche<br>
                                                 Hora de registro de pedido:   17:49<br>

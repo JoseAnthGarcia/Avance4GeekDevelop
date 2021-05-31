@@ -20,7 +20,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(listaDistritos=${listaDistritos})"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -54,7 +54,7 @@
                                     <td th:text="${pedido.restaurante.nombre}">Arroz con pollo - Restaurante amarillo</td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
                                     <td>
-                                       <a th:href="@{/repartidor/aceptarPedido}" class="btn">
+                                       <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn">
                                            <i class="fas fa-check-circle" style="color: green"></i>
                                        </a>
                                     </td>

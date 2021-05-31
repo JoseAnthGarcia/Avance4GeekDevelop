@@ -42,10 +42,47 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model,HttpSession session){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        List<Pedido> pedidos = pedidoRepository.findByRepartidorAndUbicacion_Distrito(repartidor,
-                ((Ubicacion) session.getAttribute("ubicacionActual")).getDistrito());
-        model.addAttribute("listaPedidos", pedidos);
-        return "Repartidor/solicitudPedidos";
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct==null){
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Distrito> listaDistritos = distritosRepository.findAll();
+            List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("listaPedidos", pedidos);
+            model.addAttribute("listaDistritos", listaDistritos);
+            return "Repartidor/solicitudPedidos";
+        }else{
+            return "redirect:/repartidor/pedidoActual";
+        }
+    }
+
+    @GetMapping("/pedidoActual")
+    public String verPedidoActual(Model model,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct!=null){
+            List<Distrito> listaDistritos = distritosRepository.findAll();
+            model.addAttribute("listaDistritos", listaDistritos);
+            model.addAttribute("pedidoAct", pedidoAct);
+            return "Repartidor/pedidoActual";
+        }else{
+            return "redirect:/repartidor/listaPedidos";
+        }
+    }
+
+    @GetMapping("/aceptarPedido")
+    public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
+                                HttpSession session){
+        if(codigo!=null){
+            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
+            if(pedidoOpt.isPresent()){
+                Pedido pedido = pedidoOpt.get();
+                pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
+                pedido.setEstado(5);
+                //TODO: TIEMPO DE ENTREGA??
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/repartidor/aceptarPedido";
     }
 
     @PostMapping("/seleccionarDistrito")

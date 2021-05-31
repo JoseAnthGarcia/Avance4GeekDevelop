@@ -46,11 +46,15 @@ public class RepartidorController {
         if(pedidoAct==null){
             Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
             List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("direcciones", direcciones);
             model.addAttribute("listaPedidos", pedidos);
             model.addAttribute("listaDistritos", listaDistritos);
             return "Repartidor/solicitudPedidos";
         }else{
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
+            model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/pedidoActual";
         }
     }
@@ -63,8 +67,12 @@ public class RepartidorController {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
             model.addAttribute("pedidoAct", pedidoAct);
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
+            model.addAttribute("direcciones", direcciones);
             return "Repartidor/pedidoActual";
         }else{
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
+            model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/listaPedidos";
         }
     }

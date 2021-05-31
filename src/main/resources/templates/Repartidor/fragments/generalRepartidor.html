@@ -91,20 +91,19 @@
 
 
 
-<nav th:fragment="navbar(listaDistritos)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <div class="form-group row">
-        <div class="col-sm-12 mb-2 mb-sm-0 " style="position: relative; left: 330%; bottom: 5%">
-            <div class="col-sm-2">
-                <label class="form-label">Direccion actual:</label>
-            </div>
-            <div class="col-sm-10">
+<nav th:fragment="navbar(direcciones)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <div class=" row"style="position: relative; left: 55%">
+        <div class="col-lg-6" >
+            <span style="position: relative; top: 13% ; left: 11%">Distrito actual:</span>
 
-                <select class="form-select" style="border-color:lightgray" name="distritos">
+        </div>
+        <div class="col-lg-6" >
 
-                    <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
-                            th:text="${dist.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dist.nombre}"></option>
+                <select class="form-control" style="border-color:lightgray" name="distritos">
+                    <option th:each="dir : ${direcciones}" th:value="${dir.distrito.iddistrito}"
+                            th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
                 </select>
-            </div>
+
         </div>
 
     </div>

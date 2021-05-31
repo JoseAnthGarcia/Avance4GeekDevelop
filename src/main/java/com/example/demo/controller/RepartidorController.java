@@ -67,6 +67,9 @@ public class RepartidorController {
         return "/Repartidor/registro";
     }
 
+
+
+
     @PostMapping("/guardarRepartidor")
     public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
                                     BindingResult bindingResult,

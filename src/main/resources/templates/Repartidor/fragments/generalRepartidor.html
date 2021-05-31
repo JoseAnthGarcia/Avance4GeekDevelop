@@ -99,7 +99,7 @@
             </div>
             <div class="col-sm-10">
 
-                <select class="form-select" style="border-color:lightgray" name="distritos" multiple>
+                <select class="form-select" style="border-color:lightgray" name="distritos">
 
                     <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                             th:text="${dist.nombre}"></option>

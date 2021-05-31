@@ -65,11 +65,11 @@ public class Pedido implements Serializable {
         this.comentariorestaurante = comentariorestaurante;
     }
 
-    public MetodoDePago getComentariorestaurante() {
+    public MetodoDePago getMetodopago() {
         return metodopago;
     }
 
-    public void setComentariorestaurante(MetodoDePago metodopago) {
+    public void setMetodopago(MetodoDePago metodopago) {
         this.metodopago = metodopago;
     }
 

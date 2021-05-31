@@ -13,5 +13,27 @@ public class MetodoDePago implements Serializable {
     private float cantidadapagar;
 
 
+    public int getIdmetodopago() {
+        return idmetodopago;
+    }
 
+    public void setIdmetodopago(int idmetodopago) {
+        this.idmetodopago = idmetodopago;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public float getCantidadapagar() {
+        return cantidadapagar;
+    }
+
+    public void setCantidadapagar(float cantidadapagar) {
+        this.cantidadapagar = cantidadapagar;
+    }
 }

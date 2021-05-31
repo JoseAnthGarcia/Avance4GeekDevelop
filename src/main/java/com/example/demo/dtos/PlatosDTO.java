@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public interface PlatosDTO {
 
     int getIdplato();
-    int getNombre();
+    String getNombre();
     BigDecimal getPrecio();
     byte[] getFoto();
     String getFotocontenttype();

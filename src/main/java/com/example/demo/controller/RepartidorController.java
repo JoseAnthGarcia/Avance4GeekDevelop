@@ -66,13 +66,9 @@ public class RepartidorController {
 
         if(ubicacionOpt.isPresent()){
             Ubicacion ubicacion = ubicacionOpt.get();
-            if(ubicacion.getUsuario().getIdusuario()==repartidor.getIdusuario()){
-
-
+            if(ubicacion.getUsuario().getIdusuario().intValue() == repartidor.getIdusuario().intValue()){
                 session.setAttribute("ubicacionActual", ubicacion);
-
             }
-
         }
 
         return "redirect:/repartidor/listaPedidos";

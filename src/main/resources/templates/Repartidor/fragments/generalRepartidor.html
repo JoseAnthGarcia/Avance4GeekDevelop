@@ -105,6 +105,7 @@
                     <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
                             th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
                 </select>
+            <button type="submit">Seleccionar distrito</button>
 
         </div>
 

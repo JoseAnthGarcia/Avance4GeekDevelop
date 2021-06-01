@@ -88,7 +88,7 @@
                     <!-- Begin Page Content -->
                     <div class="container">
 
-                        <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal"
+                        <a class="dropdown-item user" data-toggle="modal" data-target="#volverModal"
                            style="position: relative; right:12%">
                             <i class="fas fa-chevron-circle-left"></i>
                             Volver
@@ -211,7 +211,26 @@
             <i class="fas fa-angle-up"></i>
         </a>
 
-
+        <!-- Volver Modal-->
+        <div class="modal fade" id="volverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">¿Desea volver?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Al seleccionar el botón volver, no se guardará la información registrada.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" th:href="@{/restaurante/paginabienvenida}">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Registrar Modal-->
         <div class="modal fade" id="registrarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">

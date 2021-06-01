@@ -59,6 +59,25 @@ public class RepartidorController {
         }
     }
 
+    @PostMapping("/cambiarDistrito")
+    public String cambiarDistritoActual(@RequestParam("idubicacion") int idubicacion,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Optional<Ubicacion> ubicacionOpt =  ubicacionRepository.findById(idubicacion);
+
+        if(ubicacionOpt.isPresent()){
+            Ubicacion ubicacion = ubicacionOpt.get();
+            if(ubicacion.getUsuario().getIdusuario()==repartidor.getIdusuario()){
+
+
+                session.setAttribute("ubicacionActual", ubicacion);
+
+            }
+
+        }
+
+        return "redirect:/repartidor/listaPedidos";
+    }
+
     @GetMapping("/pedidoActual")
     public String verPedidoActual(Model model,HttpSession session){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");

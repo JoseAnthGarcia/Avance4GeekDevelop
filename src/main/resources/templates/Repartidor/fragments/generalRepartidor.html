@@ -92,6 +92,8 @@
 
 
 <nav th:fragment="navbar(direcciones)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+    <form th:action="@{'/repartidor/cambiarDistrito'}" method="post">
     <div class=" row"style="position: relative; left: 55%">
         <div class="col-lg-6" >
             <span style="position: relative; top: 13% ; left: 11%">Distrito actual:</span>
@@ -99,14 +101,15 @@
         </div>
         <div class="col-lg-6" >
 
-                <select class="form-control" style="border-color:lightgray" name="distritos">
-                    <option th:each="dir : ${direcciones}" th:value="${dir.distrito.iddistrito}"
+                <select class="form-control" style="border-color:lightgray" name="idubicacion">
+                    <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
                             th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
                 </select>
 
         </div>
 
     </div>
+     </form>
     <!-- Sidebar Toggle (Topbar) -->
     <form class="form-inline">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">

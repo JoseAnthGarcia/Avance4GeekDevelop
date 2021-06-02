@@ -79,6 +79,8 @@ public class AdminRestController {
         } catch (NumberFormatException n) {
             n.printStackTrace();
         }
+        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci "+fecha_naci);
 
         System.out.println("");
         if (file != null) {
@@ -90,7 +92,7 @@ public class AdminRestController {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
             }
         }
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci) {
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
             }
@@ -114,7 +116,6 @@ public class AdminRestController {
             }
             return "redirect:/login";
         }
-
     }
 
     @PostMapping("/guardarRestaurante")
@@ -136,9 +137,9 @@ public class AdminRestController {
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        Distrito distrito = restaurante.getDistrito();
+        Distrito distrito =restaurante.getDistrito();
 
-        boolean dist_u_val = true;
+        boolean dist_u_val=true;
         try {
             Integer id_distrito = distrito.getIddistrito();
             int dist_c = distritosRepository.findAll().size();
@@ -184,11 +185,8 @@ public class AdminRestController {
                 session.invalidate();
                 return "/AdminRestaurante/registroResturante";
             }
-            session.invalidate();
             return "redirect:/plato/";
-
         }
-
     }
 
     @GetMapping("/registroRest")

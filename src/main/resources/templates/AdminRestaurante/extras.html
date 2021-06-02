@@ -183,7 +183,7 @@
               <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
                   <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
                 </a>
                 <!-- Dropdown - User Information -->
@@ -219,7 +219,10 @@
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
                         <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=1'}">
-                          <H1 class="text2 font-weight-bolder">BEBIDAS</H1>
+
+                          <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
+                            Bebidas
+                          </div></h1>
                         </a>
                       </div>
                     </div>
@@ -233,7 +236,9 @@
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
                         <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=4'}">
-                          <H1 class="text2 font-weight-bolder">GUARNICIONES</H1>
+                          <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
+                            Guarniciones
+                          </div></h1>
                         </a>
                       </div>
                     </div>
@@ -250,7 +255,9 @@
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
                         <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=2'}">
-                          <H1 class="text2 font-weight-bolder">CUBIERTOS</H1>
+                          <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
+                            Cubiertos
+                          </div></h1>
                         </a>
                       </div>
 
@@ -266,7 +273,9 @@
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
                         <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=3'}">
-                          <H1 class="text2 font-weight-bolder">ENSALADAS</H1>
+                          <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
+                            Ensaladas
+                          </div></h1>
                         </a>
                       </div>
                     </div>

@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import com.example.demo.dtos.PedidoDTO;
 import com.example.demo.entities.Pedido;
+import com.example.demo.entities.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,5 +33,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "            and p.estado >=?3 and  p.estado <=?4 ;", nativeQuery = true)
 
     List<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2);
+
+
+    @Query(value = "select*from pedido where (idrestaurante=?1) order by estado", nativeQuery = true)
+    List<Pedido> pedidosXrestaurante (int id);
 
 }

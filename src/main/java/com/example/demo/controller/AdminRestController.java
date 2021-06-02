@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,8 @@ import java.util.*;
 public class AdminRestController {
     @Autowired
     UsuarioRepository adminRestRepository;
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @Autowired
     RolRepository rolRepository;
@@ -87,7 +90,7 @@ public class AdminRestController {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
             }
         }
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci) {
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
             }
@@ -111,6 +114,7 @@ public class AdminRestController {
             }
             return "redirect:/login";
         }
+
     }
 
     @PostMapping("/guardarRestaurante")
@@ -132,9 +136,9 @@ public class AdminRestController {
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        Distrito distrito =restaurante.getDistrito();
+        Distrito distrito = restaurante.getDistrito();
 
-        boolean dist_u_val=true;
+        boolean dist_u_val = true;
         try {
             Integer id_distrito = distrito.getIddistrito();
             int dist_c = distritosRepository.findAll().size();
@@ -177,10 +181,14 @@ public class AdminRestController {
                 model.addAttribute("mensajeFoto", "Ocurrió un error al subir el archivo");
                 model.addAttribute("listaDistritos", distritosRepository.findAll());
                 model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+                session.invalidate();
                 return "/AdminRestaurante/registroResturante";
             }
+            session.invalidate();
             return "redirect:/plato/";
+
         }
+
     }
 
     @GetMapping("/registroRest")
@@ -224,5 +232,13 @@ public class AdminRestController {
             return null;
         }
     }
-
+    @GetMapping("/listaPedidos")
+    public String listaPedidos(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<Pedido> listaPedidos =pedidoRepository.pedidosXrestaurante(restaurante.getIdrestaurante()); ;
+        model.addAttribute("listaPedidos", listaPedidos);
+        return "AdminRestaurante/listaPedidos";
+    }
 }

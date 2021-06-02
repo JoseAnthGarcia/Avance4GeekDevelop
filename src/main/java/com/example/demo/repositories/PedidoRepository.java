@@ -39,4 +39,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
+    @Query(value = "select*from pedido where (idrestaurante=?1) order by estado", nativeQuery = true)
+    List<Pedido> pedidosXrestaurante (int id);
+
+
 }

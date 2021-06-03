@@ -74,7 +74,7 @@
 
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div th:if="${totalItems!=0}" class="table-responsive">
 
                                     <div th:if="${creado != null}" th:text="${creado}" class="alert alert-success" role="alert"></div>
                                     <div th:if="${activo != null}" th:text="${activo}" class="alert alert-success" role="alert"></div>
@@ -144,6 +144,9 @@
 
                                     </table>
 
+                                </div>
+                                <div th:if="${totalItems==0}">
+                                    <h3 class="text-lg-center text-danger">No hay coincidencias con su búsqueda.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">

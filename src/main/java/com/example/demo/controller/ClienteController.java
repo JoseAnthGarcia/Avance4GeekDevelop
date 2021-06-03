@@ -407,14 +407,38 @@ public class ClienteController {
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam("codigo") String codigo){
+    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model){
+
+        model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+        model.addAttribute("listapedido2", pedidoRepository.detalle2(codigo));
+        model.addAttribute("listapedido3", pedidoRepository.detalle1(codigo));
+
 
 
         return "Cliente/detallePedidoActual";
     }
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
-    public String historialPedidos() {
+    public String historialPedidos(Model model, HttpSession httpSession) {
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        String texto= "";
+
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,7);
+        List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
+        for(PedidoDTO ped: listaPedidos){
+            if(ped.getEstado()==6 || ped.getEstado()==2  ){
+                listaPedidoActual.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos",listaPedidoActual);
+
+
+
+
+
         return "Cliente/listaHistorialPedidos";
     }
 

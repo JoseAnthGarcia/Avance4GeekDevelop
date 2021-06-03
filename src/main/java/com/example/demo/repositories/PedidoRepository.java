@@ -55,19 +55,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante res on res.idrestaurante=pe.idrestaurante\n" +
             "inner join ubicacion ubi on pe.idubicacion=ubi.idubicacion\n" +
             "inner join distrito dis on dis.iddistrito=ubi.iddistrito\n" +
-            "where res.idrestaurante=?1 and pe.codigo=?2;",nativeQuery = true)
+            "where res.idrestaurante=?1 and pe.codigo=?2",nativeQuery = true)
     List<DetallePedidoDTO> detallePedido(int idrestaurante, String codigopedido);
 
     @Query(value = "SELECT p.nombre,php.preciounitario, php.cantidad, php.preciounitario*php.cantidad as preciototal FROM plato_has_pedido php\n" +
             "inner join pedido pe on pe.codigo=php.codigo\n" +
             "inner join restaurante res on res.idrestaurante=pe.idrestaurante\n" +
             "inner join plato p on p.idplato=php.idplato\n" +
-            "where pe.idrestaurante=?1 and php.codigo=?2;",nativeQuery = true)
+            "where pe.idrestaurante=?1 and php.codigo=?2",nativeQuery = true)
     List<PlatoPorPedidoDTO> platosPorPedido(int idrestaurante, String codigopedido);
 
     @Query(value = "SELECT e.nombre, ehp.preciounitario,ehp.cantidad,ehp.preciounitario*ehp.cantidad as preciototal  FROM extra_has_pedido ehp\n" +
             "inner join extra e on e.idextra=ehp.idextra\n" +
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
-            "where ehp.codigo=?1;",nativeQuery = true)
+            "where ehp.codigo=?1",nativeQuery = true)
     List<ExtraPorPedidoDTO> extrasPorPedido(String codigopedido);
 }

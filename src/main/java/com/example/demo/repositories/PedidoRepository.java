@@ -7,6 +7,8 @@ import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Pedido;
 import com.example.demo.entities.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -41,11 +43,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
-    @Query(value = "select*from pedido where (idrestaurante=?1) order by estado", nativeQuery = true)
-    List<Pedido> pedidosXrestaurante (int id);
+
+    Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqual(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, Pageable pageable);
 
     @Query(value = "select *from pedido where idrestaurante=?1 and codigo=?2 ", nativeQuery = true)
     Pedido pedidosXrestauranteXcodigo (int idrestaurante, String codigo);
+
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente, concat(ubi.direccion,'-',dis.nombre) as direccion, pe.fechapedido, cu.nombre as cupon,\n" +
             "cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
             " pe.preciototal FROM pedido pe\n" +

@@ -426,17 +426,15 @@ public class ClienteController {
 
         String texto= "";
 
-        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,7);
-        List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoDTO> listaPedidoA= new ArrayList<PedidoDTO>();
         for(PedidoDTO ped: listaPedidos){
             if(ped.getEstado()==6 || ped.getEstado()==2  ){
-                listaPedidoActual.add(ped);
+                listaPedidoA.add(ped);
             }
         }
 
-        model.addAttribute("listaPedidos",listaPedidoActual);
-
-
+        model.addAttribute("listaPedidos",listaPedidoA);
 
 
 

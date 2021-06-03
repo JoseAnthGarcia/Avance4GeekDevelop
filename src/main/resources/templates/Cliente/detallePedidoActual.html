@@ -205,8 +205,9 @@
     </div>
 	
 	<!-- Ver Comentario-->
+
     <div class="modal fade" id="verComent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true"   th:each="pedido:${listapedido1}">
+         aria-hidden="true"   >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -215,13 +216,14 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body" th:text="${pedido.getObservacionplatillo()}"></div>
+          <div class="modal-body" th:text="${p2.getObservacionplatillo()}"></div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
           </div>
         </div>
       </div>
     </div>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>

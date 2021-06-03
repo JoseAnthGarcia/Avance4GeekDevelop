@@ -10,38 +10,36 @@
 <meta name="author" content="">
 
 <!-- Custom fonts for this template -->
-<link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
 <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
 <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-<link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
 <!-- Custom styles for this page -->
 <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-<link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
 
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
 <!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
 <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
-
-
+<script th:src="@{/js/demo/datatables-demo.js}"></script>
 
 <body id="page-top">
 <!-- Page Wrapper -->
@@ -154,7 +152,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -235,7 +234,8 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
                                 th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
                             >
 
@@ -258,14 +258,15 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
@@ -290,7 +291,8 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Búsqueda por restarurante...">
+                                <input type="text" class="form-control bg-light border-0 small"
+                                       placeholder="Búsqueda por restarurante...">
                                 <div class="input-group-append">
                                     <button class="btn" style="background-color:#701111; color:white;" type="button">
                                         <i class="fas fa-search fa-sm"></i>
@@ -308,12 +310,13 @@
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-2 ">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="button">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
-                        <div class="col-sm-2" style="margin-right: 10px" >
-                            <a class="btn btn-secondary " >Quitar filtros</a>
+                        <div class="col-sm-2" style="margin-right: 10px">
+                            <a class="btn btn-secondary ">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -335,109 +338,85 @@
                         <table class="table" id="dataTable" width="100%" style="background-color:gray">
                             <tbody>
 
-                            <div class="row" style="margin-bottom:10px"  th:each=" pedido , info:${listaPedidos}">
-                                <div class="col-3" >
+                            <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
+                                <div class="col-3">
                                     <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
                                 </div>
                                 <div class="col-6">
-                                    <div class="row mb-2" >
-                                        <input class="form-control ph-center" type="text" th:placeholder="${pedido.getNombre()}"aria-label="Disabled input example" disabled>
+                                    <div class="row mb-2">
+                                        <input class="form-control ph-center" type="text"
+                                               th:placeholder="${pedido.getNombre()}"
+                                               aria-label="Disabled input example" disabled>
                                     </div>
 
                                     <div class="row mb-2">
-                                        <input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|" aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==2}"  th:placeholder="|Estado : Cancelado |" aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==6}"  th:placeholder="|Estado : Entregado |" aria-label="Disabled input example" disabled>
+                                        <input class="form-control col-6" type="text"
+                                               th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|"
+                                               aria-label="Disabled input example" disabled>
+                                        <input width="" class="form-control col-5 ml-4" type="text"
+                                               th:if="${pedido.getEstado()==2}" th:placeholder="|Estado : Cancelado |"
+                                               aria-label="Disabled input example" disabled>
+                                        <input width="" class="form-control col-5 ml-4" type="text"
+                                               th:if="${pedido.getEstado()==6}" th:placeholder="|Estado : Entregado |"
+                                               aria-label="Disabled input example" disabled>
                                     </div>
-
-                                    <div class="row mb-2" >
-                                        <div class="col-6">
+                                    <!--Aqui tamos llamando al modal-->
+                                    <div th:if="${pedido.getValoracionrestaurante() == null}" class="row mb-2">
+                                        <div  class="col-6">
                                             <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
-                                            <a href="#" data-toggle="modal" data-target="#valoraRest">
+                                            <a data-toggle="modal" th:data-target="${'#valoraRest'+pedido.getCodigo()}"
+                                               th:href="${'#valoraRest'+pedido.getCodigo()}">
                                                 <i class="fas fa-utensils ml-2" style="font-size:2em; color:#F2EE61"></i>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <h6 class=mb-2" style="color:black"> Valora a tu repartidor</h6>
-                                            <a href="#" data-toggle="modal" data-target="#valoraRepar">
-                                                <i class="fas fa-motorcycle ml-2" style="font-size:2em; color:#2C8287"></i>
-                                            </a>
-                                        </div>
                                     </div>
-
+                                    <!--DEFINIDO-->
 
                                     <!-- todo Evaluar Restaurante , Comentar Restaurante-->
 
-                                    <div class="modal fade" id="valoraRest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                    <div class="modal fade" th:id="${'#valoraRest'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                                          aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Valora a tu restaurante</h5>
-                                                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                                                    <h5 class="modal-title">Valora a tu restaurante</h5>
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
+                                                <form id="valorarRest" method="POST" th:action="@{/cliente/valorarRest}">
                                                 <div class="modal-body">
-                                                    <form>
-                                                        <div class="form-group ">
-                                                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
-                                                            <div class="rating"></div>
+
+                                                        <div class="form-group">
+                                                            <input name="id" type="text" class="form-control mb-2" th:value="${pedido.codigo}" hidden>
+                                                            <label class="col-form-label text-center">Valora:</label>
+                                                            <div class="rating" ></div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" id="message-text"></textarea>
+                                                            <textarea class="form-control" name="comentRest" id="comentRest"></textarea>
                                                         </div>
-                                                    </form>
+
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                                                    <a class="btn" style="background-color:#701111; color:white" href="listaHistorialPedidos.html">Calificar</a>
+                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar </button>
+                                                    <button type="submit" class="btn btn-primary"> Aceptar </button>
                                                 </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-
-
-                                    <!-- todo Evaluar Repartidor , Comentar Repartidor-->
-
-                                    <div class="modal fade" id="valoraRepar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Valora a tu repartidor</h5>
-                                                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form>
-                                                        <div class="form-group ">
-                                                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
-                                                            <div class="rating"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" id="message-text"></textarea>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                                                    <a class="btn" style="background-color:#701111; color:white" href="listaHistorialPedidos.html">Calificar</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                 </div>
                                 <div class="col-3">
                                     <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center"><i style="font-size:6em; color:#2C8287" class="fas fa-eye"></i>
-                                        </div></a>
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}"><div class="text-center" style="color:#2C8287">Detalle de Pedido</div></a>
+                                        <div class="text-center"><i style="font-size:6em; color:#2C8287"
+                                                                    class="fas fa-eye"></i>
+                                        </div>
+                                    </a>
+                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                        <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="topbar-divider d-none d-sm-block"></div>
@@ -509,37 +488,6 @@
         </div>
     </div>
 
-    <!-- todo Evaluar Restaurante , Comentar Restaurante-->
-
-    <div class="modal fade" id="valoraRest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Valora a tu restaurante</h5>
-                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group ">
-                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
-                            <div class="rating"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Comentario:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn" style="background-color:#701111; color:white" href="listaHistorialPedidos.html">Calificar</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- todo Evaluar Repartidor , Comentar Repartidor-->
 
@@ -549,7 +497,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Valora a tu repartidor</h5>
-                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -572,9 +520,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
     <!-- Bootstrap core JavaScript-->
@@ -589,7 +534,6 @@
 
     <!-- Page level plugins -->
     <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
-
     <!-- Page level custom scripts -->
     <script th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script th:src="@{/js/demo/chart-pie-demo.js}"></script>

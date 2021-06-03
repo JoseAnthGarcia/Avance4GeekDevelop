@@ -105,7 +105,7 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-                            <strong><h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text" th:text="|Bienvenido ${session.usuario.nombres} ${session.usuario.apellidos}|"></h1></strong>
+                            <strong><h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text" th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1></strong>
                             <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"> Vamos a comenzar...</h1><div class="card-body" style="text-align: center"><a class="btn btn-primary" th:href="@{/restaurante/registroRest}" style="width: 30%;">Registrar mi restaurante</a></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>

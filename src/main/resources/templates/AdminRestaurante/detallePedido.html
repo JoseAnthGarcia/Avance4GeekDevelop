@@ -30,10 +30,11 @@
 <body id="page-top">
 
 <!-- Page Wrapper -->
+<!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;"
+    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
         id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
@@ -49,7 +50,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="categorias.html">
+            <a class="nav-link" th:href="@{/plato}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>Categorias</span></a>
         </li>
@@ -57,16 +58,16 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link" href="listaPedidos.html">
-                <i class="fas fa-book-open"></i>
+            <a class="nav-link" th:href="@{/restaurante/listaPedidos}">
+                <i class="fas fa-fw fa-book-open"></i>
                 <span>Pedidos</span>
             </a>
         </li>
 
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link" href="extras.html">
-                <i class="fas fa-utensils"></i>
+            <a class="nav-link" th:href="@{/extra}">
+                <i class="fas fa-fw fa-utensils"></i>
                 <span>Extras</span>
             </a>
         </li>
@@ -74,16 +75,17 @@
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link " href="eleccionReporte.html">
-                <i class="fas fa-fw fa-file"></i>
+                <i class="fas fa-fw fa-fw fa-file"></i>
                 <span>Reportes</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="listaCupones.html">
-                <i class="fas fa-ticket-alt"></i>
+            <a class="nav-link " th:href="@{/cupon}">
+                <i class="fas fa-fw fa-ticket-alt"></i>
                 <span>Cupones</span>
             </a>
         </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
@@ -112,7 +114,6 @@
                 </form>
 
                 <!-- Topbar Search -->
-
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -183,16 +184,18 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
+                            <img class="img-profile rounded-circle"
+                                 src="../../static/bootstrap/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cerrar Sesión
-                            </a>
+                            <form id="cerrar" th:action="@{/logout}" method="post">
+                                <a class="nav-link" data-toggle="modal"
+                                   href="#logoutModal" data-target="#logoutModal">Cerrar Sesión
+                                </a>
+                            </form>
                         </div>
                     </li>
 
@@ -413,7 +416,7 @@
                                     <b>Descuento:</b></div>
                                 <div class="card-body" style="background-color: #ffe8d8;color: black">
                                     <h4 class="card-text" style="text-align:center"
-                                        th:text="${detalles.get(0).getDescuento()!=0? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
+                                        th:text="${(detalles.get(0).getDescuento()!=0 && detalles.get(0).getDescuento()!=null)? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
                                 </div>
                             </div>
                             <div class="card text-dark  ml-3" style="max-width: 12rem;">
@@ -465,26 +468,24 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Alerta cierre sesion-->
+<!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
-                    continuar?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
-                   href="loginAR.html">Cerrar
-                    Sesión</a>
-                <a class="btn" type="button"
-                   data-dismiss="modal">
-                    Cancelar
-                </a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

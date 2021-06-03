@@ -209,7 +209,9 @@ public class AdminRestController {
     }
 
     @GetMapping("/paginabienvenida")
-    public String paginaBienvenida(Model model) {
+    public String paginaBienvenida(Model model,HttpSession session) {
+        Usuario usuario= (Usuario) session.getAttribute("usuario");
+        System.out.println(usuario.getNombres());
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
         return "AdminRestaurante/adminCreado";

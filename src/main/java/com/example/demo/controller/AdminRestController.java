@@ -237,7 +237,7 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<Pedido> listaPedidos =pedidoRepository.pedidosXrestaurante(restaurante.getIdrestaurante()); ;
+        List<Pedido> listaPedidos =pedidoRepository.pedidosXrestaurante(restaurante.getIdrestaurante());
         model.addAttribute("listaPedidos", listaPedidos);
         return "AdminRestaurante/listaPedidos";
     }
@@ -286,4 +286,18 @@ public class AdminRestController {
         return "redirect:/restaurante/listaPedidos";
     }
 
+
+    @GetMapping("/detallePedido")
+    public  String detalleDelPedido(Model model, HttpSession session,@RequestParam("codigoPedido") String codigoPedido){
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<DetallePedidoDTO> detallesPedido= pedidoRepository.detallePedido(restaurante.getIdrestaurante(),codigoPedido);
+        List<PlatoPorPedidoDTO> listaPlatos= pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
+        List<ExtraPorPedidoDTO> listaExtras= pedidoRepository.extrasPorPedido(codigoPedido);
+        model.addAttribute("detalles",detallesPedido);
+        model.addAttribute("platos",listaPlatos);
+        model.addAttribute("extras",listaExtras);
+        return "AdminRestaurante/detallePedido";
+    }
 }

@@ -31,7 +31,7 @@ public class Restaurante  implements Serializable {
     private String telefono;
 
     @Column(nullable = false)
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-z0-9áéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String direccion;
 
     private String fecharegistro;
@@ -47,6 +47,7 @@ public class Restaurante  implements Serializable {
     @JoinColumn(name="iddistrito", nullable = false)
 
     private Distrito distrito;
+
 
     @ManyToMany
     @JoinTable(name = "restaurante_has_categoriarestaurante",

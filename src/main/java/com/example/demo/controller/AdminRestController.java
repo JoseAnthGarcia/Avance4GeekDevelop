@@ -1,8 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.DetallePedidoDTO;
+import com.example.demo.dtos.ExtraPorPedidoDTO;
+import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import com.example.demo.service.PedidoService;
+import com.example.demo.service.PedidoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +20,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,8 +37,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/restaurante")
 public class AdminRestController {
+
+    @Autowired
+    PedidoService pedidoService;
     @Autowired
     UsuarioRepository adminRestRepository;
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @Autowired
     RolRepository rolRepository;
@@ -40,6 +55,9 @@ public class AdminRestController {
 
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
 
     @GetMapping("/registro")
@@ -53,19 +71,38 @@ public class AdminRestController {
     public String guardarAdminRest(@ModelAttribute("adminRest") @Valid Usuario adminRest, BindingResult bindingResult,
                                    @RequestParam("confcontra") String contra2, @RequestParam("photo") MultipartFile file, Model model) {
 
-        String fileName = "";
 
+        List<Usuario> usuariosxcorreo = usuarioRepository.findUsuarioByCorreo(adminRest.getCorreo());
+        if (!usuariosxcorreo.isEmpty()) {
+            bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
+        }
+        List<Usuario> usuariosxdni = usuarioRepository.findUsuarioByDni(adminRest.getDni());
+        if (!usuariosxdni.isEmpty()) {
+            bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
+        }
+
+        List<Usuario> usuariosxtelefono = usuarioRepository.findUsuarioByTelefono(adminRest.getTelefono());
+        if (!usuariosxtelefono.isEmpty()) {
+            bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
+        }
+        String fileName = "";
         System.out.println(contra2);
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
+        Date date=new Date();
+        DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
         String fecharegistro = LocalDate.now().toString();
+        fecharegistro=fecharegistro+" "+hourFormat.format(date);
+        System.out.println(fecharegistro);
         adminRest.setFecharegistro(fecharegistro);
         Boolean fecha_naci = true;
-        try {
-            String[] parts = adminRest.getFechanacimiento().split("-");
-            int naci = Integer.parseInt(parts[0]);
+        boolean validar_foto=true;
+        int naci = 0;
+        String[] parts = adminRest.getFechanacimiento().split("-");
+        try{
+            naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
             System.out.println("AÑOOOOOOO " + anio);
@@ -73,45 +110,63 @@ public class AdminRestController {
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
-        } catch (NumberFormatException n) {
-            n.printStackTrace();
-        }
-
-        System.out.println("");
-        if (file != null) {
+    }catch(NumberFormatException e){
+            System.out.println("Error capturado");
+    }
+        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci "+fecha_naci);
+        if (file == null) {
+            model.addAttribute("mensajefoto", "Debe subir una imagen");
+            validar_foto=false;
+        } else {
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validar_foto=false;
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                validar_foto=false;
+            }
+            StringTokenizer validarTipo= new StringTokenizer(file.getContentType());
+            if(validarTipo.countTokens()>10){
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validar_foto=false;
+            }
+            if(!file.getContentType().contains("jpeg")&&!file.getContentType().contains("png")&&!file.getContentType().contains("web")){
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validar_foto=false;
             }
         }
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
-            if (fecha_naci) {
-                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
-            }
-            if (!contra2.equals(adminRest.getContrasenia())) {
-                model.addAttribute("msg", "Las contraseñas no coinciden");
-            }
+        if(bindingResult.hasErrors()||!contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci|| !validar_foto)
+
+    {
+        if (fecha_naci) {
+            model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+        }
+        if (!contra2.equals(adminRest.getContrasenia())) {
+            model.addAttribute("msg", "Las contraseñas no coinciden");
+        }
+        return "/AdminRestaurante/registroAR";
+    } else
+    {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
+        adminRest.setContrasenia(hashedPassword);
+        try {
+            adminRest.setFoto(file.getBytes());
+            adminRest.setFotonombre(fileName);
+            adminRest.setFotocontenttype(file.getContentType());
+            adminRestRepository.save(adminRest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
             return "/AdminRestaurante/registroAR";
-        } else {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
-            adminRest.setContrasenia(hashedPassword);
-            try {
-                adminRest.setFoto(file.getBytes());
-                adminRest.setFotonombre(fileName);
-                adminRest.setFotocontenttype(file.getContentType());
-                adminRestRepository.save(adminRest);
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
-                return "/AdminRestaurante/registroAR";
-            }
-            return "redirect:/login";
         }
+        return "redirect:/login";
     }
+
+}
 
     @PostMapping("/guardarRestaurante")
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
@@ -132,9 +187,9 @@ public class AdminRestController {
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        Distrito distrito =restaurante.getDistrito();
+        Distrito distrito = restaurante.getDistrito();
 
-        boolean dist_u_val=true;
+        boolean dist_u_val = true;
         try {
             Integer id_distrito = distrito.getIddistrito();
             int dist_c = distritosRepository.findAll().size();
@@ -177,6 +232,7 @@ public class AdminRestController {
                 model.addAttribute("mensajeFoto", "Ocurrió un error al subir el archivo");
                 model.addAttribute("listaDistritos", distritosRepository.findAll());
                 model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+                session.invalidate();
                 return "/AdminRestaurante/registroResturante";
             }
             return "redirect:/plato/";
@@ -191,7 +247,9 @@ public class AdminRestController {
     }
 
     @GetMapping("/paginabienvenida")
-    public String paginaBienvenida(Model model) {
+    public String paginaBienvenida(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        System.out.println(usuario.getNombres());
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
         return "AdminRestaurante/adminCreado";
@@ -225,4 +283,191 @@ public class AdminRestController {
         }
     }
 
+    @GetMapping("/listaPedidos")
+    public String listaPedidos(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        return findPaginated("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
+    }
+
+    @GetMapping("/page")
+    public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
+                                @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
+                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
+        }
+        int inputID = 1;
+        int pageSize = 5;
+        Page<Pedido> page;
+        List<Pedido> listaPedidos;
+        System.out.println(textBuscador);
+        if (textBuscador == null) {
+            textBuscador = "";
+        }
+
+        System.out.println(inputEstado);
+        if (inputEstado == null) {
+            inputEstado = 0;
+        }
+        int inputEstadoMin;
+        int inputEstadoMax;
+        if (inputEstado == 0) {
+            inputEstadoMin = 0;
+            inputEstadoMax = 8;
+        } else {
+            inputEstadoMin = inputEstado;
+            inputEstadoMax = inputEstado;
+        }
+
+        System.out.println(inputPrecio);
+        if (inputPrecio == null) {
+            inputPrecio = 0;
+        }
+        int inputPMax;
+        int inputPMin;
+        if (inputPrecio == 0) {
+            inputPMin = 0;
+            inputPMax = 100;
+        } else if (inputPrecio == 4) {
+            inputPMin = inputPrecio;
+            inputPMax = 1000;
+        } else {
+            inputPMax = inputPrecio;
+            inputPMin = inputPrecio;
+        }
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 5 - 5, inputPMax * 5);//harcodeado
+        listaPedidos = page.getContent();
+
+        model.addAttribute("texto", textBuscador);
+        model.addAttribute("textoE", inputEstado);
+        model.addAttribute("textoP", inputPrecio);
+
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax);
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaPedidos", listaPedidos);
+        return "AdminRestaurante/listaPedidos";
+    }
+
+    @GetMapping("/rechazarPedido")
+    public String rechazarPedido(@RequestParam("id") String id, @RequestParam("comentarioAR") String comentarioAR,
+                                 RedirectAttributes attr,
+                                 Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        System.out.println("------------------------------------------------------------------------------------------");
+        System.out.println(comentarioAR.getClass());
+        if (pedido != null) {
+            if (pedido.getEstado() == 0) {
+                if (!comentarioAR.equals("")) {
+                    pedido.setEstado(2);
+                    pedido.setComentrechazorest(comentarioAR);
+                    pedidoRepository.save(pedido);
+                    attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
+                } else {
+                    attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
+                }
+
+            }
+        }
+        return "redirect:/restaurante/listaPedidos";
+    }
+
+    @GetMapping("/aceptarPedido")
+    public String aceptarPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 0) {
+                pedido.setEstado(1);
+                pedido.setComentrechazorest("Su pedido ha sido aceptado");
+                pedidoRepository.save(pedido);
+                attr.addFlashAttribute("msg2", "Pedido aceptado exitosamente");
+            }
+        }
+        return "redirect:/restaurante/listaPedidos";
+    }
+
+    @GetMapping("/prepararPedido")
+    public String preparaPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 1) {
+                pedido.setEstado(3);
+                pedido.setComentrechazorest("Su pedido se está preparando");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+    }
+
+    @GetMapping("/pedidoListo")
+    public String listoPedido(@RequestParam("id") String id,
+                              RedirectAttributes attr,
+                              Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 3) {
+                pedido.setEstado(4);
+                pedido.setComentrechazorest("Su pedido terminó de prepararse, estamos buscando repartidor.");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+    }
+
+
+    @GetMapping("/detallePedido")
+    public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        if (codigoPedido == null || codigoPedido.isEmpty()) {
+            return "redirect:/restaurante/listaPedidos";
+        }
+        List<DetallePedidoDTO> detallesPedido = pedidoRepository.detallePedido(restaurante.getIdrestaurante(), codigoPedido);
+        if (detallesPedido.isEmpty() || detallesPedido == null) {
+            return "redirect:/restaurante/listaPedidos";
+        }
+        List<PlatoPorPedidoDTO> listaPlatos = pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
+        List<ExtraPorPedidoDTO> listaExtras = pedidoRepository.extrasPorPedido(codigoPedido);
+        BigDecimal sumatotalPlato = new BigDecimal("0.00");
+        BigDecimal sumatotalExtra = new BigDecimal("0.00");
+        for (int i = 0; i < listaPlatos.size(); i++) {
+            sumatotalPlato = sumatotalPlato.add(listaPlatos.get(i).getPreciototal());
+        }
+        for (int i = 0; i < listaExtras.size(); i++) {
+            sumatotalExtra = sumatotalExtra.add(listaExtras.get(i).getPreciototal());
+        }
+        model.addAttribute("detalles", detallesPedido);
+        model.addAttribute("platos", listaPlatos);
+        model.addAttribute("extras", listaExtras);
+        model.addAttribute("sumaPlato", sumatotalPlato);
+        model.addAttribute("sumaExtra", sumatotalExtra);
+        return "AdminRestaurante/detallePedido";
+    }
 }

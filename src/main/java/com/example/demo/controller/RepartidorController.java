@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,61 @@ public class RepartidorController {
     @Autowired
     UbicacionRepository ubicacionRepository;
 
+    @Autowired
+    PedidoRepository pedidoRepository;
+
+    @GetMapping("/listaPedidos")
+    public String verListaPedidos(Model model,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct==null){
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Distrito> listaDistritos = distritosRepository.findAll();
+            List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("listaPedidos", pedidos);
+            model.addAttribute("listaDistritos", listaDistritos);
+            return "Repartidor/solicitudPedidos";
+        }else{
+            return "redirect:/repartidor/pedidoActual";
+        }
+    }
+
+    @GetMapping("/pedidoActual")
+    public String verPedidoActual(Model model,HttpSession session){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct!=null){
+            List<Distrito> listaDistritos = distritosRepository.findAll();
+            model.addAttribute("listaDistritos", listaDistritos);
+            model.addAttribute("pedidoAct", pedidoAct);
+            return "Repartidor/pedidoActual";
+        }else{
+            return "redirect:/repartidor/listaPedidos";
+        }
+    }
+
+    @GetMapping("/aceptarPedido")
+    public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
+                                HttpSession session){
+        if(codigo!=null){
+            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
+            if(pedidoOpt.isPresent()){
+                Pedido pedido = pedidoOpt.get();
+                pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
+                pedido.setEstado(5);
+                //TODO: TIEMPO DE ENTREGA??
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/repartidor/aceptarPedido";
+    }
+
+    @PostMapping("/seleccionarDistrito")
+    public  String distritoActual(HttpSession session){
+        session.setAttribute("ubicacionActual", new Ubicacion());
+        return "redirect:/repartidor/listaPedido";
+    }
+
     @GetMapping("/registroRepartidor")
     public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
         model.addAttribute("usuario", new Usuario());
@@ -47,6 +103,9 @@ public class RepartidorController {
 
         return "/Repartidor/registro";
     }
+
+
+
 
     @PostMapping("/guardarRepartidor")
     public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,

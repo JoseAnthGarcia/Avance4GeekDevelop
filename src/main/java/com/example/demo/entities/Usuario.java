@@ -25,12 +25,12 @@ public class Usuario implements Serializable {
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-z0-9áéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-z0-9áéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String apellidos;
 
     @Column(nullable = false)
@@ -86,11 +86,12 @@ public class Usuario implements Serializable {
     //---credenciales-----
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
+    @Pattern(regexp = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",message = "Debe tener el formato nombre@correo.com")
     private String correo;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete su contraseña")
+    @Size(min = 8, message = "Mínimo 8 caracteres")
     //@Pattern(regexp = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$",message = "Ingrese una contraseña válida.")
     private String contrasenia;
     //---------------------

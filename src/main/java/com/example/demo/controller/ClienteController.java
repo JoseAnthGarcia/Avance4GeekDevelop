@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -406,14 +407,36 @@ public class ClienteController {
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam("codigo") String codigo){
+    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model){
+
+        model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+        model.addAttribute("listapedido2", pedidoRepository.detalle2(codigo));
+        model.addAttribute("listapedido3", pedidoRepository.detalle1(codigo));
+
 
 
         return "Cliente/detallePedidoActual";
     }
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
-    public String historialPedidos() {
+    public String historialPedidos(Model model, HttpSession httpSession) {
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        String texto= "";
+
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoDTO> listaPedidoA= new ArrayList<PedidoDTO>();
+        for(PedidoDTO ped: listaPedidos){
+            if(ped.getEstado()==6 || ped.getEstado()==2  ){
+                listaPedidoA.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos",listaPedidoA);
+
+
+
         return "Cliente/listaHistorialPedidos";
     }
 

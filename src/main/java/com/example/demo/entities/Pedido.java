@@ -20,25 +20,30 @@ public class Pedido implements Serializable {
     private Usuario cliente;
 
     /*
-    private int idcupon;
-    private int idmetodopago;
-*/
+    private int idcupon;*/
+    @ManyToOne
+    @JoinColumn(name = "idmetodopago", nullable = false)
+    private MetodoDePago metodopago;
+
     @Column(name = "preciototal", nullable = false)
     private double preciototal;
 
-    //TODO definir
-    private String estado;
+    //TODO definir - lo defini como int (JOSE)
+    private int estado;
     private int tiempoentrega;
     private boolean mismodistrito;
-    private LocalDateTime fechapedido;
+    //private LocalDateTime fechapedido;
+
+    private String fechapedido;
 
     private String comentariorestaurante;
 
-    private int valoracionrestaurante;
+    private Integer valoracionrestaurante;
 
     private String comentariorepartidor;
+    private String comentrechazorest;
 
-    private int valoracionrepartidor;
+    private Integer valoracionrepartidor;
 
     @ManyToOne
     @JoinColumn(name = "idrepartidor")
@@ -47,6 +52,10 @@ public class Pedido implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idrestaurante")
     private Restaurante restaurante;
+
+    @ManyToOne
+    @JoinColumn(name = "idubicacion", nullable = false)
+    private Ubicacion ubicacion;
 
 
     public String getComentariorestaurante() {
@@ -57,11 +66,19 @@ public class Pedido implements Serializable {
         this.comentariorestaurante = comentariorestaurante;
     }
 
-    public int getValoracionrestaurante() {
+    public MetodoDePago getMetodopago() {
+        return metodopago;
+    }
+
+    public void setMetodopago(MetodoDePago metodopago) {
+        this.metodopago = metodopago;
+    }
+
+    public Integer getValoracionrestaurante() {
         return valoracionrestaurante;
     }
 
-    public void setValoracionrestaurante(int valoracionrestaurante) {
+    public void setValoracionrestaurante(Integer valoracionrestaurante) {
         this.valoracionrestaurante = valoracionrestaurante;
     }
 
@@ -73,11 +90,11 @@ public class Pedido implements Serializable {
         this.comentariorepartidor = comentariorepartidor;
     }
 
-    public int getValoracionrepartidor() {
+    public Integer getValoracionrepartidor() {
         return valoracionrepartidor;
     }
 
-    public void setValoracionrepartidor(int valoracionrepartidor) {
+    public void setValoracionrepartidor(Integer valoracionrepartidor) {
         this.valoracionrepartidor = valoracionrepartidor;
     }
 
@@ -97,9 +114,25 @@ public class Pedido implements Serializable {
         this.restaurante = restaurante;
     }
 
-    public LocalDateTime getFechapedido() { return fechapedido; }
+    /*public LocalDateTime getFechapedido() { return fechapedido; }
 
-    public void setFechapedido(LocalDateTime fechapedido) { this.fechapedido = fechapedido; }
+    public void setFechapedido(LocalDateTime fechapedido) { this.fechapedido = fechapedido; }*/
+
+    public String getFechapedido() {
+        return fechapedido;
+    }
+
+    public void setFechapedido(String fechapedido) {
+        this.fechapedido = fechapedido;
+    }
+
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
 
     public String getCodigo() {
         return codigo;
@@ -125,11 +158,11 @@ public class Pedido implements Serializable {
         this.preciototal = preciototal;
     }
 
-    public String getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -149,4 +182,12 @@ public class Pedido implements Serializable {
         this.mismodistrito = mismodistrito;
     }
 
+
+    public String getComentrechazorest() {
+        return comentrechazorest;
+    }
+
+    public void setComentrechazorest(String comentrechazorest) {
+        this.comentrechazorest = comentrechazorest;
+    }
 }

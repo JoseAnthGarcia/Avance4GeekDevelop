@@ -57,7 +57,7 @@
 
                 <!-- Nav Item - Pages Collapse Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" href="listaPedidos.html">
+                    <a class="nav-link" th:href="@{/restaurante/listaPedidos}">
                         <i class="fas fa-fw fa-book-open"></i>
                         <span>Pedidos</span>
                     </a>
@@ -184,7 +184,7 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
                                     <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
                                 </a>
                                 <!-- Dropdown - User Information -->

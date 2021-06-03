@@ -48,6 +48,7 @@ public class PlatoController {
     public String listaCategorias(Model model, HttpSession session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
+
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
@@ -195,19 +196,20 @@ public class PlatoController {
         plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
         plato.setIdcategoriaplato(idcategoria); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        if (file == null) {
-            model.addAttribute("mensajefoto", "Debe subir una imagen");
-        } else {
-            if (file.isEmpty()) {
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-            }
-        }
 
-        if (bindingResult.hasErrors()) {
+
+        if (bindingResult.hasErrors()||file == null) {
+            if (file == null) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+            } else {
+                if (file.isEmpty()) {
+                    model.addAttribute("mensajefoto", "Debe subir una imagen");
+                }
+                fileName = file.getOriginalFilename();
+                if (fileName.contains("..")) {
+                    model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                }
+            }
             if (plato.getIdplato() == 0) {
                 System.out.println("estoy 1");
                 return "/AdminRestaurante/nuevoPlato";
@@ -339,7 +341,7 @@ public class PlatoController {
             attr.addFlashAttribute("tipo", "borrado");
         }
 
-        return "redirect:/plato/lista";
+        return "redirect:/plato/lista?idcategoria=" + idcategoria;
     }
 
 }

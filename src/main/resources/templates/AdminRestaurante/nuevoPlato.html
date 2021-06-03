@@ -180,7 +180,7 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
                             <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
 
 
@@ -392,7 +392,7 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <a th:href="@{'/plato/borrar?idcategoria='+${idcategoria}'&id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
+                    <a th:href="@{'/plato/borrar?idcategoria='+${idcategoria}+'&id='+${plato.getIdplato()}}" class="btn btn-primary">Sí</a>
                     <a class="btn" type="button"
                        data-dismiss="modal">
                         No

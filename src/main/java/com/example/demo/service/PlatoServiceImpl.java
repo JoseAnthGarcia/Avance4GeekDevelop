@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PlatoServiceImpl implements PlatoService{
+public class PlatoServiceImpl implements PlatoService {
 
     @Autowired
     PlatoRepository platoRepository;
@@ -17,14 +17,14 @@ public class PlatoServiceImpl implements PlatoService{
     @Override
     public Page<Plato> findPaginated(int pageNo, int pageSize, int idrestaurante) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.platoRepository.findByIdrestauranteAndDisponible(idrestaurante,true,pageable);
+        return this.platoRepository.findByIdrestauranteAndDisponible(idrestaurante, true, pageable);
     }
 
     @Override
     public Page<Plato> findPaginated2(int pageNo, int pageSize, int idrestaurante, int idcategoriaplato, String nombre, boolean disponibilidad, double inputPMin, double inputPMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return this.platoRepository.findByIdrestauranteAndIdcategoriaplatoAndDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(idrestaurante,
-                idcategoriaplato,disponibilidad, nombre, pageable, inputPMin, inputPMax);
+                idcategoriaplato, disponibilidad, nombre, pageable, inputPMin, inputPMax);
     }
 
 

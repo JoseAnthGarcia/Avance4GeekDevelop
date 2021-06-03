@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.dtos.PedidoDTO;
+import com.example.demo.dtos.PedidoValoracionDTO;
 import com.example.demo.dtos.PlatosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
@@ -292,8 +293,7 @@ public class ClienteController {
 
             // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(
-                    MediaType.parseMediaType(restaurante.getFotocontenttype()));
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
 
             return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
 
@@ -426,9 +426,9 @@ public class ClienteController {
 
         String texto= "";
 
-        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
-        List<PedidoDTO> listaPedidoA= new ArrayList<PedidoDTO>();
-        for(PedidoDTO ped: listaPedidos){
+        List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoValoracionDTO> listaPedidoA= new ArrayList<PedidoValoracionDTO>();
+        for(PedidoValoracionDTO ped: listaPedidos){
             if(ped.getEstado()==6 || ped.getEstado()==2  ){
                 listaPedidoA.add(ped);
             }
@@ -438,6 +438,28 @@ public class ClienteController {
 
 
 
+        return "Cliente/listaHistorialPedidos";
+    }
+
+    @PostMapping("/valorarRest")
+    public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
+                              @RequestParam("valoracion") Integer valoraRest, @RequestParam("comentRest") String comentRest){
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        Pedido pedido = pedidoRepository.encontrarporId(id);
+        if(pedido!=null){
+            pedido.setValoracionrestaurante(valoraRest);
+            pedido.setComentariorestaurante(comentRest);
+        }
+        String texto= "";
+        List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoValoracionDTO> listaPedidoA= new ArrayList<PedidoValoracionDTO>();
+        for(PedidoValoracionDTO ped: listaPedidos){
+            if(ped.getEstado()==6 || ped.getEstado()==2  ){
+                listaPedidoA.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos",listaPedidoA);
         return "Cliente/listaHistorialPedidos";
     }
 

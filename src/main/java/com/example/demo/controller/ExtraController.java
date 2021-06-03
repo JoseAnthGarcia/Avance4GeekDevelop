@@ -99,7 +99,7 @@ public class ExtraController {
                 inputPMax = inputPrecio;
                 inputPMin = inputPrecio;
             }
-            page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, id, textBuscador, inputPMin * 15 - 15, inputPMax * 15);
+            page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, id, textBuscador, inputPMin * 5 - 5, inputPMax * 5);
             listaExtras = page.getContent();
             List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
             model.addAttribute("texto", textBuscador);

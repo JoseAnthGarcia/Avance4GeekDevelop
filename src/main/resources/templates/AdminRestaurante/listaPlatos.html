@@ -45,28 +45,13 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-2 mb-1">
-                                    <select class="form-control" id="textDisponible" name="textDisponible"
-                                            style="justify-content: right">
-                                        <option value="2"
-                                                th:selected="${textoD==2}">Disponibilidad
-                                        </option>
-                                        <option value="1"
-                                                th:selected="${textoD==1}">Disponible
-                                        </option>
-                                        <option value="0"
-                                                th:selected="${textoD==0}">No disponible
-                                        </option>
-                                    </select>
-                                </div>
-
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-3 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-5 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{'/plato/lista?idcategoria='+${idcategoria}}">Quitar filtros</a>
                                 </div>
@@ -78,22 +63,11 @@
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 " style="background-color: #701111;">
 
-                                <div class="d-sm-flex align-items-center">
+                                <div class="d-sm-flex align-items-center justify-content-between">
                                     <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
-                                    <h5 th:if="${idcategoria==1}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==3}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==4}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==2}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto"
+                                        th:utext="|Lista de Platos - ${nombreCate}|"></h5>
                                 </div>
 
                             </div>
@@ -106,7 +80,7 @@
                                      th:if="${msg!=null and tipo.equalsIgnoreCase('borrado')}" th:text="${msg}">
 
                                 </div>
-                                <div class="table-responsive">
+                                <div th:if="${totalItems!=0}" class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -140,6 +114,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div th:if="${totalItems==0}">
+                                    <h3 class="text-lg-center text-danger">No hay coincidencias con su búsqueda.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >

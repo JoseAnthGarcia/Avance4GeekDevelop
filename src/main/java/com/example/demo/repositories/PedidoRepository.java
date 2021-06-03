@@ -34,13 +34,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     List<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2);
 
-    @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto'  " +
+    @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto' , p.valoracionrestaurante, p.comentariorestaurante, p.valoracionrepartidor,p.comentariorepartidor  " +
             "from pedido p\n" +
             "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "            where p.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2%\n" +
             "            and p.estado >=?3 and  p.estado <=?4  order by p.codigo asc ", nativeQuery = true)
 
-    List<PedidoDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2);
+    List<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2);
 
 
     List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
@@ -94,4 +94,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     List<Pedido1DTO> detalle1(String codigo);
 
+    @Query(value="select * from pedido",nativeQuery = true)
+    Pedido encontrarporId(String id);
 }

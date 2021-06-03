@@ -1,28 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>EDITAR CUPÓN</title>
-
-        <!-- Custom fonts for this template-->
-        <link th:href="@{vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- Custom styles for this template-->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-
-    </head>
-
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Editar cu')"></head>
     <body>
 
         <div id="wrapper">
@@ -178,8 +156,10 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                          th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
+                                    <img class="img-profile rounded-circle"
+                                         src="../../static/bootstrap/img/undraw_profile.svg">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -213,7 +193,7 @@
                                         <h4 class="text-danger text-left h4 mb-4 text-black-500 "><b><strong>Código:
                                             CUP123</strong></b></h4>
 
-                                        <form method="post" th:action="@{'/cupon/guardar'}"  th:object="${cupon}">
+                                        <form method="post" th:action="@{'/cupon/guardar'}" th:object="${cupon}">
                                             <input type="hidden" th:field="*{idcupon}">
                                             <input type="hidden" th:field="*{fechainicio}">
                                             <input type="hidden" th:field="*{idrestaurante}">
@@ -223,7 +203,8 @@
                                                 <input name="precio" type="text" class="form-control mb-2"
                                                        value="CREDDI12" th:field="*{nombre}"
                                                        size="50">
-                                                <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+                                                <div class="text-danger" th:if="${#fields.hasErrors('nombre')}"
+                                                     th:errors="*{nombre}"></div>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="politica" class="form-label">Política:</label>
@@ -231,9 +212,10 @@
                                                           placeholder="Descuentos en la primera compra"
                                                           size="50" th:field="*{descripcion}"
                                                 ></textarea>
-                                                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                                                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}"
+                                                     th:errors="*{descripcion}"></div>
                                             </div>
-                                            <div class="mb-3" >
+                                            <div class="mb-3">
                                                 <label for="Caducidad" class="form-label">Caducidad</label>
                                                 <input name="fecha" type="date"
                                                        class="text-left form-control mb-2" value="caducidad"
@@ -241,7 +223,7 @@
                                                        size="5">
 
                                             </div>
-                                            <div  class="mb-3">
+                                            <div class="mb-3">
                                                 <label for="descuento" class="form-label">Descuento</label>
                                                 <input name="precio" type="text" class="form-control mb-2"
                                                        value="S/. 5.00" th:field="*{descuento}"
@@ -249,15 +231,19 @@
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-2" style="left: 25%">
-                                                    <button class="btn btn-block btn-success mt-1"   type="submit">Actualizar</button>
+                                                    <button class="btn btn-block btn-success mt-1" type="submit">
+                                                        Actualizar
+                                                    </button>
                                                 </div>
-                                                <div class="col-sm-2" style="left: 25%"><a class="btn btn-block btn-primary mt-1"
-                                                                                           th:href="@{'/cupon/lista'}"
+                                                <div class="col-sm-2" style="left: 25%"><a
+                                                        class="btn btn-block btn-primary mt-1"
+                                                        th:href="@{'/cupon/lista'}"
                                                 >Cancelar</a></div>
-                                                <div class="col-sm-2" style="left: 25%"><a class="btn btn-block btn-danger mt-1"
+                                                <div class="col-sm-2" style="left: 25%"><a
+                                                        class="btn btn-block btn-danger mt-1"
 
-                                                                                           th:href="@{'/cupon/delete'}"     data-toggle="modal"
-                                                                                           href="#lModal1" data-target="#lModal1">Eliminar
+                                                        th:href="@{'/cupon/delete'}" data-toggle="modal"
+                                                        href="#lModal1" data-target="#lModal1">Eliminar
                                                     Cupón</a></div>
                                             </div>
                                         </form>
@@ -322,7 +308,7 @@
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit"  class="btn btn-primary">Sí</button>
+                        <button type="submit" class="btn btn-primary">Sí</button>
                         <a class="btn" type="button"
                            data-dismiss="modal">
                             No
@@ -344,7 +330,7 @@
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit"  class="btn btn-primary">Sí</button>
+                        <button type="submit" class="btn btn-primary">Sí</button>
                         <a class="btn" type="button"
                            data-dismiss="modal">
                             No
@@ -376,22 +362,8 @@
                 </div>
             </div>
         </div>
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
 
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
-
-        </div>
     </body>
     <script>$(document).ready(function () {
         function readURL(input) {

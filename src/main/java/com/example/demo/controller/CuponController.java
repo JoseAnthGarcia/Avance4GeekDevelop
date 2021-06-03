@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.CuponService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -153,24 +154,32 @@ public class CuponController {
                                   @RequestParam("estado") String estado,
                                   RedirectAttributes attr){
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
+        LocalDate date = LocalDate.now();
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
-
-            switch (estado){
-                case "0":
-                    cupon.setEstado(0);
-                    attr.addFlashAttribute("bloqueo", "Cupón publicado exitosamente");
-                    break;
-                case "1":
-                    cupon.setEstado(1);
-                    attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
-                    break;
-                case "2":
-                    cupon.setEstado(2);
-                    attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
-                    break;
+            LocalDate fecha=cupon.getFechafin();
+            String fecha2= fecha.toString();
+            System.out.println("------Fecha parseada-----"+fecha2);
+            System.out.println("------Fecha actual-----"+date);
+            if(fecha.isAfter(date)) {
+                switch (estado) {
+                    case "0":
+                        cupon.setEstado(0);
+                        attr.addFlashAttribute("bloqueo", "Cupón publicado exitosamente");
+                        break;
+                    case "1":
+                        cupon.setEstado(1);
+                        attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
+                        break;
+                    case "2":
+                        cupon.setEstado(2);
+                        attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
+                        break;
+                }
+                cuponRepository.save(cupon);
+            }else{
+                return "redirect:/cupon/lista";
             }
-            cuponRepository.save(cupon);
         }
         return "redirect:/cupon/lista";
     }

@@ -1,622 +1,365 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Detalle de pedido')"></head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <body id="page-top">
 
-    <title>DETALLES DEL PEDIDO</title>
+        <!-- Page Wrapper -->
+        <div id="wrapper">
 
-    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+            <!-- Sidebar -->
+            <ul th:replace="AdminRestaurante/fragments/adminRestFragment.html :: sidebar"></ul>
+            <!-- End of Sidebar -->
 
-    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
 
+                <!-- Main Content -->
+                <div id="content">
 
-    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+                    <!-- Topbar -->
+                    <nav th:replace="AdminRestaurante/fragments/adminRestFragment.html :: topbar"></nav>
+                    <!-- End of Topbar -->
 
-
-</head>
-
-<body id="page-top">
-
-<!-- Page Wrapper -->
-<!-- Page Wrapper -->
-<div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
-        id="accordionSidebar">
-
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-shopping-basket"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/plato}">
-                <i class="fas fa-fw fa-list"></i>
-                <span>Categorias</span></a>
-        </li>
-
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/restaurante/listaPedidos}">
-                <i class="fas fa-fw fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/extra}">
-                <i class="fas fa-fw fa-utensils"></i>
-                <span>Extras</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " href="eleccionReporte.html">
-                <i class="fas fa-fw fa-fw fa-file"></i>
-                <span>Reportes</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " th:href="@{/cupon}">
-                <i class="fas fa-fw fa-ticket-alt"></i>
-                <span>Cupones</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
-
-                <!-- Topbar Search -->
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
-                                Nuevos Pedidos
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
-                                pedidos</a>
-                        </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
-                            <img class="img-profile rounded-circle"
-                                 src="../../static/bootstrap/img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <form id="cerrar" th:action="@{/logout}" method="post">
-                                <a class="nav-link" data-toggle="modal"
-                                   href="#logoutModal" data-target="#logoutModal">Cerrar Sesión
-                                </a>
-                            </form>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4 ">
-                    <div class="card-header py-3 " style="background-color: #701111;">
-                        <h3 class="h3 font-weight-bold  text-white text-xl-center">DETALLE DE PEDIDO</h3>
-                    </div>
-
-                    <!-- Detalles del pedido -->
-                    <div class="card-header">
-                        <table width="100%" cellspacing="0">
-                            <td>
-                                <ul class="list-group col-10  ml-5">
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:if="${detalles.get(0).getEstado()==0}" th:text="${'Estado: Pendiente'}">
-                                            <b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==1}" th:text="${'Estado: Aceptado'}">
-                                            <b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==2}" th:text="${'Estado: Cancelado'}">
-                                            <b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==3}" th:text="${'Estado: Preparando'}">
-                                            <b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==4}"
-                                            th:text="${'Estado: Pedido Listo'}"><b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==5}" th:text="${'Estado: En Camino'}">
-                                            <b>Estado: </b></h5>
-                                        <h5 th:if="${detalles.get(0).getEstado()==6}" th:text="${'Estado: Entregado'}">
-                                            <b>Estado: </b></h5>
-                                        <span class="text-light "><h6></h6></span>
-                                    </li>
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}"><b>Cliente: </b>Hector
-                                            Ventura</h5>
-                                        <span class="text-light"><h6></h6></span>
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <ul class="list-group col-10  ml-lg-5">
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:text="${'Fecha: '+detalles.get(0).getFechapedido()}"><b>Fecha: </b>28/04/2021
-                                            - 17:05</h5>
-                                        <span class="text-light"><h6></h6></span>
-                                    </li>
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:if="${detalles.get(0).getMetodopago()==0}"
-                                            th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo</h5>
-                                        <h5 th:if="${detalles.get(0).getMetodopago()==1}"
-                                            th:text="${'Método de Pago: POS'}"><b>Método de Pago: </b>Efectivo</h5>
-                                        <h5 th:if="${detalles.get(0).getMetodopago()==2}"
-                                            th:text="${'Método de Pago: Online'}"><b>Método de Pago: </b>Efectivo</h5>
-                                        <span class="text-light "><h6></h6></span>
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <ul class="list-group col-10  ml-lg-5">
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:text="${'Dirección: '+detalles.get(0).getDireccion()}"><b>Dirección: </b>28/04/2021
-                                            - 17:05</h5>
-                                        <span class="text-light"><h6></h6></span>
-                                    </li>
-                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                        style="background-color: #701111;">
-                                        <h5 th:text="${'Cupón: '+(detalles.get(0).getCupon()==null? 'No usa cupón': detalles.get(0).getCupon())}">
-                                            <b>Cupón: </b>Efectivo</h5>
-                                        <span class="text-light "><h6></h6></span>
-                                    </li>
-                                </ul>
-                            </td>
-                        </table>
-                    </div>
-                    <!-- Fin Detalles del pedido -->
-                    <div class="card-body">
-                        <label>Platos:</label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        <div style=text-align:center>#</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Plato</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Cantidad</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Precio Unitario</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Precio Total</div>
-                                    </th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                <tr th:each="plato,v:${platos}">
-                                    <td>
-                                        <div style="text-align:center" th:text="${v.index+1}">
-                                        </div>
-                                    </td>
-                                    <td th:text="${plato.getNombre()}">
-                                    </td>
-                                    <td>
-                                        <div style="text-align:center" th:text="${plato.getCantidad()}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style=text-align:center th:text="${'S/. '+plato.getPreciounitario()}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style=text-align:center th:text="${'S/. '+plato.getPreciototal()}">S/.60
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3"
-                                        style="border-bottom-color: white; border-left-color: white"></td>
-                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                            style="color: #701111">Total</b>
-                                    </td>
-                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                            style="color: #701111" th:text="${'S/. '+sumaPlato}">S/. 130
-                                    </b>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <label>Extras:</label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        <div style=text-align:center>#</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Plato</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Cantidad</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Precio Unitario</div>
-                                    </th>
-                                    <th>
-                                        <div style=text-align:center>Precio Total</div>
-                                    </th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                <tr th:each="extra,v:${extras}">
-                                    <td>
-                                        <div style="text-align:center" th:text="${v.index+1}">
-                                        </div>
-                                    </td>
-                                    <td th:text="${extra.getNombre()}">
-                                    </td>
-                                    <td>
-                                        <div style="text-align:center" th:text="${extra.getCantidad()}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style=text-align:center th:text="${'S/. '+extra.getPreciounitario()}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style=text-align:center th:text="${'S/. '+extra.getPreciototal()}">S/.60
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3"
-                                        style="border-bottom-color: white; border-left-color: white"></td>
-                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                            style="color: #701111">Total</b>
-                                    </td>
-                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                            style="color: #701111" th:text="${'S/. '+sumaExtra}">S/. 130
-                                    </b>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                        <div class="card-group col-6">
-                            <div class="card text-dark" style="max-width: 22rem;">
-                                <div class="card-header" style="color: white;background-color:#701111;">
-                                    <b>Comentarios:</b></div>
-                                <div class="card-body" style="background-color: #ffe8d8;color: black">
-                                    <p class="card-text" style="text-align:justify"
-                                       th:text="${(detalles.get(0).getComentario()!=null && !detalles.get(0).getComentario().isEmpty())? detalles.get(0).getComentario():'No hay comentarios...'}"></p>
-                                </div>
-                            </div>
-                            <div class="card text-dark  ml-3" style="max-width: 12rem;">
-                                <div class="card-header" style="color: white;background-color:#701111;">
-                                    <b>Descuento:</b></div>
-                                <div class="card-body" style="background-color: #ffe8d8;color: black">
-                                    <h4 class="card-text" style="text-align:center"
-                                        th:text="${(detalles.get(0).getDescuento()!=0 && detalles.get(0).getDescuento()!=null)? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
-                                </div>
-                            </div>
-                            <div class="card text-dark  ml-3" style="max-width: 12rem;">
-                                <div class="card-header" style="color: white;background-color:#701111;"><b>Pago
-                                    Total:</b></div>
-                                <div class="card-body" style="background-color: #ffe8d8;color: black">
-                                    <h4 class="card-text" style="text-align:center"
-                                        th:text="${detalles.get(0).getPreciototal()!=0? ('S/. '+detalles.get(0).getPreciototal()):'Ocurrió un error'}"></h4>
-                                </div>
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4 ">
+                            <div class="card-header py-3 " style="background-color: #701111;">
+                                <h3 class="h3 font-weight-bold  text-white text-xl-center">DETALLE DE PEDIDO</h3>
                             </div>
 
-                        </div>
+                            <!-- Detalles del pedido -->
+                            <div class="card-header">
+                                <table width="100%" cellspacing="0">
+                                    <td>
+                                        <ul class="list-group col-10  ml-5">
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:if="${detalles.get(0).getEstado()==0}"
+                                                    th:text="${'Estado: Pendiente'}">
+                                                    <b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==1}"
+                                                    th:text="${'Estado: Aceptado'}">
+                                                    <b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==2}"
+                                                    th:text="${'Estado: Cancelado'}">
+                                                    <b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==3}"
+                                                    th:text="${'Estado: Preparando'}">
+                                                    <b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==4}"
+                                                    th:text="${'Estado: Pedido Listo'}"><b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==5}"
+                                                    th:text="${'Estado: En Camino'}">
+                                                    <b>Estado: </b></h5>
+                                                <h5 th:if="${detalles.get(0).getEstado()==6}"
+                                                    th:text="${'Estado: Entregado'}">
+                                                    <b>Estado: </b></h5>
+                                                <span class="text-light "><h6></h6></span>
+                                            </li>
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}">
+                                                    <b>Cliente: </b>Hector
+                                                    Ventura</h5>
+                                                <span class="text-light"><h6></h6></span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-group col-10  ml-lg-5">
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:text="${'Fecha: '+detalles.get(0).getFechapedido()}">
+                                                    <b>Fecha: </b>28/04/2021
+                                                    - 17:05</h5>
+                                                <span class="text-light"><h6></h6></span>
+                                            </li>
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:if="${detalles.get(0).getMetodopago()==0}"
+                                                    th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo
+                                                </h5>
+                                                <h5 th:if="${detalles.get(0).getMetodopago()==1}"
+                                                    th:text="${'Método de Pago: POS'}"><b>Método de Pago: </b>Efectivo
+                                                </h5>
+                                                <h5 th:if="${detalles.get(0).getMetodopago()==2}"
+                                                    th:text="${'Método de Pago: Online'}"><b>Método de Pago: </b>Efectivo
+                                                </h5>
+                                                <span class="text-light "><h6></h6></span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-group col-10  ml-lg-5">
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:text="${'Dirección: '+detalles.get(0).getDireccion()}"><b>Dirección: </b>28/04/2021
+                                                    - 17:05</h5>
+                                                <span class="text-light"><h6></h6></span>
+                                            </li>
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:text="${'Cupón: '+(detalles.get(0).getCupon()==null? 'No usa cupón': detalles.get(0).getCupon())}">
+                                                    <b>Cupón: </b>Efectivo</h5>
+                                                <span class="text-light "><h6></h6></span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </table>
+                            </div>
+                            <!-- Fin Detalles del pedido -->
+                            <div class="card-body">
+                                <label>Platos:</label>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div style=text-align:center>#</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Plato</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Cantidad</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Precio Unitario</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Precio Total</div>
+                                                </th>
 
-                        <div class="btn-group col-6 ml-6" style="max-height: 2.5rem;">
-                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-danger" data-toggle="modal"
-                               th:data-target="${'#myModal1'}"
-                               th:href="${'#myModal1'}">Cancelar</a>
-                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-info" data-toggle="modal"
-                               th:data-target="${'#myModal2'}"
-                               th:href="${'#myModal2'}">Aceptar</a>
-                            <a th:if="${detalles.get(0).getEstado()==1}" type="button" class="btn btn-secondary" data-toggle="modal"
-                               th:data-target="${'#myModal3'}"
-                               th:href="${'#myModal3'}">Preparar</a>
-                            <a th:if="${detalles.get(0).getEstado()==3}" type="button" class="btn btn-success" data-toggle="modal"
-                               th:data-target="${'#myModal4'}"
-                               th:href="${'#myModal4'}">Listo</a>
-                            <a th:if="${detalles.get(0).getEstado()==2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
-                            <a th:if="${detalles.get(0).getEstado()!=2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
-                        </div>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
+                                            <tr th:each="plato,v:${platos}">
+                                                <td>
+                                                    <div style="text-align:center" th:text="${v.index+1}">
+                                                    </div>
+                                                </td>
+                                                <td th:text="${plato.getNombre()}">
+                                                </td>
+                                                <td>
+                                                    <div style="text-align:center" th:text="${plato.getCantidad()}">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style=text-align:center
+                                                         th:text="${'S/. '+plato.getPreciounitario()}">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style=text-align:center
+                                                         th:text="${'S/. '+plato.getPreciototal()}">S/.60
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"
+                                                    style="border-bottom-color: white; border-left-color: white"></td>
+                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                                        style="color: #701111">Total</b>
+                                                </td>
+                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                                        style="color: #701111" th:text="${'S/. '+sumaPlato}">S/. 130
+                                                </b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <label>Extras:</label>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div style=text-align:center>#</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Plato</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Cantidad</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Precio Unitario</div>
+                                                </th>
+                                                <th>
+                                                    <div style=text-align:center>Precio Total</div>
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr th:each="extra,v:${extras}">
+                                                <td>
+                                                    <div style="text-align:center" th:text="${v.index+1}">
+                                                    </div>
+                                                </td>
+                                                <td th:text="${extra.getNombre()}">
+                                                </td>
+                                                <td>
+                                                    <div style="text-align:center" th:text="${extra.getCantidad()}">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style=text-align:center
+                                                         th:text="${'S/. '+extra.getPreciounitario()}">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style=text-align:center
+                                                         th:text="${'S/. '+extra.getPreciototal()}">S/.60
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"
+                                                    style="border-bottom-color: white; border-left-color: white"></td>
+                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                                        style="color: #701111">Total</b>
+                                                </td>
+                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                                        style="color: #701111" th:text="${'S/. '+sumaExtra}">S/. 130
+                                                </b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="card-group col-6">
+                                        <div class="card text-dark" style="max-width: 22rem;">
+                                            <div class="card-header" style="color: white;background-color:#701111;">
+                                                <b>Comentarios:</b></div>
+                                            <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <p class="card-text" style="text-align:justify"
+                                                   th:text="${(detalles.get(0).getComentario()!=null && !detalles.get(0).getComentario().isEmpty())? detalles.get(0).getComentario():'No hay comentarios...'}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="card text-dark  ml-3" style="max-width: 12rem;">
+                                            <div class="card-header" style="color: white;background-color:#701111;">
+                                                <b>Descuento:</b></div>
+                                            <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                    th:text="${detalles.get(0).getDescuento()!=0? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="card text-dark  ml-3" style="max-width: 12rem;">
+                                            <div class="card-header" style="color: white;background-color:#701111;"><b>Pago
+                                                Total:</b></div>
+                                            <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                    th:text="${detalles.get(0).getPreciototal()!=0? ('S/. '+detalles.get(0).getPreciototal()):'Ocurrió un error'}"></h4>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="btn-group col-6 ml-6" style="max-height: 2.5rem;">
+                                        <a th:if="${detalles.get(0).getEstado()==0}" type="button"
+                                           class="btn btn-danger">Cancelar</a>
+                                        <a th:if="${detalles.get(0).getEstado()==0}" type="button" class="btn btn-info">Aceptar</a>
+                                        <a th:if="${detalles.get(0).getEstado()==1}" type="button"
+                                           class="btn btn-secondary">Preparar</a>
+                                        <a th:if="${detalles.get(0).getEstado()==3}" type="button"
+                                           class="btn btn-success">Listo</a>
+                                        <a th:if="${detalles.get(0).getEstado()==2}" type="button"
+                                           class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                                        <a th:if="${detalles.get(0).getEstado()!=2}" type="button"
+                                           class="btn btn-warning">Regresar</a>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- End of Main Content -->
+
+
         </div>
-    </div>
+        <!-- End of Content Wrapper -->
 
-    <!-- End of Main Content -->
+        </div>
+        <!-- End of Page Wrapper -->
 
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
 
-</div>
-<!-- End of Content Wrapper -->
-
-</div>
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <form th:action="@{/logout}" method="post">
-                    <button class="btn btn-primary" type="submit">Cerrar Sesión
-                    </button>
-                </form>
+        <!-- Logout Modal -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!--Modal eliminar -->
-<div class="modal" th:id="${'myModal1'}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Explique el motivo del rechazo
-                    brevemente</h4>
-            </div>
-            <div class="container"></div>
-            <div class="modal-footer">
-                <form id="rechazar" method="GET"
-                      th:action="@{/restaurante/rechazarPedido}">
-                    <input name="id" type="text" class="form-control mb-2"
-                           th:value="${detalles.get(0).getCodigo()}" hidden>
-                    <label class="form-label">Comentario: </label>
-                    <input name="comentarioAR" type="text"
-                           class="form-control mb-2">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
-                    <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
-                </form>
+
+        <!-- Modal1-->
+        <div class="modal fade" id="Modal-Entregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">El pedido será aceptado</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="eliminar" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!--Modal aceptar -->
-<div class="modal" th:id="${'myModal2'}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">El pedido será aceptado</h4>
-            </div>
-            <div class="container"></div>
-            <div class="modal-footer">
-                <a th:href="@{'/restaurante/aceptarPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
-                <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Modal preparar -->
-<div class="modal" th:id="${'myModal3'}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">El pedido se empezará a preparar</h4>
-            </div>
-            <div class="container"></div>
-            <div class="modal-footer">
-                <a th:href="@{'/restaurante/prepararPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
-                <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
+        <!-- Modal2-->
+        <!-- Modal3-->
+        <div class="modal fade" id="Modal-Cancelar-Pedido" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel4">¿Desea rechazar el pedido?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                        <button class="btn btn-primary" type="submit" form="cancelar">Sí</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!--Modal pedido listo -->
-<div class="modal" th:id="${'myModal4'}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">¿El pedido está listo para entregar?</h4>
-            </div>
-            <div class="container"></div>
-            <div class="modal-footer">
-                <a th:href="@{'/restaurante/pedidoListo?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
-                <a href="#" data-dismiss="modal" class="btn">No</a>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Modal1-->
-<div class="modal fade" id="Modal-Entregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">El pedido será aceptado</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" form="eliminar" class="btn btn-primary">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal2-->
-<!-- Modal3-->
-<div class="modal fade" id="Modal-Cancelar-Pedido" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel4">¿Desea rechazar el pedido?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                <button class="btn btn-primary" type="submit" form="cancelar">Sí</button>
-            </div>
-        </div>
-    </div>
-</div>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
 
-</div>
-
-<!-- Bootstrap core JavaScript-->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
-
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page level custom scripts -->
-<script th:src="@{/js/demo/datatables-demo.js}"></script>
-
-</body>
+    </body>
 
 </html>

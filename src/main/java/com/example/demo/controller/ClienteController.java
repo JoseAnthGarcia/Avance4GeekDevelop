@@ -65,7 +65,6 @@ public class ClienteController {
         return "Cliente/editarPerfil";
 
     }
-
     @PostMapping("/guardarEditar")
     public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
                                  @RequestParam("telefonoNuevo") String telefonoNuevo,
@@ -81,6 +80,7 @@ public class ClienteController {
         if (clientesxtelefono.isEmpty()) {
             telfUnico = false;
         }
+
 
 
         int telfInt;
@@ -164,10 +164,10 @@ public class ClienteController {
 
 
     @PostMapping("/guardarDireccion")
-    public String guardarDirecciones(HttpSession httpSession, @RequestParam("direccionactual") String direccionActual, Model model) {
+    public String guardarDirecciones(HttpSession httpSession, @RequestParam("direccionactual") String direccionActual, Model model){
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         usuario.setDireccionactual(direccionActual);
-        httpSession.setAttribute("usuario", usuario);
+        httpSession.setAttribute("usuario",usuario);
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         clienteRepository.save(usuario);
 
@@ -175,7 +175,7 @@ public class ClienteController {
     }
 
     @PostMapping("/eliminarDireccion")
-    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session, Model model) {
+    public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session, Model model){
 
         for (String idUbicacion : listaIdDireccionesAeliminar) {
             //validad int idUbicacion:
@@ -183,7 +183,7 @@ public class ClienteController {
             Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
             Usuario usuarioS = (Usuario) session.getAttribute("usuario");
             model.addAttribute("listaDistritos", distritosRepository.findAll());
-            if (!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())) {
+            if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
                 ubicacionRepository.delete(ubicacion);
             }
 
@@ -194,10 +194,10 @@ public class ClienteController {
     }
 
     @PostMapping("/agregarDireccion")
-    public String registrarNewDireccion(@RequestParam("direccion") String direccion, @RequestParam("distrito") Integer distrito, HttpSession httpSession, Model model) {
-        boolean valNul = false;
-        boolean valNew = false;
-        boolean valLong = false;
+    public  String registrarNewDireccion(@RequestParam("direccion") String direccion, @RequestParam("distrito") Integer distrito,HttpSession httpSession,Model model ){
+        boolean valNul=false;
+        boolean valNew=false;
+        boolean valLong= false;
 
 
         if (direccion.isEmpty()) {
@@ -232,31 +232,31 @@ public class ClienteController {
             valLong = true;
         }
 
-        if (valNul || valNew || valLong || dist_u_val) {
-            if (valNul) {
+        if(valNul|| valNew || valLong || dist_u_val){
+            if(valNul){
                 model.addAttribute("msg", "No ingresó dirección");
             }
-            if (valNew) {
+            if(valNew){
                 model.addAttribute("msg1", "La dirección ingresda ya está registrada");
             }
 
-            if (valLong) {
+            if(valLong){
                 model.addAttribute("msg2", "Solo puede registrar 6 direcciones");
             }
-            if (dist_u_val) {
+            if(dist_u_val){
 
-                model.addAttribute("msg3", "Seleccione una de las opciones");
+                    model.addAttribute("msg3", "Seleccione una de las opciones");
             }
 
-            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+           Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
             List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
             model.addAttribute("listaDirecciones", listaDirecciones);
 
             ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
-            for (Ubicacion ubicacion : listaDirecciones) {
-                if (!ubicacion.getDireccion().equals(usuario.getDireccionactual())) {
+            for(Ubicacion ubicacion: listaDirecciones){
+                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
                     listaUbicacionesSinActual.add(ubicacion);
                 }
             }
@@ -265,7 +265,7 @@ public class ClienteController {
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             return "Cliente/listaDirecciones";
 
-        } else {
+        }else{
             Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
             List<Ubicacion> listaDirecciones = (List) httpSession.getAttribute("poolDirecciones");
             Ubicacion ubicacion = new Ubicacion();
@@ -276,7 +276,7 @@ public class ClienteController {
             ubicacion.setDistrito(distritoEnviar);
             listaDirecciones.add(ubicacion);
             ubicacionRepository.save(ubicacion);
-            httpSession.setAttribute("listaDirecciones", listaDirecciones);
+            httpSession.setAttribute("listaDirecciones",listaDirecciones);
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             return "redirect:/cliente/listaDirecciones";
         }
@@ -292,7 +292,9 @@ public class ClienteController {
 
             // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
+            httpHeaders.setContentType(
+                    MediaType.parseMediaType(restaurante.getFotocontenttype()));
+
             return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
 
         } else {
@@ -317,27 +319,23 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam("idRest") int idRest,
-                              @RequestParam(value = "texto", required = false) String texto,
-                              @RequestParam(value = "idPrecio", required = false) String idPrecio,
+                              @RequestParam(value = "texto",required = false) String texto,
+                              @RequestParam(value = "idPrecio",required = false) String idPrecio,
                               Model model) {
         Integer limitInf = 0;
         Integer limitSup = 5000;
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
 
-        if (idPrecio == null || idPrecio.equals("")) {
+        if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
         }
 
-        if(texto==null){
-            texto = "";
-        }
-
-        if (restauranteOpt.isPresent()) {
-            Restaurante restaurante = restauranteOpt.get();
+        if(restauranteOpt.isPresent()){
+           Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("nombreRest", restaurante.getNombre());
         }
 
-        switch (idPrecio) {
+        switch (idPrecio){
             case "1":
                 limitInf = 0;
                 limitSup = 10;
@@ -362,12 +360,11 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
+
         List<PlatosDTO> listaPlato = platoRepository.listaPlato(idRest, texto, limitInf, limitSup);
-        model.addAttribute("listaPlato", listaPlato);
-        model.addAttribute("idRest", idRest);
-        model.addAttribute("texto",texto);
-        model.addAttribute("idPrecio",idPrecio);
-        return "/Cliente/listaProductos";
+        model.addAttribute("listaPlato",listaPlato);
+        model.addAttribute("idRest",idRest);
+         return "/Cliente/listaProductos";
     }
 
     @GetMapping("/listaCupones")
@@ -394,34 +391,58 @@ public class ClienteController {
     public String pedidoActual(Model model, HttpSession httpSession) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        String texto = "";
+      String texto= "";
 
-        List<PedidoDTO> listaPedidos = pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto, 0, 6);
-        List<PedidoDTO> listaPedidoActual = new ArrayList<PedidoDTO>();
-        for (PedidoDTO ped : listaPedidos) {
-            if (ped.getEstado() == 1 || ped.getEstado() == 3 || ped.getEstado() == 4 || ped.getEstado() == 5) {
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
+        for(PedidoDTO ped: listaPedidos){
+            if(ped.getEstado()==1 || ped.getEstado()==3 || ped.getEstado()==4 || ped.getEstado()==5 ){
                 listaPedidoActual.add(ped);
             }
         }
 
-        model.addAttribute("listaPedidos", listaPedidoActual);
+        model.addAttribute("listaPedidos",listaPedidoActual);
 
         return "Cliente/listaPedidoActual";
     }
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam("codigo") String codigo) {
+    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model){
+
+        model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+        model.addAttribute("listapedido2", pedidoRepository.detalle2(codigo));
+        model.addAttribute("listapedido3", pedidoRepository.detalle1(codigo));
+
 
 
         return "Cliente/detallePedidoActual";
     }
-
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
-    public String historialPedidos() {
+    public String historialPedidos(Model model, HttpSession httpSession) {
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        String texto= "";
+
+        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
+        List<PedidoDTO> listaPedidoA= new ArrayList<PedidoDTO>();
+        for(PedidoDTO ped: listaPedidos){
+            if(ped.getEstado()==6 || ped.getEstado()==2  ){
+                listaPedidoA.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos",listaPedidoA);
+
+
+
         return "Cliente/listaHistorialPedidos";
     }
+
+
+
 
 
 }

@@ -179,7 +179,12 @@ public class PlatoController {
         String fileName = "";
         model.addAttribute("idcategoria", idcategoria);
 
-
+        if (plato.getIdplato() != 0) {
+            Optional<Plato> plato1 = platoRepository.findById(plato.getIdplato());
+            if(plato1.isPresent()){
+                Plato plato2= plato1.get();
+            }
+        }
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
@@ -197,30 +202,39 @@ public class PlatoController {
         plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
         plato.setIdcategoriaplato(idcategoria); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-        boolean validarFoto= true;
 
-        if (bindingResult.hasErrors()||file == null) {
-            if (file == null) {
+        System.out.println("----------------------------------------------------aquí----" + plato.getIdplato());
+
+
+        boolean validarFoto = true;
+
+        if (bindingResult.hasErrors() || file == null) {
+            if (file == null){
+                System.out.println("FILE NULL---- HECTOR CTM");
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
-                validarFoto= false;
+                validarFoto = false;
             } else {
                 if (file.isEmpty()) {
+                    System.out.println("FILE NULL---- HECTOR CTM2");
                     model.addAttribute("mensajefoto", "Debe subir una imagen");
-                    validarFoto= false;
+                    validarFoto = false;
                 }
                 fileName = file.getOriginalFilename();
                 if (fileName.contains("..")) {
+                    System.out.println("FILE NULL---- HECTOR CTM3");
                     model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                    validarFoto= false;
+                    validarFoto = false;
                 }
-                StringTokenizer validarTipo= new StringTokenizer(file.getContentType());
-                if(validarTipo.countTokens()>10){
+                StringTokenizer validarTipo = new StringTokenizer(file.getContentType());
+                if (validarTipo.countTokens() > 10) {
+                    System.out.println("FILE NULL---- HECTOR CTM4");
                     model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                    validarFoto= false;
+                    validarFoto = false;
                 }
-                if(!file.getContentType().contains("jpeg")&&!file.getContentType().contains("png")&&!file.getContentType().contains("web")){
+                if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                    System.out.println("FILE NULL---- HECTOR CTM5");
                     model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                    validarFoto= false;
+                    validarFoto = false;
                 }
             }
             if (plato.getIdplato() == 0 || !validarFoto) {

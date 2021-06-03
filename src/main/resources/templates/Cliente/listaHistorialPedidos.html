@@ -346,8 +346,8 @@
 
                                     <div class="row mb-2">
                                         <input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|" aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==2}"  th:placeholder="|Estado : Cancelado |" aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==6}"  th:placeholder="|Estado : Entregado |" aria-label="Disabled input example" disabled>
+                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado()==2}"  th:placeholder="|Estado : Cancelado |" aria-label="Disabled input example" disabled>
+                                        <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado()==6}"  th:placeholder="|Estado : Entregado |" aria-label="Disabled input example" disabled>
                                     </div>
 
                                     <div class="row mb-2" >

@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.DetallePedidoDTO;
+import com.example.demo.dtos.ExtraPorPedidoDTO;
+import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;

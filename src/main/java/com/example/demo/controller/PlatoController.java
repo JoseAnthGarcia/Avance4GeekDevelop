@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Controller
 @RequestMapping("/plato")
@@ -196,21 +197,33 @@ public class PlatoController {
         plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
         plato.setIdcategoriaplato(idcategoria); //Jarcodeado
         plato.setDisponible(true); //default expresion !!!!
-
+        boolean validarFoto= true;
 
         if (bindingResult.hasErrors()||file == null) {
             if (file == null) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto= false;
             } else {
                 if (file.isEmpty()) {
                     model.addAttribute("mensajefoto", "Debe subir una imagen");
+                    validarFoto= false;
                 }
                 fileName = file.getOriginalFilename();
                 if (fileName.contains("..")) {
                     model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                    validarFoto= false;
+                }
+                StringTokenizer validarTipo= new StringTokenizer(file.getContentType());
+                if(validarTipo.countTokens()>10){
+                    model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                    validarFoto= false;
+                }
+                if(!file.getContentType().contains("jpeg")&&!file.getContentType().contains("png")&&!file.getContentType().contains("web")){
+                    model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                    validarFoto= false;
                 }
             }
-            if (plato.getIdplato() == 0) {
+            if (plato.getIdplato() == 0 || !validarFoto) {
                 System.out.println("estoy 1");
                 return "/AdminRestaurante/nuevoPlato";
             } else {

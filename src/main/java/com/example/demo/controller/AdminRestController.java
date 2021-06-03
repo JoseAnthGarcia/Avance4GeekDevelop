@@ -56,6 +56,7 @@ public class AdminRestController {
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
+
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
         model.addAttribute("adminRest", new Usuario());
@@ -90,8 +91,8 @@ public class AdminRestController {
         } catch (NumberFormatException n) {
             n.printStackTrace();
         }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
+        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci "+fecha_naci);
 
         System.out.println("");
         if (file != null) {
@@ -103,7 +104,7 @@ public class AdminRestController {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
             }
         }
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci) {
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci) {
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
             }
@@ -148,9 +149,9 @@ public class AdminRestController {
         System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        Distrito distrito = restaurante.getDistrito();
+        Distrito distrito =restaurante.getDistrito();
 
-        boolean dist_u_val = true;
+        boolean dist_u_val=true;
         try {
             Integer id_distrito = distrito.getIddistrito();
             int dist_c = distritosRepository.findAll().size();
@@ -315,11 +316,8 @@ public class AdminRestController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaPedidos", listaPedidos);
-
         return "AdminRestaurante/listaPedidos";
-
     }
-
     @GetMapping("/rechazarPedido")
     public String rechazarPedido(@RequestParam("id") String id, @RequestParam("comentarioAR") String comentarioAR,
                                  RedirectAttributes attr,
@@ -337,7 +335,7 @@ public class AdminRestController {
                     pedido.setComentrechazorest(comentarioAR);
                     pedidoRepository.save(pedido);
                     attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
-                } else {
+                }else{
                     attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
                 }
 
@@ -365,29 +363,70 @@ public class AdminRestController {
         return "redirect:/restaurante/listaPedidos";
     }
 
+    @GetMapping("/prepararPedido")
+    public String preparaPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 1) {
+                pedido.setEstado(3);
+                pedido.setComentrechazorest("Su pedido se está preparando");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido="+id;
+    }
+
+    @GetMapping("/pedidoListo")
+    public String listoPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 3) {
+                pedido.setEstado(4);
+                pedido.setComentrechazorest("Su pedido terminó de prepararse, estamos buscando repartidor.");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido="+id;
+    }
+
 
     @GetMapping("/detallePedido")
-    public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido) {
+    public  String detalleDelPedido(Model model, HttpSession session,@RequestParam(value = "codigoPedido",required = false) String codigoPedido){
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
-        codigoPedido = "2205210001";
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<DetallePedidoDTO> detallesPedido = pedidoRepository.detallePedido(restaurante.getIdrestaurante(), codigoPedido);
-        List<PlatoPorPedidoDTO> listaPlatos = pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
-        List<ExtraPorPedidoDTO> listaExtras = pedidoRepository.extrasPorPedido(codigoPedido);
-        BigDecimal sumatotalPlato = new BigDecimal("0.00");
-        BigDecimal sumatotalExtra = new BigDecimal("0.00");
-        for (int i = 0; i < listaPlatos.size(); i++) {
-            sumatotalPlato = sumatotalPlato.add(listaPlatos.get(i).getPreciototal());
+        if (codigoPedido==null|| codigoPedido.isEmpty()){
+            return "redirect:/restaurante/listaPedidos";
         }
-        for (int i = 0; i < listaExtras.size(); i++) {
-            sumatotalExtra = sumatotalExtra.add(listaExtras.get(i).getPreciototal());
+        List<DetallePedidoDTO> detallesPedido= pedidoRepository.detallePedido(restaurante.getIdrestaurante(),codigoPedido);
+        if (detallesPedido.isEmpty()||detallesPedido==null){
+            return "redirect:/restaurante/listaPedidos";
         }
-        model.addAttribute("detalles", detallesPedido);
-        model.addAttribute("platos", listaPlatos);
-        model.addAttribute("extras", listaExtras);
-        model.addAttribute("sumaPlato", sumatotalPlato);
-        model.addAttribute("sumaExtra", sumatotalExtra);
+        List<PlatoPorPedidoDTO> listaPlatos= pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
+        List<ExtraPorPedidoDTO> listaExtras= pedidoRepository.extrasPorPedido(codigoPedido);
+        BigDecimal sumatotalPlato=new BigDecimal("0.00");
+        BigDecimal sumatotalExtra=new BigDecimal("0.00");
+        for (int i=0; i<listaPlatos.size(); i++) {
+            sumatotalPlato=sumatotalPlato.add(listaPlatos.get(i).getPreciototal());
+        }
+        for (int i=0; i<listaExtras.size(); i++) {
+            sumatotalExtra=sumatotalExtra.add(listaExtras.get(i).getPreciototal());
+        }
+        model.addAttribute("detalles",detallesPedido);
+        model.addAttribute("platos",listaPlatos);
+        model.addAttribute("extras",listaExtras);
+        model.addAttribute("sumaPlato",sumatotalPlato);
+        model.addAttribute("sumaExtra",sumatotalExtra);
         return "AdminRestaurante/detallePedido";
     }
 }

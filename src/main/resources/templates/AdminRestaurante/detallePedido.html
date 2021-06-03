@@ -428,12 +428,20 @@
                         </div>
 
                         <div class="btn-group col-6 ml-6" style="max-height: 2.5rem;">
-                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-danger">Cancelar</a>
-                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-info">Aceptar</a>
-                            <a th:if="${detalles.get(0).getEstado()==1}" type="button" class="btn btn-secondary">Preparar</a>
-                            <a th:if="${detalles.get(0).getEstado()==3}" type="button" class="btn btn-success">Listo</a>
-                            <a th:if="${detalles.get(0).getEstado()==2}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
-                            <a th:if="${detalles.get(0).getEstado()!=2}" type="button" class="btn btn-warning">Regresar</a>
+                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-danger" data-toggle="modal"
+                               th:data-target="${'#myModal1'}"
+                               th:href="${'#myModal1'}">Cancelar</a>
+                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-info" data-toggle="modal"
+                               th:data-target="${'#myModal2'}"
+                               th:href="${'#myModal2'}">Aceptar</a>
+                            <a th:if="${detalles.get(0).getEstado()==1}" type="button" class="btn btn-secondary" data-toggle="modal"
+                               th:data-target="${'#myModal3'}"
+                               th:href="${'#myModal3'}">Preparar</a>
+                            <a th:if="${detalles.get(0).getEstado()==3}" type="button" class="btn btn-success" data-toggle="modal"
+                               th:data-target="${'#myModal4'}"
+                               th:href="${'#myModal4'}">Listo</a>
+                            <a th:if="${detalles.get(0).getEstado()==2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                            <a th:if="${detalles.get(0).getEstado()!=2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
                         </div>
 
                         </div>
@@ -477,6 +485,75 @@
                    data-dismiss="modal">
                     Cancelar
                 </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal eliminar -->
+<div class="modal" th:id="${'myModal1'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Explique el motivo del rechazo
+                    brevemente</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-footer">
+                <form id="rechazar" method="GET"
+                      th:action="@{/restaurante/rechazarPedido}">
+                    <input name="id" type="text" class="form-control mb-2"
+                           th:value="${detalles.get(0).getCodigo()}" hidden>
+                    <label class="form-label">Comentario: </label>
+                    <input name="comentarioAR" type="text"
+                           class="form-control mb-2">
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal aceptar -->
+<div class="modal" th:id="${'myModal2'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">El pedido será aceptado</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-footer">
+                <a th:href="@{'/restaurante/aceptarPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
+                <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal preparar -->
+<div class="modal" th:id="${'myModal3'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">El pedido se empezará a preparar</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-footer">
+                <a th:href="@{'/restaurante/prepararPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
+                <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal pedido listo -->
+<div class="modal" th:id="${'myModal4'}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">¿El pedido está listo para entregar?</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-footer">
+                <a th:href="@{'/restaurante/pedidoListo?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
+                <a href="#" data-dismiss="modal" class="btn">No</a>
             </div>
         </div>
     </div>

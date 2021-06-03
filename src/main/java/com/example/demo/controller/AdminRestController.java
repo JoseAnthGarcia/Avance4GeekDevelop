@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.DetallePedidoDTO;
+import com.example.demo.dtos.ExtraPorPedidoDTO;
+import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,14 +290,55 @@ public class AdminRestController {
         return "redirect:/restaurante/listaPedidos";
     }
 
+    @GetMapping("/prepararPedido")
+    public String preparaPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 1) {
+                pedido.setEstado(3);
+                pedido.setComentrechazorest("Su pedido se está preparando");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido="+id;
+    }
+
+    @GetMapping("/pedidoListo")
+    public String listoPedido(@RequestParam("id") String id,
+                                RedirectAttributes attr,
+                                Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        if (pedido != null) {
+            if (pedido.getEstado() == 3) {
+                pedido.setEstado(4);
+                pedido.setComentrechazorest("Su pedido terminó de prepararse, estamos buscando repartidor.");
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/restaurante/detallePedido?codigoPedido="+id;
+    }
+
 
     @GetMapping("/detallePedido")
     public  String detalleDelPedido(Model model, HttpSession session,@RequestParam(value = "codigoPedido",required = false) String codigoPedido){
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
-        codigoPedido="2205210001";
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        if (codigoPedido==null|| codigoPedido.isEmpty()){
+            return "redirect:/restaurante/listaPedidos";
+        }
         List<DetallePedidoDTO> detallesPedido= pedidoRepository.detallePedido(restaurante.getIdrestaurante(),codigoPedido);
+        if (detallesPedido.isEmpty()||detallesPedido==null){
+            return "redirect:/restaurante/listaPedidos";
+        }
         List<PlatoPorPedidoDTO> listaPlatos= pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
         List<ExtraPorPedidoDTO> listaExtras= pedidoRepository.extrasPorPedido(codigoPedido);
         BigDecimal sumatotalPlato=new BigDecimal("0.00");

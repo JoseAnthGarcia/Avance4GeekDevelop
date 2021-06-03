@@ -124,6 +124,8 @@
                                         <option th:value="Femenino">Femenino</option>
                                         <option th:value="Masculino">Masculino</option>
                                     </select>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('sexo')}"
+                                         th:errors="*{sexo}"></div>
                                 </div>
                                 <div class="col-sm-6  mb-0 mb-sm-0">
                                     <input th:field="*{telefono}" type="text" class="form-control"
@@ -134,6 +136,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-0 mt-1 mb-sm-0">
+
                                     <input th:field="*{dni}" type="text" class="form-control" placeholder="DNI"/>
                                     <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                          th:errors="*{dni}"></div>
@@ -148,15 +151,18 @@
                                     <p>La contraseña debe contar con al menos 8 caracteres.</p>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('contrasenia')}"
+                                                 th:errors="*{contrasenia}"></div>
                                             <input type="password" class="form-control" th:field="*{contrasenia}"
                                                    placeholder="Contraseña">
-                                            <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
+
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
                                             <input id="confcontra" name="confcontra" type="password"
                                                    class="form-control" placeholder="Confirmar contraseña">
+                                            <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
                                         </div>
                                     </div>
                                     <div id="msg"></div>

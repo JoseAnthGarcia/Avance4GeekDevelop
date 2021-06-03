@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.DetallePedidoDTO;
-import com.example.demo.dtos.ExtraPorPedidoDTO;
-import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +14,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -243,6 +242,51 @@ public class AdminRestController {
         model.addAttribute("listaPedidos", listaPedidos);
         return "AdminRestaurante/listaPedidos";
     }
+    @GetMapping("/rechazarPedido")
+    public String rechazarPedido(@RequestParam("id") String id, @RequestParam("comentarioAR") String comentarioAR,
+                              RedirectAttributes attr,
+                              Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+        System.out.println("------------------------------------------------------------------------------------------");
+        System.out.println(comentarioAR.getClass());
+        if (pedido!=null) {
+            if(pedido.getEstado()==0) {
+                if(!comentarioAR.equals("")){
+                    pedido.setEstado(2);
+                    pedido.setComentrechazorest(comentarioAR);
+                    pedidoRepository.save(pedido);
+                    attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
+                }else{
+                    attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
+                }
+
+            }
+        }
+        return "redirect:/restaurante/listaPedidos";
+    }
+
+    @GetMapping("/aceptarPedido")
+    public String aceptarPedido(@RequestParam("id") String id,
+                                 RedirectAttributes attr,
+                                 Model model, HttpSession session) {
+            Usuario adminRest = (Usuario) session.getAttribute("usuario");
+            int idr = adminRest.getIdusuario();
+            Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+            Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
+            if (pedido != null) {
+                if (pedido.getEstado() == 0) {
+                    pedido.setEstado(1);
+                    pedido.setComentrechazorest("Su pedido ha sido aceptado");
+                    pedidoRepository.save(pedido);
+                    attr.addFlashAttribute("msg2", "Pedido aceptado exitosamente");
+                }
+            }
+        return "redirect:/restaurante/listaPedidos";
+    }
+
 
     @GetMapping("/detallePedido")
     public  String detalleDelPedido(Model model, HttpSession session,@RequestParam(value = "codigoPedido",required = false) String codigoPedido){

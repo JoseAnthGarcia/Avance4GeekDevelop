@@ -1,465 +1,544 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
+<head>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <title>DETALLES DEL PEDIDO</title>
+    <title>DETALLES DEL PEDIDO</title>
 
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
+    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
 
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
-    </head>
-
-    <body id="page-top">
-
-        <!-- Page Wrapper -->
-        <div id="wrapper">
-
-            <!-- Sidebar -->
-            <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
-                id="accordionSidebar">
-
-                <!-- Sidebar - Brand -->
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15">
-                        <i class="fas fa-shopping-basket"></i>
-                    </div>
-                    <div class="sidebar-brand-text mx-3">Food Delivery</div>
-                </a>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
-
-                <!-- Nav Item - Dashboard -->
-                <li class="nav-item">
-                    <a class="nav-link" href="categorias.html">
-                        <i class="fas fa-fw fa-list"></i>
-                        <span>Categorias</span></a>
-                </li>
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
 
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="listaPedidos.html">
-                        <i class="fas fa-book-open"></i>
-                        <span>Pedidos</span>
-                    </a>
-                </li>
+</head>
 
-                <!-- Nav Item - Utilities Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
-                        <i class="fas fa-utensils"></i>
-                        <span>Extras</span>
-                    </a>
-                </li>
+<body id="page-top">
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link " href="eleccionReporte.html">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Reportes</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>Cupones</span>
-                    </a>
-                </li>
-                <!-- Divider -->
-                <hr class="sidebar-divider d-none d-md-block">
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-                <!-- Sidebar Toggler (Sidebar) -->
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-                </div>
+    <!-- Sidebar -->
+    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;"
+        id="accordionSidebar">
 
-            </ul>
-            <!-- End of Sidebar -->
-
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
-
-                <!-- Main Content -->
-                <div id="content">
-
-                    <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
-
-                        <!-- Topbar Search -->
-
-
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
-
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                            </li>
-
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">3+</span>
-                                </a>
-                                <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                                     aria-labelledby="alertsDropdown">
-                                    <h6 class="notificacion">
-                                        Nuevos Pedidos
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle notificacion">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle notificacion">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle notificacion">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
-                                        pedidos</a>
-                                </div>
-                            </li>
-
-                            <div class="topbar-divider d-none d-sm-block"></div>
-
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesión
-                                    </a>
-                                </div>
-                            </li>
-
-                        </ul>
-
-                    </nav>
-                    <!-- End of Topbar -->
-
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid">
-                        <!-- DataTales Example -->
-                        <div class="card shadow mb-4 ">
-                            <div class="card-header py-3 " style="background-color: #701111;">
-                                <h3 class="h3 font-weight-bold  text-white text-xl-center">DETALLE DE PEDIDO</h3>
-                            </div>
-
-                            <!-- Detalles del pedido -->
-                            <div class="card-header">
-                                <table width="100%" cellspacing="0">
-                                    <td>
-                                        <ul class="list-group col-10  ml-5">
-                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                                style="background-color: #701111;">
-                                                <h5 th:text="${detalles.get(0).getCodigo()}"><b>Código: </b></h5>
-                                                <span class="text-light "><h6></h6></span>
-                                            </li>
-                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                                style="background-color: #701111;">
-                                                <h5 th
-                                                ><b>Cliente: </b>Hector Ventura</h5>
-                                                <span class="text-light"><h6></h6></span>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul class="list-group col-10  ml-lg-5">
-                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                                style="background-color: #701111;">
-                                                <h5><b>Fecha: </b>28/04/2021 - 17:05</h5>
-                                                <span class="text-light"><h6></h6></span>
-                                            </li>
-                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
-                                                style="background-color: #701111;">
-                                                <h5><b>Método de Pago: </b>Efectivo</h5>
-                                                <span class="text-light "><h6></h6></span>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </table>
-                            </div>
-                            <!-- Fin Detalles del pedido -->
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <div style=text-align:center>#</div>
-                                                </th>
-                                                <th>
-                                                    <div style=text-align:center>Plato</div>
-                                                </th>
-                                                <th>
-                                                    <div style=text-align:center>Cantidad</div>
-                                                </th>
-                                                <th>
-                                                    <div style=text-align:center>Precio Unitario</div>
-                                                </th>
-                                                <th>
-                                                    <div style=text-align:center>Precio Total</div>
-                                                </th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <tr>
-                                                <td>
-                                                    <div style="text-align:center">1
-                                                    </div>
-                                                </td>
-                                                <td>Arroz con pollo
-                                                </td>
-                                                <td>
-                                                    <div style="text-align:center">2
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div style=text-align:center>S/.30
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div style=text-align:center>S/.60
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div style="text-align:center">2
-                                                    </div>
-                                                </td>
-                                                <td>Lomo Saltado
-                                                </td>
-                                                <td>
-                                                    <div style="text-align:center">2
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div style=text-align:center>S/.35
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div style=text-align:center>S/.70
-                                                    </div>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td colspan="3"
-                                                    style="border-bottom-color: white; border-left-color: white"></td>
-                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                                        style="color: #701111">Total</b>
-                                                </td>
-                                                <td style="text-align:center" bgcolor="#F5F5F5"><b
-                                                        style="color: #701111">S/. 130
-                                                </b>
-                                                </td>
-                                            </tr>
-                                            <table class="table">
-                                                <thead>
-                                                    <div style="text-align: center">
-                                                        <form id="eliminar" method="POST"
-                                                              action="listaPedidos.html">
-                                                            <a class="btn btn-success mb-1" role="button"
-                                                               data-toggle="modal"
-                                                               href="#Modal-Entregar">
-                                                                Aceptar Pedido
-                                                            </a>
-
-                                                        </form>
-
-                                                        <form id="cancelar" method="POST"
-                                                              action="listaPedidos.html">
-                                                            <!--<button type="submit" class="btn btn-outline-danger"><a  class="btn-outline-danger" style="text-decoration: none" data-toggle="modal" href="#Modal-Cancelar-Pedido" role="button" >Cancelar Pedido</a></button>-->
-                                                            <a class="btn btn-danger mb-1"
-                                                               data-toggle="modal" href="#Modal-Cancelar-Pedido">
-                                                                Rechazar Pedido
-                                                            </a>
-                                                        </form>
-                                                        <div class="btn-group" style="text-align: left" role="group"
-                                                             aria-label="Basic example">
-                                                            <a style="text-decoration: none"
-                                                               class="btn btn-primary mb-1"
-                                                               href="listaPedidos.html"
-                                                               role="button">
-                                                                Regresar
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </thead>
-                                            </table>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-shopping-basket"></i>
             </div>
-
-            <!-- End of Main Content -->
-
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-        </div>
-        <!-- End of Page Wrapper -->
-
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
+            <div class="sidebar-brand-text mx-3">Food Delivery</div>
         </a>
 
-        <!-- Alerta cierre sesion-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
-                            continuar?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
-                           href="loginAR.html">Cerrar
-                            Sesión</a>
-                        <a class="btn" type="button"
-                           data-dismiss="modal">
-                            Cancelar
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="categorias.html">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Categorias</span></a>
+        </li>
+
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="listaPedidos.html">
+                <i class="fas fa-book-open"></i>
+                <span>Pedidos</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="extras.html">
+                <i class="fas fa-utensils"></i>
+                <span>Extras</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link " href="eleccionReporte.html">
+                <i class="fas fa-fw fa-file"></i>
+                <span>Reportes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " href="listaCupones.html">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Cupones</span>
+            </a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+                <!-- Topbar Search -->
+
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
+                    </li>
+
+                    <!-- Nav Item - Alerts -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter">3+</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
+                             aria-labelledby="alertsDropdown">
+                            <h6 class="notificacion">
+                                Nuevos Pedidos
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                    <span class="font-weight-bold">Arroz con pollo</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                    <span class="font-weight-bold">Arroz con pollo</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
+                                    <span class="font-weight-bold">Arroz con pollo</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
+                                pedidos</a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
+                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4 ">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+                        <h3 class="h3 font-weight-bold  text-white text-xl-center">DETALLE DE PEDIDO</h3>
+                    </div>
+
+                    <!-- Detalles del pedido -->
+                    <div class="card-header">
+                        <table width="100%" cellspacing="0">
+                            <td>
+                                <ul class="list-group col-10  ml-5">
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:if="${detalles.get(0).getEstado()==0}" th:text="${'Estado: Pendiente'}">
+                                            <b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==1}" th:text="${'Estado: Aceptado'}">
+                                            <b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==2}" th:text="${'Estado: Cancelado'}">
+                                            <b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==3}" th:text="${'Estado: Preparando'}">
+                                            <b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==4}"
+                                            th:text="${'Estado: Pedido Listo'}"><b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==5}" th:text="${'Estado: En Camino'}">
+                                            <b>Estado: </b></h5>
+                                        <h5 th:if="${detalles.get(0).getEstado()==6}" th:text="${'Estado: Entregado'}">
+                                            <b>Estado: </b></h5>
+                                        <span class="text-light "><h6></h6></span>
+                                    </li>
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}"><b>Cliente: </b>Hector
+                                            Ventura</h5>
+                                        <span class="text-light"><h6></h6></span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="list-group col-10  ml-lg-5">
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:text="${'Fecha: '+detalles.get(0).getFechapedido()}"><b>Fecha: </b>28/04/2021
+                                            - 17:05</h5>
+                                        <span class="text-light"><h6></h6></span>
+                                    </li>
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:if="${detalles.get(0).getMetodopago()==0}"
+                                            th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo</h5>
+                                        <h5 th:if="${detalles.get(0).getMetodopago()==1}"
+                                            th:text="${'Método de Pago: POS'}"><b>Método de Pago: </b>Efectivo</h5>
+                                        <h5 th:if="${detalles.get(0).getMetodopago()==2}"
+                                            th:text="${'Método de Pago: Online'}"><b>Método de Pago: </b>Efectivo</h5>
+                                        <span class="text-light "><h6></h6></span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="list-group col-10  ml-lg-5">
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:text="${'Dirección: '+detalles.get(0).getDireccion()}"><b>Dirección: </b>28/04/2021
+                                            - 17:05</h5>
+                                        <span class="text-light"><h6></h6></span>
+                                    </li>
+                                    <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                        style="background-color: #701111;">
+                                        <h5 th:text="${'Cupón: '+(detalles.get(0).getCupon()==null? 'No usa cupón': detalles.get(0).getCupon())}">
+                                            <b>Cupón: </b>Efectivo</h5>
+                                        <span class="text-light "><h6></h6></span>
+                                    </li>
+                                </ul>
+                            </td>
+                        </table>
+                    </div>
+                    <!-- Fin Detalles del pedido -->
+                    <div class="card-body">
+                        <label>Platos:</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <div style=text-align:center>#</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Plato</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Cantidad</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Precio Unitario</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Precio Total</div>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr th:each="plato,v:${platos}">
+                                    <td>
+                                        <div style="text-align:center" th:text="${v.index+1}">
+                                        </div>
+                                    </td>
+                                    <td th:text="${plato.getNombre()}">
+                                    </td>
+                                    <td>
+                                        <div style="text-align:center" th:text="${plato.getCantidad()}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style=text-align:center th:text="${'S/. '+plato.getPreciounitario()}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style=text-align:center th:text="${'S/. '+plato.getPreciototal()}">S/.60
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"
+                                        style="border-bottom-color: white; border-left-color: white"></td>
+                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                            style="color: #701111">Total</b>
+                                    </td>
+                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                            style="color: #701111" th:text="${'S/. '+sumaPlato}">S/. 130
+                                    </b>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <label>Extras:</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <div style=text-align:center>#</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Plato</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Cantidad</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Precio Unitario</div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>Precio Total</div>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr th:each="extra,v:${extras}">
+                                    <td>
+                                        <div style="text-align:center" th:text="${v.index+1}">
+                                        </div>
+                                    </td>
+                                    <td th:text="${extra.getNombre()}">
+                                    </td>
+                                    <td>
+                                        <div style="text-align:center" th:text="${extra.getCantidad()}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style=text-align:center th:text="${'S/. '+extra.getPreciounitario()}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style=text-align:center th:text="${'S/. '+extra.getPreciototal()}">S/.60
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"
+                                        style="border-bottom-color: white; border-left-color: white"></td>
+                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                            style="color: #701111">Total</b>
+                                    </td>
+                                    <td style="text-align:center" bgcolor="#F5F5F5"><b
+                                            style="color: #701111" th:text="${'S/. '+sumaExtra}">S/. 130
+                                    </b>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                        <div class="card-group col-6">
+                            <div class="card text-dark" style="max-width: 22rem;">
+                                <div class="card-header" style="color: white;background-color:#701111;">
+                                    <b>Comentarios:</b></div>
+                                <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                    <p class="card-text" style="text-align:justify"
+                                       th:text="${(detalles.get(0).getComentario()!=null && !detalles.get(0).getComentario().isEmpty())? detalles.get(0).getComentario():'No hay comentarios...'}"></p>
+                                </div>
+                            </div>
+                            <div class="card text-dark  ml-3" style="max-width: 12rem;">
+                                <div class="card-header" style="color: white;background-color:#701111;">
+                                    <b>Descuento:</b></div>
+                                <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                    <h4 class="card-text" style="text-align:center"
+                                        th:text="${detalles.get(0).getDescuento()!=0? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
+                                </div>
+                            </div>
+                            <div class="card text-dark  ml-3" style="max-width: 12rem;">
+                                <div class="card-header" style="color: white;background-color:#701111;"><b>Pago
+                                    Total:</b></div>
+                                <div class="card-body" style="background-color: #ffe8d8;color: black">
+                                    <h4 class="card-text" style="text-align:center"
+                                        th:text="${detalles.get(0).getPreciototal()!=0? ('S/. '+detalles.get(0).getPreciototal()):'Ocurrió un error'}"></h4>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="btn-group col-6 ml-6" style="max-height: 2.5rem;">
+                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-danger">Cancelar</a>
+                            <a th:if="${detalles.get(0).getEstado()==0}" type="button"  class="btn btn-info">Aceptar</a>
+                            <a th:if="${detalles.get(0).getEstado()==1}" type="button" class="btn btn-secondary">Preparar</a>
+                            <a th:if="${detalles.get(0).getEstado()==3}" type="button" class="btn btn-success">Listo</a>
+                            <a th:if="${detalles.get(0).getEstado()==2}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                            <a th:if="${detalles.get(0).getEstado()!=2}" type="button" class="btn btn-warning">Regresar</a>
+                        </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal1-->
-        <div class="modal fade" id="Modal-Entregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel2">El pedido será aceptado</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" form="eliminar" class="btn btn-primary">Aceptar</button>
-                    </div>
-                </div>
+    <!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Alerta cierre sesion-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Usted está a punto de salir ¿Desea
+                    continuar?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
+                   href="loginAR.html">Cerrar
+                    Sesión</a>
+                <a class="btn" type="button"
+                   data-dismiss="modal">
+                    Cancelar
+                </a>
             </div>
         </div>
-        <!-- Modal2-->
-        <!-- Modal3-->
-        <div class="modal fade" id="Modal-Cancelar-Pedido" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel4">¿Desea rechazar el pedido?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                        <button class="btn btn-primary" type="submit" form="cancelar">Sí</button>
-                    </div>
-                </div>
+    </div>
+</div>
+
+<!-- Modal1-->
+<div class="modal fade" id="Modal-Entregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">El pedido será aceptado</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="eliminar" class="btn btn-primary">Aceptar</button>
             </div>
         </div>
-
+    </div>
+</div>
+<!-- Modal2-->
+<!-- Modal3-->
+<div class="modal fade" id="Modal-Cancelar-Pedido" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">¿Desea rechazar el pedido?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                <button class="btn btn-primary" type="submit" form="cancelar">Sí</button>
+            </div>
         </div>
+    </div>
+</div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+</div>
 
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+<!-- Custom scripts for all pages-->
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
 
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
-    </body>
+<!-- Page level custom scripts -->
+<script th:src="@{/js/demo/datatables-demo.js}"></script>
+
+</body>
 
 </html>

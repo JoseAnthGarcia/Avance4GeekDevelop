@@ -22,6 +22,7 @@ import javax.mail.Multipart;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -244,16 +245,27 @@ public class AdminRestController {
     }
 
     @GetMapping("/detallePedido")
-    public  String detalleDelPedido(Model model, HttpSession session,@RequestParam("codigoPedido") String codigoPedido){
+    public  String detalleDelPedido(Model model, HttpSession session,@RequestParam(value = "codigoPedido",required = false) String codigoPedido){
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
+        codigoPedido="2205210001";
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<DetallePedidoDTO> detallesPedido= pedidoRepository.detallePedido(restaurante.getIdrestaurante(),codigoPedido);
         List<PlatoPorPedidoDTO> listaPlatos= pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
         List<ExtraPorPedidoDTO> listaExtras= pedidoRepository.extrasPorPedido(codigoPedido);
+        BigDecimal sumatotalPlato=new BigDecimal("0.00");
+        BigDecimal sumatotalExtra=new BigDecimal("0.00");
+        for (int i=0; i<listaPlatos.size(); i++) {
+            sumatotalPlato=sumatotalPlato.add(listaPlatos.get(i).getPreciototal());
+        }
+        for (int i=0; i<listaExtras.size(); i++) {
+            sumatotalExtra=sumatotalExtra.add(listaExtras.get(i).getPreciototal());
+        }
         model.addAttribute("detalles",detallesPedido);
         model.addAttribute("platos",listaPlatos);
         model.addAttribute("extras",listaExtras);
+        model.addAttribute("sumaPlato",sumatotalPlato);
+        model.addAttribute("sumaExtra",sumatotalExtra);
         return "AdminRestaurante/detallePedido";
     }
 }

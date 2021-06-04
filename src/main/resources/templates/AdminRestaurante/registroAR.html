@@ -149,9 +149,10 @@
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <h4 style="color: black">Foto de perfil</h4>
                                     <p>Adjunte una foto de perfil para su cuenta.</p>
+
                                     <div class="custom-file">
-                                        <input type="file" name="photo" accept="image/png, image/jpeg, image/webp, image/jpg"
-                                               class="custom-file-input" id="customFile">
+                                        <input type="file" name="photo"
+                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
                                         <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
                                         <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
                                             style="color: red; font-size: small; text-align: left"></h1>
@@ -239,13 +240,7 @@
             </div>
         </div>
 
-        <script>
-            // Add the following code if you want the name of the file appear on select
-            $(".custom-file-input").on("change", function () {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            });
-        </script>
+
 
 
         <!-- Begin Scripts -->
@@ -253,5 +248,12 @@
         <!-- End Scripts -->
 
     </body>
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 
 </html>

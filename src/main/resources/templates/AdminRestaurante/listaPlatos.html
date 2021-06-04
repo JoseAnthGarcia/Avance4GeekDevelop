@@ -45,6 +45,21 @@
                                     </select>
                                 </div>
 
+                                <div class="col-sm-2 mb-1">
+                                    <select class="form-control" id="textDisponible" name="textDisponible"
+                                            style="justify-content: right">
+                                        <option value="2"
+                                                th:selected="${textoD==2}">Disponibilidad
+                                        </option>
+                                        <option value="1"
+                                                th:selected="${textoD==1}">Disponible
+                                        </option>
+                                        <option value="0"
+                                                th:selected="${textoD==0}">No disponible
+                                        </option>
+                                    </select>
+                                </div>
+
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
@@ -67,14 +82,13 @@
                                     <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:utext="|Lista de Platos - ${nombreCate}|"></h5>
+                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
                                 </div>
 
                             </div>
                             <div class="card-body">
-                                <div class="alert alert-success" role="alert"
-                                     th:if="${msg!=null and tipo.equalsIgnoreCase('saved')}" th:text="${msg}">
 
+                                <div class="table-responsive">
                                 </div>
                                 <div class="alert alert-danger" role="alert"
                                      th:if="${msg!=null and tipo.equalsIgnoreCase('borrado')}" th:text="${msg}">

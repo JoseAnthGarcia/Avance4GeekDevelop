@@ -3,7 +3,9 @@
 
     <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías de platos')"></head>
 
-    <body id="page-top">
+    <head th:if="${estadoRestaurante==1}" th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías')"></head>
+
+    <body id="page-top" th:if="${estadoRestaurante==1}">
 
         <!-- Page Wrapper -->
         <div id="wrapper">

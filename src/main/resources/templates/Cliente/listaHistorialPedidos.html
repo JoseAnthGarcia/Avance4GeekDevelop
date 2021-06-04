@@ -41,6 +41,7 @@
 <!-- Page level custom scripts -->
 <script th:src="@{/js/demo/datatables-demo.js}"></script>
 
+
 <body id="page-top">
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -374,8 +375,7 @@
 
                                     <!-- todo Evaluar Restaurante , Comentar Restaurante-->
 
-                                    <div class="modal fade" th:id="${'#valoraRest'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
+                                    <div class="modal fade" th:id="${'#valoraRest'+pedido.getCodigo()}">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -384,13 +384,12 @@
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
-                                                <form id="valorarRest" method="POST" th:action="@{/cliente/valorarRest}">
                                                 <div class="modal-body">
-
+                                                    <form id="valorarRest" method="POST" th:action="@{/cliente/valorarRest}">
                                                         <div class="form-group">
                                                             <input name="id" type="text" class="form-control mb-2" th:value="${pedido.codigo}" hidden>
-                                                            <label class="col-form-label text-center">Valora:</label>
-                                                            <div class="rating" ></div>
+                                                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
+                                                            <div class="rating" name="valoraRest"></div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="message-text" class="col-form-label">Comentario:</label>
@@ -488,6 +487,37 @@
         </div>
     </div>
 
+    <!-- todo Evaluar Restaurante , Comentar Restaurante-->
+
+    <div class="modal fade" id="valoraRest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Valora a tu restaurante</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group ">
+                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
+                            <div class="rating"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Comentario:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn" style="background-color:#701111; color:white" href="listaHistorialPedidos.html">Calificar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- todo Evaluar Repartidor , Comentar Repartidor-->
 
@@ -534,6 +564,7 @@
 
     <!-- Page level plugins -->
     <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+
     <!-- Page level custom scripts -->
     <script th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script th:src="@{/js/demo/chart-pie-demo.js}"></script>

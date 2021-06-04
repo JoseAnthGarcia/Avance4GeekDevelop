@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class RepartidorController {
     }
 
     @GetMapping("/listaPedidos")
-    public String verListaPedidos(Model model,HttpSession session){
+    public String verListaPedidos(Model model,HttpSession session, @RequestParam(value = "idPedido", required = false) String codigoPedido ){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         if(pedidoAct==null){
@@ -52,6 +53,19 @@ public class RepartidorController {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
             List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            if(pedidos.size()!=0){
+                if(codigoPedido==null){
+                    Pedido pedido = pedidos.get(0);
+                    model.addAttribute("pedidoDetalle", pedido);
+                }else{
+                    Optional pedidoOptional =pedidoRepository.findById(codigoPedido);
+                    if(pedidoOptional.isPresent()){
+                        Pedido pedido = (Pedido) pedidoOptional.get();
+                        model.addAttribute("pedidoDetalle", pedido);
+                    }
+                }
+            }
+
             model.addAttribute("direcciones", direcciones);
             model.addAttribute("listaPedidos", pedidos);
             model.addAttribute("listaDistritos", listaDistritos);
@@ -84,7 +98,7 @@ public class RepartidorController {
     }
 
     @GetMapping("/pedidoActual")
-    public String verPedidoActual(Model model,HttpSession session){
+    public String verPedidoActual(Model model,HttpSession session, RedirectAttributes attr){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         if(pedidoAct!=null){
@@ -95,6 +109,7 @@ public class RepartidorController {
             model.addAttribute("direcciones", direcciones);
             return "Repartidor/pedidoActual";
         }else{
+            attr.addFlashAttribute("msg", "No tienes ningún pedido actual.");
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
             model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/listaPedidos";

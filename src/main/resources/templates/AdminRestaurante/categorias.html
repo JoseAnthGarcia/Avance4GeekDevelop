@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías')"></head>
 
-    <body id="page-top">
+    <head th:if="${estadoRestaurante==1}" th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías')"></head>
+
+    <body id="page-top" th:if="${estadoRestaurante==1}">
 
         <!-- Page Wrapper -->
         <div id="wrapper">
@@ -145,5 +146,7 @@
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
     </body>
+
+
 
 </html>

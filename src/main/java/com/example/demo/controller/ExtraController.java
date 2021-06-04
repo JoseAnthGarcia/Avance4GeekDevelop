@@ -146,17 +146,21 @@ public class ExtraController {
         System.out.println("id categoriaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa "+idc);
 
         String fileName ="";
+        boolean validarFoto=true;
         if (file!=null){
             if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
-                model.addAttribute("idcategoria",idc);
-                return "/AdminRestaurante/nuevoPlato";
+                validarFoto = false;
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")){
                 model.addAttribute("idcategoria",idc);
                 model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-                return "/AdminRestaurante/nuevoPlato";
+                return "/AdminRestaurante/nuevoExtra";
             }
         }
 
@@ -164,10 +168,14 @@ public class ExtraController {
         extra.setDisponible(true); //default expresion !!!!
         extra.setIdcategoriaextra(idc);
         if (bindingResult.hasErrors()) {
+            if (extra.getIdextra() == 0&&!validarFoto) {
+                model.addAttribute("idcategoria",idc);
+                return "/AdminRestaurante/nuevoExtra";
+            }
             if (extra.getIdextra() == 0) {
                 model.addAttribute("idcategoria",idc);
                 return "/AdminRestaurante/nuevoExtra";
-            } else {
+            }else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
                     model.addAttribute("idcategoria",idc);
@@ -177,7 +185,7 @@ public class ExtraController {
                     return "redirect:/extra/lista?idcategoria="+idc;
                 }
             }
-        } else {
+        } else if (validarFoto) {
             if (extra.getIdextra() == 0) {
                 try{
                     extra.setFoto(file.getBytes());
@@ -208,6 +216,9 @@ public class ExtraController {
             }
             model.addAttribute("idcategoria",idc);
             return "redirect:/extra/lista?idcategoria="+idc;
+        }
+        else {
+            return "/AdminRestaurante/nuevoExtra";
         }
     }
 

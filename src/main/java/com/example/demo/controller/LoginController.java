@@ -87,9 +87,9 @@ public class LoginController {
                     } catch (NullPointerException e) {
                         System.out.println("Fallo");
                     }
-                    if (restaurante == null) {
+                    if (restaurante == null|| restaurante.getEstado()==2) {
                         return "redirect:/restaurante/paginabienvenida";
-                    } else {
+                    } else if(restaurante.getEstado()==1){
                         return "redirect:/plato/";
                     }
                 case "repartidor":
@@ -143,9 +143,9 @@ public class LoginController {
                 } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if (restaurante == null) {
+                if (restaurante == null|| restaurante.getEstado()==2) {
                     return "redirect:/restaurante/paginabienvenida";
-                } else {
+                } else if(restaurante.getEstado()==1){
                     return "redirect:/plato/";
                 }
             case "repartidor":

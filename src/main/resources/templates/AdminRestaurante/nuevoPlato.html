@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>NUEVO PLATO</title>
+    <title th:text="${plato.idplato==0? 'NUEVO PLATO':'EDITAR PLATO'}">NUEVO PLATO</title>
 
     <!-- Custom fonts for this template-->
     <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
@@ -181,7 +181,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
 
 
                         </a>
@@ -276,12 +276,12 @@
                                                         <td colspan="2"><br>
 
                                                             <div class="custom-file">
-                                                                <input type="file" name="photo"  accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                                                <input type="file" name="photo"
+                                                                       accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
 
                                                                 <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
                                                                 <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}" style="color: red; font-size: small; text-align: left"></h1>
                                                             </div>
-
 
                                                         </td>
                                                     <tr>
@@ -361,7 +361,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title text-center"
                                 id="exampleModalRegistro"
-                                th:text="${plato.idplato!=0? '¿Está seguro de registrar este plato?':'¿Está seguro de editar este plato?'}">
+                                th:text="${plato.idplato==0? '¿Está seguro de registrar este plato?':'¿Está seguro de editar este plato?'}">
                             </h5>
                             <button class="close" type="button"
                                     data-dismiss="modal"

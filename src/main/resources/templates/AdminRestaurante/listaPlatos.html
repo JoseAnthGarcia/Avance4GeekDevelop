@@ -81,16 +81,7 @@
                                 <div class="d-sm-flex align-items-center">
                                     <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
-                                    <h5 th:if="${idcategoria==1}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==3}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==4}"
-                                        class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
-                                    <h5 th:if="${idcategoria==2}"
+                                    <h5
                                         class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="|Lista de Platos - ${nombreCate}|"></h5>
 
@@ -98,14 +89,7 @@
 
                             </div>
                             <div class="card-body">
-                                <div class="alert alert-success" role="alert"
-                                     th:if="${msg!=null and tipo.equalsIgnoreCase('saved')}" th:text="${msg}">
 
-                                </div>
-                                <div class="alert alert-danger" role="alert"
-                                     th:if="${msg!=null and tipo.equalsIgnoreCase('borrado')}" th:text="${msg}">
-
-                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>

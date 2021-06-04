@@ -53,6 +53,7 @@ public class PlatoController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
+        model.addAttribute("estadoRestaurante",restaurante.getEstado());
 
         return "AdminRestaurante/categorias";
     }
@@ -179,17 +180,9 @@ public class PlatoController {
         String fileName = "";
         model.addAttribute("idcategoria", idcategoria);
 
-        if (plato.getIdplato() != 0) {
-            Optional<Plato> plato1 = platoRepository.findById(plato.getIdplato());
-            if(plato1.isPresent()){
-                Plato plato2= plato1.get();
-            }
-        }
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        System.out.println(adminRest.getIdusuario());
-        System.out.println(restaurante.getIdrestaurante());
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         for (Categorias lista : listaCategorias) {
@@ -199,90 +192,76 @@ public class PlatoController {
             }
         }
 
-        plato.setIdrestaurante(restaurante.getIdrestaurante()); //Jarcodeado
-        plato.setIdcategoriaplato(idcategoria); //Jarcodeado
-        plato.setDisponible(true); //default expresion !!!!
-
-        System.out.println("----------------------------------------------------aquí----" + plato.getIdplato());
-
+        plato.setIdrestaurante(restaurante.getIdrestaurante());
+        plato.setIdcategoriaplato(idcategoria);
+        plato.setDisponible(true);
 
         boolean validarFoto = true;
 
-        if (bindingResult.hasErrors() || file == null) {
-            if (file == null){
-                System.out.println("FILE NULL---- HECTOR CTM");
+        if (file!=null){
+            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
+            System.out.println(file);
+            if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
-            } else {
-                if (file.isEmpty()) {
-                    System.out.println("FILE NULL---- HECTOR CTM2");
-                    model.addAttribute("mensajefoto", "Debe subir una imagen");
-                    validarFoto = false;
-                }
-                fileName = file.getOriginalFilename();
-                if (fileName.contains("..")) {
-                    System.out.println("FILE NULL---- HECTOR CTM3");
-                    model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                    validarFoto = false;
-                }
-                StringTokenizer validarTipo = new StringTokenizer(file.getContentType());
-                if (validarTipo.countTokens() > 10) {
-                    System.out.println("FILE NULL---- HECTOR CTM4");
-                    model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                    validarFoto = false;
-                }
-                if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                    System.out.println("FILE NULL---- HECTOR CTM5");
-                    model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                    validarFoto = false;
-                }
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
             }
-            if (plato.getIdplato() == 0 || !validarFoto) {
-                System.out.println("estoy 1");
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
                 return "/AdminRestaurante/nuevoPlato";
-            } else {
-                Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
-                if (optPlato.isPresent()) {
-                    System.out.println("estoy 2");
+            }
+        }
+
+
+
+        if (bindingResult.hasErrors()) {
+            if (plato.getIdplato() == 0&&!validarFoto) {
+                return "/AdminRestaurante/nuevoPlato";
+            }
+            if(plato.getIdplato() == 0 ){
+                return "/AdminRestaurante/nuevoPlato";
+            }else {
+                Optional<Plato> platoOptional = platoRepository.findById(plato.getIdplato() );
+                if (platoOptional.isPresent()) {
                     return "/AdminRestaurante/nuevoPlato";
                 } else {
 
-                    return "redirect:/plato/lista?idcategoria=" + idcategoria;
+                    return "redirect:/plato/lista?idcategoria="+idcategoria;
                 }
             }
-        } else {
+        } else if (validarFoto){
             if (plato.getIdplato() == 0) {
-
-                attr.addFlashAttribute("msg", "Plato creado exitosamente");
-                attr.addFlashAttribute("tipo", "saved");
-                System.out.println("estoy 3");
-                try {
+                try{
                     plato.setFoto(file.getBytes());
                     plato.setFotonombre(fileName);
                     plato.setFotocontenttype(file.getContentType());
                     platoRepository.save(plato);
-                } catch (IOException e) {
+                }catch (IOException e){
                     e.printStackTrace();
-                    model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                    model.addAttribute("idcategoria",idcategoria);
+                    model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
                     return "/AdminRestaurante/nuevoPlato";
                 }
 
             } else {
-                Optional<Plato> optPlato = platoRepository.findById(plato.getIdplato());
-                if (optPlato.isPresent()) {
-                    System.out.println("estoy 4");
-                    Optional<Plato> platoOptional = platoRepository.findById(plato.getIdplato());
+                Optional<Plato> optionalPlato = platoRepository.findById(plato.getIdplato());
+                if (optionalPlato.isPresent()) {
+                    Optional<Plato> platoOptional=platoRepository.findById(plato.getIdplato());
                     plato.setFoto(platoOptional.get().getFoto());
                     plato.setFotonombre(platoOptional.get().getFotonombre());
                     plato.setFotocontenttype(platoOptional.get().getFotocontenttype());
                     platoRepository.save(plato);
-                    attr.addFlashAttribute("tipo", "saved");
-                    attr.addFlashAttribute("msg", "Plato actualizado exitosamente");
                 }
             }
-            return "redirect:/plato/lista?idcategoria=" + idcategoria;
+            return "redirect:/plato/lista?idcategoria="+idcategoria;
         }
-
+        else {
+            return "/AdminRestaurante/nuevoPlato";
+        }
     }
 
 

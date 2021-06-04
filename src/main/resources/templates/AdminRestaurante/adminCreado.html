@@ -1,31 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Administrador creado')"></head>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>REGISTRO ADMINISTRADOR RESTAURANTE</title>
-
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-    </head>
-
-    <body id="page-top">
+    <body th:if="${estadoRestaurante!=2}" id="page-top">
 
         <!-- Page Wrapper -->
         <div id="wrapper">
@@ -105,7 +83,7 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-                            <strong><h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text" th:text="|Bienvenido ${session.usuario.nombres} ${session.usuario.apellidos}|"></h1></strong>
+                            <strong><h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text" th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1></strong>
                             <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"> Vamos a comenzar...</h1><div class="card-body" style="text-align: center"><a class="btn btn-primary" th:href="@{/restaurante/registroRest}" style="width: 30%;">Registrar mi restaurante</a></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
@@ -155,31 +133,174 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Sí</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
+    </body>
+    <body id="page-top1" th:if="${estadoRestaurante==2}">
 
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+    <!-- Page Wrapper -->
+    <div id="wrapper1">
 
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+        <!-- Sidebar -->
+        <!-- End of Sidebar -->
 
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper1" class="d-flex flex-column">
 
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+
+            <!-- Main Content -->
+            <div id="content1" class=" bg-login-image2">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
+
+                    <!-- Topbar Search -->
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h4 class="mr-2 d-none d-lg-inline text-gray-600 small" style="color: black" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|">Joham Romucho</h4>
+                                <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+                                <form id="cerrar" th:action="@{/logout}" method="post">
+                                    <a class="nav-link" data-toggle="modal"
+                                       href="#logoutModal1" data-target="#logoutModal1">Cerrar Sesión
+                                    </a>
+                                </form>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-5 mt-5 mx-auto bg-welcome" style="width: 50%; height: 25%; text-align: center">
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <strong><h1 style="text-align: center; color: white" class="text-sm-center text-uppercase text" th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1></strong>
+                        <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"> Su cuenta de restaurante, se está validando...</h1>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+                        <div class="card-body"></div>
+
+
+
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top1">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="cerrar" class="btn btn-primary">Sí</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script  th:src="@{/js/demo/datatables-demo.js}"></script>
     </body>
 
 </html>

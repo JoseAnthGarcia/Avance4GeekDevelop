@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DistritosRepository extends JpaRepository<Distrito, Integer> {
 
-
-
+    Distrito findByIddistrito(int iddistrito);
 }

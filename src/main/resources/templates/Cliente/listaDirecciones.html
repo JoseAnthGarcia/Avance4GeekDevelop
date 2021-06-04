@@ -116,7 +116,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -197,7 +198,8 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
                                 th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
                             >
 
@@ -220,14 +222,15 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
@@ -255,7 +258,7 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 " style="background-color: #701111;">
-                                <h6 class="m-0 font-weight-bold text-gray-400 text-center">REGISTRE UNA DIRECCIÓN</h6>
+                                <h6 class="m-0 font-weight-bold text-center" style="color: white">REGISTRE UNA DIRECCIÓN</h6>
                             </div>
 
                             <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
@@ -265,104 +268,112 @@
 
                             <div class="card-header py-3">
 
+                                <div class="form-row">
 
-                                    <div class="form-row">
-
-                                        <div class="col-md-6 mb-3">
-                                            <!-- ################################################################ -->
-                                            <form method="POST" th:action="@{/cliente/agregarDireccion}">
-                                            <div style=text-align:center>
-                                            <label for="direcc">Ingrese una dirección</label>
-                                            <input type="text" class="form-control " name="direccion"  id="direcc" value="" placeholder="" >
-                                                <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
-                                                <div th:if="${msg1 != null}" th:text="${msg1}" style="color: red; font-size: small; text-align: left" ></div>
-                                                <div th:if="${msg2 != null}" th:text="${msg2}" style="color: red; font-size: small; text-align: left" ></div>
-                                            </div>
-
-                                            <h2>   </h2>
-                                            <div class="col-md-12 mb-3"  style=text-align:center>
-                                                <button  class="btn btn-primary" type="submit">Agregar</button>
-
-                                                <a  class="btn btn-danger" th:href="@{/cliente/listaRestaurantes}" type="submit">Cancelar</a>
-
-                                            </div>
-                                            </form>
-                        <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
-                                            <form th:action="@{/cliente/eliminarDireccion}" method="post">
-                                            <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>
-                                                            N°
-                                                        </th>
-                                                        <th>
-                                                            Direcciones
-                                                        </th>
-                                                        <th>
-                                                        </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr th:each="direcciones,info:${direccionesSinActual}">
-                                                        <td th:text="${info.index + 1}"></td>
-                                                        <td th:text="${direcciones.direccion}"></td>
-                                                        <td> <input type="checkbox"
-                                                                name="listaIdDireccionesAeliminar"
-                                                                th:value="${direcciones.idubicacion}"> </td>
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
-
-                                                <div class="col-md-12 mb-4"  >
-                                                    <button type="submit" class="btn btn-dark" >
-                                                         <i class="fas fa-trash"></i>
-                                                    </button>
-
+                                    <div class="col-md-6 mb-3">
+                                        <!-- ################################################################ -->
+                                        <form method="POST" th:action="@{/cliente/agregarDireccion}">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="direcc">Ingrese una dirección</label>
+                                                    <input type="text" class="form-control " name="direccion"
+                                                           id="direcc" value="" placeholder="">
+                                                    <div th:if="${msg != null}" th:text="${msg}"
+                                                         style="color: red; font-size: small; text-align: left"></div>
+                                                    <div th:if="${msg1 != null}" th:text="${msg1}"
+                                                         style="color: red; font-size: small; text-align: left"></div>
+                                                    <div th:if="${msg2 != null}" th:text="${msg2}"
+                                                         style="color: red; font-size: small; text-align: left"></div>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label for="distrito">Ingrese un  distrito</label>
+                                                    <select class="form-control" id="distrito" name="distrito" style="border-color:lightgray">
+                                                        <option value="0" selected>Distrito</option>
+                                                        <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
+                                                                th:text="${dist.nombre}"></option>
+                                                    </select>
+                                                    <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
+                                                </div>
+                                            </div>
+                                            <h2></h2>
+                                            <div class="col-md-12 mb-3" style=text-align:center>
+                                                <button class="btn btn-primary" type="submit">Agregar</button>
+
+                                                <a class="btn btn-danger" th:href="@{/cliente/listaRestaurantes}"
+                                                   type="submit">Cancelar</a>
 
                                             </div>
-
-                                        </div>
                                         </form>
+                                        <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
+                                        <form th:action="@{/cliente/eliminarDireccion}" method="post">
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>
+                                                                N°
+                                                            </th>
+                                                            <th>
+                                                                Direcciones
+                                                            </th>
+                                                            <th>
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="direcciones,info:${direccionesSinActual}">
+                                                            <td th:text="${info.index + 1}"></td>
+                                                            <td th:text="${direcciones.direccion}"></td>
+                                                            <td><input type="checkbox"
+                                                                       name="listaIdDireccionesAeliminar"
+                                                                       th:value="${direcciones.idubicacion}"></td>
+                                                        </tr>
 
-                                        </div>
-                                        <div class="col-md-6 mb-3">
+                                                        </tbody>
 
-                                                <div class="card shadow mb-4">
-                                                    <!-- Card Body -->
-                                                    <form method="post" th:action="@{/cliente/guardarDireccion}">
-                                                    <div class="card-body">
-                                                        <div style=text-align:center>
-                                                            <label for="direccionactual">Dirección Actual</label>
-                                                            <select class="form-control" id="direccionactual" name="direccionactual" style="border-color:lightgray">
-                                                                <option value="0" selected disabled>Direcciones</option>
-                                                                <option th:each="direc : ${listaDirecciones}"
-                                                                        th:value="${direc.direccion}"
-                                                                        th:text="${direc.direccion}"
-                                                                        th:selected="${session.usuario.direccionactual.equals(direc.direccion)}"></option>
-                                                            </select>
-                                                            <h1> </h1>
-                                                            <button class="btn btn-secondary" type="submit"> Seleccionar </button>
+                                                    </table>
 
-                                                        </div>
-                                                        <h1>       </h1>
-                                                        <div style=text-align:center>
-                                                            <img scr="https://tuwebtecno.com/wp-content/uploads/2020/10/1603606268_Se-corrigio-que-Google-Maps-no-actualizara-la-ubicacion.png"
-                                                                 width="200" height="150">
-                                                        </div>
+                                                    <div class="col-md-12 mb-4">
+                                                        <button type="submit" class="btn btn-dark">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
 
                                                     </div>
-                                                    </form>
 
                                                 </div>
 
-                                        </div>
+                                            </div>
+                                        </form>
 
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <form method="post" th:action="@{/cliente/guardarDireccion}">
+                                            <div class="container">
+                                                <div style=text-align:center>
+                                                    <label for="direccionactual">Dirección Actual</label>
+                                                    <select class="form-control" id="direccionactual"
+                                                            name="direccionactual" style="border-color:lightgray">
+                                                        <option value="0" selected disabled>Direcciones</option>
+                                                        <option th:each="direc : ${listaDirecciones}"
+                                                                th:value="${direc.direccion}"
+                                                                th:text="${direc.direccion}"
+                                                                th:selected="${session.usuario.direccionactual.equals(direc.direccion)}"></option>
+                                                    </select>
+                                                    <h1></h1>
+                                                    <button class="btn btn-secondary mb-5" type="submit"> Seleccionar
+                                                    </button>
+                                                </div>
+                                                <div style=text-align:center>
+                                                    <img src="https://tuwebtecno.com/wp-content/uploads/2020/10/1603606268_Se-corrigio-que-Google-Maps-no-actualizara-la-ubicacion.png"
+                                                         width="200" height="150">
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
@@ -371,13 +382,11 @@
                     </div>
 
 
-
-
                 </div>
-            <!-- /.container-fluid -->
+                <!-- /.container-fluid -->
 
-        </div>
-        <!-- End of Main Content -->
+            </div>
+            <!-- End of Main Content -->
         </div>
         <!-- Footer -->
         <footer class="sticky-footer bg-white">

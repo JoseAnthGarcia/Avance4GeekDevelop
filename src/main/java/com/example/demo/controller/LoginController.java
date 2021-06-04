@@ -59,6 +59,50 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm(Authentication auth, HttpSession session) {
+        try {
+            String rol = "";
+            for (GrantedAuthority role : auth.getAuthorities()) {
+                rol = role.getAuthority();
+                break;
+            }
+
+            String correo = auth.getName();
+            Usuario usuario = usuarioRepository.findByCorreo(correo);
+
+            session.setAttribute("usuario", usuario);
+
+            switch (rol) {
+                case "cliente":
+                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                    session.setAttribute("poolDirecciones", listaDirecciones);
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    Restaurante restaurante = null;
+                    try {
+                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
+                    } catch (NullPointerException e) {
+                        System.out.println("Fallo");
+                    }
+                    if (restaurante == null|| restaurante.getEstado()==2) {
+                        return "redirect:/restaurante/paginabienvenida";
+                    } else if(restaurante.getEstado()==1){
+                        return "redirect:/plato/";
+                    }
+                case "repartidor":
+                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                    session.setAttribute("poolDirecciones", listaDirecciones1);
+                    //TODO: agregar redireccion a repartidor
+                    return "somewhere";
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
+
+        } catch (NullPointerException n) {
+        }
         return "Cliente/login";
     }
 
@@ -83,7 +127,7 @@ public class LoginController {
 
 
         //redirect:
-        switch (rol){
+        switch (rol) {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
@@ -93,15 +137,15 @@ public class LoginController {
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":
-                Restaurante restaurante=null;
+                Restaurante restaurante = null;
                 try {
                     restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if(restaurante==null){
+                if (restaurante == null|| restaurante.getEstado()==2) {
                     return "redirect:/restaurante/paginabienvenida";
-                }else{
+                } else if(restaurante.getEstado()==1){
                     return "redirect:/plato/";
                 }
             case "repartidor":
@@ -250,89 +294,87 @@ public class LoginController {
     }
 
     @RequestMapping("/olvidoContrasenia")
-    public String olvidoContrasenia(){
+    public String olvidoContrasenia() {
         return "olvidoContrasenia";
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
-    public String envioCorreo(@RequestParam("correo") String correo, Model model){
+    public String envioCorreo(@RequestParam("correo") String correo, Model model) {
 
-        boolean valcorreo=false;
-        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(correo);
-        if(clientesxcorreo.isEmpty()){
-            valcorreo=true;
+        boolean valcorreo = false;
+        Usuario clientesxcorreo = clienteRepository.findByCorreo(correo);
+        if (clientesxcorreo==null) {
+            valcorreo = true;
         }
 
-        boolean valVacio=false;
-        if(correo.isEmpty()){
+        boolean valVacio = false;
+        if (correo.isEmpty()) {
             System.out.println("VACIO");
-            valVacio=true;
+            valVacio = true;
         }
 
-        if( valVacio || valcorreo) {
-            if(valcorreo){
+        if (valVacio || valcorreo) {
+            if (valcorreo) {
                 System.out.println("validacion correo");
-                model.addAttribute("msg1","El correo no está registrado");
+                model.addAttribute("msg1", "El correo no está registrado");
             }
 
-            if(valVacio){
-                model.addAttribute("msg2","Ingrese su correo");
+            if (valVacio) {
+                model.addAttribute("msg2", "Ingrese su correo");
             }
 
             return "olvidoContrasenia";
 
-        }else {
-
-            Rol rol = rolRepository.findByTipo("cliente");
-            Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
-            if (cliente != null) {
-                Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
-                if (urlcorreo1 != null) {
-                    urlCorreoRepository.delete(urlcorreo1);
-                }
-                String codigoAleatorio = "";
-                while (true) {
-                    codigoAleatorio = generarCodigAleatorio();
-                    Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
-                    if (urlcorreo2 == null) {
-                        break;
+        } else {
+            if(clientesxcorreo.getRol().getIdrol()==1 ||clientesxcorreo.getRol().getIdrol()==3||clientesxcorreo.getRol().getIdrol()==4) {
+                Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, clientesxcorreo.getRol());
+                if (cliente != null) {
+                    Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
+                    if (urlcorreo1 != null) {
+                        urlCorreoRepository.delete(urlcorreo1);
                     }
+                    String codigoAleatorio = "";
+                    while (true) {
+                        codigoAleatorio = generarCodigAleatorio();
+                        Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
+                        if (urlcorreo2 == null) {
+                            break;
+                        }
+                    }
+                    Urlcorreo urlcorreo3 = new Urlcorreo();
+                    urlcorreo3.setCodigo(codigoAleatorio);
+                    urlcorreo3.setUsuario(cliente);
+
+                    //genero fecha:
+                    Date date = new Date();
+                    DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    urlcorreo3.setFecha(hourdateFormat.format(date));
+                    urlCorreoRepository.save(urlcorreo3);
+
+                    //genero url:
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
+                    String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
+                    String content = "Para cambio de contraseña:\n" + url;
+
+                    String subject = "OLVIDE MI CONTRASEÑA";
+
+                    sendEmail(correo, subject, content);
                 }
-                Urlcorreo urlcorreo3 = new Urlcorreo();
-                urlcorreo3.setCodigo(codigoAleatorio);
-                urlcorreo3.setUsuario(cliente);
-
-                //genero fecha:
-                Date date = new Date();
-                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                urlcorreo3.setFecha(hourdateFormat.format(date));
-                urlCorreoRepository.save(urlcorreo3);
-
-                //genero url:
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
-                String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
-                String content = "Para cambio de contraseña:\n" + url;
-
-                String subject = "OLVIDE MI CONTRASEÑA";
-
-                sendEmail(correo, subject, content);
             }
             return "redirect:/login";
         }
 
 
-
-
     }
 
     @GetMapping("/cambioContra")
-    public String cambiarContra(@RequestParam("id") String id, Model model){
+    public String cambiarContra(@RequestParam("id") String id, Model model) {
         List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
         Boolean redireccionar = false;
-        for(Urlcorreo urlcorreo : listaUrlCorreo){
-            String comparar = urlcorreo.getUsuario().getDni()+urlcorreo.getCodigo();
-            if(BCrypt.checkpw(comparar,id)){
+        for (Urlcorreo urlcorreo : listaUrlCorreo) {
+            String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
+            if (BCrypt.checkpw(comparar, id)) {
                 redireccionar = true;
 
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -342,9 +384,9 @@ public class LoginController {
             }
         }
 
-        if(redireccionar){
+        if (redireccionar) {
             return "recuperarContra";
-        }else{
+        } else {
             return "redirect:/login";
         }
     }
@@ -352,51 +394,51 @@ public class LoginController {
     @PostMapping("/actualizarContraOlvidada")
     public String actualizarContraOlvidada(@RequestParam("id") String id,
                                            @RequestParam("contra1") String contra1,
-                                           @RequestParam("contra2") String contra2, Model model){
+                                           @RequestParam("contra2") String contra2, Model model) {
 
-        boolean valLong1=false;
-        boolean valLong2=false;
-        boolean valIguales=true;
-        boolean valVacio1=false;
-        boolean valVacio2=false;
-        if(contra1.isEmpty()){
-            valVacio1=true;
+        boolean valLong1 = false;
+        boolean valLong2 = false;
+        boolean valIguales = true;
+        boolean valVacio1 = false;
+        boolean valVacio2 = false;
+        if (contra1.isEmpty()) {
+            valVacio1 = true;
         }
-        if(contra2.isEmpty()){
-            valVacio2=true;
+        if (contra2.isEmpty()) {
+            valVacio2 = true;
         }
-        if(contra1.length()<8){
-            valLong1=true;
+        if (contra1.length() < 8) {
+            valLong1 = true;
         }
-        if(contra2.length()<8){
-            valLong2=true;
-        }
-
-        if(contra1.equalsIgnoreCase(contra2)){
-            valIguales=false;
+        if (contra2.length() < 8) {
+            valLong2 = true;
         }
 
-        if(valLong1 || valLong2 || valIguales || valVacio1 || valVacio2){
+        if (contra1.equalsIgnoreCase(contra2)) {
+            valIguales = false;
+        }
 
-            if(valLong1){
-                model.addAttribute("msg1","Ingrese de 8 caracteres a mas");
-            }
-            if(valLong2){
-                model.addAttribute("msg2","Ingrese de 8 caracteres a mas");
-            }
-            if (valIguales){
-                model.addAttribute("msg3","Las contraseñas no coinciden");
-            }
-            if (valVacio1){
-                model.addAttribute("msg4","Recuadro vacio");
-            }
-            if (valVacio2){
-                model.addAttribute("msg5","Recuadro vacio");
-            }
+        if (valLong1 || valLong2 || valIguales || valVacio1 || valVacio2) {
 
+            if (valLong1) {
+                model.addAttribute("msg1", "Ingrese de 8 caracteres a mas");
+            }
+            if (valLong2) {
+                model.addAttribute("msg2", "Ingrese de 8 caracteres a mas");
+            }
+            if (valIguales) {
+                model.addAttribute("msg3", "Las contraseñas no coinciden");
+            }
+            if (valVacio1) {
+                model.addAttribute("msg4", "Recuadro vacio");
+            }
+            if (valVacio2) {
+                model.addAttribute("msg5", "Recuadro vacio");
+            }
+            model.addAttribute("id", id);
 
             return "recuperarContra";
-        }else {
+        } else {
 
             List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
             for (Urlcorreo urlcorreo : listaUrlCorreo) {
@@ -416,13 +458,13 @@ public class LoginController {
 
 
     //generar codigo aleatorio:
-    public String generarCodigAleatorio(){
-        char [] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+    public String generarCodigAleatorio() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int charsLength = chars.length;
         Random random = new Random();
         StringBuffer buffer = new StringBuffer();
         int tamCodigo = 5;
-        for (int i=0;i<tamCodigo;i++){
+        for (int i = 0; i < tamCodigo; i++) {
             buffer.append(chars[random.nextInt(charsLength)]);
         }
         return buffer.toString();
@@ -455,11 +497,9 @@ public class LoginController {
 
     /****   RECUPERAR CONTRASEÑA ***/
     @GetMapping("/recuperarContrasenia")
-    public  String recuperar (){
+    public String recuperar() {
         return "olvidoContrasenia";
     }
-
-
 
 
 }

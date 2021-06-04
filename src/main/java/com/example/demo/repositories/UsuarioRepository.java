@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
@@ -69,7 +70,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findUsuarioByTelefono(String telefono);
 
 
-
+    @Query(value = "select ub.iddistrito, ub.direccion, u.idusuario  from usuario u inner join ubicacion ub\n" +
+            "on u.idusuario=ub.idusuario where u.idusuario=?;\n"
+            ,nativeQuery = true)
+    List<ClienteDTO> listaParaCompararDirecciones(int idusuario);
 
     //muestra la ganancia de un repartidor - la ganancia de un repartidor depende del atributo mismo distrito, entonces la ganancia sería
     //la cantidad de pedidos que tiene en un distrito *4 + la cantidad de pedidos que tiene fuera *6
@@ -102,5 +106,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> buscadorUsuarioSinEstadoNiRol(String texto, int fechaRegistro);
 
     Usuario findByCorreoAndRol(String correo, Rol rol);
+
+
+/*
+    @Query(value = "select ub.iddistrito, ub.direccion, u.idusuario  from usuario u inner join ubicacion ub\n" +
+            "on u.idusuario=ub.idusuario where u.idusuario=?;\n"
+            ,nativeQuery = true)
+    List<ClienteDTO> listaParaCompararDirecciones(int idusuario);
+
+
+ */
+
 
 }

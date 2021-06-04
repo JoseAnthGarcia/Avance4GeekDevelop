@@ -41,6 +41,7 @@ public class Pedido implements Serializable {
     private Integer valoracionrestaurante;
 
     private String comentariorepartidor;
+    private String comentrechazorest;
 
     private Integer valoracionrepartidor;
 
@@ -182,5 +183,11 @@ public class Pedido implements Serializable {
     }
 
 
+    public String getComentrechazorest() {
+        return comentrechazorest;
+    }
 
+    public void setComentrechazorest(String comentrechazorest) {
+        this.comentrechazorest = comentrechazorest;
+    }
 }

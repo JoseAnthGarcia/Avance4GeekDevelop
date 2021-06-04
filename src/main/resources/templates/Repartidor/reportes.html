@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reportes')"></head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+
+                </div>
+        <div class="container-fluid">
+
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3" style="background-color: #701111;">
+                    <h5 class="font-weight-bold text-white text-center mb-0">REPORTES</h5>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="col-sm-6">
+                            <div class="col-sm-6 mb-4"
+                                 style="margin-left: 270px; margin-top: 30px">
+                                <div class="container2">
+                                    <img src="imagenes/delivery-rider.jpg" alt="Avatar"
+                                         class="image2 shadow"
+                                         style="height: 300px; width: 400px">
+                                    <a class="overlay2" style="height: 300px; width: 400px" href="reporteDeliverys.html">
+                                        <H1 class="text2 font-weight-bolder">DELIVERYS</H1>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="col-sm-6">
+                            <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
+                                <div class="container2">
+                                    <img src="imagenes/como-administrar-el-dinero.jpg" alt="Avatar"
+                                         class="image2 shadow"
+                                         style="height: 300px; width: 400px">
+                                    <a class="overlay2" style="height: 300px; width: 400px" href="reporteIngresos.html">
+                                        <H1 class="text2 font-weight-bolder">INGRESOS</H1>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" href="/html/login.html">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
+</body>
+
+</html>

@@ -1,30 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>REGISTRO ADMINISTRADOR</title>
-
-        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-    </head>
-
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de adminsitrador')"></head>
     <body id="page-top">
 
         <!-- Page Wrapper -->
@@ -124,6 +101,8 @@
                                         <option th:value="Femenino">Femenino</option>
                                         <option th:value="Masculino">Masculino</option>
                                     </select>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('sexo')}"
+                                         th:errors="*{sexo}"></div>
                                 </div>
                                 <div class="col-sm-6  mb-0 mb-sm-0">
                                     <input th:field="*{telefono}" type="text" class="form-control"
@@ -134,6 +113,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-0 mt-1 mb-sm-0">
+
                                     <input th:field="*{dni}" type="text" class="form-control" placeholder="DNI"/>
                                     <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                          th:errors="*{dni}"></div>
@@ -148,15 +128,18 @@
                                     <p>La contraseña debe contar con al menos 8 caracteres.</p>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('contrasenia')}"
+                                                 th:errors="*{contrasenia}"></div>
                                             <input type="password" class="form-control" th:field="*{contrasenia}"
                                                    placeholder="Contraseña">
-                                            <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
+
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
                                             <input id="confcontra" name="confcontra" type="password"
                                                    class="form-control" placeholder="Confirmar contraseña">
+                                            <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
                                         </div>
                                     </div>
                                     <div id="msg"></div>
@@ -166,9 +149,10 @@
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <h4 style="color: black">Foto de perfil</h4>
                                     <p>Adjunte una foto de perfil para su cuenta.</p>
+
                                     <div class="custom-file">
-                                        <input type="file" name="photo" accept="image/png, image/jpeg, image/webp, image/jpg"
-                                               class="custom-file-input" id="customFile">
+                                        <input type="file" name="photo"
+                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
                                         <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
                                         <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
                                             style="color: red; font-size: small; text-align: left"></h1>
@@ -225,7 +209,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.
+                    <div class="modal-body">Al seleccionar el botón volver, no se guardará la información registrada.
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -256,32 +240,20 @@
             </div>
         </div>
 
-        <script>
-            // Add the following code if you want the name of the file appear on select
-            $(".custom-file-input").on("change", function () {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            });
-        </script>
 
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
-
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script th:src="@{/js/demo/datatables-demo.js}"></script>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
 
     </body>
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 
 </html>

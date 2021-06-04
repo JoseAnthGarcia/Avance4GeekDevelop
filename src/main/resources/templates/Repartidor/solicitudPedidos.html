@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(listaDistritos=${listaDistritos})"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+
+                        <div class="d-sm-flex align-items-center justify-content-between">
+
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">SOLICITUDES DE REPARTO</h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Pedido</th>
+                                    <th scope="col">Hora de registro </th>
+                                    <th scope="col">Aceptar</th>
+                                    <th scope="col">Rechazar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="pedido, i : ${listaPedidos}">
+                                    <th scope="row" th:text="${i.index+1}" >1</th>
+                                    <td th:text="${pedido.restaurante.nombre}">Arroz con pollo - Restaurante amarillo</td>
+                                    <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
+                                    <td>
+                                       <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn">
+                                           <i class="fas fa-check-circle" style="color: green"></i>
+                                       </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/repartidor/rechazarPedido}" class="btn">
+                                            <i class="fas fa-times-circle" style="color: red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+
+                            <!--Pagination -->
+                            <div class="pagination" style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
+                                <a  href="#">&laquo;</a>
+                                <a  href="#" class="active">1</a>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                <a href="#">5</a>
+                                <a href="#">6</a>
+                                <a href="#">&raquo;</a>
+                            </div>
+                            <!-- End of pagination -->
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                <div class="container-fluid">
+
+                    <div class="card">
+
+                        <div class="card-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <h1 class="card-title" style="color: black">Ceviche - Restaurante Marino</h1>
+                                            <p class="card-text">Dirección de restaurante: Av. Universitaria 345<br>
+                                                Direción de cliente: Av. Universitaria 987<br>
+                                                Producto: Ceviche<br>
+                                                Hora de registro de pedido:   17:49<br>
+                                                Método de pago : Efectivo</p>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-sm-6">
+                                                <i class="fas fa-check-circle" style="color: green"></i>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <i class="fas fa-times-circle" style="color: red"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" href="/html/login.html">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
+</body>
+
+</html>

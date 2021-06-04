@@ -38,6 +38,10 @@ public class RepartidorController {
 
     @Autowired
     PedidoRepository pedidoRepository;
+    @GetMapping("/tipoReporte")
+    public String tipoReporte(){
+        return "Repartidor/reportes";
+    }
 
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model,HttpSession session){
@@ -57,6 +61,11 @@ public class RepartidorController {
             model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/pedidoActual";
         }
+    }
+
+    @GetMapping("/estadisticas")
+    public String estadisticas(){
+        return "/Repartidor/estadisticas";
     }
 
     @PostMapping("/cambiarDistrito")
@@ -127,6 +136,14 @@ public class RepartidorController {
         return "/Repartidor/registro";
     }
 
+    @GetMapping("/reporteDeliverys")
+    public String reporteDeliverys(){
+        return "/Repartidor/reporteDeliverys";
+    }
+    @GetMapping("/reporteIngresos")
+    public String reporteIngresos(){
+        return "/Repartidor/reporteIngresos";
+    }
 
 
 

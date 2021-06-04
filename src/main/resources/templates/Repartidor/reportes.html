@@ -9,7 +9,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -41,7 +41,7 @@
                                     <img src="imagenes/delivery-rider.jpg" alt="Avatar"
                                          class="image2 shadow"
                                          style="height: 300px; width: 400px">
-                                    <a class="overlay2" style="height: 300px; width: 400px" href="reporteDeliverys.html">
+                                    <a class="overlay2" style="height: 300px; width: 400px"th:href="@{'/repartidor/reporteDeliverys'}">
                                         <H1 class="text2 font-weight-bolder">DELIVERYS</H1>
                                     </a>
                                 </div>
@@ -56,7 +56,7 @@
                                     <img src="imagenes/como-administrar-el-dinero.jpg" alt="Avatar"
                                          class="image2 shadow"
                                          style="height: 300px; width: 400px">
-                                    <a class="overlay2" style="height: 300px; width: 400px" href="reporteIngresos.html">
+                                    <a class="overlay2" style="height: 300px; width: 400px"th:href="@{'/repartidor/reporteIngresos'}">
                                         <H1 class="text2 font-weight-bolder">INGRESOS</H1>
                                     </a>
                                 </div>

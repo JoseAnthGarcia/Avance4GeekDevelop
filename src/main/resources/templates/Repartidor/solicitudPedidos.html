@@ -20,11 +20,37 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(direcciones=${direcciones})"></nav>
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
+
+                <form th:action="@{'/repartidor/cambiarDistrito'}" method="post" class="mb-3">
+                    <div class=" row">
+                        <div class="col-lg-2"  >
+                            <span style="position:relative; top:10% ">Distrito actual:</span>
+
+                        </div>
+                        <div class="col-lg-2" >
+
+                            <select class="form-control" style="border-color:lightgray; position: relative; right: 40%" name="idubicacion">
+                                <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
+                                        th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
+                            </select>
+
+
+                        </div>
+                        <div class="col-lg-2" style="position:relative; right: 6%">
+                            <button type="submit"  class="btn btn-dark">Seleccionar distrito</button>
+                        </div>
+
+                    </div>
+                </form>
+
+
+
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -164,8 +190,10 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" href="/html/login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

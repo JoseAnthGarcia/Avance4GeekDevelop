@@ -443,7 +443,7 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam("valoracion") Integer valoraRest, @RequestParam("comentRest") String comentRest){
+                              @RequestParam("valrest") Integer valoraRest, @RequestParam("comentRest") String comentRest){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Pedido pedido = pedidoRepository.encontrarporId(id);
         if(pedido!=null){

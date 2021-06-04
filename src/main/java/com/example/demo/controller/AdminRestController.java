@@ -98,7 +98,7 @@ public class AdminRestController {
         System.out.println(fecharegistro);
         adminRest.setFecharegistro(fecharegistro);
         Boolean fecha_naci = true;
-        boolean validar_foto=true;
+        boolean validarFoto=true;
         int naci = 0;
         String[] parts = adminRest.getFechanacimiento().split("-");
         try{
@@ -115,32 +115,25 @@ public class AdminRestController {
     }
         System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
         System.out.println("Soy solo fecha_naci "+fecha_naci);
-        if (file == null) {
-            model.addAttribute("mensajefoto", "Debe subir una imagen");
-            validar_foto=false;
-        } else {
-            if (file.isEmpty()) {
+        if (file!=null){
+            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
+            System.out.println(file);
+            if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
-                validar_foto=false;
+                validarFoto = false;
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                validar_foto=false;
-            }
-            StringTokenizer validarTipo= new StringTokenizer(file.getContentType());
-            if(validarTipo.countTokens()>10){
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                validar_foto=false;
-            }
-            if(!file.getContentType().contains("jpeg")&&!file.getContentType().contains("png")&&!file.getContentType().contains("web")){
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                validar_foto=false;
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/registroAR";
             }
         }
-        if(bindingResult.hasErrors()||!contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci|| !validar_foto)
 
-    {
+        if(bindingResult.hasErrors()||!contra2.equalsIgnoreCase(adminRest.getContrasenia())||fecha_naci||!validarFoto){
         if (fecha_naci) {
             model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
         }
@@ -148,8 +141,7 @@ public class AdminRestController {
             model.addAttribute("msg", "Las contraseñas no coinciden");
         }
         return "/AdminRestaurante/registroAR";
-    } else
-    {
+    } else if (validarFoto) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
         adminRest.setContrasenia(hashedPassword);
@@ -165,7 +157,9 @@ public class AdminRestController {
         }
         return "redirect:/login";
     }
-
+    else{
+            return "/AdminRestaurante/registroAR";
+        }
 }
 
     @PostMapping("/guardarRestaurante")
@@ -202,15 +196,29 @@ public class AdminRestController {
             dist_u_val = true;
         }
 
+        boolean validarFoto = true;
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val) {
-            if (file.isEmpty()) {
-                model.addAttribute("mensajeFoto", "Debe subir una imagen");
+        if (file!=null){
+            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
+            System.out.println(file);
+            if(file.isEmpty()){
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajeFoto", "No se premite '..' een el archivo");
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+                return "/AdminRestaurante/registroResturante";
             }
+        }
+
+
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val||!validarFoto) {
+
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
                 model.addAttribute("msg5", "Complete sus datos");
@@ -221,7 +229,7 @@ public class AdminRestController {
                 model.addAttribute("msg", "Se deben seleccionar 4 categorías");
             }
             return "/AdminRestaurante/registroResturante";
-        } else {
+        } else if (validarFoto){
             try {
                 restaurante.setFoto(file.getBytes());
                 restaurante.setFotonombre(fileName);
@@ -237,6 +245,9 @@ public class AdminRestController {
             }
             return "redirect:/plato/";
         }
+        else {
+            return "/AdminRestaurante/registroResturante";
+        }
     }
 
     @GetMapping("/registroRest")
@@ -250,6 +261,16 @@ public class AdminRestController {
     public String paginaBienvenida(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         System.out.println(usuario.getNombres());
+        int id = usuario.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        int estado=-1;
+        try {
+            estado=restaurante.getEstado();
+        }catch (NullPointerException e){
+
+        }
+
+        model.addAttribute("estadoRestaurante",estado);
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
         return "AdminRestaurante/adminCreado";
@@ -320,8 +341,8 @@ public class AdminRestController {
             inputEstadoMin = 0;
             inputEstadoMax = 8;
         } else {
-            inputEstadoMin = inputEstado;
-            inputEstadoMax = inputEstado;
+            inputEstadoMin = inputEstado - 1;
+            inputEstadoMax = inputEstado - 1;
         }
 
         System.out.println(inputPrecio);
@@ -340,10 +361,14 @@ public class AdminRestController {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
+        System.out.println("#################");
+        System.out.println(inputEstadoMin);
+        System.out.println(inputEstadoMax);
+        System.out.println("#################");
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 5 - 5, inputPMax * 5);//harcodeado
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20);
         listaPedidos = page.getContent();
 
         model.addAttribute("texto", textBuscador);

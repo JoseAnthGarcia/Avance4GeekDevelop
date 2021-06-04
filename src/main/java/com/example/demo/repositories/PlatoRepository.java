@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import com.example.demo.dtos.Plato_has_PedidoDTO;
 import com.example.demo.dtos.PlatosDTO;
 import com.example.demo.entities.Plato;
 import org.springframework.data.domain.Page;
@@ -22,5 +23,11 @@ public interface PlatoRepository extends JpaRepository<Plato, Integer> {
             "from plato p where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
             "and (p.precio >= ?3 and p.precio < ?4 )", nativeQuery = true)
     List<PlatosDTO> listaPlato(int idRest, String texto, Integer limitInf, Integer limitSup);
+
+
+
+
+
+
 
 }

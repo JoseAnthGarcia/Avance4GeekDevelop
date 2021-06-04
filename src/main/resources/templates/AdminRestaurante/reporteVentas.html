@@ -87,95 +87,29 @@
                                                     Fecha
                                                 </th>
                                                 <th>
-                                                    Monto total
+                                                    Monto platos
                                                 </th>
                                                 <th>
-                                                    Visualizar
+                                                    Monto extras
+                                                </th>
+                                                <th>
+                                                    Descuento
+                                                </th>
+                                                <th>
+                                                    Monto total
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>8</td>
-                                                <td>0000001</td>
-                                                <td>08/05/2021</td>
-                                                <td>S/. 130.00</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align" href="detalleVenta.html">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-
+                                        <tr th:each="lista,v:${listareporte} ">
+                                            <td th:text="${(v.index+1)}"></td>
+                                            <td th:text="${lista.getCodigo()}"></td>
+                                            <td th:text="${lista.getFecha()}"></td>
+                                            <td th:text="${'S/. '+lista.getMontoplatos()}"></td>
+                                            <td th:text="${'S/. '+lista.getMontoextras()}"></td>
+                                            <td th:text="${'S/. '+lista.getDescuento()}"></td>
+                                            <td th:text="${'S/. '+lista.getPreciototal()}"></td>
+                                        </tr>
                                         </tbody>
 
                                     </table>
@@ -235,7 +169,7 @@
                     <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
+                        <button type="submit" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>

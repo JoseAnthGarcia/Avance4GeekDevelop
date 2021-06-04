@@ -90,6 +90,9 @@
                                                     N°
                                                 </th>
                                                 <th>
+                                                    ID de plato
+                                                </th>
+                                                <th>
                                                     Nombre del Plato
                                                 </th>
                                                 <th>
@@ -101,62 +104,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>8</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>Criollo</td>
-                                                <td>08/01/2021</td>
-                                                <td>25 uni.</td>
-                                            </tr>
+                                        <tr th:each="lista,v:${listareporte} ">
+                                            <td th:text="${(v.index+1)}"></td>
+                                            <td th:text="${lista.getId()}"></td>
+                                            <td th:text="${lista.getNombre()}"></td>
+                                            <td th:text="${lista.getNombrecat()}"></td>
+                                            <td th:text="${lista.getSuma()}"></td>
+                                        </tr>
 
                                         </tbody>
 

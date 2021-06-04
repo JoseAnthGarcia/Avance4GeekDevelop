@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.DetallePedidoDTO;
-import com.example.demo.dtos.ExtraPorPedidoDTO;
-import com.example.demo.dtos.PlatoPorPedidoDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.PedidoService;
@@ -495,4 +493,49 @@ public class AdminRestController {
         model.addAttribute("sumaExtra", sumatotalExtra);
         return "AdminRestaurante/detallePedido";
     }
+
+    @GetMapping("/reporteVentas")
+    public String listaVentas(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<String> lista_codigos=pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(),6);
+        List<PedidoReporteDTO> lista=new ArrayList<PedidoReporteDTO>();
+        for (String codigo:lista_codigos){
+            lista.add(pedidoRepository.pedidoReporte(codigo,codigo));
+        }
+        model.addAttribute("listareporte",lista);
+        return "AdminRestaurante/reporteVentas";
+    }
+
+    @GetMapping("/reporteValoracion")
+    public String listaValoracion(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<String> lista_codigos=pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(),6);
+
+        List<ValoracionReporteDTO> lista=new ArrayList<ValoracionReporteDTO>();
+        for (String codigo:lista_codigos){
+            lista.add(pedidoRepository.valoracionReporte(codigo));
+        }
+        model.addAttribute("listareporte",lista);
+        return "AdminRestaurante/reporteValoraciones";
+    }
+
+    @GetMapping("/reportePlatos")
+    public String reportePlato(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<PlatoReporteDTO> lista_platos_dto=pedidoRepository.reportePlato(restaurante.getIdrestaurante(),6);
+        model.addAttribute("listareporte",lista_platos_dto);
+        return "AdminRestaurante/reportePlatos";
+    }
+    @GetMapping("/elegirReporte")
+    public String elegirReporte(){
+        return "AdminRestaurante/eleccionReporte";
+    }
+
+
 }

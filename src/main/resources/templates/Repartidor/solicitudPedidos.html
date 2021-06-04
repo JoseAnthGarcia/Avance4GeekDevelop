@@ -45,6 +45,8 @@
                             <button type="submit"  class="btn btn-dark">Seleccionar distrito</button>
                         </div>
 
+                        <div th:if="${msg != null}" th:text="${msg}" class="col-3 alert-danger" ></div>
+
                     </div>
                 </form>
 
@@ -77,7 +79,11 @@
                                 <tbody>
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${i.index+1}" >1</th>
-                                    <td th:text="${pedido.restaurante.nombre}">Arroz con pollo - Restaurante amarillo</td>
+                                    <td >
+                                        <a th:href="@{'/repartidor/listaPedidos?idPedido='+${pedido.codigo}}" th:text="${pedido.restaurante.nombre}" class="btn">
+
+                                        </a>
+                                        </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
                                     <td>
                                        <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn">
@@ -116,7 +122,7 @@
 
 
 
-                <div class="container-fluid">
+                <div class="container-fluid" th:if="${pedidoDetalle != null}">
 
                     <div class="card">
 
@@ -125,12 +131,17 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="row">
-                                            <h1 class="card-title" style="color: black">Ceviche - Restaurante Marino</h1>
-                                            <p class="card-text">Dirección de restaurante: Av. Universitaria 345<br>
+                                            <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}">Ceviche - Restaurante Marino</h1>
+                                            <p class="card-text" th:utext="'Dirección de restaurante: '+${pedidoDetalle.restaurante.direccion}
+                                            +'<br>Direción de envio: '+${pedidoDetalle.cliente.direccionactual}
+                                            +'<br>Hora de registro de pedido: '+${pedidoDetalle.fechapedido}
+                                            +'<br>Método de pago : '+${pedidoDetalle.metodopago.tipo}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>
                                                 Producto: Ceviche<br>
                                                 Hora de registro de pedido:   17:49<br>
                                                 Método de pago : Efectivo</p>
+                                            <p >Productos: </p>
+                                            <!-- <p class="card-text" th:each="plato : ${}" th:text="${}"><br></p>-->
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-sm-6">

@@ -16,7 +16,7 @@ public class Cupon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcupon;
-    
+
     @Column(nullable = false, unique = true)
     //@Size(max = 8, message = "Ingrese como máximo 8 caractéres")
     @Pattern(regexp = "^[A-Z0-9]{8}",message = "Ingrese 8 caracteres (letras mayúsculas y/o números)")

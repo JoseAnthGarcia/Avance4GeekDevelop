@@ -301,8 +301,8 @@ public class LoginController {
     public String envioCorreo(@RequestParam("correo") String correo, Model model) {
 
         boolean valcorreo = false;
-        List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(correo);
-        if (clientesxcorreo.isEmpty()) {
+        Usuario clientesxcorreo = clienteRepository.findByCorreo(correo);
+        if (clientesxcorreo==null) {
             valcorreo = true;
         }
 
@@ -325,41 +325,41 @@ public class LoginController {
             return "olvidoContrasenia";
 
         } else {
-
-            Rol rol = rolRepository.findByTipo("cliente");
-            Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, rol);
-            if (cliente != null) {
-                Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
-                if (urlcorreo1 != null) {
-                    urlCorreoRepository.delete(urlcorreo1);
-                }
-                String codigoAleatorio = "";
-                while (true) {
-                    codigoAleatorio = generarCodigAleatorio();
-                    Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
-                    if (urlcorreo2 == null) {
-                        break;
+            if(clientesxcorreo.getRol().getIdrol()==1 ||clientesxcorreo.getRol().getIdrol()==3||clientesxcorreo.getRol().getIdrol()==4) {
+                Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, clientesxcorreo.getRol());
+                if (cliente != null) {
+                    Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
+                    if (urlcorreo1 != null) {
+                        urlCorreoRepository.delete(urlcorreo1);
                     }
+                    String codigoAleatorio = "";
+                    while (true) {
+                        codigoAleatorio = generarCodigAleatorio();
+                        Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
+                        if (urlcorreo2 == null) {
+                            break;
+                        }
+                    }
+                    Urlcorreo urlcorreo3 = new Urlcorreo();
+                    urlcorreo3.setCodigo(codigoAleatorio);
+                    urlcorreo3.setUsuario(cliente);
+
+                    //genero fecha:
+                    Date date = new Date();
+                    DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    urlcorreo3.setFecha(hourdateFormat.format(date));
+                    urlCorreoRepository.save(urlcorreo3);
+
+                    //genero url:
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
+                    String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
+                    String content = "Para cambio de contraseña:\n" + url;
+
+                    String subject = "OLVIDE MI CONTRASEÑA";
+
+                    sendEmail(correo, subject, content);
                 }
-                Urlcorreo urlcorreo3 = new Urlcorreo();
-                urlcorreo3.setCodigo(codigoAleatorio);
-                urlcorreo3.setUsuario(cliente);
-
-                //genero fecha:
-                Date date = new Date();
-                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                urlcorreo3.setFecha(hourdateFormat.format(date));
-                urlCorreoRepository.save(urlcorreo3);
-
-                //genero url:
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
-                String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
-                String content = "Para cambio de contraseña:\n" + url;
-
-                String subject = "OLVIDE MI CONTRASEÑA";
-
-                sendEmail(correo, subject, content);
             }
             return "redirect:/login";
         }

@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.ClienteDTO;
 import com.example.demo.dtos.PedidoDTO;
 import com.example.demo.dtos.PlatosDTO;
+import com.example.demo.dtos.RestauranteDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.model.IModel;
 
 import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpSession;
@@ -123,10 +125,18 @@ public class ClienteController {
     }
 
     @GetMapping("/listaRestaurantes")
-    public String listaRestaurantes(Model model, HttpSession httpSession) {
+    public String listaRestaurantes(Model model, HttpSession httpSession,
+                                    @RequestParam(value = "texto",required = false) String texto,
+                                    @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                                    @RequestParam(value = "val",required = false) String val) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         String direccionactual = usuario.getDireccionactual();
         int iddistritoactual = 1;
+        Integer limitInfP = 0;
+        Integer limitSupP = 5000;
+        Integer limitInfVal = 0;
+        Integer limitSupVal = 6;
+
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
         List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
@@ -138,7 +148,76 @@ public class ClienteController {
             }
         }
 
-        model.addAttribute("listaRestaurante", restauranteRepository.listaRestaurante(iddistritoactual));
+        if(val == null || val.equals("")){
+            val = "6";
+        }
+
+        if(idPrecio == null || idPrecio.equals("")){
+            idPrecio = "6";
+        }
+
+        if(texto == null){
+            texto = "";
+        }
+
+        switch (idPrecio){
+            case "1":
+                limitInfP = 0;
+                limitSupP = 10;
+                break;
+            case "2":
+                limitInfP = 10;
+                limitSupP = 20;
+                break;
+            case "3":
+                limitInfP = 20;
+                limitSupP = 30;
+                break;
+            case "4":
+                limitInfP = 30;
+                limitSupP = 40;
+                break;
+            case "5":
+                limitInfP = 50;
+                limitSupP = 5000;
+                break;
+            default:
+                limitInfP = 0;
+                limitSupP = 5000;
+        }
+
+        switch (val){
+            case "1":
+                limitInfVal = 1;
+                limitSupVal = 1;
+                break;
+            case "2":
+                limitInfVal = 2;
+                limitSupVal = 2;
+                break;
+            case "3":
+                limitInfVal = 3;
+                limitSupVal = 3;
+                break;
+            case "4":
+                limitInfVal = 4;
+                limitSupVal = 4;
+                break;
+            case "5":
+                limitInfVal = 5;
+                limitSupVal = 5;
+                break;
+            default:
+                limitInfVal = 0;
+                limitSupVal = 6;
+        }
+
+        List<RestauranteDTO> listaRestaurante = restauranteRepository.listaRestaurante(texto, limitInfP, limitSupP, limitInfVal, limitSupVal,iddistritoactual);
+        model.addAttribute("listaRestaurante", listaRestaurante);
+        model.addAttribute("idPrecio", idPrecio);
+        model.addAttribute("texto", texto);
+        model.addAttribute("val", val);
+
         return "Cliente/listaRestaurantes";
     }
 
@@ -328,6 +407,10 @@ public class ClienteController {
             idPrecio = "6";
         }
 
+        if(texto == null){
+            texto = "";
+        }
+
         if(restauranteOpt.isPresent()){
            Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("nombreRest", restaurante.getNombre());
@@ -352,16 +435,42 @@ public class ClienteController {
                 break;
             case "5":
                 limitInf = 40;
-                limitSup = 50;
+                limitSup = 5000;
                 break;
             default:
                 limitInf = 0;
                 limitSup = 5000;
         }
+
         List<PlatosDTO> listaPlato = platoRepository.listaPlato(idRest, texto, limitInf, limitSup);
         model.addAttribute("listaPlato",listaPlato);
         model.addAttribute("idRest",idRest);
+        model.addAttribute("texto",texto);
+        model.addAttribute("idPrecio",idPrecio);
          return "/Cliente/listaProductos";
+    }
+
+    @GetMapping("/detallePlato")
+    public String detallePedido(@RequestParam("idRest") int idRest,
+                                @RequestParam("idPlato") int idPlato,
+                                Model model) {
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
+        Optional<Plato> platoOpt = platoRepository.findById(idPlato);
+
+        if(platoOpt.isPresent() || restauranteOpt.isPresent()){
+            Plato plato = platoOpt.get();
+            Restaurante restaurante = restauranteOpt.get();
+
+            model.addAttribute("plato",plato);
+            model.addAttribute("idRest",idRest);
+            model.addAttribute("nombreRest",restaurante.getNombre());
+            return "Cliente/detallePlato";
+        }else{
+            model.addAttribute("idRest",idRest);
+            model.addAttribute("idPlato",idPlato);
+            return "Cliente/listaProductos";
+        }
+
     }
 
     @GetMapping("/listaCupones")

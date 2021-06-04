@@ -2,15 +2,13 @@ package com.example.demo.dtos;
 
 public interface RestauranteDTO {
 
-    Integer getIdRestaurante();
-    String getFotonombre();
-    String getFotocontenttype();
-    byte[] getFoto();
-    String getDistrito();
-    Integer getEstado();
+    Integer getIdrestaurante();
     String getNombre();
-    String getDireccion();
+    byte[] getFoto();
+    String getFotocontenttype();
+    String getFotonombre();
     Integer getValoracion();
     Integer getCalificaciones();
+    Double getPreciopromedio();
     String getCategorias();
 }

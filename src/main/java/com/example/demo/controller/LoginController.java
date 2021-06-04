@@ -111,7 +111,8 @@ public class LoginController {
     public String acces() {
         return "/accessDenied";
     }
-
+    
+    //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
@@ -133,7 +134,7 @@ public class LoginController {
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
-                return "redirect:/admin/usuarios";
+                return "red irect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":

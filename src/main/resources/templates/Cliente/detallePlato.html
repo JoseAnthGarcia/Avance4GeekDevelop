@@ -2,7 +2,46 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Producto')"></head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Custom fonts for this template -->
+    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+
+
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+
+    <title>Detalle Plato</title>
+
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+</head>
 
 
 <body id="page-top">
@@ -22,7 +61,6 @@
             <!-- Topbar -->
             <nav th:replace="Cliente/fragments/general.html :: navbar"></nav>
             <!-- End of Topbar -->
-            <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -35,38 +73,35 @@
                                 <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
-                                <h5 class="font-weight-bold text-white text-center">LITTLE CEASERS</h5>
+                                <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
                             </div>
                         </div>
                     </div>
 
-                    <div class="alert alert-info mt-2 ml-2 mr-2" role="alert">
+             <!--       <div class="alert alert-info mt-2 ml-2 mr-2" role="alert">
                         Se agregó un plato al carrito
                     </div>
-
+-->
                     <div class="row">
 
                         <div class="col-4 align-content-center">
                             <div align="center" class="mt-2 mb-5">
-                                <img src="img/pizza.jpg" style="width: 90%; height: 90%">
+                                <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" style="width: 90%; height: 90%">
                             </div>
-
 
                         </div>
                         <div class="col-8">
                             <div class="mt-2">
                                 <div class="form-check-inline">
-                                    <h2 style="color:#000000;"><strong>Pizza a la Italiana</strong></h2>
+                                    <h2 style="color:#000000;"><strong th:text="${plato.getNombre()}"></strong></h2>
                                     <button class="btn btn-dark ml-5"><i class="fas fa-arrow-left"></i></button>
                                     <button class="btn btn-dark ml-3"><i class="fas fa-arrow-right"></i></button>
                                 </div>
 
                                 <hr width="75%" style="border-top: #000000 solid" align="left">
                                 <h6 style="color:#000000;"><strong>Detalle</strong></h6>
-                                <p>Pizza preparada con los mejores ingrediente frescos, peperoni, queso chedar,
-                                    extra tomate, champiñones, cebolla, apio, hawaina con pera. Hecho en horno
-                                    artesanal. Garantizado la mejor de la ciudad. </p>
-                                <h6><strong style="color:#000000;">Precio: </strong> S/. 56.00</h6>
+                                <p th:text="${plato.getDescripcion()}"></p>
+                                <strong style="color:#000000;">Precio: </strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
 
                             </div>
                             <form>
@@ -77,22 +112,22 @@
                                                style="border-color: lightgray">
                                         <span>uni.</span>
                                     </div>
-                                    <div class="ml-2 mb-3" style="color:#EE2D20;">Ingrese un número </div> <!-- | Ingrese más de un plato | Debe agregar un valor mayor que 1 -->
+                            <!-- <div class="ml-2 mb-3" style="color:#EE2D20;">Ingrese un número </div> &lt;!&ndash; | Ingrese más de un plato | Debe agregar un valor mayor que 1 &ndash;&gt; -->
                                 </div>
                                 <br>
                                 <div class="form-check-inline align-content-xl-end mb-5">
-                                    <a class="btn btn-secondary mr-3" href="#" data-toggle="modal"
+                                    <a class="btn btn-secondary mr-3" style="color: #FFFFFF" href="#" data-toggle="modal"
                                        data-target="#extraModal">
                                         <i class="fas fa-plus mr-2"></i>
                                         Extras
                                     </a>
 
-                                    <button class="btn btn-cielito mr-3" type="submit"><i
+                                    <button class="btn btn-cielito mr-3"   style="background-color: #2d4a8d; color: #FFFFFF" type="submit"><i
                                             class="fas fa-cart-plus mr-2"></i>Añadir al carrito
                                     </button>
-                                    <a class="btn btn-back mr-3" href="listaProductos.html"><i
+                                    <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}"><i
                                             class="fas fa-arrow-left"></i> Regresar</a>
-                                    <a class="btn btn-pay mr-3" href="pagoPedido.html"><i
+                                    <a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="pagoPedido.html"><i
                                             class="fas fa-arrow-right"></i> Ir a Pagar</a>
                                 </div>
 
@@ -155,9 +190,11 @@
             </div>
             <div class="modal-body">
                 <div class="container">
+
                     <hr width="100%" style="border-top: solid">
                     <h6 class="text-center"><strong>Bebidas</strong></h6>
                     <hr width="100%" style="border-top: solid">
+
                     <div class="row">
                         <div class="col-4 text-left">
                             <div class="form-check-inline">

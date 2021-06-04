@@ -341,8 +341,8 @@ public class AdminRestController {
             inputEstadoMin = 0;
             inputEstadoMax = 8;
         } else {
-            inputEstadoMin = inputEstado;
-            inputEstadoMax = inputEstado;
+            inputEstadoMin = inputEstado - 1;
+            inputEstadoMax = inputEstado - 1;
         }
 
         System.out.println(inputPrecio);
@@ -361,10 +361,14 @@ public class AdminRestController {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
+        System.out.println("#################");
+        System.out.println(inputEstadoMin);
+        System.out.println(inputEstadoMax);
+        System.out.println("#################");
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 5 - 5, inputPMax * 5);//harcodeado
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20);
         listaPedidos = page.getContent();
 
         model.addAttribute("texto", textBuscador);

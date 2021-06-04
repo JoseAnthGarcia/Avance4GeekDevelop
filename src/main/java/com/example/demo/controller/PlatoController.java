@@ -76,7 +76,7 @@ public class PlatoController {
                 break;
             }
         }
-        System.out.println("SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOY idcateeeeeeee" + idcategoria);
+        System.out.println("SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOY idcateeeeeeee " + idcategoria);
         return findPaginated("", 1, 0, 1, idcategoria, restaurante.getIdrestaurante(), model, session);
     }
 
@@ -115,7 +115,7 @@ public class PlatoController {
         int inputPMin;
         if (inputPrecio == 0) {
             inputPMin = 0;
-            inputPMax = 100;
+            inputPMax = 1000;
         } else if (inputPrecio == 4) {
             inputPMin = inputPrecio;
             inputPMax = 1000;
@@ -126,7 +126,7 @@ public class PlatoController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = platoService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), idcategoria, textBuscador, disponibilidad, inputPMin * 5 - 5, inputPMax * 5);//harcodeado
+        page = platoService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), idcategoria, textBuscador, disponibilidad, inputPMin * 15 - 15, inputPMax * 15);
         listaPlatos = page.getContent();
 
         model.addAttribute("texto", textBuscador);
@@ -136,13 +136,14 @@ public class PlatoController {
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         model.addAttribute("idcategoria", idcategoria);
-        for (Categorias lista : listaCategorias) {
-            if (lista.getIdcategoria() == idcategoria) {
-                model.addAttribute("nombreCate", lista.getNombre());
+        for (Categorias categoria : listaCategorias) {
+            if (categoria.getIdcategoria() == idcategoria) {
+                System.out.println(categoria.getNombre());
+                model.addAttribute("nombreCate", categoria.getNombre());
                 break;
             }
         }
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" + inputPMax);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" + inputPMax + "\n" + idcategoria);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

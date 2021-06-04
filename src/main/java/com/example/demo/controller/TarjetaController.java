@@ -38,7 +38,7 @@ public class TarjetaController {
 
     @PostMapping("/guardar")
     public String guardarTarjeta(@RequestParam("numeroTarjeta") String numeroTarjeta, @RequestParam("nombreC") String nombreC, @RequestParam("apellidoC") String apellidoC,
-                                 @RequestParam("idcvv") String idcvv, HttpSession httpSession, Model model,
+                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") Integer mes, @RequestParam("year") String year,HttpSession httpSession, Model model,
                                  RedirectAttributes attr) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
@@ -46,7 +46,8 @@ public class TarjetaController {
         Boolean valNumN = false;
         Boolean valNumaA = false;
         Boolean valNumCv = false;
-// VALIDACIÓN DE NUMERO
+        Boolean valyear = false;
+        // VALIDACIÓN DE NUMERO
         try {
             if (numeroTarjeta == null) {
                 valNumT = true;
@@ -58,9 +59,33 @@ public class TarjetaController {
         } catch (NumberFormatException numberFormatException) {
             valNumT = true;
         }
-
-
-//
+        //validacion año
+        try {
+            if (year == null) {
+                valyear = true;
+            }
+            if (year.length() != 4) {
+                valyear = true;
+            }
+            Integer numeroTarjeta1 = Integer.parseInt(year);
+        } catch (NumberFormatException numberFormatException) {
+            valyear = true;
+        }
+        //VALIDACION MES
+        Boolean mes_u = true;
+        try {
+            Integer u_dist = mes;
+            System.out.println(u_dist + "ID DISTRITO");
+            for (int i = 1; i <= 12; i++) {
+                if (u_dist == i) {
+                    mes_u = false;
+                    System.out.println("ENTRO A LA VAIDACION DE AQUI");
+                }
+            }
+        } catch (NullPointerException n) {
+            System.out.println("No llegó nada");
+            mes_u = true;
+        }
         //VALIDACIÓN NOMBRES
 
         Pattern pat = Pattern.compile("[a-zA-Z]{1,256}");
@@ -103,7 +128,7 @@ public class TarjetaController {
             cantTarjetas = true;
         }
         //
-        if (valNumT || valNumN || valNumaA || valNumCv || cantTarjetas) {
+        if (valNumT || valNumN || valNumaA || valNumCv || cantTarjetas || mes_u || valyear) {
 
 
             if (valNumT && !cantTarjetas) {
@@ -114,21 +139,28 @@ public class TarjetaController {
                 model.addAttribute("msg2", "Debe colocar su nombre");
 
             }
-            if (valNumaA && !cantTarjetas ) {
+            if (valNumaA && !cantTarjetas) {
                 model.addAttribute("msg3", "Debe colocar su apellido");
 
             }
-            if (valNumCv && !cantTarjetas ) {
+            if (valNumCv && !cantTarjetas) {
                 model.addAttribute("msg4", "Debe colocar 3 dígitos(números)");
             }
             if (cantTarjetas) {
                 model.addAttribute("cantTarj", "Puede registrar 5 tarjetas como máximo");
             }
-
+            if (mes_u) {
+                model.addAttribute("mdg6", "Debe escoger una de las opciones");
+            }
+            if(valyear){
+                model.addAttribute("msg5", "Debe colocar 4 dígitos(números)");
+            }
             model.addAttribute("tarjeta", numeroTarjeta);
             model.addAttribute("nombre", nombreC);
             model.addAttribute("apellido", apellidoC);
             model.addAttribute("cvv", idcvv);
+            model.addAttribute("year", year);
+            model.addAttribute("mes", mes);
             model.addAttribute("listaTarjetas", listaTarjetas);
             return "Cliente/tarjetas";
         } else {

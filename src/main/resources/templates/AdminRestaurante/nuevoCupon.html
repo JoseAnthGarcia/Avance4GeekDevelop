@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Nuevo cupón')"></head>
+    <head th:replace="${cupon.idcupon==0}? ~{AdminRestaurante/fragments/adminRestFragment.html :: head(title='Nuevo cupón')} : ~{AdminRestaurante/fragments/adminRestFragment.html :: head(title='Editar cupón')}"></head>
     <body id="page-top">
 
         <!-- Page Wrapper -->
@@ -104,10 +104,8 @@
                                                                 Desbloquear
                                                             </a>
                                                             <a class="btn btn-danger mb-4"
-                                                               th:href="@{/cupon/lista}"
-                                                               role="button"
-                                                               data-toggle="modal"
-                                                               data-target="#CancelarRegistro">Cancelar</a>
+                                                               th:href="@{'/cupon/lista'}"
+                                                               role="button">Cancelar</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -296,32 +294,35 @@
         <!-- Begin Scripts -->
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
-    </body>
-    <script>$(document).ready(function () {
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#image_preview').attr('src', e.target.result);
-                    $('#image_preview').removeAttr('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
-                console.log(input.files[0].name.split(".")[1])
-                let extensions = ['jpg', 'jpeg', 'png']
-                if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
-                    $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
-                    $('#error').attr('hidden', 'true');
-                } else {
-                    $('#photo_error').attr('hidden', 'true');
+
+        <!-- Begin new script -->
+        <!--<script>$(document).ready(function () {
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#image_preview').attr('src', e.target.result);
+                        $('#image_preview').removeAttr('hidden');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    console.log(input.files[0].name.split(".")[1])
+                    let extensions = ['jpg', 'jpeg', 'png']
+                    if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                        $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                        $('#error').attr('hidden', 'true');
+                    } else {
+                        $('#photo_error').attr('hidden', 'true');
+                    }
                 }
             }
-        }
 
-        $("#imagen").change(function () {
-            console.log("sdafefdgsagsagasdg");
-            readURL(this);
-        });
-    })</script>
+            $("#imagen").change(function () {
+                console.log("sdafefdgsagsagasdg");
+                readURL(this);
+            });
+        })</script>-->
+        <!-- End new script -->
+    </body>
 </html>
 
 

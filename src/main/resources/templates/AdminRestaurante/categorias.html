@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías de platos')"></head>
 
     <head th:if="${estadoRestaurante==1}" th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Categorías')"></head>
 
@@ -29,7 +30,7 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3" style="background-color: #701111;">
-                                <h5 class="font-weight-bold text-white text-center mb-0">CATEGORÍAS</h5>
+                                <h5 class="font-weight-bold text-white text-center mb-0">CATEGORÍAS DE PLATOS</h5>
                             </div>
                             <div class="row" >
                                 <div class="column">
@@ -146,7 +147,5 @@
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
     </body>
-
-
 
 </html>

@@ -2,7 +2,7 @@ package com.example.demo.dtos;
 
 import java.time.LocalDate;
 
-public interface PedidoDTO {
+public interface PedidoValoracionDTO {
     String getNombre();
     byte[] getFoto();
     int getIdrestaurante();
@@ -10,4 +10,8 @@ public interface PedidoDTO {
     int getTiempoentrega();
     int getEstado();
     String getCodigo();
+    Integer getValoracionrestaurante();
+    String getComentariorestaurante();
+    Integer getValoracionrepartidor();
+    String getComentariorepartidor();
 }

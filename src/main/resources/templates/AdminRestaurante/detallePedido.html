@@ -249,7 +249,7 @@
                                                 <b>Descuento:</b></div>
                                             <div class="card-body" style="background-color: #ffe8d8;color: black">
                                                 <h4 class="card-text" style="text-align:center"
-                                                    th:text="${detalles.get(0).getDescuento()!=0? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
+                                                    th:text="${(detalles.get(0).getDescuento()!=0 && detalles.get(0).getDescuento()!=null)? ('S/. '+detalles.get(0).getDescuento()):'No usa cupón...'}"></h4>
                                             </div>
                                         </div>
                                         <div class="card text-dark  ml-3" style="max-width: 12rem;">

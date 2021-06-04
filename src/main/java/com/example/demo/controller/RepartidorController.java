@@ -57,8 +57,6 @@ public class RepartidorController {
             model.addAttribute("listaDistritos", listaDistritos);
             return "Repartidor/solicitudPedidos";
         }else{
-            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
-            model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/pedidoActual";
         }
     }
@@ -95,8 +93,6 @@ public class RepartidorController {
             model.addAttribute("direcciones", direcciones);
             return "Repartidor/pedidoActual";
         }else{
-            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
-            model.addAttribute("direcciones", direcciones);
             return "redirect:/repartidor/listaPedidos";
         }
     }
@@ -115,6 +111,23 @@ public class RepartidorController {
             }
         }
         return "redirect:/repartidor/aceptarPedido";
+    }
+
+    @GetMapping("/pedidoEntegado")
+    public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
+                                  HttpSession session){
+        if(codigo!=null){
+            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            if(pedidoOpt.isPresent() &&
+                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).getCodigo().equals(pedidoOpt.get().getCodigo())){
+                Pedido pedido = pedidoOpt.get();
+                pedido.setEstado(6);
+                pedidoRepository.save(pedido);
+            }
+        }
+        return "redirect:/repartidor/listaPedidos";
+
     }
 
     @PostMapping("/seleccionarDistrito")

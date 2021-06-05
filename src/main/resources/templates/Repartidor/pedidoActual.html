@@ -60,7 +60,8 @@
 
                                     </div>
                                     <div class="col-sm-6">
-                                        <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid mx-auto" style="width: 90%; height: 70%">
+                                        <img  th:src="@{'/repartidor/images?id='+${pedidoAct.restaurante.idrestaurante}}" class="img-fluid">
+                                        <!--<img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid mx-auto" style="width: 90%; height: 70%">-->
                                     </div>
                                 </div>
                             </div>

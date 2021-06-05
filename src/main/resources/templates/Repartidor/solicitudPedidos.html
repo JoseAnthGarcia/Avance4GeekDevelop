@@ -73,7 +73,7 @@
                                     <th scope="col">Pedido</th>
                                     <th scope="col">Hora de registro </th>
                                     <th scope="col">Aceptar</th>
-                                    <th scope="col">Rechazar</th>
+                                    <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -90,11 +90,11 @@
                                            <i class="fas fa-check-circle" style="color: green"></i>
                                        </a>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <a th:href="@{/repartidor/rechazarPedido}" class="btn">
                                             <i class="fas fa-times-circle" style="color: red"></i>
                                         </a>
-                                    </td>
+                                    </td>-->
                                 </tr>
                                 </tbody>
 
@@ -105,7 +105,7 @@
                                 <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                     <a th:if="${currentPage != i}"
-                                       th:href="@{'/admin/solicitudes?tipo=restaurantet&numPag=' + ${i}}"
+                                       th:href="@{'/repartidor/listaPedidos?numPag=' + ${i}}"
                                        th:utext="${i}"
                                        class="active mt-2 no "></a>
                                     <a th:unless="${currentPage != i}"
@@ -141,8 +141,8 @@
                                                 Direción de cliente: Av. Universitaria 987<br>
                                                 Producto: Ceviche<br>
                                                 Hora de registro de pedido:   17:49<br>
-                                                Método de pago : Efectivo</p>
-                                            <p >Productos: </p>
+                                                Método de pago : Efectivo</p><br>
+
                                             <!-- <p class="card-text" th:each="plato : ${}" th:text="${}"><br></p>-->
                                         </div>
                                         <div class="row mt-3">
@@ -156,7 +156,8 @@
 
                                     </div>
                                     <div class="col-sm-6">
-                                        <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">
+                                        <img  th:src="@{'/repartidor/images?id='+${pedidoDetalle.restaurante.idrestaurante}}" class="img-fluid">
+                                        <!-- <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">-->
                                     </div>
                                 </div>
                             </div>

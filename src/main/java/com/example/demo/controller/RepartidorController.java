@@ -6,6 +6,10 @@ import com.example.demo.service.PedidoService;
 import com.example.demo.service.PedidoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,6 +50,9 @@ public class RepartidorController {
 
     @Autowired
     PedidoServiceImpl pedidoService;
+
+    @Autowired
+    RestauranteRepository restauranteRepository;
     @GetMapping("/tipoReporte")
     public String tipoReporte(){
         return "Repartidor/reportes";
@@ -62,7 +69,7 @@ public class RepartidorController {
             numPag= 1;
         }
 
-        int tamPag = 3;
+        int tamPag = 2;
         if(pedidoAct==null){
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
@@ -96,6 +103,23 @@ public class RepartidorController {
             return "Repartidor/solicitudPedidos";
         }else{
             return "redirect:/repartidor/pedidoActual";
+        }
+    }
+    @GetMapping("/images")
+    public ResponseEntity<byte[]> mostrarRestaurante(@RequestParam("id") int id) {
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(id);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            byte[] image = restaurante.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
         }
     }
 

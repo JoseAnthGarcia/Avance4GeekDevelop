@@ -532,12 +532,14 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        return findPaginated2("", 1,restaurante.getIdrestaurante(), model, session);
+        return findPaginated2("", 0, "", 1,restaurante.getIdrestaurante(), model, session);
     }
     @GetMapping("/page2")
     public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+                                 @RequestParam(value = "inputCantidad", required=false) Integer inputCantidad,
+                                 @RequestParam(value = "inputCategoria", required=false) String inputCategoria,
+                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -546,25 +548,53 @@ public class AdminRestController {
         int pageSize = 5;
         Page<PlatoReporteDTO> page;
         List<PlatoReporteDTO> listaPlatoReporte;
+
+        //Manipular input de buscadores
         System.out.println(textBuscador);
         if (textBuscador == null) {
             textBuscador = "";
         }
-
+        System.out.println(inputCategoria);
+        if (inputCategoria == null || inputCategoria.equals("")) {
+            inputCategoria = "";
+        }
+        System.out.println(inputCantidad);
+        if (inputCantidad == null) {
+            inputCantidad = 0;
+        }
+        int inputCantidadMax;
+        int inputCantidadMin;
+        if (inputCantidad == 0) {
+            inputCantidadMin = 0;
+            inputCantidadMax = 1000;
+        } else if (inputCantidad == 4) {
+            inputCantidadMin = inputCantidad;
+            inputCantidadMax = 1000;
+        } else {
+            inputCantidadMin = inputCantidad;
+            inputCantidadMax = inputCantidad;
+        }
 
         System.out.println("#################");
-
         System.out.println("#################");
+
+        //Obtener lista de reportes
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(),6);
+        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria);
         listaPlatoReporte = page.getContent();
 
+        //Enviar atributos a la vista
         model.addAttribute("texto", textBuscador);
+        model.addAttribute("textoC", inputCategoria);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
 
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria);
+
+        //Enviar lista y valores para paginación
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());

@@ -48,7 +48,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
 
-    Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqual(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, Pageable pageable);
+    Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualOrderByEstadoAsc(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, Pageable pageable);
 
     @Query(value = "select *from pedido where idrestaurante=?1 and codigo=?2 ", nativeQuery = true)
     Pedido pedidosXrestauranteXcodigo (int idrestaurante, String codigo);
@@ -117,9 +117,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join pedido p on php.codigo=p.codigo\n" +
             "inner join plato pl on pl.idplato=php.idplato \n" +
             "inner join categoriarestaurante c on pl.idcategoriarestaurante=c.idcategoria \n" +
-            "where p.idrestaurante=?1 and p.estado=?2\n" +
-            "group by php.idplato ", nativeQuery = true)
-    Page<PlatoReporteDTO> reportePlato(int id, int estado, Pageable pageable);
+            "where p.idrestaurante=?1 and p.estado=?2 and (pl.nombre like %?3%) and (c.idcategoria like %?4%)\n" +
+            "group by php.idplato", nativeQuery = true)
+    Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, Pageable pageable);
 
 
 }

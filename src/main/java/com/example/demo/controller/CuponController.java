@@ -139,10 +139,10 @@ public class CuponController {
             cupon.setIdrestaurante(restaurante.getIdrestaurante());
             cupon.setFechainicio(LocalDate.now());
             cupon.setEstado(1);
-            attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
+            attributes.addFlashAttribute("creado", "Cupón creado exitosamente");
         } else {
             cupon.setIdrestaurante(restaurante.getIdrestaurante());
-            attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
+            attributes.addFlashAttribute("editado", "Cupón editado exitosamente");
         }
 
             /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){

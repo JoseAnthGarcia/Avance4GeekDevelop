@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dtos.ClienteDTO;
-import com.example.demo.dtos.PedidoDTO;
-import com.example.demo.dtos.PedidoValoracionDTO;
-import com.example.demo.dtos.PlatosDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.http.HttpHeaders;
@@ -443,12 +440,16 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam("valrest") Integer valoraRest, @RequestParam("comentRest") String comentRest){
+                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        Pedido pedido = pedidoRepository.encontrarporId(id);
-        if(pedido!=null){
-            pedido.setValoracionrestaurante(valoraRest);
-            pedido.setComentariorestaurante(comentRest);
+        System.out.println(valoraRest);
+        System.out.println(comentRest);
+        System.out.println(id);
+        Optional<Pedido> pedido= pedidoRepository.findById(id);
+        if(pedido.isPresent()){
+            Pedido pedido1= pedido.get();
+            pedido1.setValoracionrestaurante(valoraRest);
+            pedido1.setComentariorestaurante(comentRest);
         }
         String texto= "";
         List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
@@ -464,6 +465,40 @@ public class ClienteController {
     }
 
 
+    @GetMapping("/reporteDinero")
+    public String reporteDinero(){
+
+
+
+
+        return "Cliente/reporteDineroCliente";
+    }
+
+
+    @GetMapping("/reportePedido")
+    public String reportePedido(Model model, HttpSession httpSession){
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),6);
+        List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),6);
+
+        model.addAttribute("listapedidos",listapedidos);
+        model.addAttribute("listarestTop", listarestTop);
+       model.addAttribute("listarestPl", listaPl);
+        return "Cliente/reportePedidoCliente";
+    }
+
+    @GetMapping("/reporteTiempo")
+    public String reporteTiempo(){
+
+
+
+
+
+        return "Cliente/reporteTiempo";
+    }
 
 
 

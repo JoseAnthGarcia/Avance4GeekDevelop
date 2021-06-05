@@ -43,7 +43,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2);
 
 
-    List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
+    Page<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito, Pageable pageable);
 
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 

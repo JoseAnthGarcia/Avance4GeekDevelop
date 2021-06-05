@@ -101,15 +101,17 @@
                             </table>
 
                             <!--Pagination -->
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
+                            <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/admin/solicitudes?tipo=restaurantet&numPag=' + ${i}}"
+                                       th:utext="${i}"
+                                       class="active mt-2 no "></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+
+                                </div>
                             </div>
                             <!-- End of pagination -->
 

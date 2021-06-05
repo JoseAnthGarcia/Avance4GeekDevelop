@@ -2,7 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import com.example.demo.service.PedidoService;
+import com.example.demo.service.PedidoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,20 +43,36 @@ public class RepartidorController {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
+    @Autowired
+    PedidoServiceImpl pedidoService;
     @GetMapping("/tipoReporte")
     public String tipoReporte(){
         return "Repartidor/reportes";
     }
 
     @GetMapping("/listaPedidos")
-    public String verListaPedidos(Model model,HttpSession session, @RequestParam(value = "idPedido", required = false) String codigoPedido ){
+    public String verListaPedidos(Model model,HttpSession session,
+                                  @RequestParam(value = "idPedido", required = false) String codigoPedido,
+                                  @RequestParam(value = "numPag", required = false) Integer numPag){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        Page<Pedido> pagina;
+        if(numPag==null){
+            numPag= 1;
+        }
+
+        int tamPag = 3;
         if(pedidoAct==null){
-            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
-            List<Pedido> pedidos = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+
+            pagina = pedidoService.pedidosPaginacion(numPag, tamPag, session);
+            List<Pedido> pedidos =pagina.getContent();
+
+
+
             if(pedidos.size()!=0){
                 if(codigoPedido==null){
                     Pedido pedido = pedidos.get(0);
@@ -66,6 +85,10 @@ public class RepartidorController {
                     }
                 }
             }
+            model.addAttribute("tamPag",tamPag);
+            model.addAttribute("currentPage",numPag);
+            model.addAttribute("totalPages", pagina.getTotalPages());
+            model.addAttribute("totalItems", pagina.getTotalElements());
 
             model.addAttribute("direcciones", direcciones);
             model.addAttribute("listaPedidos", pedidos);

@@ -36,10 +36,10 @@
                                         <div class="col-sm-6 mb-4"
                                              style="margin-left: 270px; margin-top: 30px">
                                             <div class="container2">
-                                                <img src="imagenesAR/reportePlatos.jpg" alt="Avatar"
+                                                <img th:src="@{/imagenesAR/reportePlatos.jpg}" alt="Avatar"
                                                      class="image2 shadow"
                                                      style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px" href="reportePlatos.html">
+                                                <a class="overlay2" style="height: 300px; width: 400px" th:href="@{/restaurante/reportePlatos}">
                                                     <H1 class="text2 font-weight-bolder">PLATOS</H1>
                                                 </a>
                                             </div>
@@ -51,10 +51,10 @@
                                     <div class="col-sm-6">
                                         <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
                                             <div class="container2">
-                                                <img src="imagenesAR/reporteVentas.jpg" alt="Avatar"
+                                                <img th:src="@{/imagenesAR/reporteVentas.jpg}" alt="Avatar"
                                                      class="image2 shadow"
                                                      style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px" href="reporteVentas.html">
+                                                <a class="overlay2" style="height: 300px; width: 400px" th:href="@{/restaurante/reporteVentas}">
                                                     <H1 class="text2 font-weight-bolder">VENTAS</H1>
                                                 </a>
                                             </div>
@@ -67,10 +67,10 @@
                                     <div class="col-sm-6 mb-4"
                                          style="margin-left: 610px; margin-top: 10px; margin-bottom: 200px">
                                         <div class="container2">
-                                            <img src="imagenesAR/reporteComentario.jpg" alt="Avatar"
+                                            <img th:src="@{/imagenesAR/reporteComentario.jpg}" alt="Avatar"
                                                  class="image2 shadow"
                                                  style="height: 300px; width: 400px">
-                                            <a class="overlay2" style="height: 300px; width: 400px" href="reporteValoraciones.html">
+                                            <a class="overlay2" style="height: 300px; width: 400px" th:href="@{/restaurante/reporteValoracion}">
                                                 <H1 class="text2 font-weight-bolder">VALORACIÓN</H1>
                                             </a>
                                         </div>
@@ -119,7 +119,7 @@
                     <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
+                        <button type="submit"  class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>

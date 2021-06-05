@@ -1,297 +1,236 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reporte de valoraciones')"></head>
+<head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reporte de valoraciones')"></head>
 
-    <body id="page-top">
+<body id="page-top">
 
-        <!-- Page Wrapper -->
-        <div id="wrapper">
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-            <!-- Sidebar -->
-            <ul th:replace="AdminRestaurante/fragments/adminRestFragment.html :: sidebar"></ul>
-            <!-- End of Sidebar -->
+    <!-- Sidebar -->
+    <ul th:replace="AdminRestaurante/fragments/adminRestFragment.html :: sidebar"></ul>
+    <!-- End of Sidebar -->
 
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-                <!-- Main Content -->
-                <div id="content">
+        <!-- Main Content -->
+        <div id="content">
 
-                    <!-- Topbar -->
-                    <nav th:replace="AdminRestaurante/fragments/adminRestFragment.html :: topbar"></nav>
-                    <!-- End of Topbar -->
+            <!-- Topbar -->
+            <nav th:replace="AdminRestaurante/fragments/adminRestFragment.html :: topbar"></nav>
+            <!-- End of Topbar -->
 
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid">
-                        <form>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <form>
 
-                            <div class="form-group row">
-                                <div class="col-sm-3 mb-2">
-                                    <select class="form-control">
-                                        <option value="">Valoración</option>
-                                        <option value="">1</option>
-                                        <option value="">2</option>
-                                        <option value="">3</option>
-                                        <option value="">4</option>
-                                        <option value="">5</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 mb-2">
-                                    <input placeholder="Desde" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
-                                </div>
-                                <div class="col-sm-2 mb-2">
-                                    <input placeholder="Hasta" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
-                                </div>
-                                <div class="input-group-append col-sm-1 mb-3 ml-0">
-                                    <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                            type="button">
-                                        <i class="fas fa-filter"></i>
-                                    </button>
-                                </div>
-                                <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
-                                    <a class="btn btn-secondary">Quitar filtros</a>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="form-group row">
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control">
+                                <option value="">Valoración</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-2">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+                        </div>
+                        <div class="col-sm-2 mb-2">
+                            <input placeholder="Hasta" class="form-control" type="text"
+                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
+                        </div>
+                        <div class="input-group-append col-sm-1 mb-3 ml-0">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="button">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
+                            <a class="btn btn-secondary">Quitar filtros</a>
+                        </div>
+                    </div>
+                </form>
 
-                        <!-- DataTales Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3 " style="background-color: #701111;">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
 
-                                <div class="d-sm-flex align-items-center justify-content-between">
+                        <div class="d-sm-flex align-items-center justify-content-between">
 
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
-                                        VALORACIONES</h5>
-                                    <a class="btn btn-warning mr-1">Exportar</a>
-                                </div>
-
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    N°
-                                                </th>
-                                                <th>
-                                                    Pedido
-                                                </th>
-                                                <th>
-                                                    Valoración
-                                                </th>
-                                                <th>
-                                                    Fecha
-                                                </th>
-                                                <th>
-                                                    Comentario
-                                                </th>
-                                                <th>
-                                                    Visualizar
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>8</td>
-                                                <td>Arroz con pollo + Inka Cola de .....</td>
-                                                <td>5</td>
-                                                <td>08/01/2021</td>
-                                                <td>Buen servicio, pero no.....</td>
-                                                <td style="width: 160px"><a style="color: #dce3f9"
-                                                                            class="btn btn-warning btn-circle align"
-                                                                            href="#" data-toggle="modal"
-                                                                            data-target="#comentarioModal">
-                                                    <i class="fas fa-eye"></i>
-                                                </a></td>
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a href="#">&laquo;</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
-                                </div>
-                            </div>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
+                                VALORACIONES</h5>
+                            <a class="btn btn-warning mr-1">Exportar</a>
                         </div>
 
                     </div>
-                    <!-- /.container-fluid -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        N°
+                                    </th>
+                                    <th>
+                                        Pedido
+                                    </th>
+                                    <th>
+                                        Valoración
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Comentario
+                                    </th>
 
-                </div>
-                <!-- End of Main Content -->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="lista,v:${listareporte} ">
+                                    <td th:text="${(v.index+1)}"></td>
+                                    <td th:text="${lista.getCodigo()}"></td>
+                                    <td th:if="${lista.getValoracion()==5 ||lista.getValoracion()==4 ||lista.getValoracion()==3 ||lista.getValoracion()==2 ||lista.getValoracion()==1}">
+                                        <div th:switch="${lista.getValoracion()}">
+                                            <div th:case="1">
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div th:case="2">
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div th:case="3">
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div th:case="4">
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div th:case="5">
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                                <i class="fas fa-star" style="color: gold"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:if="${lista.getValoracion()!=5 &&lista.getValoracion()!=4 &&lista.getValoracion()!=3 &&lista.getValoracion()!=2 &&lista.getValoracion()!=1}" th:text="|${'No hay valoración'}|"></td>
+                                    <td th:text="${lista.getFecha()}"></td>
+                                    <td th:text="${lista.getComentario()}"></td>
+                                </tr>
+                                </tbody>
 
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Geek Developers &copy; 2021-1</span>
+                            </table>
+
+                        </div>
+                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
+                            <a href="#">&laquo;</a>
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#">6</a>
+                            <a href="#">&raquo;</a>
                         </div>
                     </div>
-                </footer>
-                <!-- End of Footer -->
+                </div>
 
             </div>
-            <!-- End of Content Wrapper -->
+            <!-- /.container-fluid -->
 
         </div>
-        <!-- End of Page Wrapper -->
+        <!-- End of Main Content -->
 
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
-
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
-                    </div>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
                 </div>
             </div>
-        </div>
-        <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog"
-             aria-labelledby="exampleComentarioModal"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleComentarioModal">Arroz con pollo + Inca Kola de 500 mL</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Buen servicio, pero no llego exactamente a la hora, demoró unos minutos
-                        más.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary"
-                                style="background-color: #701111; color: #FFFFFF; border: #701111"
-                                data-dismiss="modal">Ok
-                        </button>
-                    </div>
-                </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salir</button>
             </div>
         </div>
+    </div>
+</div>
+<div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleComentarioModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleComentarioModal">Arroz con pollo + Inca Kola de 500 mL</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Buen servicio, pero no llego exactamente a la hora, demoró unos minutos
+                más.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary"
+                        style="background-color: #701111; color: #FFFFFF; border: #701111"
+                        data-dismiss="modal">Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <!-- Begin Scripts -->
-        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
-        <!-- End Scripts -->
+<!-- Begin Scripts -->
+<div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+<!-- End Scripts -->
 
-    </body>
+</body>
 
 </html>

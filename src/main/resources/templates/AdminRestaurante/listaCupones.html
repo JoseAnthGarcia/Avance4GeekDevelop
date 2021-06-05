@@ -35,7 +35,11 @@
                                            name="textBuscador">
                                 </div>
 
-                                <div class="col-sm-2 mb-1" hidden>
+                                <div class="col-sm-2 mb-1">
+                                    <input placeholder="Inicio" class="form-control" name="fechainicio"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                </div>
+                                <div class="col-sm-2 mb-1">
                                     <input placeholder="Caducidad" class="form-control" name="fechafin"
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
@@ -55,7 +59,7 @@
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-6 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{/cupon/lista}">Quitar filtros</a>
                                 </div>
@@ -68,8 +72,8 @@
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
                                     <a class="btn btn-warning" th:href="@{'/cupon/nuevo'}"><i
-                                            class="fas fa-plus fa-sm"></i> Nuevo cupón</a>
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto">CUPONES</h5>
+                                            class="fas fa-plus fa-sm"></i>&nbspNuevo cupón</a>
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto">LISTA DE CUPONES</h5>
                                 </div>
 
                             </div>
@@ -114,7 +118,7 @@
                                         <tbody>
 
                                             <tr th:each="cupon : ${listaCupon}" >
-                                                <td th:text="${(cuponStat.index+1)*currentPage}"></td>
+                                                <td th:text="${(cuponStat.index+1)+(2*(currentPage - 1))}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>
@@ -122,11 +126,13 @@
                                                     <div th:case="${2}" th:text="|Publicado|"></div>
                                                 </td>
                                                 <td th:text="${cupon.politica}"></td>
-                                                <td th:text="${cupon.fechafin}"></td>
+                                                <td th:text="${cupon.fechafin.plusDays(1)}"></td>
                                                 <td th:text="'S/.'+${cupon.descuento}"></td>
+
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
-                                                                            th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon}}">
+                                                                            th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon} +
+                                                                            '&fechainicio=' + ${cupon.fechainicio.plusDays(1)} + '&fechafin=' + ${cupon.fechafin.plusDays(1)}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
                                                 <td th:if="${cupon.estado == 1}" style="width: 160px"><a style="color: #dce3f9"

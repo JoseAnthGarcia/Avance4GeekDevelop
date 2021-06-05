@@ -42,14 +42,6 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-2">
-                                    <input placeholder="Desde" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
-                                </div>
-                                <div class="col-sm-2 mb-2">
-                                    <input placeholder="Hasta" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
-                                </div>
-                                <div class="col-sm-2 mb-2">
                                     <select class="form-control">
                                         <option value="">Cantidad Vendida</option>
                                         <option value="">0 uni. hasta 25 uni.</option>
@@ -104,7 +96,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="lista,v:${listareporte} ">
+                                        <tr th:each="lista,v:${listaPedidos} ">
                                             <td th:text="${(v.index+1)}"></td>
                                             <td th:text="${lista.getId()}"></td>
                                             <td th:text="${lista.getNombre()}"></td>

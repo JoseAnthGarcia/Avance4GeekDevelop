@@ -119,7 +119,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join categoriarestaurante c on pl.idcategoriarestaurante=c.idcategoria \n" +
             "where p.idrestaurante=?1 and p.estado=?2\n" +
             "group by php.idplato ", nativeQuery = true)
-    List<PlatoReporteDTO> reportePlato(int id, int estado);
+    Page<PlatoReporteDTO> reportePlato(int id, int estado, Pageable pageable);
 
 
 }

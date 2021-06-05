@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Pedido actual')"></head>
 
 <body id="page-top">
 
@@ -27,6 +27,7 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
+                <div th:if="${msg != null}" th:text="${msg}" class="col-lg-3 alert alert-danger" ></div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -45,16 +46,21 @@
                                         <div class="row">
                                             <h1 class="card-title"
                                                 style="color: black"
-                                                th:text="|${pedidoAct.cliente.nombres} - ${pedidoAct.ubicacion.distrito.nombre}|">Ceviche - Restaurante Marino</h1>
+                                                th:text="|${pedidoAct.getRestaurante().nombre} - ${pedidoAct.ubicacion.distrito.nombre}|">Ceviche - Restaurante Marino</h1>
                                             <p class="card-text"
                                                th:utext="'Dirección de restaurante: '+${pedidoAct.restaurante.direccion}
-                                            +'<br>Direción de envio: '+${pedidoAct.ubicacion.direccion}
+                                            +'<br>Direción de envio: '+${pedidoAct.cliente.direccionactual}
                                             +'<br>Hora de registro de pedido: '+${pedidoAct.fechapedido}
                                             +'<br>Método de pago : '+${pedidoAct.metodopago.tipo}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>
                                                 Producto: Ceviche<br>
                                                 Hora de registro de pedido:   17:49<br>
                                                 Método de pago : Efectivo</p>
+                                        </div>
+                                        <div style="position: relative; bottom: 2%; right: 3%"  class="mt-0 ml-0">
+                                            <p class="card-text mt-0 mb-0">Platos:</p>
+                                            <p  class="card-text mb-0" th:each="plato : ${platosPorPedido}"th:utext="'-'+${plato.nombre}"></p>
+
                                         </div>
 
 

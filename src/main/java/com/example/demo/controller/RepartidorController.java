@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.PedidoService;
@@ -61,7 +62,8 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model,HttpSession session,
                                   @RequestParam(value = "idPedido", required = false) String codigoPedido,
-                                  @RequestParam(value = "numPag", required = false) Integer numPag){
+                                  @RequestParam(value = "numPag", required = false) Integer numPag,
+                                  RedirectAttributes attr){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         Page<Pedido> pagina;
@@ -84,11 +86,16 @@ public class RepartidorController {
                 if(codigoPedido==null){
                     Pedido pedido = pedidos.get(0);
                     model.addAttribute("pedidoDetalle", pedido);
+                    List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedido.getRestaurante().getIdrestaurante(), pedido.getCodigo());
+                    model.addAttribute("platosPorPedido", platosPorPedido);
                 }else{
                     Optional pedidoOptional =pedidoRepository.findById(codigoPedido);
                     if(pedidoOptional.isPresent()){
                         Pedido pedido = (Pedido) pedidoOptional.get();
                         model.addAttribute("pedidoDetalle", pedido);
+                        List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedido.getRestaurante().getIdrestaurante(), pedido.getCodigo());
+                        model.addAttribute("platosPorPedido", platosPorPedido);
+
                     }
                 }
             }
@@ -102,6 +109,7 @@ public class RepartidorController {
             model.addAttribute("listaDistritos", listaDistritos);
             return "Repartidor/solicitudPedidos";
         }else{
+            attr.addFlashAttribute("msg", "Debes culminar tu entrega para poder visualizar otras solicitudes de reparto.");
             return "redirect:/repartidor/pedidoActual";
         }
     }
@@ -124,7 +132,24 @@ public class RepartidorController {
     }
 
     @GetMapping("/estadisticas")
-    public String estadisticas(){
+    public String estadisticas(Model model,HttpSession session,
+                               @RequestParam(value = "numPag", required = false) Integer numPag){
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Page<Pedido> pagina;
+        if(numPag==null){
+            numPag= 1;
+        }
+
+        int tamPag = 5;
+        pagina = pedidoService.pedidosPaginacion(numPag, tamPag, session);
+        List<Pedido> pedidos =pagina.getContent();
+        model.addAttribute("tamPag",tamPag);
+        model.addAttribute("currentPage",numPag);
+        model.addAttribute("totalPages", pagina.getTotalPages());
+        model.addAttribute("totalItems", pagina.getTotalElements());
+
+
+
         return "/Repartidor/estadisticas";
     }
 
@@ -151,6 +176,8 @@ public class RepartidorController {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
             model.addAttribute("pedidoAct", pedidoAct);
+            List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.getRestaurante().getIdrestaurante(), pedidoAct.getCodigo());
+            model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
             model.addAttribute("direcciones", direcciones);
             return "Repartidor/pedidoActual";
@@ -173,10 +200,10 @@ public class RepartidorController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/repartidor/aceptarPedido";
+        return "redirect:/repartidor/pedidoActual";
     }
 
-    @GetMapping("/pedidoEntegado")
+    @GetMapping("/pedidoEntregado")
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session){
         if(codigo!=null){

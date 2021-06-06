@@ -30,6 +30,8 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 
@@ -136,7 +138,10 @@ public class ClienteController {
     }
 
     @GetMapping("/listaRestaurantes")
-    public String listaRestaurantes(Model model, HttpSession httpSession) {
+    public String listaRestaurantes(Model model, HttpSession httpSession,
+                                    @RequestParam(value = "texto",required = false) String texto,
+                                    @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                                    @RequestParam(value = "val",required = false) String val) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         String direccionactual = usuario.getDireccionactual();
         int iddistritoactual = 1;
@@ -228,7 +233,6 @@ public class ClienteController {
 
         return "Cliente/listaRestaurantes";
     }
-
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");

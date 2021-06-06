@@ -222,7 +222,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -257,8 +258,8 @@
                                 <div class="col-sm-6" style="padding-left:28em; padding-top:2em">
                                     <div class="col-sm-6 mb-4" >
                                         <div class="container2">
-											<img src="img/time.svg" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
-                                                <a class="overlay2" style="height: 200px; width: 200px" href="reporteTiempoCliente.html">
+											<img th:src="@{/img/reloj.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                                <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reporteTiempo}">
                                                     <H1 class="text2 font-weight-bolder">TIEMPO</H1>
                                                 </a>
                                         </div>
@@ -269,16 +270,16 @@
                                 <div class="padre">
                                     <div class="hijo">
                                         <div class="container2">
-                                            <img src="img/dinero.svg" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
-                                            <a class="overlay2" style="height: 200px; width: 200px" href="reporteDineroCliente.html">
+                                            <img th:src="@{/img/dinero.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                            <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reporteDinero}">
                                                 <h1 class="text2 font-weight-bolder">DINERO</h1>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="hijo">
                                         <div class="container2">
-                                            <img src="img/fast-food.svg" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
-											<a class="overlay2" style="height: 200px; width: 200px" href="reportePedidoCliente.html">
+                                            <img  th:src="@{/img/food.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+											<a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reportePedido}">
 													<H1 class="text2 font-weight-bolder">PEDIDOS</H1>
 											</a>
 										</div>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<title>Pedido Actual</title>
+<title>Pedidos Actuales</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -177,7 +177,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -366,6 +366,7 @@
                                     </tbody>
 								</table>
 							</div>
+
 							<nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">

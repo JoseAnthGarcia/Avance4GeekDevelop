@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Historial de Pedidos</title>
+    <title>Reporte de Pedidos</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -162,7 +162,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -272,55 +272,48 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form method="get" th:action="@{'/cliente/reportePedido'}">
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small"
-                                       placeholder="Búsqueda por restarurante...">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
+                                <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
+                                       name="texto" th:value="${texto.equals('')?'':texto}"
+                                       th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                             </div>
                         </div>
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="busquedaNumeroPedidos" class="form-control" id="exampleRestaurante"
-                                       placeholder="N° de pedidos">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
+                                <input type="busquedaNumeroPedidos" class="form-control" name="numpedidos"
+                                       th:value="${numpedidos.equals('')?'':numpedidos}"
+                                       th:placeholder="${numpedidos.equals('')?'N° de pedidos':numpedidos}"
+                                >
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosot</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
+                            <select class="form-control" name="mes">
+                                <option value="" disabled th:selected="${mes.equals('13')}">Estados</option>
+                                <option value="1" th:selected="${mes.equals('1')}">Enero</option>
+                                <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
+                                <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
+                                <option value="4" th:selected="${mes.equals('4')}">Abril</option>
+                                <option value="5" th:selected="${mes.equals('5')}">Mayo</option>
+                                <option value="6" th:selected="${mes.equals('6')}">Junio</option>
+                                <option value="7" th:selected="${mes.equals('7')}">Julio</option>
+                                <option value="8" th:selected="${mes.equals('8')}">Agosto</option>
+                                <option value="9" th:selected="${mes.equals('9')}">Septiembre</option>
+                                <option value="10" th:selected="${mes.equals('10')}">Octubre</option>
+                                <option value="11" th:selected="${mes.equals('11')}">Noviembre</option>
+                                <option value="12" th:selected="${mes.equals('12')}">Diciembre</option>
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="button">
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2" style="margin-right: 10px">
-                            <a class="btn btn-secondary ">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/cliente/reportePedido'}">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -333,98 +326,107 @@
                                 <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
                             </div>
                             <div class="col-1 d-sm-flex justify-content-center">
-                                <a class="btn btn-warning mr-1 ">Exportar</a>
+                                <button onclick="exportTableToExcel('reportePedido', 'reportePedido')" class="btn btn-warning mr-1 ">Exportar</button>
                             </div>
                         </div>
                     </div>
                     <br>
-                    <div class="justify-content-center row">
-                        <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
-                        <span><h2 style="color:black">Top 3</h2></span>
+                    <h3 class="justify-content-center"
+                        th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
+                        th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
+
+
+                <div class="justify-content-center row">
+                    <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
+                    <span><h2 style="color:black">Top 3</h2></span>
+                </div>
+                <br>
+
+                <div class="justify-content-center row">
+
+                    <div class="col-3" style="background-color:#F2E2AA">
+                        <div style="color:black; text-align:center">Restaurantes</div>
+                        <h6 style="color: black" th:each="ped,info: ${listarestTop}"
+                            th:text="${ped.getNombrerest()}"></h6>
+
                     </div>
-
-
-                    <div class="justify-content-center row">
-                        <div class="card col-3" style="background-color:#F2E2AA" >
-                            <div style="color:black; text-align:center" >Restaurantes</div>
-                            <h6 style="color: black"  th:each="ped,info: ${listarestTop}" th:text="${ped.getNombrerest()}"></h6>
-
-
-                        </div>
-                        <br>
-
-                        <div class="col-3" style="background-color:#F2E2AA">
-                            <div style="color:black; text-align:center">Platos mas pedidos</div>
+                    <br>
+                    <div class="col-3 offset-md-1" style="background-color:#F2E2AA">
+                        <div style="color:black; text-align:center">Platos mas pedidos</div>
                         <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
-                        </div>
-                    </div>
-                    </br>
-
-                    <div class="text-center">
-                        <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-
-                                <tr>
-                                    <th>
-                                        N°
-                                    </th>
-                                    <th>
-                                        Restaurantes
-                                    </th>
-                                    <th>
-                                        N° Pedidos
-                                    </th>
-                                    <th>
-                                        Consumo Total
-                                    </th>
-                                    <th>
-                                        Mes
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${info.index+1}"></td>
-                                    <td th:text="${ped.getNombrerest()}"></td>
-                                    <td th:text="${ped.getNumPedidos()}">10</td>
-                                    <td th:text="${ped.getTotal()}"></td>
-                                    <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
-                                    <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
-                                    <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
-                                    <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
-                                    <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
-                                    <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
-                                    <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
-                                    <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
-                                    <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
-                                    <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
-                                    <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
-                                    <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
-                                </tr>
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                            <a href="#">&laquo;</a>
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
-                        </div>
                     </div>
                 </div>
-                <div style="text-align:center">
-                    <a class="btn btn-primary" th:href="@{cliente/listaReportes}" type="submit">Regresar</a>
+
+                <br>
+                <div class="text-center">
+                    <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="reportePedido" class="table table-bordered">
+
+                            <tr>
+                                <th>
+                                    N°
+                                </th>
+                                <th>
+                                    Restaurantes
+                                </th>
+                                <th>
+                                    N° Pedidos
+                                </th>
+                                <th>
+                                    Consumo Total
+                                </th>
+                                <th>
+                                    Mes
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ped,info:${listapedidos}">
+                                <td th:text="${info.index+1}"></td>
+                                <td th:text="${ped.getNombrerest()}"></td>
+                                <td th:text="${ped.getNumPedidos()}">10</td>
+                                <td th:text="${ped.getTotal()}"></td>
+                                <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
+                                <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
+                                <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
+                                <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
+                                <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
+                                <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
+                                <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
+                                <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
+                                <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
+                                <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
+                                <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
+                                <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:each="page : ${pages}">
+                                <a th:unless="${texto == null && numpedidos == null && mes==null  }"
+                                   class="page-link active" th:text="${page}"
+                                   th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}}"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                </div>
+                <!-- -->
+
             </div>
+
+
+            <div style="text-align:center">
+                <a class="btn btn-primary" th:href="@{cliente/listaReportes}" type="submit">Regresar</a>
+            </div>
+
             <!-- /.container-fluid-->
 
         </div>
@@ -442,9 +444,9 @@
 
     </div>
     <!-- End of Content Wrapper -->
-    </div>
-
 </div>
+
+
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -475,7 +477,7 @@
     </div>
 </div>
 
-</body>
+
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
@@ -489,5 +491,37 @@
 <!-- Page level plugins -->
 
 <script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+<script>
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
 
+        // Specify file name
+        filename = filename?filename+'.xls':'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>
+</body>
 </html>

@@ -73,7 +73,7 @@ public class CuponController {
         }
         System.out.println(pageNo);
         int inputID = 1;
-        int pageSize = 2;
+        int pageSize = 5;
         Page<Cupon> page;
         List<Cupon> listaCupon;
 
@@ -123,6 +123,7 @@ public class CuponController {
 
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + fechainicio2 + "\n" + fechafin2);
 
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());

@@ -107,10 +107,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value="SELECT codigo FROM pedido where idrestaurante=?1 and estado=?2 ", nativeQuery = true)
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
-    @Query(value="select distinct php.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d')  as fecha, p.preciototal as preciototal from plato_has_pedido php\n" +
+    @Query(value="select distinct php.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d')  as fecha, p.preciototal as preciototal from plato_has_pedido php \n" +
             "\t\tinner join pedido p on php.codigo=p.codigo\n" +
-            "\t\twhere php.codigo=p.codigo and p.idrestaurante = ?1 and p.estado = ?2", nativeQuery = true)
-    List<PedidoReporteDTO> pedidoReporte(int idrestaurante, int estado);
+            "\t\twhere p.idrestaurante = ?1 and p.estado = ?2 and (date_format(p.fechapedido,'%Y-%m-%d') between ?3 and ?4) \n" +
+            "and php.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7", nativeQuery = true)
+    Page<PedidoReporteDTO> pedidoReporte(int idrestaurante, int estado, String fechainicio, String fechafin, String codigo, double inputPrecioMin, double inputPrecioMax, Pageable pageable);
 
     @Query(value="select pe.codigo as 'codigo', pe.valoracionrestaurante as 'valoracion', date_format(pe.fechapedido,'%Y-%m-%d') as 'fecha', pe.comentariorestaurante as 'comentario' \n" +
             "from pedido pe\n" +

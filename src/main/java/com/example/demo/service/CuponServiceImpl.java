@@ -22,6 +22,6 @@ public class CuponServiceImpl implements CuponService {
     @Override
     public Page<Cupon> findPaginated2(int pageNo, int pageSize, int idrestaurante, String nombre, LocalDate fechainicio, LocalDate fechafin, int inputDescuentoMin, int inputDescuentoMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.cuponRepository.findByIdrestauranteAndNombreIsContainingAndFechainicioEqualsAndFechafinBeforeAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(idrestaurante, nombre, fechainicio, fechafin, inputDescuentoMin, inputDescuentoMax, pageable);
+        return this.cuponRepository.findByIdrestauranteAndNombreIsContainingAndFechafinBetweenAndDescuentoGreaterThanEqualAndDescuentoLessThanEqualOrderByFechafinDesc(idrestaurante, nombre, fechainicio, fechafin, inputDescuentoMin, inputDescuentoMax, pageable);
     }
 }

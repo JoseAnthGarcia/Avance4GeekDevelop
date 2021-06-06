@@ -177,7 +177,7 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="lista,v:${listaPlatoReportes} ">
-                                            <td th:text="${(v.index+1)+(5*(currentPage - 1))}"></td>
+                                            <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                             <td th:text="${lista.getId()}"></td>
                                             <td th:text="${lista.getNombre()}"></td>
                                             <td th:text="${lista.getNombrecat()}"></td>

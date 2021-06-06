@@ -329,7 +329,7 @@ public class AdminRestController {
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
-                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
                                 @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
@@ -369,7 +369,7 @@ public class AdminRestController {
         int inputPMin;
         if (inputPrecio == 0) {
             inputPMin = 0;
-            inputPMax = 100;
+            inputPMax = 1000;
         } else if (inputPrecio == 4) {
             inputPMin = inputPrecio;
             inputPMax = 1000;

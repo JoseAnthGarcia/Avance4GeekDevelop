@@ -627,13 +627,6 @@ public class ClienteController {
         return "Cliente/listaReportes";
     }
 
-
-    //LISTA CATEGORIAS
-    @GetMapping("/categorias")
-    public String categorias() {
-        return "Cliente/categorías";
-    }
-
     //PEDIDO ACTUAL
     @GetMapping("/pedidoActual")
     public String pedidoActual(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
@@ -699,8 +692,6 @@ public class ClienteController {
 
         model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
         model.addAttribute("listapedido2", pedidoRepository.detalle2(codigo));
-        model.addAttribute("listapedido3", pedidoRepository.detalle1(codigo));
-
 
 
         return "Cliente/detallePedidoActual";
@@ -730,16 +721,14 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest){
+                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        System.out.println(valoraRest);
-        System.out.println(comentRest);
-        System.out.println(id);
-        Optional<Pedido> pedido= pedidoRepository.findById(id);
-        if(pedido.isPresent()){
-            Pedido pedido1= pedido.get();
+        Pedido pedido = pedidoRepository.encontrarporId(id);
+        if (pedido != null) {
+            Pedido pedido1 = pedido;
             pedido1.setValoracionrestaurante(valoraRest);
             pedido1.setComentariorestaurante(comentRest);
+            pedidoRepository.save(pedido1);
         }
         String texto= "";
         List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
@@ -750,9 +739,39 @@ public class ClienteController {
             }
         }
 
-        model.addAttribute("listaPedidos",listaPedidoA);
-        return "Cliente/listaHistorialPedidos";
+        model.addAttribute("listaPedidos", listaPedidoA);
+        return "redirect:/cliente/historialPedidos";
     }
+
+    @PostMapping("/valorarRep")
+    public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
+                             @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRep") String comentRest) {
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        System.out.println(valoraRest);
+        System.out.println(comentRest);
+        System.out.println(id);
+        Pedido pedido = pedidoRepository.encontrarporId(id);
+        if (pedido != null) {
+            Pedido pedido1 = pedido;
+            pedido1.setValoracionrepartidor(valoraRest);
+            pedido1.setComentariorepartidor(comentRest);
+            pedidoRepository.save(pedido1);
+        }
+        String texto = "";
+        List<PedidoValoracionDTO> listaPedidos = pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto, 0, 6);
+        List<PedidoValoracionDTO> listaPedidoA = new ArrayList<PedidoValoracionDTO>();
+        for (PedidoValoracionDTO ped : listaPedidos) {
+            if (ped.getEstado() == 6 || ped.getEstado() == 2) {
+                listaPedidoA.add(ped);
+            }
+        }
+
+        model.addAttribute("listaPedidos", listaPedidoA);
+        return "redirect:/cliente/historialPedidos";
+    }
+
+
+
 
 
     @GetMapping("/reporteDinero")
@@ -810,6 +829,25 @@ public class ClienteController {
         return "Cliente/reporteTiempoCliente";
     }
 
+    @GetMapping("/listaCupones")
+    public String listaCupones(Model model, HttpSession httpSession) {
 
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        String direccionactual = usuario.getDireccionactual();
+        int iddistritoactual = 1;
+        //buscar que direccion de milista de direcciones coincide con mi direccion actual
+
+        List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+
+        for (ClienteDTO cl : listadirecc) {
+            if (cl.getDireccion().equalsIgnoreCase(direccionactual)) {
+                iddistritoactual = cl.getIddistrito();
+                break;
+            }
+        }
+
+        model.addAttribute("listaCupones", restauranteRepository.listaRestaurante(iddistritoactual));
+        return "Cliente/listaCupones";
+    }
 
 }

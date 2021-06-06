@@ -213,7 +213,7 @@ public class PlatoController {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
+
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
@@ -247,6 +247,7 @@ public class PlatoController {
                     plato.setFoto(file.getBytes());
                     plato.setFotonombre(fileName);
                     plato.setFotocontenttype(file.getContentType());
+                    attr.addFlashAttribute("msg", "Plato creado exitosamente");
                     platoRepository.save(plato);
                 }catch (IOException e){
                     e.printStackTrace();
@@ -262,6 +263,7 @@ public class PlatoController {
                     plato.setFoto(platoOptional.get().getFoto());
                     plato.setFotonombre(platoOptional.get().getFotonombre());
                     plato.setFotocontenttype(platoOptional.get().getFotocontenttype());
+                    attr.addFlashAttribute("msg2", "Plato editado exitosamente");
                     platoRepository.save(plato);
                 }
             }
@@ -355,7 +357,7 @@ public class PlatoController {
             Plato plato = platoOptional.get();
             plato.setDisponible(false);
             platoRepository.save(plato);
-            attr.addFlashAttribute("msg", "Plato borrado exitosamente");
+            attr.addFlashAttribute("msg3", "Plato borrado exitosamente");
             attr.addFlashAttribute("tipo", "borrado");
         }
 

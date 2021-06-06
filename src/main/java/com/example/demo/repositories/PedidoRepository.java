@@ -39,13 +39,20 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
 
-    @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto' , p.valoracionrestaurante, p.comentariorestaurante, p.valoracionrepartidor,p.comentariorepartidor  " +
-            "from pedido p\n" +
-            "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "            where p.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2%\n" +
-            "            and p.estado > ?3 and  p.estado <=?4  order by p.codigo asc ", nativeQuery = true)
+    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
+            "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+            "p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
+            " p.comentariorestaurante as `comentariorestaurante` , \n" +
+            " p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
+            " p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
+            " as pedidosT\n" +
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) ")
 
-    List<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2);
+    Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
 
     List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);

@@ -271,40 +271,32 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form method="get" th:action="@{'/cliente/historialPedidos'}">
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small"
-                                       placeholder="Búsqueda por restarurante...">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
+                                <input type="text" class="form-control bg-light border-0 small" name="texto"
+                                       th:value="${texto.equals('')?'':texto}"
+                                       th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="1">Aceptado</option>
-                                <option value="3">Preparando</option>
-                                <option value="4">Listo</option>
-                                <option value="5">En camino</option>
-
+                            <select class="form-control" name="estado">
+                                <option value="" disabled th:selected="${estado.equals('7')}">Estados</option>
+                                <option value="2" th:selected="${estado.equals('1')}">Cancelado</option>
+                                <option value="6" th:selected="${estado.equals('3')}">Entregado</option>
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-2 ">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
-                        <div class="col-sm-2" style="margin-right: 10px">
-                            <a class="btn btn-secondary ">Quitar filtros</a>
+                        <div class="col-sm-2" style="margin-right: 10px" >
+                            <a class="btn btn-secondary " th:href="@{'/cliente/historialPedidos'}" >Quitar filtros</a>
                         </div>
                     </div>
                 </form>
-
                 <!-- DataTales Example -->
                 <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -461,10 +453,10 @@
                                             <div class="modal-body">
 
                                                 <div class="form-group ">
-                                                    <label for="recipient-Valoración "
+                                                    <label for="recipient-Valoración"
                                                            class="col-form-label text-center">Valoración:</label>
                                                     <i th:if="${pedido.getValoracionrestaurante() >= 1}"
-                                                       class="fas fa-star"></i>
+                                                       class="fas fa-star" id="recipient-Valoración"></i>
 
                                                     <i th:if="${pedido.getValoracionrestaurante() >= 2}"
                                                        class="fas fa-star"></i>
@@ -524,7 +516,7 @@
                                                 <div class="form-group ">
                                                     <label for="recipient-name" class="col-form-label text-center">Valoración:</label>
                                                     <i th:if="${pedido.getValoracionrepartidor() >= 1}"
-                                                       class="fas fa-star"></i>
+                                                       class="fas fa-star" id="recipient-name"></i>
 
                                                     <i th:if="${pedido.getValoracionrepartidor() >= 2}"
                                                        class="fas fa-star"></i>
@@ -629,16 +621,23 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination topnav">
-                        <a href="#">«</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <a href="#">5</a>
-                        <a href="#">6</a>
-                        <a href="#">»</a>
-                    </div>
+                <nav aria-label="Pagination">
+
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:each="page : ${pages}">
+                            <a class="page-link active" th:text="${page}" th:href="@{'/cliente/historialPedidos?page='+${page}}"></a>
+                        </li>
+                    </ul>
+
+                    <!--<a href="#">«</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">»</a>-->
+                </nav>
                 </div>
 
                 <!-- /.container-fluid -->

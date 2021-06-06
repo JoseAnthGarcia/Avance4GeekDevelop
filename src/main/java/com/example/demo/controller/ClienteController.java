@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import com.example.demo.service.HistorialPedidoService;
 import com.example.demo.service.PedidoActualService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,6 +75,10 @@ public class ClienteController {
 
     @Autowired
     CuponRepository cuponRepository;
+
+
+    @Autowired
+    HistorialPedidoService historialPedidoService;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -697,21 +702,50 @@ public class ClienteController {
     }
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")
-    public String historialPedidos(Model model, HttpSession httpSession) {
+    public String historialPedidos(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                   @RequestParam(value = "texto",required = false) String texto,
+                                   @RequestParam(value = "estado",required = false) String estado) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
 
-        String texto= "";
+        if(texto==null ){
+            texto= "";
+        }
+        if(estado==null){
+            estado="7";
+        }
+        int limitSup=6;
+        int limitInf=0;
+        switch (estado){
+            case "2":
+                limitSup=2;
+                limitInf=1;
+                break;
 
-        List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
-        List<PedidoValoracionDTO> listaPedidoA= new ArrayList<PedidoValoracionDTO>();
-        for(PedidoValoracionDTO ped: listaPedidos){
-            if(ped.getEstado()==6 || ped.getEstado()==2  ){
-                listaPedidoA.add(ped);
-            }
+            case "6":
+                limitSup=6;
+                limitInf=5;
+                break;
+
+            default:
+                limitSup=6;
+                limitInf=0;
         }
 
-        model.addAttribute("listaPedidos",listaPedidoA);
+
+        Page<PedidoValoracionDTO> listaPedidos = historialPedidoService.findPaginated2(usuario1.getIdusuario(), texto,limitInf,limitSup, pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
+
+
+        model.addAttribute("listaPedidos",listaPedidos);
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado", estado);
 
 
 
@@ -719,9 +753,11 @@ public class ClienteController {
     }
 
     @PostMapping("/valorarRest")
-    public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
+    public String valorarRest(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession, @RequestParam("id") String id,
                               @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
         Pedido pedido = pedidoRepository.encontrarporId(id);
         if (pedido != null) {
             Pedido pedido1 = pedido;
@@ -729,23 +765,18 @@ public class ClienteController {
             pedido1.setComentariorestaurante(comentRest);
             pedidoRepository.save(pedido1);
         }
-        String texto= "";
-        List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
-        List<PedidoValoracionDTO> listaPedidoA= new ArrayList<PedidoValoracionDTO>();
-        for(PedidoValoracionDTO ped: listaPedidos){
-            if(ped.getEstado()==6 || ped.getEstado()==2  ){
-                listaPedidoA.add(ped);
-            }
-        }
 
-        model.addAttribute("listaPedidos", listaPedidoA);
+
+
         return "redirect:/cliente/historialPedidos";
     }
 
     @PostMapping("/valorarRep")
-    public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
+    public String valorarRep(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession, @RequestParam("id") String id,
                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRep") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
         System.out.println(valoraRest);
         System.out.println(comentRest);
         System.out.println(id);
@@ -756,16 +787,7 @@ public class ClienteController {
             pedido1.setComentariorepartidor(comentRest);
             pedidoRepository.save(pedido1);
         }
-        String texto = "";
-        List<PedidoValoracionDTO> listaPedidos = pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto, 0, 6);
-        List<PedidoValoracionDTO> listaPedidoA = new ArrayList<PedidoValoracionDTO>();
-        for (PedidoValoracionDTO ped : listaPedidos) {
-            if (ped.getEstado() == 6 || ped.getEstado() == 2) {
-                listaPedidoA.add(ped);
-            }
-        }
 
-        model.addAttribute("listaPedidos", listaPedidoA);
         return "redirect:/cliente/historialPedidos";
     }
 

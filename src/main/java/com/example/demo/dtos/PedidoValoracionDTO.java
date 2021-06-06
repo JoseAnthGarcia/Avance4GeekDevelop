@@ -10,6 +10,7 @@ public interface PedidoValoracionDTO {
     int getTiempoentrega();
     int getEstado();
     String getCodigo();
+    int getIdcliente();
     Integer getValoracionrestaurante();
     String getComentariorestaurante();
     Integer getValoracionrepartidor();

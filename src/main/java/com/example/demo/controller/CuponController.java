@@ -47,27 +47,27 @@ public class CuponController {
     PedidoRepository pedidoRepository;
 
     @GetMapping(value = {"/lista", ""})
-    public String listarCupones(Model model,HttpSession session) {
+    public String listarCupones(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
         Date today = Calendar.getInstance().getTime();
         String todayAsString = df.format(today);
         System.out.println(todayAsString);
 
-        return findPaginated("", "3000-05-21", todayAsString, 0, 1, model,session);
+        return findPaginated("", "3000-05-21", todayAsString, 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                @ModelAttribute @RequestParam(value = "fechainicio", required= false) String fechainicio,
+                                @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model,HttpSession session) {
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int idadmin=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
         }
@@ -81,12 +81,14 @@ public class CuponController {
             textBuscador = "";
         }
         System.out.println(textBuscador);
-        LocalDate fechafin2 = LocalDate.parse(fechafin);
+        LocalDate fechafin2;
         if (fechafin == null || fechafin.equals("")) {
             fechafin2 = LocalDate.parse("3000-05-21");
+        } else {
+            fechafin2 = LocalDate.parse(fechafin);
         }
         LocalDate fechainicio2;
-        if (fechainicio == null || fechainicio.equals("")){
+        if (fechainicio == null || fechainicio.equals("")) {
             fechainicio2 = LocalDate.now();
         } else {
             fechainicio2 = LocalDate.parse(fechainicio);
@@ -105,11 +107,21 @@ public class CuponController {
             inputPMin = inputPrecio;
         }
         System.out.println(inputPrecio);
-        page = cuponService.findPaginated2(pageNo, pageSize, textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        System.out.println(restaurante.getIdrestaurante());
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
+        page = cuponService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
         listaCupon = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoP", inputPrecio);
+        model.addAttribute("fechainicio", fechainicio2);
+        model.addAttribute("fechafin", fechafin2);
+
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + fechainicio2 + "\n" + fechafin2);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

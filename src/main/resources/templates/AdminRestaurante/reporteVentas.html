@@ -164,16 +164,10 @@
                                                     Fecha
                                                 </th>
                                                 <th>
-                                                    Monto platos
-                                                </th>
-                                                <th>
-                                                    Monto extras
-                                                </th>
-                                                <th>
-                                                    Descuento
-                                                </th>
-                                                <th>
                                                     Monto total
+                                                </th>
+                                                <th>
+                                                    Visualizar
                                                 </th>
                                             </tr>
                                         </thead>
@@ -182,10 +176,10 @@
                                             <td th:text="${(v.index+1)}"></td>
                                             <td th:text="${lista.getCodigo()}"></td>
                                             <td th:text="${lista.getFecha()}"></td>
-                                            <td th:text="${'S/. '+lista.getMontoplatos()}"></td>
-                                            <td th:text="${'S/. '+lista.getMontoextras()}"></td>
-                                            <td th:text="${'S/. '+lista.getDescuento()}"></td>
                                             <td th:text="${'S/. '+lista.getPreciototal()}"></td>
+                                            <td><a style="color: #dce3f9"
+                                                   class="btn btn-info btn-circle align" th:href="@{'/restaurante/detallePedido?v=1&codigoPedido='+${lista.getCodigo()}}"><i
+                                                    class="fas fa-eye text-white"></i></a></td>
                                         </tr>
                                         </tbody>
 

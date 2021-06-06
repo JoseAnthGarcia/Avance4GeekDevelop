@@ -353,8 +353,9 @@
                                         <a th:if="${detalles.get(0).getEstado()==3}" type="button" class="btn btn-success" data-toggle="modal"
                                            th:data-target="${'#myModal4'}"
                                            th:href="${'#myModal4'}">Listo</a>
-                                        <a th:if="${detalles.get(0).getEstado()==2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
-                                        <a th:if="${detalles.get(0).getEstado()!=2}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
+                                        <a th:if="${detalles.get(0).getEstado()==6 && v.equals('1')}" th:href="@{/restaurante/reporteVentas}" type="button" class="btn btn-warning mr-1">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()==2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()!=2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
                                     </div>
 
 

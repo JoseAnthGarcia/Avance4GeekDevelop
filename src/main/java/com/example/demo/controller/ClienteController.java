@@ -7,6 +7,7 @@ import com.example.demo.repositories.*;
 import com.example.demo.service.PedidoActualService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -641,7 +642,7 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
-        PageRequest pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 5);
 
 
         if(texto==null ){
@@ -677,23 +678,11 @@ public class ClienteController {
                 limitInf=0;
         }
 
-        System.out.println("BEFORE QUERY");
-
-
-        Page<PedidoDTO> listaPedidos=pedidoActualService.findPaginated(usuario1.getIdusuario(), texto,limitInf,limitSup, pageRequest);
-
+        Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto,limitInf,limitSup, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
-
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages",pages);
-        }
-
-        List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
-        for(PedidoDTO ped: listaPedidos){
-            if(ped.getEstado()==1 || ped.getEstado()==3 || ped.getEstado()==4 || ped.getEstado()==5 ){
-                listaPedidoActual.add(ped);
-            }
         }
 
         model.addAttribute("listaPedidos",listaPedidos.getContent());

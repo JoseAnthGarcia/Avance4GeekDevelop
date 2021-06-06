@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.ExtraDTO;
+import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.CategoriaExtraRepository;
 import com.example.demo.repositories.ExtraRepository;
+import com.example.demo.repositories.PedidoRepository;
 import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.ExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +46,24 @@ public class ExtraController {
     RestauranteRepository restauranteRepository;
     @Autowired
     CategoriaExtraRepository categoriaExtraRepository;
+    @Autowired
+    PedidoRepository pedidoRepository;
     @GetMapping(value = {"/categoria",""})
     public  String listaCategorias(Model model, @RequestParam(value = "idcategoria",required = false) Integer id, HttpSession session){
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         return "AdminRestaurante/extras";
     }
     @GetMapping("/lista")
     public String listarExtra(Model model,@RequestParam(value = "idcategoria",required = false) Integer id, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         if (id==null){
             return "redirect:/extra/categoria";
         }else {
@@ -69,6 +83,8 @@ public class ExtraController {
             Usuario adminRest = (Usuario) session.getAttribute("usuario");
             int idadmin = adminRest.getIdusuario();
             Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+            List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+            model.addAttribute("listaNotiRest",listaNotificacion);
             int idrestaurante = restaurante.getIdrestaurante();
             System.out.println(id);
             System.out.println(pageNo);
@@ -117,7 +133,12 @@ public class ExtraController {
     }
 
     @GetMapping("/nuevo")
-    public String nuevoExtra(@ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int id, Model model) {
+    public String nuevoExtra(@ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int id, Model model,HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         model.addAttribute("idcategoria", id);
         return "AdminRestaurante/nuevoExtra";
     }
@@ -130,6 +151,8 @@ public class ExtraController {
         Usuario adminRest=(Usuario)session.getAttribute("usuario");
         int idadmin=adminRest.getIdusuario();
         Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         int idrestaurante=restaurante.getIdrestaurante();
         System.out.println("id categoriaaaaaaaa "+idc);
         System.out.println("id categoriaaaaaaaa "+idc);
@@ -240,8 +263,13 @@ public class ExtraController {
     @GetMapping("/editar")
     public String editarExtra(@RequestParam("id") int id,
                               Model model,
-                              @ModelAttribute("extra") Extra extra,@RequestParam(value = "idcategoria") int idc) {
+                              @ModelAttribute("extra") Extra extra,@RequestParam(value = "idcategoria") int idc,HttpSession session) {
         Optional<Extra> extraOptional = extraRepository.findById(id);
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        int idadmin=adminRest.getIdusuario();
+        Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         model.addAttribute("idcategoria",idc);
         if (extraOptional.isPresent()) {
             extra = extraOptional.get();

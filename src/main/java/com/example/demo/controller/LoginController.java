@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,7 +319,6 @@ public class LoginController {
                 System.out.println("validacion correo");
                 model.addAttribute("msg1", "El correo no está registrado");
             }
-
             if (valVacio) {
                 model.addAttribute("msg2", "Ingrese su correo");
             }
@@ -356,9 +356,7 @@ public class LoginController {
                     String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
                     String url = "http://localhost:8080/avance6/cambioContra?id=" + urlPart;
                     String content = "Para cambio de contraseña:\n" + url;
-
                     String subject = "OLVIDE MI CONTRASEÑA";
-
                     sendEmail(correo, subject, content);
                 }
             }

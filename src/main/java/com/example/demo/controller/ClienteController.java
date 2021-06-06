@@ -272,9 +272,7 @@ public class ClienteController {
             }
 
         }
-
         return "redirect:/cliente/listaDirecciones";
-
     }
 
     @PostMapping("/agregarDireccion")
@@ -630,10 +628,12 @@ public class ClienteController {
 
     //PEDIDO ACTUAL
     @GetMapping("/pedidoActual")
-    public String pedidoActual(Model model, HttpSession httpSession) {
+    public String pedidoActual(Model model, HttpSession httpSession,
+                               @RequestParam(value = "texto",required = false) String texto,
+                               @RequestParam(value = "estado",required = false) String estado) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-      String texto= "";
+        texto= "";
 
         List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,6);
         List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
@@ -685,12 +685,16 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam("valrest") Integer valoraRest, @RequestParam("comentRest") String comentRest){
+                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        Pedido pedido = pedidoRepository.encontrarporId(id);
-        if(pedido!=null){
-            pedido.setValoracionrestaurante(valoraRest);
-            pedido.setComentariorestaurante(comentRest);
+        System.out.println(valoraRest);
+        System.out.println(comentRest);
+        System.out.println(id);
+        Optional<Pedido> pedido= pedidoRepository.findById(id);
+        if(pedido.isPresent()){
+            Pedido pedido1= pedido.get();
+            pedido1.setValoracionrestaurante(valoraRest);
+            pedido1.setComentariorestaurante(comentRest);
         }
         String texto= "";
         List<PedidoValoracionDTO> listaPedidos=pedidoRepository.pedidosTotales2(usuario1.getIdusuario(), texto,0,6);
@@ -706,6 +710,60 @@ public class ClienteController {
     }
 
 
+    @GetMapping("/reporteDinero")
+    public String reporteDinero(Model model, HttpSession httpSession){
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        BigDecimal totalsuma1= new BigDecimal(0);
+        for(ReportePedido rep:listapedidos){
+            System.out.println(rep.getDescuento());
+            totalsuma1.add(rep.getDescuento());
+        }
+        System.out.println(totalsuma1);
+        model.addAttribute("listapedidos",listapedidos);
+        model.addAttribute("totalsuma",totalsuma1);
+
+        return "Cliente/reporteDineroCliente";
+    }
+
+
+    @GetMapping("/reportePedido")
+    public String reportePedido(Model model, HttpSession httpSession){
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),6);
+        List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),6);
+        BigDecimal totalsuma= new BigDecimal(0);
+        for(ReportePedido rep:listapedidos){
+            totalsuma.add(rep.getTotal());
+        }
+        model.addAttribute("totalsuma",totalsuma);
+        model.addAttribute("listapedidos",listapedidos);
+        model.addAttribute("listarestTop", listarestTop);
+
+
+       model.addAttribute("listarestPl", listaPl);
+        return "Cliente/reportePedidoCliente";
+    }
+
+    @GetMapping("/reporteTiempo")
+    public String reporteTiempo(Model model, HttpSession httpSession){
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        int totalsuma1= 0;
+        for(ReportePedido rep:listapedidos){
+           // System.out.println(rep.getTiempoEntrega());
+            totalsuma1=totalsuma1+ rep.getTiempoEntrega();
+        }
+        System.out.println(totalsuma1);
+        model.addAttribute("listapedidos",listapedidos);
+        model.addAttribute("totalsuma",totalsuma1);
+        return "Cliente/reporteTiempoCliente";
+    }
 
 
 

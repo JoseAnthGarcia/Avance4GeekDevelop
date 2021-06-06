@@ -54,12 +54,6 @@ public class CuponController {
         String todayAsString = df.format(today);
         System.out.println(todayAsString);
 
-        Usuario adminRest=(Usuario)session.getAttribute("usuario");
-        int idadmin=adminRest.getIdusuario();
-        Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
-
         return findPaginated("", "3000-05-21", todayAsString, 0, 1, model,session);
     }
 

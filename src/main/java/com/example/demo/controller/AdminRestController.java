@@ -580,55 +580,28 @@ public class AdminRestController {
         } else {
             fechainicio2 = LocalDate.parse(fechainicio);
         }
+
+
+
+
+        String fechainicio3 = fechainicio2.toString();
+        System.out.println(fechainicio3);
+        String fechafin3 = fechafin2.toString();
+        System.out.println(fechafin3);
+
+
+        System.out.println(fechainicio3);
+        System.out.println(fechafin3);
+
+        System.out.println("#################");
+        System.out.println("#################");
+
+        //Obtener lista de reportes
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
         model.addAttribute("listaNotiRest",listaNotificacion);
-        model.addAttribute("listareporte",lista);
-
-        String fechainicio3 = fechainicio2.toString();
-        System.out.println(fechainicio3);
-        String fechafin3 = fechafin2.toString();
-        System.out.println(fechafin3);
-
-
-        System.out.println(fechainicio3);
-        System.out.println(fechafin3);
-
-        System.out.println("#################");
-        System.out.println("#################");
-
-        //Obtener lista de reportes
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        int id = adminRest.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio3, fechafin3);
-        listaValoracionReporte = page.getContent();
-
-        //Enviar atributos a la vista
-        model.addAttribute("inputValoracion", inputValoracion2);
-
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion2 + "\n" + fechainicio3 + "\n" + fechafin3);
-
-        //Enviar lista y valores para paginación
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listaValoracionReportes", listaValoracionReporte);
-        String fechainicio3 = fechainicio2.toString();
-        System.out.println(fechainicio3);
-        String fechafin3 = fechafin2.toString();
-        System.out.println(fechafin3);
-
-
-        System.out.println(fechainicio3);
-        System.out.println(fechafin3);
-
-        System.out.println("#################");
-        System.out.println("#################");
-
-        //Obtener lista de reportes
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        int id = adminRest.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
         page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio3, fechafin3);
         listaValoracionReporte = page.getContent();
 

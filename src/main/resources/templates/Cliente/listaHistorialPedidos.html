@@ -1,45 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <title>Historial de Pedidos</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<title>Historial de Pedidos</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
+    <!-- Custom fonts for this template -->
+    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
 
-<!-- Custom fonts for this template -->
-<link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-<link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-<!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<!-- Custom styles for this page -->
-<link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-<link th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <link th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
 
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
-
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page level custom scripts -->
-<script th:src="@{/js/demo/datatables-demo.js}"></script>
+</head>
 
 <body id="page-top">
 <!-- Page Wrapper -->
@@ -334,246 +319,311 @@
                         <h6>Si su pedido ya ha sido entregado o cancelado dirijase al Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table" id="dataTable" width="100%" style="background-color:gray">
-                            <tbody>
+                    <div>
 
-                            <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
-                                <div class="col-3">
-                                    <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
+
+                        <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
+                            <div class="col-3">
+                                <img width="110" height="100" alt="Avatar"
+                                     th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
+                            </div>
+                            <div class="col-6">
+                                <div class="row mb-2">
+                                    <input class="form-control ph-center" type="text"
+                                           th:placeholder="${pedido.getNombre()}"
+                                           aria-label="Disabled input example" disabled>
                                 </div>
-                                <div class="col-6">
-                                    <div class="row mb-2">
-                                        <input class="form-control ph-center" type="text"
-                                               th:placeholder="${pedido.getNombre()}"
-                                               aria-label="Disabled input example" disabled>
+
+                                <div class="row mb-2">
+                                    <input class="form-control col-6" type="text"
+                                           th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|"
+                                           aria-label="Disabled input example" disabled>
+                                    <input width="" class="form-control col-5 ml-4" type="text"
+                                           th:if="${pedido.getEstado()==2}" th:placeholder="|Estado : Cancelado |"
+                                           aria-label="Disabled input example" disabled>
+                                    <input width="" class="form-control col-5 ml-4" type="text"
+                                           th:if="${pedido.getEstado()==6}" th:placeholder="|Estado : Entregado |"
+                                           aria-label="Disabled input example" disabled>
+                                </div>
+
+                                <!-- TODO AQUI LLAMAMOS AL MODAL -->
+
+                                <!-- -------------------------------------1 ) LLAMADO AL MODAL CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
+                                <div class="row mb-2">
+                                    <div class="col-6" th:if="${pedido.getValoracionrestaurante() == null}">
+                                        <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
+                                        <a data-toggle="modal"
+                                           th:data-target="${'#valoraRest'+pedido.getCodigo()}"
+                                           th:href="${'#valoraRest'+pedido.getCodigo()}">
+                                            <i class="fas fa-utensils ml-2"
+                                               style="font-size:2em; color:#F2EE61"></i>
+                                        </a>
                                     </div>
 
-                                    <div class="row mb-2">
-                                        <input class="form-control col-6" type="text"
-                                               th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado()==2}" th:placeholder="|Estado : Cancelado |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado()==6}" th:placeholder="|Estado : Entregado |"
-                                               aria-label="Disabled input example" disabled>
+
+                                    <!---------------------------------------2 ) LLAMADO  AL MODAL CUANDO YA SE VALORO O SE HIZO UNA OBSERVACION ------------------------------------------>
+
+                                    <div class="col-6" th:if="${pedido.getValoracionrestaurante() != null}">
+                                        <h6 class="mb-2" style="color:black">Valoración a tu restaurante</h6>
+                                        <a data-toggle="modal"
+                                           th:data-target="${'#valoraRest2'+pedido.getCodigo()}"
+                                           th:href="${'#valoraRest2'+pedido.getCodigo()}">
+                                            <i class="fas fa-utensils ml-2"
+                                               style="font-size:2em; color:#F2EE61"></i>
+                                        </a>
                                     </div>
 
-                                    <!-- TODO AQUI LLAMAMOS AL MODAL -->
 
-<!-- -------------------------------------1 ) LLAMADO AL MODAL CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
-                                    <div  class="row mb-2" >
-                                        <div  class="col-6" th:if="${pedido.getValoracionrestaurante() == null}"  >
-                                            <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
-                                            <a data-toggle="modal"
-                                               th:data-target="${'#valoraRest'+pedido.getCodigo()}"
-                                               th:href="${'#valoraRest'+pedido.getCodigo()}">
-                                                <i class="fas fa-utensils ml-2" style="font-size:2em; color:#F2EE61"></i>
-                                            </a>
-                                        </div>
+                                    <!-- ------------------------------------- 3 ) LLAMADO AL MODAL REPARTIDOR CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
 
-
-<!---------------------------------------2 ) LLAMADO  AL MODAL CUANDO YA SE VALORO O SE HIZO UNA OBSERVACION ------------------------------------------>
-
-                                        <div  class="col-6"  th:if="${pedido.getValoracionrestaurante() != null}" >
-                                            <h6 class="mb-2" style="color:black">Valoración a tu restaurante</h6>
-                                            <a data-toggle="modal"
-                                               th:data-target="${'#valoraRest2'+pedido.getCodigo()}"
-                                               th:href="${'#valoraRest2'+pedido.getCodigo()}">
-                                                <i class="fas fa-utensils ml-2" style="font-size:2em; color:#F2EE61"></i>
-                                            </a>
-                                        </div>
-
-
-<!-- ------------------------------------- 3 ) LLAMADO AL MODAL REPARTIDOR CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
-
-                                        <div class="col-6"  th:if="${pedido.getValoracionrepartidor()== null}">
-                                            <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
-                                            <a  data-toggle="modal" th:data-target="${'#valoraRep'+pedido.getCodigo()}"
-                                                th:href="${'#valoraRep'+pedido.getCodigo()}">
-                                                <i class="fas fa-motorcycle ml-2" style="font-size:2em; color:#2C8287"></i>
-                                            </a>
-                                        </div>
-
-<!-- ------------------------------------- 4 ) LLAMADO AL MODAL CUANDO El REAPRTIDOR YA FUE VALORADO ------------------------------------------------------------------>
-
-                                        <div class="col-6"  th:if="${pedido.getValoracionrepartidor()!= null}">
-                                            <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
-                                            <a  data-toggle="modal" th:data-target="${'#valoraRep2'+pedido.getCodigo()}"
-                                                th:href="${'#valoraRep2'+pedido.getCodigo()}">
-                                                <i class="fas fa-motorcycle ml-2" style="font-size:2em; color:#2C8287"></i>
-                                            </a>
-                                        </div>
+                                    <div class="col-6" th:if="${pedido.getValoracionrepartidor()== null}">
+                                        <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
+                                        <a data-toggle="modal" th:data-target="${'#valoraRep'+pedido.getCodigo()}"
+                                           th:href="${'#valoraRep'+pedido.getCodigo()}">
+                                            <i class="fas fa-motorcycle ml-2"
+                                               style="font-size:2em; color:#2C8287"></i>
+                                        </a>
                                     </div>
 
-<!-- ------------------------------------------------------------------------------------------------------------------------------- -->
+                                    <!-- ------------------------------------- 4 ) LLAMADO AL MODAL CUANDO El REAPRTIDOR YA FUE VALORADO ------------------------------------------------------------------>
+
+                                    <div class="col-6" th:if="${pedido.getValoracionrepartidor()!= null}">
+                                        <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
+                                        <a data-toggle="modal" th:data-target="${'#valoraRep2'+pedido.getCodigo()}"
+                                           th:href="${'#valoraRep2'+pedido.getCodigo()}">
+                                            <i class="fas fa-motorcycle ml-2"
+                                               style="font-size:2em; color:#2C8287"></i>
+                                        </a>
                                     </div>
+                                </div>
 
-<!---------------------------------------------  1 MODAL EVALUAR REST Y COMENTAR ------------------------------------------------------------------------>
-                                    <!-- todo Evaluar Restaurante , Comentar Restaurante-->
+                                <!-- ------------------------------------------------------------------------------------------------------------------------------- -->
 
-                                    <div class="modal fade" th:id="${'valoraRest'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Valora a tu restaurante</h5>
-                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <form id="valorarRest" method="POST" th:action="@{/cliente/valorarRest}">
-                                                <div class="modal-body">
+                                <!---------------------------------------------  1 MODAL EVALUAR REST Y COMENTAR ------------------------------------------------------------------------>
+                                <!-- todo Evaluar Restaurante , Comentar Restaurante-->
 
-                                                        <div class="form-group">
-                                                            <input name="id" type="text" class="form-control mb-2" th:value="${pedido.codigo}" hidden>
-                                                            <label class="col-form-label text-center">Valora:</label>
-                                                            <div class="rating"  name="valrest"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" name="comentRest" id="comentRest"></textarea>
-                                                        </div>
+                                <div class="modal fade" th:id="${'valoraRest'+pedido.getCodigo()}" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Valora a tu restaurante</h5>
+                                                <button class="close" type="button" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
 
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar </button>
-                                                    <button type="submit" class="btn btn-primary"> Aceptar </button>
-                                                </div>
+                                            <div class="modal-body">
+                                                <form th:id="${'valoraForm'+pedido.getCodigo()}" method="POST"
+                                                      th:action="@{/cliente/valorarRest}">
+
+                                                    <div class="form-group">
+                                                        <input name="id" type="text" class="form-control mb-2"
+                                                               th:value="${pedido.codigo}" hidden>
+                                                        <label class="col-form-label text-center">Valora:</label>
+
+                                                    </div>
+                                                    <div class="rating"></div>
+                                                    <div class="form-group">
+                                                        <label
+                                                                class="col-form-label">Comentario:</label>
+                                                        <textarea class="form-control" name="comentRest"
+                                                        ></textarea>
+                                                    </div>
                                                 </form>
                                             </div>
-                                        </div>
-                                    </div>
-
-<!--------------------------------------------- 2 MODAL PARA EL REST EVAULADO ------------------------------------------------------------------------>
-                                    <!-- Repartidor Evaluado , Restaurante Evaluado-->
-                                    <div class="modal fade" th:id="${'valoraRest2'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" >Valoración a tu restaurante</h5>
-                                                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form>
-                                                        <div class="form-group ">
-                                                            <label for="recipient-Valoración " class="col-form-label text-center">Valoración:</label>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" id="message-text" placeholder="Vino muy poquito" disabled></textarea>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
-                                                </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                        data-dismiss="modal">Cancelar
+                                                </button>
+                                                <button type="submit" class="btn btn-primary"
+                                                        th:form="${'valoraForm'+pedido.getCodigo()}"> Aceptar
+                                                </button>
                                             </div>
+
+
                                         </div>
                                     </div>
-
-
-<!--------------------------------------------- 3 MODAL PARA EVALUAR REPARTIDOR------------------------------------------------------------------------>
-
-
-                                    <!-- Evaluar Repartidor , Comentar Repartidor-->
-                                    <div class="modal fade"  th:id="${'valoraRep'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <!-- id="exampleModalLabel"-->
-                                                    <h5 class="modal-title">Valora a tu repartidor</h5>
-                                                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form>
-                                                        <div class="form-group ">
-                                                            <label for="recipient-name " class="col-form-label text-center">Valora:</label>
-                                                            <div class="rating"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" id="message-text"></textarea>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                                                    <a class="btn" style="background-color:#701111; color:white" href="listaHistorialPedidos.html">Calificar</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-<!--------------------------------------------- 4 MODAL REPARTIDOR  EVALUADO------------------------------------------------------------------------>
-
-                                    <div class="modal fade" th:id="${'valoraRep2'+pedido.getCodigo()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <!-- id="exampleModalLabel"-->
-                                                    <h5 class="modal-title" >Valoración a tu repartidor</h5>
-                                                    <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form>
-                                                        <div class="form-group ">
-                                                            <label for="recipient-name " class="col-form-label text-center">Valoración:</label>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="message-text" class="col-form-label">Comentario:</label>
-                                                            <textarea class="form-control" id="message-text" placeholder="Se demoró más del tiempo que me dieron" disabled></textarea>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-<!------------------------------------------------------------------------------------------------------------------------------------------------------------->
                                 </div>
-                                <div class="col-3">
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center"><i style="font-size:6em; color:#2C8287"
-                                                                    class="fas fa-eye"></i>
+                                <!-- Repartidor Evaluado , Restaurante Evaluado-->
+                                <div class="modal fade" th:id="${'valoraRest2'+pedido.getCodigo()}" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Valoración a tu restaurante</h5>
+                                                <button class="close" type="button" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="form-group ">
+                                                    <label for="recipient-Valoración "
+                                                           class="col-form-label text-center">Valoración:</label>
+                                                    <i th:if="${pedido.getValoracionrestaurante() >= 1}"
+                                                       class="fas fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrestaurante() >= 2}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrestaurante() < 2}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrestaurante() >= 3}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrestaurante() < 3}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrestaurante() >= 4}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrestaurante() < 4}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrestaurante() == 5}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrestaurante() < 5}"
+                                                       class="far fa-star"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="message-text"
+                                                           class="col-form-label">Comentario:</label>
+                                                    <textarea class="form-control" id="message-text"
+                                                              th:placeholder="${pedido.getComentariorestaurante}"
+                                                              disabled></textarea>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                        data-dismiss="modal">
+                                                    Cerrar
+                                                </button>
+                                            </div>
                                         </div>
-                                    </a>
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
-                                    </a>
+                                    </div>
                                 </div>
+
+
+                                <div class="modal fade" th:id="${'valoraRep2'+pedido.getCodigo()}" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <!-- id="exampleModalLabel"-->
+                                                <h5 class="modal-title">Valoración a tu repartidor</h5>
+                                                <button class="close" type="button" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="form-group ">
+                                                    <label for="recipient-name" class="col-form-label text-center">Valoración:</label>
+                                                    <i th:if="${pedido.getValoracionrepartidor() >= 1}"
+                                                       class="fas fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrepartidor() >= 2}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrepartidor() < 2}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrepartidor() >= 3}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrepartidor() < 3}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrepartidor() >= 4}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrepartidor() < 4}"
+                                                       class="far fa-star"></i>
+
+                                                    <i th:if="${pedido.getValoracionrepartidor() == 5}"
+                                                       class="fas fa-star"></i>
+                                                    <i th:if="${pedido.getValoracionrepartidor() < 5}"
+                                                       class="far fa-star"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="message-text"
+                                                           class="col-form-label">Comentario:</label>
+                                                    <textarea class="form-control" id="message-text"
+                                                              th:placeholder="${pedido.getComentariorepartidor}"
+                                                              disabled></textarea>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                        data-dismiss="modal">
+                                                    Cerrar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Evaluar Repartidor , Comentar Repartidor-->
+                                <div class="modal fade" th:id="${'valoraRep'+pedido.getCodigo()}" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <!-- id="exampleModalLabel"-->
+                                                <h5 class="modal-title">Valora a tu repartidor</h5>
+                                                <button class="close" type="button" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group ">
+                                                        <label for="recipient-name"
+                                                               class="col-form-label text-center">Valora:</label>
+                                                        <div class="rating"></div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="message-text"
+                                                               class="col-form-label">Comentario:</label>
+                                                        <textarea class="form-control" id="message-text"></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                        data-dismiss="modal">
+                                                    Cancelar
+                                                </button>
+                                                <a class="btn" style="background-color:#701111; color:white"
+                                                   href="listaHistorialPedidos.html">Calificar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
-                            <div class="topbar-divider d-none d-sm-block"></div>
+                            <div class="col-3">
+                                <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                    <div class="text-center"><i style="font-size:6em; color:#2C8287"
+                                                                class="fas fa-eye"></i>
+                                    </div>
+                                </a>
+                                <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                    <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="topbar-divider d-none d-sm-block"></div>
 
 
-                            </tbody>
-                        </table>
                     </div>
                     <div class="pagination topnav">
                         <a href="#">«</a>
@@ -588,81 +638,83 @@
                 </div>
 
                 <!-- /.container-fluid -->
-
             </div>
-
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
         </div>
-        <!-- End of Content Wrapper -->
+
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
 
     </div>
+    <!-- End of Content Wrapper -->
 
-    <!-- End of Page Wrapper -->
+</div>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- End of Page Wrapper -->
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
                     </button>
-                </div>
-                <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-primary" type="submit">Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-
-
-    <!-- Bootstrap core JavaScript-->
-    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script th:src="@{/js/sb-admin-2.min.js}"></script>
-
-    <!-- Page level plugins -->
-    <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
-    <!-- Page level custom scripts -->
-    <script th:src="@{/js/demo/chart-area-demo.js}"></script>
-    <script th:src="@{/js/demo/chart-pie-demo.js}"></script>
-    <script th:src="@{/js/demo/chart-bar-demo.js}"></script>
-    <script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
-    <script>
-
-        $('.rating').raty({
-            path: '../img/estrellitas/',
-            scoreName: 'valoracion'
-        });
-    </script>
+</div>
 </body>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+
+<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+
+
+
+<script>
+
+    $('.rating').raty({
+        path: '../img/estrellitas/',
+        scoreName: 'val',
+        hints: ['malísimo', 'malo', 'regular', 'bueno', 'buenísimo']
+
+    });
+</script>
+
 
 </html>

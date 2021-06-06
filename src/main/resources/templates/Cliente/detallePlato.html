@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 
 <head>
@@ -70,18 +70,14 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
+                                <a class="btn" th:href="@{'/cliente/mostrarCarrito?idRest='+${idRest}+'&idPlato='+${plato.getIdplato()}}"><i class="fas fa-cart-plus" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
                                 <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
                             </div>
                         </div>
                     </div>
-
-             <!--       <div class="alert alert-info mt-2 ml-2 mr-2" role="alert">
-                        Se agregó un plato al carrito
-                    </div>
--->
+                    <div th:if="${msgAdd != null}" th:text="${msgAdd}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
                     <div class="row">
 
                         <div class="col-4 align-content-center">
@@ -104,11 +100,13 @@
                                 <strong style="color:#000000;">Precio: </strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
 
                             </div>
-                            <form>
+                            <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
                                 <div class="form-check-inline">
                                     <div class="form-check-inline">
-                                        <label for="precio"><strong style="color:#000000;">Añadir: </strong></label>
-                                        <input size="2%" class="form-control ml-3 mr-sm-1 mb-3" type="text" id="precio"
+                                        <label for="cantidad"><strong style="color:#000000;">Añadir: </strong></label>
+                                        <input name="idPlato" th:value="${plato.getIdplato()}" type="hidden">
+                                        <input name="idRest" th:value="${idRest}" type="hidden">
+                                        <input size="2%" class="form-control ml-3 mr-sm-1 mb-3" type="text" name="cantidadPlato" id="cantidad"
                                                style="border-color: lightgray">
                                         <span>uni.</span>
                                     </div>
@@ -116,13 +114,7 @@
                                 </div>
                                 <br>
                                 <div class="form-check-inline align-content-xl-end mb-5">
-                                    <a class="btn btn-secondary mr-3" style="color: #FFFFFF" href="#" data-toggle="modal"
-                                       data-target="#extraModal">
-                                        <i class="fas fa-plus mr-2"></i>
-                                        Extras
-                                    </a>
-
-                                    <button class="btn btn-cielito mr-3"   style="background-color: #2d4a8d; color: #FFFFFF" type="submit"><i
+                                    <button class="btn btn-cielito mr-3" style="background-color: #2d4a8d; color: #FFFFFF" type="submit"><i
                                             class="fas fa-cart-plus mr-2"></i>Añadir al carrito
                                     </button>
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}"><i
@@ -139,7 +131,120 @@
 
                 </div>
 
-            </div>
+
+                <form> <!--  th:action="@{'/cliente/buscadorCliente'}" method="get" -->
+                    <input type="hidden" name="idUsuario"> <!-- th:value="${cliente.idusuario}" -->
+                    <div class="form-group row">
+                        <div class="col-sm-3 mb-1 ">
+                            <input type="text" class="form-control"
+                                   name="textoPedido"
+                                   placeholder="Búsqueda por nombre ...">
+                            <!-- th:if="${textoBuscador == null}"
+                            <input th:unless="${textoBuscador == null}" type="text" class="form-control"
+                                   name="textoPedido" th:value="${textoBuscador}"
+                                   placeholder="Búsqueda por repartidor o restaurante"> -->
+                        </div>
+                        <div class="col-sm-2 mb-1 ">
+                            <!-- th:if="${valoracionBuscador == null}" -->
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled selected>Precio</option>
+                                <option value="1">S./00.00 hasta S./10.00</option>
+                                <option value="2">S./10.00 hasta S./20.00</option>
+                                <option value="3">S./20.00 hasta S./30.00</option>
+                                <option value="4">S./30.00 hasta S./40.00</option>
+                                <option value="5">S./50.00 a más</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-1">
+                            <!--th:if="${fechaPedidoBuscador == null}" -->
+                            <select id="buscadorCategoria" name="idPrecio" class="form-control" style="border-color: lightgray">
+                                <!-- TODO MANDAR LISTA DE CATEGORÍA-->
+                                <option value="" disabled selected>Categoría</option>
+                                <option value="1">a</option>
+                                <option value="2">b</option>
+                                <option value="3">c</option>
+                                <option value="4">d</option>
+                                <option value="5">e</option>
+                            </select>
+                            <!--<select th:unless="${fechaPedidoBuscador == null}" class="form-control" name="fechaPedido">
+                                <option value="" disabled selected>Fecha de Registro</option>
+                                <option th:selected="${fechaPedidoBuscador == 1}" value="1">Hoy</option>
+                                <option th:selected="${fechaPedidoBuscador == 7}" value="7">Esta semana</option>
+                                <option th:selected="${fechaPedidoBuscador == 30}" value="30">Este mes</option>
+                                <option th:selected="${fechaPedidoBuscador == 365}" value="365">Este año</option>
+                            </select>-->
+                        </div>
+
+                        <div class="input-group-append col-sm-1 mb-3 ml-0">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="submit">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
+                            <!--th:href="@{'/admin/detalle?idUsuario='+${cliente.idusuario}}" -->
+                            <a href="#" class="btn btn-secondary">Quitar filtros</a>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- /.container-fluid -->
+                <div class="card shadow ">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+                        <div class="d-sm-flex align-items-center justify-content-between">
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">LISTA DE EXTRAS</h5>
+                        </div>
+                    </div>
+                    <div th:if="${msgAddExtra != null}" th:text="${msgAddExtra}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
+
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="table-responsive ">
+                                <table>
+                                    <thead>
+                                    <th class="text-center">Extras</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Precio</th>
+                                    <th class="text-center">Categoría</th>
+                                    <th class="text-center">Añadir</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="extra : ${listaExtras}">
+                                        <td class="text-center mb-3"><img th:src="@{'/cliente/imagenExtra?id='+${extra.getIdextra()}}" style="width: 200px; height: 200px"></td>
+                                        <td class="text-center mb-3" th:text="${extra.getNombre()}"></td>
+                                        <td class="text-center mb-3" th:text="|S/. ${extra.getPreciounitario()}|"></td>
+                                        <td class="text-center mb-3" th:text="${extra.getTipo()}"></td>
+                                        <td class="text-center ">
+                                            <div class="form-check-inline">
+                                                <form th:action="@{'/cliente/aniadirExtras'}" method="post">
+                                                    <input name="idExtra" th:value="${extra.getIdextra()}" type="hidden">
+                                                    <input name="idRest" th:value="${idRest}" type="hidden">
+                                                    <input class="form-control ml-5 mr-2" name="cantidadExtra" type="text" size="5%" style="border-color: lightgray">uni.
+                                                    <button class="btn btn-cerrito ml-3" style="background-color: #701111" type="submit">
+                                                        <i class="fas fa-plus" style="color: #FFFFFF"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="pagination" style=" margin-left: 30% ;align-content: center">
+                                <a href="#">&laquo;</a>
+                                <a href="#" class="active">1</a>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                <a href="#">5</a>
+                                <a href="#">6</a>
+                                <a href="#">&raquo;</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             <!-- End of Page Content -->
 
         </div>
@@ -170,198 +275,10 @@
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111"
-                   href="/html/login.html">Cerrar Sesión</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Extras Modal-->
-<div class="modal fade" id="extraModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Extras Disponibles</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-
-                    <hr width="100%" style="border-top: solid">
-                    <h6 class="text-center"><strong>Bebidas</strong></h6>
-                    <hr width="100%" style="border-top: solid">
-
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-
-                    <hr width="100%" style="border-top: solid">
-                    <h6 class="text-center"><strong>Cubiertos</strong></h6>
-                    <hr width="100%" style="border-top: solid">
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/cuchillo.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/tenedor.jpg">
-                                <div class="ml-1"> Tenedor</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> De plástico</div>
-                        </div>
-                        <div class="col text-center">Gratis</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-
-                    <hr width="100%" style="border-top: solid">
-                    <h6 class="text-center"><strong>Guarniciones</strong></h6>
-                    <hr width="100%" style="border-top: solid">
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">
-                            <div class="ml-1"> 1.5L de saber peruano</div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                        <div class="col text-left">
-                            <input class="form-control mr-3" type="text" size="5%" style="border-color: lightgray">
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-cerrito" href="#">Agregar al Plato</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>

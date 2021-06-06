@@ -1,11 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dtos.ClienteDTO;
-import com.example.demo.dtos.PedidoDTO;
-import com.example.demo.dtos.PedidoValoracionDTO;
-import com.example.demo.dtos.PlatosDTO;
-import com.example.demo.dtos.RestauranteDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.model.IModel;
 
 import javax.print.attribute.standard.Media;
@@ -29,9 +26,7 @@ import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 
@@ -58,6 +53,15 @@ public class ClienteController {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
+    @Autowired
+    ExtraRepository extraRepository;
+
+    @Autowired
+    PlatoHasPedidoRepository platoHasPedidoRepository;
+
+    @Autowired
+    ExtraHasPedidoRepository extraHasPedidoRepository;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -394,6 +398,19 @@ public class ClienteController {
             return null;
         }
     }
+    @GetMapping("/imagenExtra")
+    public ResponseEntity<byte[]> mostrarExtras(@RequestParam("id") int id) {
+        Optional<Extra> extraOpt = extraRepository.findById(id);
+        if (extraOpt.isPresent()) {
+            Extra extra = extraOpt.get();
+            byte[] image = extra.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(extra.getFotocontenttype()));
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 
 
     @GetMapping("/listaPlatos")
@@ -462,18 +479,135 @@ public class ClienteController {
         if(platoOpt.isPresent() || restauranteOpt.isPresent()){
             Plato plato = platoOpt.get();
             Restaurante restaurante = restauranteOpt.get();
+            List<ExtraDTO> listaExtras = extraRepository.listaExtrasDisponibles(idRest);
 
             model.addAttribute("plato",plato);
+            model.addAttribute("listaExtras",listaExtras);
             model.addAttribute("idRest",idRest);
             model.addAttribute("nombreRest",restaurante.getNombre());
             return "Cliente/detallePlato";
         }else{
-            model.addAttribute("idRest",idRest);
-            model.addAttribute("idPlato",idPlato);
-            return "Cliente/listaProductos";
+            //model.addAttribute("idRest",idRest);
+            //model.addAttribute("idPlato",idPlato);
+            return "redirect: cliente/listaPlatos?idRest="+idRest+"&idPlato="+idPlato;
+        }
+    }
+
+    @GetMapping("/mostrarCarrito")
+    public String mostrarCarrito(@RequestParam("idRest") Integer idRest,
+                                 Model model){
+        //ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
+        //List<Plato_has_pedido> carritoL = (List<Plato_has_pedido>) session.getAttribute("carrito");
+
+        //model.addAttribute("carrito",carritoL);
+        model.addAttribute("idRest",idRest);
+        return "Cliente/carritoCompras";
+    }
+
+    @PostMapping("/aniadirCarrito")
+    public String aniadirCarrito(@RequestParam("idPlato") Integer idPlato,
+                                 @RequestParam("idRest") Integer idRest,
+                                 @RequestParam("cantidadPlato") int cantidadPlato,
+                                 HttpSession session,
+                                 RedirectAttributes attr){
+        //carrito
+        ArrayList<Plato_has_pedido> carrito = new ArrayList<>();
+        Plato_has_pedido php = new Plato_has_pedido();
+        Optional<Plato> platoOptional = platoRepository.findById(idPlato);
+
+        if(platoOptional.isPresent()){
+            //GUARDANDO TODOS LOS ATRIBUTOS NECESARIOS A CARRITO
+            Plato plato = platoOptional.get();
+            Plato_has_pedidoKey idComPlato = new Plato_has_pedidoKey();
+            //SE GUARDARÁ TEMPORALMENTE EN SESIÓN CON UN CÓDIGO TEMPORAL QUE SE ACTUALIZARÁ
+            String codigo = "CODIGOTEMPORAL";
+
+            //TODO HAY QUE VALIDAR DE QUE VISTA SE ESTÁ AÑADIENDO AL CARRITO - XQ DE ESO DEPENDE EL COMENTARIO
+            idComPlato.setIdplato(idPlato);
+            idComPlato.setCodigo(codigo);
+
+            php.setPlato(plato);
+            //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
+            php.setCantidad(cantidadPlato);
+            //TODO SI FUERA EL SUBTOTAL EN EL CARRITO SE GUARDARÍA PRECIO UNITARIO X CANTIDAD PLATO
+            php.setPreciounitario(BigDecimal.valueOf(plato.getPrecio()));
+            php.setIdplatohaspedido(idComPlato);
+
+            carrito.add(php);
+            session.setAttribute("carrito",carrito);
+            attr.addFlashAttribute("msgAdd", "Se agregó un plato al carrito");
+        }else{
+            attr.addFlashAttribute("msgNotFound", "No se encontro el plato");
+        }
+        //TODO por ahora solo funcionará si el flujo es LISTA DE PLATOS - DETALLE - VER CARRITO
+        String urlDetalle = "detallePlato";
+        String params = "?idRest="+idRest+"&idPlato="+idPlato;
+        return "redirect:/cliente/"+urlDetalle+params;
+    }
+
+    @PostMapping("/restarCarrito")
+    public String restarCarrito(){
+
+        return "/";
+    }
+
+    @GetMapping("/mostrarExtrasCarrito")
+    public String mostrarExtrasCarrito(@RequestParam("idRest") Integer idRest,
+                                       Model model){
+        model.addAttribute("idRest",idRest);
+        return "Cliente/carritoExtras";
+    }
+
+    @PostMapping("/aniadirExtras")
+    public String aniadirExtras(@RequestParam(value = "IdExtra") Integer idExtra,
+                                @RequestParam("idRest") Integer idRest,
+                                @RequestParam("idPlato") Integer idPlato,
+                                @RequestParam(value = "cantidadExtra") int cantidadExtra,
+                                HttpSession session,
+                                RedirectAttributes attr){
+        //extras de carrito
+        ArrayList<Extra_has_pedido> extrasCarrito = new ArrayList<>();
+        Extra_has_pedido ehp = new Extra_has_pedido();
+        Optional<Extra> extraOptional = extraRepository.findById(idExtra);
+
+        if(extraOptional.isPresent()){
+            Extra extra = extraOptional.get();
+            Extra_has_pedidoKey idComExtra = new Extra_has_pedidoKey();
+            String codigo = "CODIGOTEMPORAL";
+
+            idComExtra.setIdextra(idExtra);
+            idComExtra.setCodigo(codigo);
+
+            ehp.setCantidad(cantidadExtra);
+            ehp.setPreciounitario(BigDecimal.valueOf(extra.getPreciounitario()));
+            ehp.setIdextra(idComExtra);
+
+            extrasCarrito.add(ehp);
+            session.setAttribute("extrasCarrito",extrasCarrito);
+            attr.addFlashAttribute("msgAddExtra", "Se agregó un extra al carrito");
+        }else{
+            attr.addFlashAttribute("msgNotFound", "No se encontro el plato");
         }
 
+        //TODO por ahora solo funcionará si el flujo es LISTA DE PLATOS - DETALLE - VER CARRITO
+        String urlDetalle = "detallePlato";
+        String params = "?idRest="+idRest+"&idPlato="+idPlato;
+        return "redirect:/cliente/"+urlDetalle+params;
     }
+
+
+    @PostMapping("/restarExtrasCarrito")
+    public String restarExtrasCarrito(){
+
+        return "/";
+    }
+
+    @GetMapping("/terminarCompra")
+    public String terminarCompra(){
+
+        return "/";
+    }
+
 
     @GetMapping("/listaCupones")
     public String listacupones() {

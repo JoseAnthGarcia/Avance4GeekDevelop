@@ -26,14 +26,6 @@ public class Extra  implements Serializable {
     @NotBlank(message = "El nombre del extra no puede estar vacío")
     private String nombre;
 
-    public double getPreciounitario() {
-        return preciounitario;
-    }
-
-    public void setPreciounitario(double preciounitario) {
-        this.preciounitario = preciounitario;
-    }
-
     //Considerando un precio máximo de extra de 200 - superior a esto se considera String <- Se puede cambiar
     @Column(nullable = false, name = "preciounitario")
     @Digits(integer = 200, fraction = 2, message = "Ingresar un precio válido")
@@ -42,7 +34,15 @@ public class Extra  implements Serializable {
     @NotNull(message = "Este campo no puede estar vacío")
     private double preciounitario;
     private int idrestaurante;
+
+    @Column(nullable = false)
+    private boolean disponible;
+
     private int idcategoriaextra;
+
+    //@ManyToOne
+    //@JoinColumn(name="idcategoriaextra", nullable = false)
+    //private CategoriaExtra categoriaExtra;
 
     //FOTI
     private String fotonombre;
@@ -73,8 +73,7 @@ public class Extra  implements Serializable {
     public void setFoto(byte[] foto) {
         this.foto = foto;
     }
-//FIN FOTIU
-
+//FIN FOTI
 
     public int getIdrestaurante() {
         return idrestaurante;
@@ -88,6 +87,13 @@ public class Extra  implements Serializable {
 
     public void setIdcategoriaextra(int idcategoriaextra) { this.idcategoriaextra = idcategoriaextra; }
 
+    public double getPreciounitario() {
+        return preciounitario;
+    }
+
+    public void setPreciounitario(double preciounitario) {
+        this.preciounitario = preciounitario;
+    }
 
     public boolean isDisponible() {
         return disponible;
@@ -96,11 +102,6 @@ public class Extra  implements Serializable {
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
-
-    @Column(nullable = false)
-    private boolean disponible;
-
-
 
     public String getNombre() {
         return nombre;

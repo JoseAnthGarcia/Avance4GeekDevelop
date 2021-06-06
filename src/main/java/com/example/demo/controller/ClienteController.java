@@ -4,6 +4,9 @@ package com.example.demo.controller;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import com.example.demo.service.PedidoActualService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +29,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 
@@ -53,6 +59,9 @@ public class ClienteController {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
+    @Autowired
+    PedidoActualService pedidoActualService;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -383,14 +392,60 @@ public class ClienteController {
 
     //PEDIDO ACTUAL
     @GetMapping("/pedidoActual")
-    public String pedidoActual(Model model, HttpSession httpSession,
+    public String pedidoActual(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                @RequestParam(value = "texto",required = false) String texto,
                                @RequestParam(value = "estado",required = false) String estado) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        texto= "";
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        PageRequest pageRequest = PageRequest.of(page, 5);
 
-        List<PedidoDTO> listaPedidos=pedidoRepository.pedidosTotales(usuario1.getIdusuario(), texto,0,6);
+
+        if(texto==null ){
+            texto= "";
+        }
+        if(estado==null){
+            estado="7";
+        }
+        int limitSup=6;
+        int limitInf=0;
+        switch (estado){
+            case "1":
+                 limitSup=1;
+                 limitInf=0;
+                break;
+
+            case "3":
+                limitSup=3;
+                limitInf=2;
+                break;
+
+            case "4":
+                limitSup=4;
+                limitInf=3;
+                break;
+            case "5":
+                limitSup=5;
+                limitInf=4;
+                break;
+
+            default:
+                 limitSup=6;
+                limitInf=0;
+        }
+
+        System.out.println("BEFORE QUERY");
+
+
+        Page<PedidoDTO> listaPedidos=pedidoActualService.findPaginated(usuario1.getIdusuario(), texto,limitInf,limitSup, pageRequest);
+
+        int totalPage = listaPedidos.getTotalPages();
+
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
+
         List<PedidoDTO> listaPedidoActual= new ArrayList<PedidoDTO>();
         for(PedidoDTO ped: listaPedidos){
             if(ped.getEstado()==1 || ped.getEstado()==3 || ped.getEstado()==4 || ped.getEstado()==5 ){
@@ -398,7 +453,10 @@ public class ClienteController {
             }
         }
 
-        model.addAttribute("listaPedidos",listaPedidoActual);
+        model.addAttribute("listaPedidos",listaPedidos.getContent());
+        //mandar valores
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado", estado);
 
         return "Cliente/listaPedidoActual";
     }

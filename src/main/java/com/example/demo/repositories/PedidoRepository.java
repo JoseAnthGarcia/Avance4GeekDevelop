@@ -27,18 +27,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<Pedido> pedidosPorCliente(int idCliente, String texto, int valoracion, int fechaPedido);
 
 
-    @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto'  from pedido p\n" +
-            "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "            where p.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2%\n" +
-            "            and p.estado >=?3 and  p.estado <=?4  order by p.codigo asc ", nativeQuery = true)
+    @Query(value="select r.nombre, r.idrestaurante,ped.fechapedido, ped.tiempoentrega, ped.estado, ped.codigo,r.foto as 'foto' from pedido ped\n" +
+            "            inner join restaurante r on ped.idrestaurante = r.idrestaurante \n" +
+            "            where ped.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2% \n" +
+            "            and ped.estado >?3 and  ped.estado <=?4 ", nativeQuery = true)
 
-    List<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2);
+    Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto' , p.valoracionrestaurante, p.comentariorestaurante, p.valoracionrepartidor,p.comentariorepartidor  " +
             "from pedido p\n" +
             "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "            where p.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2%\n" +
-            "            and p.estado >=?3 and  p.estado <=?4  order by p.codigo asc ", nativeQuery = true)
+            "            and p.estado > ?3 and  p.estado <=?4  order by p.codigo asc ", nativeQuery = true)
 
     List<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2);
 

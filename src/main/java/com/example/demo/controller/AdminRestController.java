@@ -532,12 +532,12 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        return findPaginated2("", 0, "", 1,restaurante.getIdrestaurante(), model, session);
+        return findPaginated2("", 0, 0, 1,restaurante.getIdrestaurante(), model, session);
     }
     @GetMapping("/page2")
     public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                 @RequestParam(value = "inputCantidad", required=false) Integer inputCantidad,
-                                 @RequestParam(value = "inputCategoria", required=false) String inputCategoria,
+                                 @ModelAttribute @RequestParam(value = "inputCantidad", required=false) Integer inputCantidad,
+                                 @ModelAttribute @RequestParam(value = "inputCategoria", required=false) Integer inputCategoria,
                                  @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                  @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
@@ -555,8 +555,11 @@ public class AdminRestController {
             textBuscador = "";
         }
         System.out.println(inputCategoria);
-        if (inputCategoria == null || inputCategoria.equals("")) {
-            inputCategoria = "";
+        String inputCategoria2;
+        if (inputCategoria == null || inputCategoria == 0) {
+            inputCategoria2 = "";
+        } else {
+            inputCategoria2 = String.valueOf(inputCategoria);
         }
         System.out.println(inputCantidad);
         if (inputCantidad == null) {
@@ -582,17 +585,19 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria);
+        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
         listaPlatoReporte = page.getContent();
 
         //Enviar atributos a la vista
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoC", inputCategoria);
+        model.addAttribute("textoCant", inputCantidad);
 
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria);
+        System.out.println(listaCategorias.get(2).getIdcategoria());
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
 
         //Enviar lista y valores para paginación
         model.addAttribute("currentPage", pageNo);

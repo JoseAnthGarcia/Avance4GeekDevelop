@@ -36,17 +36,20 @@
                                 </div>
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="inputCategoria" name="inputCategoria">
-                                        <option th:selected="${textoC==0}">Categorías</option>
-                                        <option th:each="listaCat:${listaCategorias}" th:selected="${textoC==listaCat.idcategoria}"></option>
+                                        <option th:value="0" th:selected="${textoC==0}">Categorías</option>
+                                        <option th:value="${listaCategorias.get(0).getIdcategoria()}" th:selected="${textoC==listaCategorias.get(0).getIdcategoria()}" th:text="${listaCategorias.get(0).nombre}"></option>
+                                        <option th:value="${listaCategorias.get(1).getIdcategoria()}" th:selected="${textoC==listaCategorias.get(1).getIdcategoria()}" th:text="${listaCategorias.get(1).nombre}" ></option>
+                                        <option th:value="${listaCategorias.get(2).getIdcategoria()}" th:selected="${textoC==listaCategorias.get(2).getIdcategoria()}" th:text="${listaCategorias.get(2).nombre}"></option>
+                                        <option th:value="${listaCategorias.get(3).getIdcategoria()}" th:selected="${textoC==listaCategorias.get(3).getIdcategoria()}" th:text="${listaCategorias.get(3).nombre}"></option>
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-2">
-                                    <select class="form-control" id="textPrecio" name="textPrecio">
-                                        <option value="">Cantidad Vendida</option>
-                                        <option value="">0 uni. hasta 25 uni.</option>
-                                        <option value="">25 uni. hasta 50 uni.</option>
-                                        <option value="">50 uni. hasta 100 uni.</option>
-                                        <option value="">100 uni. a más</option>
+                                    <select class="form-control" id="inputCantidad" name="inputCantidad">
+                                        <option value="0" th:selected="${textoCant==0}">Cantidad Vendida</option>
+                                        <option value="1" th:selected="${textoCant==1}">0 uni. hasta 5 uni.</option>
+                                        <option value="2" th:selected="${textoCant==2}">5 uni. hasta 10 uni.</option>
+                                        <option value="3" th:selected="${textoCant==3}">10 uni. hasta 15 uni.</option>
+                                        <option value="4" th:selected="${textoCant==4}">20 uni. a más</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-1 mb-3 ml-0 mr-0">
@@ -55,7 +58,7 @@
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-xs-2 mb-1 ml-0 mr-0" style="text-align: right">
+                                <div class="col-sm-4 mb-1 ml-0 mr-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{'/restaurante/reportePlatos'}">Quitar filtros</a>
                                 </div>
@@ -74,7 +77,7 @@
 
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div th:if="${totalItems!=0}" class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -97,7 +100,7 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="lista,v:${listaPedidos} ">
-                                            <td th:text="${(v.index+1)}"></td>
+                                            <td th:text="${(v.index+1)+(5*(currentPage - 1))}"></td>
                                             <td th:text="${lista.getId()}"></td>
                                             <td th:text="${lista.getNombre()}"></td>
                                             <td th:text="${lista.getNombrecat()}"></td>
@@ -109,15 +112,19 @@
                                     </table>
 
                                 </div>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a href="#">&laquo;</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
+                                <div th:if="${totalItems==0}">
+                                    <h3 class="text-lg-center text-danger">No hay coincidencias con su búsqueda.</h3>
+                                </div>
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/restaurante/page2?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputCategoria='+ ${textoC} + '&inputCantidad=' + ${textoCant}}"
+                                           th:utext="${i}"
+                                           class="active mt-2"></a>
+                                        <a th:unless="${currentPage != i}"
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

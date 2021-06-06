@@ -15,8 +15,8 @@ public class ReportePlatoServiceImpl implements ReportePlatoService {
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<PlatoReporteDTO> findPaginated(int pageNo, int pageSize, int idrestaurante, int estado, String nombre, String idcategoria) {
+    public Page<PlatoReporteDTO> findPaginated(int pageNo, int pageSize, int idrestaurante, int estado, String nombre, String idcategoria, int cantMin, int cantMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.pedidoRepository.reportePlato(idrestaurante, estado, nombre, idcategoria, pageable);
+        return this.pedidoRepository.reportePlato(idrestaurante, estado, nombre, idcategoria, cantMin, cantMax, pageable);
     }
 }

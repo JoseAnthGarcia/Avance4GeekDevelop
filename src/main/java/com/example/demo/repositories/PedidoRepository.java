@@ -135,20 +135,15 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
 
-    @Query(value = "select r.idrestaurante, r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
-            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total', p.fechapedido \n" +
-            ",c.nombre as 'nombrecupon', c.descuento,p.codigo,p.tiempoentrega\n" +
+    @Query(value ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +
             "from pedido p \n" +
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
-            "left join cliente_has_cupon clhp on p.idcupon = clhp.idcupon\n" +
-            "inner join cupon c on c.idcupon = clhp.idcupon\n" +
-            "where p.idcliente=?1  and clhp.utilizado=1 and\n" +
-            "(EXTRACT(MONTH from p.fechapedido) > ?2  and  EXTRACT(MONTH from p.fechapedido)<= ?3 )\n" +
-            "and  lower(r.nombre) like %?4%\n"+
-            "group by r.idrestaurante\n" +
-            " having (count(r.idrestaurante ) like %?5%)", nativeQuery = true)
+            "where p.idcliente= ?1 and (EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido) <=?3 )\n" +
+            "and lower(r.nombre) like %?4%\n" +
+            " group by p.idrestaurante having count(r.idrestaurante) like %?5%",nativeQuery = true)
 
-    List<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,String texto,String limitcant);
+    Page<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,String texto,String limitcant,Pageable pageable);
 
     @Query(value = "select pe.codigo,dis.nombre as lugar, date_format(pe.fechapedido, '%H:%i') as hora, u.nombres as cliente  from pedido pe\n" +
             "    inner join ubicacion ubi on pe.idubicacion=ubi.idubicacion\n" +

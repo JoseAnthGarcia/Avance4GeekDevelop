@@ -276,7 +276,8 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small" name="texto"
+                                <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
+                                       name="texto"
                                        th:value="${texto.equals('')?'':texto}"
                                        th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                             </div>
@@ -286,7 +287,7 @@
                                 <input type="busquedaNumeroPedidos" class="form-control" name="numpedidos"
                                        th:value="${numpedidos.equals('')?'':numpedidos}"
                                        th:placeholder="${numpedidos.equals('')?'N° de pedidos':numpedidos}"
-                                       >
+                                >
 
                             </div>
                         </div>
@@ -317,7 +318,7 @@
                             <a class="btn btn-secondary" th:href="@{'/cliente/reportePedido'}">Quitar filtros</a>
                         </div>
                     </div>
-                </form >
+                </form>
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
@@ -332,109 +333,125 @@
                         </div>
                     </div>
                     <br>
-                    <div class="justify-content-center row">
+
+                    <div style=text-align:center>
+                    <h3 class="justify-content-center"
+                    th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
+                        th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
+                    </div>
+                    <!-- th:if="${listarestTop.size>0 || listarestPl.size()>0 }"  -->
+                    <div class="justify-content-center row" >
                         <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
                         <span><h2 style="color:black">Top 3</h2></span>
                     </div>
 
 
-                    <div class="justify-content-center row">
-                        <div class="card col-3" style="background-color:#F2E2AA" >
-                            <div style="color:black; text-align:center" >Restaurantes</div>
-                            <h6 style="color: black"  th:each="ped,info: ${listarestTop}" th:text="${ped.getNombrerest()}"></h6>
+                    <div class="justify-content-center row" >
+                    <!-- th:if="${listarestTop.size>0 || listarestPl.size()>0 }"-->
 
+
+                        <div>
+                            <div class="card col-3" style="background-color:#F2E2AA">
+                                <div style="color:black; text-align:center">Restaurantes</div>
+                                <h6 style="color: black" th:each="ped,info: ${listarestTop}"
+                                    th:text="${ped.getNombrerest()}"></h6>
+
+                            </div>
+                            <br>
+                            </br>
+                            <div class="col-3" style="background-color:#F2E2AA">
+                                <div style="color:black; text-align:center">Platos mas pedidos</div>
+                                <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
+                            </div>
                         </div>
-                        <br>
-                        </br>
-                        <div class="col-3" style="background-color:#F2E2AA">
-                            <div style="color:black; text-align:center">Platos mas pedidos</div>
-                        <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
+
+
+                        <div class="text-center">
+                            <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
                         </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+
+                                    <tr>
+                                        <th>
+                                            N°
+                                        </th>
+                                        <th>
+                                            Restaurantes
+                                        </th>
+                                        <th>
+                                            N° Pedidos
+                                        </th>
+                                        <th>
+                                            Consumo Total
+                                        </th>
+                                        <th>
+                                            Mes
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="ped,info:${listapedidos}">
+                                        <td th:text="${info.index+1}"></td>
+                                        <td th:text="${ped.getNombrerest()}"></td>
+                                        <td th:text="${ped.getNumPedidos()}">10</td>
+                                        <td th:text="${ped.getTotal()}"></td>
+                                        <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
+                                        <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
+                                        <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
+                                        <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
+                                        <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
+                                        <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
+                                        <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
+                                        <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
+                                        <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
+                                        <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
+                                        <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
+                                        <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                            <nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${texto == null && numpedidos == null && mes==null  }" class="page-link active" th:text="${page}"
+                                           th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}}"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+
+
                     </div>
 
 
-                    <div class="text-center">
-                        <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-
-                                <tr>
-                                    <th>
-                                        N°
-                                    </th>
-                                    <th>
-                                        Restaurantes
-                                    </th>
-                                    <th>
-                                        N° Pedidos
-                                    </th>
-                                    <th>
-                                        Consumo Total
-                                    </th>
-                                    <th>
-                                        Mes
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${info.index+1}"></td>
-                                    <td th:text="${ped.getNombrerest()}"></td>
-                                    <td th:text="${ped.getNumPedidos()}">10</td>
-                                    <td th:text="${ped.getTotal()}"></td>
-                                    <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
-                                    <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
-                                    <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
-                                    <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
-                                    <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
-                                    <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
-                                    <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
-                                    <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
-                                    <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
-                                    <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
-                                    <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
-                                    <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
-                                </tr>
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                            <a href="#">&laquo;</a>
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
-                        </div>
+                    <div style="text-align:center">
+                        <a class="btn btn-primary" th:href="@{cliente/listaReportes}" type="submit">Regresar</a>
                     </div>
                 </div>
-                <div style="text-align:center">
-                    <a class="btn btn-primary" th:href="@{cliente/listaReportes}" type="submit">Regresar</a>
-                </div>
+                <!-- /.container-fluid-->
+
             </div>
-            <!-- /.container-fluid-->
+
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Geek Developers &copy; 2021-1</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
+        <!-- End of Content Wrapper -->
     </div>
 
 </div>

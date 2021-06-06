@@ -132,7 +132,7 @@
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <select class="form-control" id="textPrecio" name="textPrecio">
+                                    <select class="form-control" id="inputPrecio" name="inputPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.20.00</option>
                                         <option value="2" th:selected="${textoP==2}">S/.20.00 hasta S/.40.00</option>
@@ -303,7 +303,7 @@
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP} + '&textEstado=' + ${textoE} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
+                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP} + '&textEstado=' + ${textoE} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

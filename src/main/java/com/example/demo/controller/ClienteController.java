@@ -753,11 +753,9 @@ public class ClienteController {
     }
 
     @PostMapping("/valorarRest")
-    public String valorarRest(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession, @RequestParam("id") String id,
+    public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
                               @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
         Pedido pedido = pedidoRepository.encontrarporId(id);
         if (pedido != null) {
             Pedido pedido1 = pedido;
@@ -766,17 +764,13 @@ public class ClienteController {
             pedidoRepository.save(pedido1);
         }
 
-
-
         return "redirect:/cliente/historialPedidos";
     }
 
     @PostMapping("/valorarRep")
-    public String valorarRep(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession, @RequestParam("id") String id,
+    public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRep") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
         System.out.println(valoraRest);
         System.out.println(comentRest);
         System.out.println(id);
@@ -787,7 +781,6 @@ public class ClienteController {
             pedido1.setComentariorepartidor(comentRest);
             pedidoRepository.save(pedido1);
         }
-
         return "redirect:/cliente/historialPedidos";
     }
 

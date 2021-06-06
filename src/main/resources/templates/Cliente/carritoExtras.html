@@ -1,7 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Carrito de compras')"></head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Custom fonts for this template -->
+    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+
+
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+
+    <title>Carrito de Extras</title>
+
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+</head>
 <body id="page-top">
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -239,7 +279,7 @@
                 </ul>
 
             </nav>
-            <!------------>
+            <!-- End of Top bar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -284,16 +324,7 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
-
-                        <div class="row">
-                            <div class="col-1">
-                                <a class="btn" th:href="@{'/cliente/mostrarExtrasCarrito?idRest='+${idRest}}"><i class="fas fa-shopping-basket" style="color: white"></i></a>
-                            </div>
-                            <div class="col-9 mt-2">
-                                <!-- <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>-->
-                                <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE COMPRAS</h5>
-                            </div>
-                        </div>
+                        <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE EXTRAS</h5>
                     </div>
                     <div class="card-body">
                         <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
@@ -302,13 +333,13 @@
                             </div> -->
 
                         <div class="table-responsive">
-                            <!--<div class="mb-2" style="color: red">Ingrese un número</div>-->
+                            <div class="mb-2" style="color: red">Ingrese un número</div>
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center"></th>
                                     <th class="text-center">
-                                        Plato
+                                        Extra
                                     </th>
                                     <th class="text-center">
                                         Precio
@@ -319,41 +350,37 @@
                                     <th class="text-center">
                                         Subtotal
                                     </th>
-                                    <th class="text-center">
-                                        Observación
-                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                   <tr th:each="plato : ${session.carrito}">
-                                       <td style="width: 100px">
-                                           <div class="ml-sm-4 mb-4">
-                                               <input class="form-check-input" type="checkbox" value="">
-                                           </div>
-                                       </td>
+                                <tr th:each="extra : ${session.extrasCarrito}">
+                                    <td style="width: 100px">
+                                        <div class="ml-sm-4 mb-4">
+                                            <input class="form-check-input" type="checkbox" value="">
+                                        </div>
+                                    </td>
                                     <td style="width: 500px">
                                         <div class="form-check-inline">
                                             <img class="img-profile rounded-circle" alt="list-style-image"
                                                  style="width: 35px; height: 35px"
-                                                 th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplatohaspedido().getIdplato()}}">
-                                            <div class="ml-3" th:text="${plato.getPlato().getNombre()}"></div>
+                                                 th:src="@{'/cliente/imagenExtra?id='+${extra.getExtra().getIdextra()}}">
+                                            <div class="ml-3" th:text="${extra.getExtra().getNombre()}"></div>
                                         </div>
                                     </td>
-                                    <td style="width: 250px" th:text="|S/. ${plato.getPreciounitario()}|"></td>
+                                    <td style="width: 250px" th:text="|S/. ${extra.getPreciounitario()}|"></td>
                                     <td style="width: 250px">
                                         <div class="form-check-inline">
                                             <button class="btn btn-cerrito mr-3" style="color: #ffffff; background-color: #701111"><i
                                                     class="fas fa-plus"></i></button>
-                                            <input class="form-control mr-3 mb-3 mt-3" type="text" size="5%" name="cantidad" th:value="${plato.getCantidad()}"
-                                                   id="cantidad" style="background: #ededed">
-                                            <button class="btn btn-cielito " style="color: #FFFFFF; background-color: #2d4a8d"><i
+                                            <input class="form-control ml-3 mr-3 mb-3 mt-3" type="text" size="5%"
+                                                   id="extra" style="background: #ededed" name="cantidadExtra" th:value="${extra.getCantidad()}">
+                                            <button class="btn btn-cielito "style="color: #FFFFFF; background-color: #2d4a8d"><i
                                                     class="fas fa-minus"></i></button>
                                         </div>
                                     </td>
-                                    <td style="width: 250px" th:text="|S/. ${plato.getPreciounitario() * plato.getCantidad()}|"></td>
-                                    <td style="width: 700px"><textarea class="form-control" aria-label="With textarea"
-                                                                       style="background: #ededed"></textarea></td>
-                                    </tr>
+                                    <td style="width: 250px" th:text="|S/. ${extra.getPreciounitario() * extra.getCantidad()}|"></td>
+                                </tr>
+
                                 </tbody>
 
                             </table>
@@ -361,14 +388,13 @@
                         <div class="container">
                             <div class="row justify-content-between mb-3">
                                 <div class="col justify-content-start">
-                                    <button class="btn btn-trash mr-3" style="color: #FFFFFF; background-color: #701111"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-eliminar mr-3" style="color: #FFFFFF; background-color: #e08a3d"><i class="fas fa-times"></i></button>
+                                    <button class="btn btn-trash mr-3"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-eliminar mr-3"><i class="fas fa-times"></i></button>
                                 </div>
                                 <div class="col text-right">
-                                    <!-- TODO VALIDAR LA REDIRECCION -->
-                                    <a class="btn btn-back mr-3" style="color: #FFFFFF;background-color: #d6bd1d" th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}"><i class="fas fa-arrow-left"></i> Regresar
+                                    <a class="btn btn-back mr-3" href="listaProductos.html"><i class="fas fa-arrow-left"></i> Regresar
                                     </a>
-                                    <a class="btn btn-pay mr-3" style="color: #FFFFFF; background-color: #64a94d" href="pagoPedido.html"><i class="fas fa-arrow-right"></i> Ir a Pagar
+                                    <a class="btn btn-pay mr-3" href="pagoPedido.html"><i class="fas fa-arrow-right"></i> Ir a Pagar
                                     </a>
                                 </div>
                             </div>
@@ -413,7 +439,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -445,13 +471,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 </body>
 

@@ -10,4 +10,5 @@ public interface PedidoDTO {
     int getTiempoentrega();
     int getEstado();
     String getCodigo();
+    int getIdcliente();
 }

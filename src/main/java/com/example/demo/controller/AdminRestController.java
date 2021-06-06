@@ -512,7 +512,9 @@ public class AdminRestController {
         for (String codigo : lista_codigos) {
             lista.add(pedidoRepository.pedidoReporte(codigo, codigo));
         }
-        model.addAttribute("listareporte", lista);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
+        model.addAttribute("listareporte",lista);
         return "AdminRestaurante/reporteVentas";
     }
 
@@ -669,7 +671,7 @@ public class AdminRestController {
 
         System.out.println(listaCategorias.get(2).getIdcategoria());
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
-
+        System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

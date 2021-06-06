@@ -22,6 +22,9 @@ public interface ExtraRepository extends JpaRepository<Extra, Integer> {
 
     Page<Extra> findByIdrestauranteAndDisponible(int idrestaurante,boolean disponible, Pageable pageable);
 
-
-
+    @Query(value = "SELECT e.idextra, e.foto, e.fotocontenttype, e.fotonombre, e.nombre, e.preciounitario, ce.tipo FROM extra e\n" +
+            "inner join categoriaextra ce on e.idcategoriaextra = ce.idcategoriaextra\n" +
+            "where e.idrestaurante = ?1 and e.disponible = 1\n" +
+            "order by ce.idcategoriaextra;",nativeQuery = true)
+    List<ExtraDTO> listaExtrasDisponibles(int idRestaurante);
 }

@@ -273,14 +273,13 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <input id="idRest" name="idRest" type="hidden" th:value="${idRest}">
-                            <input id="texto" name="texto" type="text" class="form-control bg-light small"
-                                   th:value="${texto.equals('')?'':texto}"
-                                   th:placeholder="${texto.equals('')?'Búsqueda por plato...':texto}"
+                            <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                   th:placeholder="${texto.equals('') ? 'Búsqueda por plato...' : texto}"
+                                   th:value="${texto.equals('') ? '' : texto}"
                                    style="border-color: lightgray">
                         </div>
                         <div class="col-sm-3 mb-1">
-                            <select id="buscadorPrecios" name="idPrecio" class="form-control"
-                                    style="border-color: lightgray">
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
                                 <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
                                 <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
@@ -290,12 +289,10 @@
                             </select>
                         </div>
                         <div class="col-sm-2 mb-1 mt-md-auto">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="submit">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
-                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar
-                                filtros</a>
+                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -304,8 +301,7 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus"
-                                                                             style="color: white"></i></a>
+                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
                                 <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
@@ -315,9 +311,9 @@
 
                     <div class="container mt-4 mb-4">
 
-                        <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
-                               Se agregó un plato al carrito
-                           </div>-->
+                     <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
+                            Se agregó un plato al carrito
+                        </div>-->
                         <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
                             <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
                                 No se encontraron resultados en la búsqueda
@@ -326,33 +322,25 @@
                         <div class="row mb-5">
 
                             <div class="col text-center" th:each="plato : ${listaPlato}">
-                                <div style="color:#000000;" class="ml-3 mt-1 text-left">
-                                    <strong>Precio:</strong>
-                                    <h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
-                                </div>
-
-
-                                <div class="container2">
-                                    <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
-                                         class="image2 shadow" style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left"
-                                            th:text="${plato.getNombre()}"></h1>
-                                    </a>
-                                </div>
-
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br>
-                                        número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-plus"></i></button>
+                                    <div style="color:#000000;" class="ml-3 mt-1 text-left">
+                                        <strong th:text="|Precio:  |"></strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
                                     </div>
-                                </div>
+                                    <div class="container2">
+                                        <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
+                                             class="image2 shadow"  style="height: 200px; width: 300px">
+                                        <a class="overlay2" th:href="@{'/cliente/detallePlato?idRest='+${idRest}+'&idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
+                                            <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
+                                        </a>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <!-- label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label> -->
+                                        <div class="form-check-inline">
+                                            <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
+                                                   style="border-color: lightgray">
+                                            <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
+                                                    class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
                             </div>
 
                         </div>

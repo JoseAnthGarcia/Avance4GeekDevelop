@@ -863,7 +863,7 @@ public class ClienteController {
                 mes = "13";
             }
         }
-
+//aea
         Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
 
         List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitSup);

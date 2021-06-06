@@ -133,7 +133,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by php.idplato) as T2 having suma >= ?5 and suma <=?6", nativeQuery = true)
     Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, int cantMin, int cantMax, Pageable pageable);
 
-
+//.
 
     @Query(value ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
             ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +

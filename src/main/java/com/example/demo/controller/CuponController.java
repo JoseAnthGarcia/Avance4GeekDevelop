@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import ch.qos.logback.core.util.CachingDateFormatter;
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
 import com.example.demo.entities.Restaurante;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CuponRepository;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 
 import com.example.demo.repositories.RestauranteRepository;
@@ -42,13 +44,19 @@ public class CuponController {
 
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model) {
+        String pattern = "yyyy-MM-dd";
+        DateFormat df = new SimpleDateFormat(pattern);
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = df.format(today);
+        System.out.println(todayAsString);
 
-        return findPaginated("", LocalDate.parse("3000-05-21"), 0, 1, model);
+        return findPaginated("", "3000-05-21", todayAsString, 0, 1, model);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                @ModelAttribute @RequestParam(value = "fechafin", required = false) LocalDate fechafin,
+                                @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
+                                @ModelAttribute @RequestParam(value = "fechainicio", required= false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
 
@@ -65,11 +73,17 @@ public class CuponController {
             textBuscador = "";
         }
         System.out.println(textBuscador);
-
-        if (fechafin == null) {
-            fechafin = LocalDate.parse("3000-05-21");
+        LocalDate fechafin2 = LocalDate.parse(fechafin);
+        if (fechafin == null || fechafin.equals("")) {
+            fechafin2 = LocalDate.parse("3000-05-21");
         }
-
+        LocalDate fechainicio2;
+        if (fechainicio == null || fechainicio.equals("")){
+            fechainicio2 = LocalDate.now();
+        } else {
+            fechainicio2 = LocalDate.parse(fechainicio);
+        }
+        System.out.println(fechainicio2);
         if (inputPrecio == null) {
             inputPrecio = 0;
         }
@@ -83,7 +97,7 @@ public class CuponController {
             inputPMin = inputPrecio;
         }
         System.out.println(inputPrecio);
-        page = cuponService.findPaginated2(pageNo, pageSize, textBuscador, fechafin, inputPMin * 5 - 5, inputPMax * 5);
+        page = cuponService.findPaginated2(pageNo, pageSize, textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
         listaCupon = page.getContent();
 
         model.addAttribute("texto", textBuscador);
@@ -117,14 +131,18 @@ public class CuponController {
             return "AdminRestaurante/nuevoCupon";
         }
 
-        cupon.setIdrestaurante(restaurante.getIdrestaurante());
 
+        System.out.println("################################");
+        System.out.println(cupon.getFechafin());
+        System.out.println(cupon.getFechainicio());
         if (cupon.getIdcupon() == 0) {
+            cupon.setIdrestaurante(restaurante.getIdrestaurante());
             cupon.setFechainicio(LocalDate.now());
             cupon.setEstado(1);
-            attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
+            attributes.addFlashAttribute("creado", "Cupón creado exitosamente");
         } else {
-            attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
+            cupon.setIdrestaurante(restaurante.getIdrestaurante());
+            attributes.addFlashAttribute("editado", "Cupón editado exitosamente");
         }
 
             /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
@@ -137,11 +155,16 @@ public class CuponController {
 
     @GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
-                              Model model,
+                              Model model,@RequestParam("fechainicio") String fechainicio,
+                              @RequestParam("fechafin") String fechafin,
                               @RequestParam("id") int id) {
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
+        System.out.println(fechainicio);
         if (optionalCupon.isPresent()) {
             cupon = optionalCupon.get();
+            cupon.setFechainicio(LocalDate.parse(fechainicio));
+            cupon.setFechafin(LocalDate.parse(fechafin));
+            System.out.println("********" + cupon.getFechainicio());
             model.addAttribute("cupon", cupon);
             return "AdminRestaurante/nuevoCupon";
         } else {

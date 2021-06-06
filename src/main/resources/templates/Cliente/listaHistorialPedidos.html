@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <title>Historial de Pedidos</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <!-- Custom fonts for this template -->
-    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+<title>Historial de Pedidos</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
 
-    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+<!-- Custom fonts for this template -->
+<link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+<link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+<!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
-    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-    <link th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<!-- Custom styles for this page -->
+<link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+<link th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -319,20 +319,20 @@
                         <h6>Si su pedido ya ha sido entregado o cancelado dirijase al Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
-                    <div>
+                    <div class="table-responsive">
+                        <table class="table" id="dataTable" width="100%" style="background-color:gray">
+                            <tbody>
 
-
-                        <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
-                            <div class="col-3">
-                                <img width="110" height="100" alt="Avatar"
-                                     th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
-                            </div>
-                            <div class="col-6">
-                                <div class="row mb-2">
-                                    <input class="form-control ph-center" type="text"
-                                           th:placeholder="${pedido.getNombre()}"
-                                           aria-label="Disabled input example" disabled>
+                            <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
+                                <div class="col-3">
+                                    <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
                                 </div>
+                                <div class="col-6">
+                                    <div class="row mb-2">
+                                        <input class="form-control ph-center" type="text"
+                                               th:placeholder="${pedido.getNombre()}"
+                                               aria-label="Disabled input example" disabled>
+                                    </div>
 
                                 <div class="row mb-2">
                                     <input class="form-control col-6" type="text"
@@ -346,22 +346,21 @@
                                            aria-label="Disabled input example" disabled>
                                 </div>
 
-                                <!-- TODO AQUI LLAMAMOS AL MODAL -->
+                                    <!-- TODO AQUI LLAMAMOS AL MODAL -->
 
-                                <!-- -------------------------------------1 ) LLAMADO AL MODAL CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
-                                <div class="row mb-2">
-                                    <div class="col-6" th:if="${pedido.getValoracionrestaurante() == null}">
-                                        <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
-                                        <a data-toggle="modal"
-                                           th:data-target="${'#valoraRest'+pedido.getCodigo()}"
-                                           th:href="${'#valoraRest'+pedido.getCodigo()}">
-                                            <i class="fas fa-utensils ml-2"
-                                               style="font-size:2em; color:#F2EE61"></i>
-                                        </a>
-                                    </div>
+<!-- -------------------------------------1 ) LLAMADO AL MODAL CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
+                                    <div  class="row mb-2" >
+                                        <div  class="col-6" th:if="${pedido.getValoracionrestaurante() == null}"  >
+                                            <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
+                                            <a data-toggle="modal"
+                                               th:data-target="${'#valoraRest'+pedido.getCodigo()}"
+                                               th:href="${'#valoraRest'+pedido.getCodigo()}">
+                                                <i class="fas fa-utensils ml-2" style="font-size:2em; color:#F2EE61"></i>
+                                            </a>
+                                        </div>
 
 
-                                    <!---------------------------------------2 ) LLAMADO  AL MODAL CUANDO YA SE VALORO O SE HIZO UNA OBSERVACION ------------------------------------------>
+<!---------------------------------------2 ) LLAMADO  AL MODAL CUANDO YA SE VALORO O SE HIZO UNA OBSERVACION ------------------------------------------>
 
                                     <div class="col-6" th:if="${pedido.getValoracionrestaurante() != null}">
                                         <h6 class="mb-2" style="color:black">Valoración de tu restaurante</h6>
@@ -374,18 +373,17 @@
                                     </div>
 
 
-                                    <!-- ------------------------------------- 3 ) LLAMADO AL MODAL REPARTIDOR CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
+<!-- ------------------------------------- 3 ) LLAMADO AL MODAL REPARTIDOR CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
 
-                                    <div class="col-6" th:if="${pedido.getValoracionrepartidor()== null}">
-                                        <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
-                                        <a data-toggle="modal" th:data-target="${'#valoraRep'+pedido.getCodigo()}"
-                                           th:href="${'#valoraRep'+pedido.getCodigo()}">
-                                            <i class="fas fa-motorcycle ml-2"
-                                               style="font-size:2em; color:#2C8287"></i>
-                                        </a>
-                                    </div>
+                                        <div class="col-6"  th:if="${pedido.getValoracionrepartidor()== null}">
+                                            <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
+                                            <a  data-toggle="modal" th:data-target="${'#valoraRep'+pedido.getCodigo()}"
+                                                th:href="${'#valoraRep'+pedido.getCodigo()}">
+                                                <i class="fas fa-motorcycle ml-2" style="font-size:2em; color:#2C8287"></i>
+                                            </a>
+                                        </div>
 
-                                    <!-- ------------------------------------- 4 ) LLAMADO AL MODAL CUANDO El REAPRTIDOR YA FUE VALORADO ------------------------------------------------------------------>
+<!-- ------------------------------------- 4 ) LLAMADO AL MODAL CUANDO El REAPRTIDOR YA FUE VALORADO ------------------------------------------------------------------>
 
                                     <div class="col-6" th:if="${pedido.getValoracionrepartidor()!= null}">
                                         <h6 class="mb-2" style="color:black">Valoración de tu repartidor</h6>
@@ -397,10 +395,11 @@
                                     </div>
                                 </div>
 
-                                <!-- ------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------- -->
+                                    </div>
 
-                                <!---------------------------------------------  1 MODAL EVALUAR REST Y COMENTAR ------------------------------------------------------------------------>
-                                <!-- todo Evaluar Restaurante , Comentar Restaurante-->
+<!---------------------------------------------  1 MODAL EVALUAR REST Y COMENTAR ------------------------------------------------------------------------>
+                                    <!-- todo Evaluar Restaurante , Comentar Restaurante-->
 
                                 <div class="modal fade" th:id="${'valoraRest'+pedido.getCodigo()}" tabindex="-1"
                                      role="dialog" aria-labelledby="exampleModalLabel"
@@ -630,6 +629,8 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
 
+                            </tbody>
+                        </table>
                     </div>
                     <div class="pagination topnav">
                         <a href="#">«</a>
@@ -644,83 +645,81 @@
                 </div>
 
                 <!-- /.container-fluid -->
+
             </div>
+
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
         </div>
+        <!-- End of Content Wrapper -->
 
-        <!-- End of Main Content -->
+    </div>
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-primary" type="submit">Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-</div>
-
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <form th:action="@{/logout}" method="post">
-                    <button class="btn btn-primary" type="submit">Cerrar Sesión
-                    </button>
-                </form>
-            </div>
         </div>
     </div>
-</div>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+    <!-- Page level custom scripts -->
+    <script th:src="@{/js/demo/chart-area-demo.js}"></script>
+    <script th:src="@{/js/demo/chart-pie-demo.js}"></script>
+    <script th:src="@{/js/demo/chart-bar-demo.js}"></script>
+    <script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+    <script>
+
+        $('.rating').raty({
+            path: '../img/estrellitas/',
+            scoreName: 'valoracion'
+        });
+    </script>
 </body>
-
-
-<!-- Bootstrap core JavaScript-->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
-
-<!-- Page level plugins -->
-
-<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
-
-
-
-<script>
-
-    $('.rating').raty({
-        path: '../img/estrellitas/',
-        scoreName: 'val',
-        hints: ['malísimo', 'malo', 'regular', 'bueno', 'buenísimo']
-
-    });
-</script>
-
 
 </html>

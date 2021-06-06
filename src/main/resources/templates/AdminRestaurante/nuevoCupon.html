@@ -34,14 +34,14 @@
                                 <div class="col-7">
                                     <div class="card">
                                         <div class="card-body ml-xl-5">
-                                            <form method="POST" th:action="@{'/cupon/guardar'}"
+                                            <form method="POST" th:action="@{/cupon/guardar}"
                                                   class="justify-content-left"
                                                   enctype="multipart/form-data" th:object="${cupon}">
                                                 <div class="form-row">
                                                     <div class="col-md-8 mb-4 ml-5">
                                                         <div th:if="${cupon.getIdcupon() != 0}">
                                                             <input type="hidden" th:field="*{idcupon}">
-                                                            <input type="hidden" th:field="*{fechainicio}">
+                                                            <input th:field="*{fechainicio}">
                                                             <input type="hidden" th:field="*{estado}">
                                                         </div>
                                                         <div class="form-group">
@@ -80,7 +80,7 @@
                                                             <label for="caducidad" class="small mb-1">Caducidad:</label>
                                                             <input type="date" class="form-control mb-2"
                                                                    style="border-color: lightgray"
-                                                                   th:field="*{fechafin}" th:novalidate="novalidate">
+                                                                   th:field="*{fechafin}">
                                                             <h1 style="color: red; font-size: small; text-align: left"
                                                                 th:if="${#fields.hasErrors('fechafin')}"
                                                                 th:errors="*{fechafin}"></h1>

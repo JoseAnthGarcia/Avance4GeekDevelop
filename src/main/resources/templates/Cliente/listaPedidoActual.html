@@ -286,34 +286,29 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <form>
+                    <form method="get" th:action="@{'/cliente/pedidoActual'}">
                         <div class="form-group row mt-3">
                             <div class="col-sm-3 mb-1 ">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Búsqueda por restarurante...">
-                                    <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
+                                    <input type="text" class="form-control bg-light border-0 small" name="texto"
+                                           placeholder="Búsqueda por restarurante...">
                                 </div>
                             </div>
                             <div class="col-sm-2 mb-1">
-                                <select class="form-control">
+                                <select class="form-control" name="estado">
                                     <option value="1">Aceptado</option>
                                     <option value="3">Preparando</option>
                                     <option value="4">Listo</option>
                                     <option value="5">En camino</option>
-
                                 </select>
                             </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
-                                <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                     <i class="fas fa-filter"></i>
                                 </button>
                             </div>
                             <div class="col-sm-2" style="margin-right: 10px" >
-                                <a class="btn btn-secondary " >Quitar filtros</a>
+                                <a class="btn btn-secondary " th:href="@{'/cliente/pedidoActual'}" >Quitar filtros</a>
                             </div>
                         </div>
                     </form>

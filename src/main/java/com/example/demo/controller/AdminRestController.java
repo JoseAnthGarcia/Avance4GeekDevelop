@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.DetallePedidoDTO;
-import com.example.demo.dtos.ExtraPorPedidoDTO;
-import com.example.demo.dtos.PlatoPorPedidoDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.PedidoService;
 import com.example.demo.service.PedidoServiceImpl;
+import com.example.demo.service.ReportePlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -49,6 +48,9 @@ public class AdminRestController {
     RolRepository rolRepository;
     @Autowired
     DistritosRepository distritosRepository;
+
+    @Autowired
+    ReportePlatoService reportePlatoService;
 
     @Autowired
     RestauranteRepository restauranteRepository;
@@ -495,4 +497,120 @@ public class AdminRestController {
         model.addAttribute("sumaExtra", sumatotalExtra);
         return "AdminRestaurante/detallePedido";
     }
+
+    @GetMapping("/reporteVentas")
+    public String listaVentas(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<String> lista_codigos=pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(),6);
+        List<PedidoReporteDTO> lista=new ArrayList<PedidoReporteDTO>();
+        for (String codigo:lista_codigos){
+            lista.add(pedidoRepository.pedidoReporte(codigo,codigo));
+        }
+        model.addAttribute("listareporte",lista);
+        return "AdminRestaurante/reporteVentas";
+    }
+
+    @GetMapping("/reporteValoracion")
+    public String listaValoracion(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<String> lista_codigos=pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(),6);
+
+        List<ValoracionReporteDTO> lista=new ArrayList<ValoracionReporteDTO>();
+        for (String codigo:lista_codigos){
+            lista.add(pedidoRepository.valoracionReporte(codigo));
+        }
+        model.addAttribute("listareporte",lista);
+        return "AdminRestaurante/reporteValoraciones";
+    }
+
+    @GetMapping("/reportePlatos")
+    public String reportePlato(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        return findPaginated2("", 0, 0, 1,restaurante.getIdrestaurante(), model, session);
+    }
+    @GetMapping("/page2")
+    public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
+                                 @ModelAttribute @RequestParam(value = "inputCantidad", required=false) Integer inputCantidad,
+                                 @ModelAttribute @RequestParam(value = "inputCategoria", required=false) Integer inputCategoria,
+                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
+        }
+        int inputID = 1;
+        int pageSize = 5;
+        Page<PlatoReporteDTO> page;
+        List<PlatoReporteDTO> listaPlatoReporte;
+
+        //Manipular input de buscadores
+        System.out.println(textBuscador);
+        if (textBuscador == null) {
+            textBuscador = "";
+        }
+        System.out.println(inputCategoria);
+        String inputCategoria2;
+        if (inputCategoria == null || inputCategoria == 0) {
+            inputCategoria2 = "";
+        } else {
+            inputCategoria2 = String.valueOf(inputCategoria);
+        }
+        System.out.println(inputCantidad);
+        if (inputCantidad == null) {
+            inputCantidad = 0;
+        }
+        int inputCantidadMax;
+        int inputCantidadMin;
+        if (inputCantidad == 0) {
+            inputCantidadMin = 0;
+            inputCantidadMax = 1000;
+        } else if (inputCantidad == 4) {
+            inputCantidadMin = inputCantidad;
+            inputCantidadMax = 1000;
+        } else {
+            inputCantidadMin = inputCantidad;
+            inputCantidadMax = inputCantidad;
+        }
+
+        System.out.println("#################");
+        System.out.println("#################");
+
+        //Obtener lista de reportes
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
+        listaPlatoReporte = page.getContent();
+
+        //Enviar atributos a la vista
+        model.addAttribute("texto", textBuscador);
+        model.addAttribute("textoC", inputCategoria);
+        model.addAttribute("textoCant", inputCantidad);
+
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        model.addAttribute("listaCategorias", listaCategorias);
+
+        System.out.println(listaCategorias.get(2).getIdcategoria());
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
+
+        //Enviar lista y valores para paginación
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaPedidos", listaPlatoReporte);
+        return "AdminRestaurante/reportePlatos";
+    }
+
+    @GetMapping("/elegirReporte")
+    public String elegirReporte(){
+        return "AdminRestaurante/eleccionReporte";
+    }
+
+
 }

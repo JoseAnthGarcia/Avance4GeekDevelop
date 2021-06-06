@@ -73,7 +73,7 @@
                         <div class="row mb-5 mr-xl-5" th:each=" cupon :${listaCuponesenviar}">
                             <div class="col-6">
                                 <div class="container2">
-                                    <img src="img/cupon2.png" alt="Avatar"
+                                    <img src="https://kinsta.com/es/wp-content/uploads/sites/8/2018/05/kinsta-cupon-1.png" alt="Avatar"
                                          class="image2 shadow" style="height: 250px; width: 400px">
                                     <a class="overlay2" href="#" style="height: 250px; width: 400px">
                                         <h1 class="text2 font-weight-bolder text-left" th:text="${cupon.getNombrecupon()}"></h1>
@@ -97,7 +97,7 @@
                                     </div>
                                     <h6>Política: </h6>
                                     <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" th:value="${cupon.getPolitica()}" disabled></textarea>
+                                              style="background: #ededed" th:text="${cupon.getPolitica()}" disabled></textarea>
 
                             </div>
                         </div>

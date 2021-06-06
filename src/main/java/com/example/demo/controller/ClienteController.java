@@ -619,11 +619,6 @@ public class ClienteController {
     }
 
 
-    @GetMapping("/listaCupones")
-    public String listacupones() {
-
-        return "Cliente/listaCupones";
-    }
 
     @GetMapping("/listaReportes")
     public String listaReportes() {
@@ -833,7 +828,7 @@ public class ClienteController {
         return "Cliente/reporteTiempoCliente";
     }
 
-  /*  @GetMapping("/listaCupones")
+    @GetMapping("/listaCupones")
     public String listaCupones(Model model, HttpSession httpSession) {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -849,6 +844,6 @@ public class ClienteController {
 
         model.addAttribute("listaCuponesenviar", listaCuponesenviar);
         return "Cliente/listaCupones";
-    }*/
+    }
 
 }

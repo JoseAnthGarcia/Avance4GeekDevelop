@@ -56,7 +56,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -114,12 +114,10 @@
 
                                 <div class="col-sm-2 mb-1">
                                     <input placeholder="Desde" class="form-control" name="fechainicio"
-                                           th:value="${fechainicio}"
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                                 <div class="col-sm-2 mb-1">
                                     <input placeholder="Caducidad" class="form-control" name="fechafin"
-                                           th:value="${fechafin}"
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
 
@@ -197,7 +195,7 @@
                                         <tbody>
 
                                             <tr th:each="cupon : ${listaCupon}" >
-                                                <td th:text="${(cuponStat.index+1)+(2*(currentPage - 1))}"></td>
+                                                <td th:text="${(cuponStat.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>

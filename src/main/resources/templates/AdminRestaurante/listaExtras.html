@@ -54,7 +54,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -142,16 +142,16 @@
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo Extra</a>
                                     <h5 th:if="${idcategoria==1}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="${'Lista de Bebidas'}"></h5>
+                                        th:text="${'LISTA DE BEBIDAS'}"></h5>
                                     <h5 th:if="${idcategoria==3}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="${'Lista de Ensaladas'}"></h5>
+                                        th:text="${'LISTA DE ENSALADAS'}"></h5>
                                     <h5 th:if="${idcategoria==4}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="${'Lista de Guarniciones'}"></h5>
+                                        th:text="${'LISTA DE GUARNICIONES'}"></h5>
                                     <h5 th:if="${idcategoria==2}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="${'Lista de Cubiertos'}"></h5>
+                                        th:text="${'LISTA DE CUBIERTOS'}"></h5>
 
                                 </div>
 

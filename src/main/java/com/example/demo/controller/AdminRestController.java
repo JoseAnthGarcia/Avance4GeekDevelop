@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
-import com.example.demo.service.PedidoService;
-import com.example.demo.service.PedidoServiceImpl;
-import com.example.demo.service.ReportePlatoService;
-import com.example.demo.service.ReporteValoracionService;
+import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -29,6 +26,7 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,6 +51,9 @@ public class AdminRestController {
 
     @Autowired
     ReportePlatoService reportePlatoService;
+
+    @Autowired
+    ReporteVentasService reporteVentasService;
 
     @Autowired
     ReporteValoracionService reporteValoracionService;
@@ -98,17 +99,17 @@ public class AdminRestController {
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
-        Date date=new Date();
+        Date date = new Date();
         DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
         String fecharegistro = LocalDate.now().toString();
-        fecharegistro=fecharegistro+" "+hourFormat.format(date);
+        fecharegistro = fecharegistro + " " + hourFormat.format(date);
         System.out.println(fecharegistro);
         adminRest.setFecharegistro(fecharegistro);
         Boolean fecha_naci = true;
-        boolean validarFoto=true;
+        boolean validarFoto = true;
         int naci = 0;
         String[] parts = adminRest.getFechanacimiento().split("-");
-        try{
+        try {
             naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
@@ -117,25 +118,25 @@ public class AdminRestController {
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
-    }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Error capturado");
-    }
-        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci "+fecha_naci);
-        if (file!=null){
+        }
+        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci " + fecha_naci);
+        if (file != null) {
             System.out.println("No soy nul 1111111111111111111111111111111111111111111");
             System.out.println(file);
-            if(file.isEmpty()){
+            if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
-            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
                 System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")){
-                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
                 return "/AdminRestaurante/registroAR";
             }
         }
@@ -166,7 +167,7 @@ public class AdminRestController {
         } else {
             return "/AdminRestaurante/registroAR";
         }
-}
+    }
 
     @PostMapping("/guardarRestaurante")
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
@@ -204,26 +205,26 @@ public class AdminRestController {
 
         boolean validarFoto = true;
 
-        if (file!=null){
+        if (file != null) {
             System.out.println("No soy nul 1111111111111111111111111111111111111111111");
             System.out.println(file);
-            if(file.isEmpty()){
+            if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
-            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
                 System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")){
-                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
                 return "/AdminRestaurante/registroResturante";
             }
         }
 
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val||!validarFoto) {
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto) {
 
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
@@ -235,7 +236,7 @@ public class AdminRestController {
                 model.addAttribute("msg", "Se deben seleccionar 4 categorías");
             }
             return "/AdminRestaurante/registroResturante";
-        } else if (validarFoto){
+        } else if (validarFoto) {
             try {
                 restaurante.setFoto(file.getBytes());
                 restaurante.setFotonombre(fileName);
@@ -250,8 +251,7 @@ public class AdminRestController {
                 return "/AdminRestaurante/registroResturante";
             }
             return "redirect:/plato/";
-        }
-        else {
+        } else {
             return "/AdminRestaurante/registroResturante";
         }
     }
@@ -269,14 +269,14 @@ public class AdminRestController {
         System.out.println(usuario.getNombres());
         int id = usuario.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        int estado=-1;
+        int estado = -1;
         try {
-            estado=restaurante.getEstado();
-        }catch (NullPointerException e){
+            estado = restaurante.getEstado();
+        } catch (NullPointerException e) {
 
         }
 
-        model.addAttribute("estadoRestaurante",estado);
+        model.addAttribute("estadoRestaurante", estado);
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
         return "AdminRestaurante/adminCreado";
@@ -311,21 +311,29 @@ public class AdminRestController {
     }
 
     @GetMapping("/listaPedidos")
-    public String listaPedidos(Model model, HttpSession session) {
+    public String listaPedidos(Model model, HttpSession session) throws ParseException {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
-        return findPaginated("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String today = dtf.format(now);
+        System.out.println(today);
+
+        return findPaginated("", 0, 0, today , "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
+                                @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) throws ParseException {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -369,6 +377,53 @@ public class AdminRestController {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
+
+        System.out.println(fechafin + "############");
+        Date fechafin2;
+        String fechafin3;
+        if (fechafin == null || fechafin.equals("")) {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechafin2 = simpleDateFormat.parse("3000-05-21");
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechafin3 = simpleDateFormat2.format(fechafin2);
+            System.out.println(fechafin3);
+        } else {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechafin2 = simpleDateFormat.parse(fechafin);
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechafin3 = simpleDateFormat2.format(fechafin2);
+            System.out.println(fechafin3);
+            model.addAttribute("fechafin", fechafin3);
+
+        }
+
+        System.out.println(fechainicio + "############");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = new Date();
+        String today = dateFormat.format(date);
+        Date fechainicio2;
+        String fechainicio3;
+        if (fechainicio == null || fechainicio.equals("")) {
+            fechainicio2 = date;
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechainicio3 = simpleDateFormat.format(fechainicio2);
+            System.out.println(fechainicio3);
+        } else {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechainicio2 = simpleDateFormat.parse(fechainicio);
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechainicio3 = simpleDateFormat2.format(fechainicio2);
+            System.out.println(fechainicio3);
+            model.addAttribute("fechainicio", fechainicio3);
+        }
+
         System.out.println("#################");
         System.out.println(inputEstadoMin);
         System.out.println(inputEstadoMax);
@@ -376,17 +431,18 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
-        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20, fechainicio3, fechafin3);
         listaPedidos = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoE", inputEstado);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
 
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -402,8 +458,8 @@ public class AdminRestController {
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         System.out.println("------------------------------------------------------------------------------------------");
         System.out.println(comentarioAR.getClass());
         if (pedido != null) {
@@ -430,8 +486,8 @@ public class AdminRestController {
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         if (pedido != null) {
             if (pedido.getEstado() == 0) {
                 pedido.setEstado(1);
@@ -451,8 +507,8 @@ public class AdminRestController {
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         if (pedido != null) {
             if (pedido.getEstado() == 1) {
                 pedido.setEstado(3);
@@ -471,8 +527,8 @@ public class AdminRestController {
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         if (pedido != null) {
             if (pedido.getEstado() == 3) {
                 pedido.setEstado(4);
@@ -486,7 +542,7 @@ public class AdminRestController {
 
     @GetMapping("/detallePedido")
     public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido,
-                                   @RequestParam(value = "v",required = false) String v) {
+                                   @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
@@ -497,8 +553,8 @@ public class AdminRestController {
         if (detallesPedido.isEmpty() || detallesPedido == null) {
             return "redirect:/restaurante/listaPedidos";
         }
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         List<PlatoPorPedidoDTO> listaPlatos = pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
         List<ExtraPorPedidoDTO> listaExtras = pedidoRepository.extrasPorPedido(codigoPedido);
         BigDecimal sumatotalPlato = new BigDecimal("0.00");
@@ -509,13 +565,13 @@ public class AdminRestController {
         for (int i = 0; i < listaExtras.size(); i++) {
             sumatotalExtra = sumatotalExtra.add(listaExtras.get(i).getPreciototal());
         }
-        System.out.println("##############V= "+v);
+        System.out.println("##############V= " + v);
         model.addAttribute("detalles", detallesPedido);
         model.addAttribute("platos", listaPlatos);
         model.addAttribute("extras", listaExtras);
         model.addAttribute("sumaPlato", sumatotalPlato);
         model.addAttribute("sumaExtra", sumatotalExtra);
-        model.addAttribute("v",v);
+        model.addAttribute("v", v);
         return "AdminRestaurante/detallePedido";
     }
 
@@ -524,27 +580,16 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<PedidoReporteDTO> lista = pedidoRepository.pedidoReporte(restaurante.getIdrestaurante(), 6);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
-        model.addAttribute("listareporte", lista);
-        return "AdminRestaurante/reporteVentas";
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
-    @GetMapping("/reporteValoracion")
-    public String listaValoracion(Model model, HttpSession session) {
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        int id = adminRest.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
-        return findPaginatedRepVal(6, "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
-    }
-
-    @GetMapping("/pageVal")
-    public String findPaginatedRepVal(@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
+    @GetMapping("/pageVen")
+    public String findPaginatedRepVen(@ModelAttribute @RequestParam(value = "textCodigo", required = false) String textCodigo,
                                       @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                       @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
+                                      @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
@@ -552,27 +597,40 @@ public class AdminRestController {
             pageNo = 1;
         }
         int inputID = 1;
-        int pageSize = 2;
-        Page<ValoracionReporteDTO> page;
-        List<ValoracionReporteDTO> listaValoracionReporte;
+        int pageSize = 5;
+        Page<PedidoReporteDTO> page;
+        List<PedidoReporteDTO> listaVentasReporte;
 
         //Manipular input de buscadores
-        System.out.println(inputValoracion);
-        String inputValoracion2;
-        if (inputValoracion == null || inputValoracion == 6) {
-            inputValoracion2 = "";
+        System.out.println(textCodigo);
+        if (textCodigo == null) {
+            textCodigo = "";
+        }
+        System.out.println(inputPrecio);
+        if (inputPrecio == null) {
+            inputPrecio = 0;
+        }
+        int inputPrecioMax;
+        int inputPrecioMin;
+        if (inputPrecio == 0) {
+            inputPrecioMin = 0;
+            inputPrecioMax = 1000;
+        } else if (inputPrecio == 4) {
+            inputPrecioMin = inputPrecio;
+            inputPrecioMax = 1000;
         } else {
-            inputValoracion2 = String.valueOf(inputValoracion);
+            inputPrecioMin = inputPrecio;
+            inputPrecioMax = inputPrecio;
         }
 
         if (fechafin == null || fechafin.equals("")) {
             fechafin = "3000-05-21";
-        }else {
+        } else {
             model.addAttribute("fechafin", fechafin);
 
         }
 
-        if (fechainicio == null || fechainicio.equals("")){
+        if (fechainicio == null || fechainicio.equals("")) {
             fechainicio = "1980-05-21";
         } else {
             model.addAttribute("fechainicio", fechainicio);
@@ -589,8 +647,86 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        page = reporteVentasService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, fechainicio, fechafin, textCodigo, inputPrecioMin * 20 - 20, inputPrecioMax * 20);
+        listaVentasReporte = page.getContent();
+
+        //Enviar atributos a la vista
+        model.addAttribute("textCodigo", textCodigo);
+        model.addAttribute("inputPrecio", inputPrecio);
+
+        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecio + "\n" + fechainicio + "\n" + fechafin);
+
+        //Enviar lista y valores para paginación
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listaVentasReportes", listaVentasReporte);
+        return "AdminRestaurante/reporteVentas";
+    }
+
+    @GetMapping("/reporteValoracion")
+    public String listaValoracion(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        return findPaginatedRepVal(6, "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
+    }
+
+    @GetMapping("/pageVal")
+    public String findPaginatedRepVal(@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
+                                      @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
+                                      @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
+                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 1;
+        }
+        int inputID = 1;
+        int pageSize = 5;
+        Page<ValoracionReporteDTO> page;
+        List<ValoracionReporteDTO> listaValoracionReporte;
+
+        //Manipular input de buscadores
+        System.out.println(inputValoracion);
+        String inputValoracion2;
+        if (inputValoracion == null || inputValoracion != 1 || inputValoracion != 2 || inputValoracion != 3 || inputValoracion != 4 || inputValoracion != 5) {
+            inputValoracion2 = "";
+        } else {
+            inputValoracion2 = String.valueOf(inputValoracion);
+        }
+
+        if (fechafin == null || fechafin.equals("")) {
+            fechafin = "3000-05-21";
+        } else {
+            model.addAttribute("fechafin", fechafin);
+
+        }
+
+        if (fechainicio == null || fechainicio.equals("")) {
+            fechainicio = "1980-05-21";
+        } else {
+            model.addAttribute("fechainicio", fechainicio);
+        }
+
+
+        System.out.println(fechainicio);
+        System.out.println(fechafin);
+
+        System.out.println("#################");
+        System.out.println("#################");
+
+        //Obtener lista de reportes
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio, fechafin);
         listaValoracionReporte = page.getContent();
 
@@ -613,8 +749,8 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         return findPaginated2("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
@@ -669,8 +805,8 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
         listaPlatoReporte = page.getContent();
 
@@ -686,6 +822,7 @@ public class AdminRestController {
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
         System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -698,8 +835,8 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
         return "AdminRestaurante/eleccionReporte";
     }
 

@@ -344,7 +344,7 @@
 														<input class="form-control ph-center" type="text" th:placeholder="|Fecha de entrega: ${pedido.getFechapedido()}|" aria-label="Disabled input example" disabled>
 													</div>	
 													<div class="row mb-2">
-															<input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|" aria-label="Disabled input example" disabled>
+															<input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|" aria-label="Disabled input example" disabled>
 
                                                         <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==3}"  th:placeholder="|Estado : Preparando |" aria-label="Disabled input example" disabled>
                                                         <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==5}"  th:placeholder="|Estado : En camino |" aria-label="Disabled input example" disabled>
@@ -367,21 +367,11 @@
 								</table>
 							</div>
 							<nav aria-label="Pagination">
-
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
-                                        <a class="page-link active" th:text="${page}" th:href="@{'/cliente/pedidoActual?page='+${page}}"></a>
+                                        <a th:unless="${texto == null && estado == null}" class="page-link active" th:text="${page}" th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
                                     </li>
                                 </ul>
-
-								<!--<a href="#">«</a>
-								<a href="#" class="active">1</a>
-								<a href="#">2</a>
-								<a href="#">3</a>
-								<a href="#">4</a>
-								<a href="#">5</a>
-								<a href="#">6</a>
-								<a href="#">»</a>-->
 							</nav>
                         </div>
 				

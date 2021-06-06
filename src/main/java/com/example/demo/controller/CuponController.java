@@ -169,7 +169,7 @@ public class CuponController {
 
     @GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
-                              Model model,@RequestParam("fechainicio") String fechainicio,
+                              Model model, @RequestParam("fechainicio") String fechainicio,
                               @RequestParam("fechafin") String fechafin,
                               @RequestParam("id") int id,HttpSession session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
@@ -204,11 +204,11 @@ public class CuponController {
         LocalDate date = LocalDate.now();
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
-            LocalDate fecha=cupon.getFechafin();
-            String fecha2= fecha.toString();
-            System.out.println("------Fecha parseada-----"+fecha2);
-            System.out.println("------Fecha actual-----"+date);
-            if(fecha.isAfter(date)) {
+            LocalDate fecha = cupon.getFechafin();
+            String fecha2 = fecha.toString();
+            System.out.println("------Fecha parseada-----" + fecha2);
+            System.out.println("------Fecha actual-----" + date);
+            if (fecha.isAfter(date)) {
                 switch (estado) {
                     case "0":
                         cupon.setEstado(0);
@@ -224,7 +224,7 @@ public class CuponController {
                         break;
                 }
                 cuponRepository.save(cupon);
-            }else{
+            } else {
                 return "redirect:/cupon/lista";
             }
         }

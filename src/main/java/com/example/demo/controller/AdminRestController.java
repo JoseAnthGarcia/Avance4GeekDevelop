@@ -315,8 +315,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         return findPaginated("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
@@ -376,8 +374,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20);
         listaPedidos = page.getContent();
 
@@ -401,8 +397,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         System.out.println("------------------------------------------------------------------------------------------");
         System.out.println(comentarioAR.getClass());
@@ -429,8 +423,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         if (pedido != null) {
             if (pedido.getEstado() == 0) {
@@ -450,8 +442,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         if (pedido != null) {
             if (pedido.getEstado() == 1) {
@@ -470,8 +460,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         if (pedido != null) {
             if (pedido.getEstado() == 3) {
@@ -490,8 +478,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         if (codigoPedido == null || codigoPedido.isEmpty()) {
             return "redirect:/restaurante/listaPedidos";
         }
@@ -584,9 +570,6 @@ public class AdminRestController {
             fechainicio2 = LocalDate.parse(fechainicio);
         }
 
-
-
-
         String fechainicio3 = fechainicio2.toString();
         System.out.println(fechainicio3);
         String fechafin3 = fechafin2.toString();
@@ -603,8 +586,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio3, fechafin3);
         listaValoracionReporte = page.getContent();
 
@@ -626,8 +607,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         return findPaginated2("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
@@ -682,8 +661,6 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
         page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
         listaPlatoReporte = page.getContent();
 
@@ -697,7 +674,7 @@ public class AdminRestController {
 
         System.out.println(listaCategorias.get(2).getIdcategoria());
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
-
+        System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -707,12 +684,7 @@ public class AdminRestController {
     }
 
     @GetMapping("/elegirReporte")
-    public String elegirReporte(Model model,HttpSession session){
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        int id = adminRest.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+    public String elegirReporte() {
         return "AdminRestaurante/eleccionReporte";
     }
 

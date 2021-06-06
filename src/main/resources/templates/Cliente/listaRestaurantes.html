@@ -287,40 +287,44 @@
             <!-- -------------------------------------------------------------------------------------------------------------------------------------------------->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form method="get" th:action="@{'/cliente/listaRestaurantes'}">
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control" style="border-color:lightgray" placeholder="Búsqueda por restaurante...">
-
+                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                       th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
+                                       th:value="${texto.equals('') ? '' : texto}"
+                                       style="border-color: lightgray">
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Precio</option>
-                                <option value="">Menor a S./15.00 </option>
-                                <option value="">S./15.00 hasta S./25.00 </option>
-                                <option value="">S./25.00 hasta S./40.00 </option>
-                                <option value="">S./40.00 a más </option>
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
+                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2 ">
-                            <select class="form-control ">
-                                <option value="" disabled selected>Valoración</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
+                            <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${val.equals('6')}">Valoración</option>
+                                <option value="1" th:selected="${val.equals('1')}">1</option>
+                                <option value="2" th:selected="${val.equals('2')}">2</option>
+                                <option value="3" th:selected="${val.equals('3')}">3</option>
+                                <option value="4" th:selected="${val.equals('4')}">4</option>
+                                <option value="5" th:selected="${val.equals('5')}">5</option>
                             </select>
                         </div>
+                        <!-- TODO BUSCADOR DE CATEGORÍAS -->
                         <div class="input-group-append col-sm-1 mb-2 ">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2" style="margin-right: 10px" >
-                            <a class="btn btn-secondary " >Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/cliente/listaRestaurantes'}" >Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -363,19 +367,23 @@
                                     <td th:text="${v.index + 1}"></td>
                                     <td>
                                         <div style=text-align:center>
-                                            <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdRestaurante()}}">
+                                            <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div style=text-align:center>
                                             <h5 class="mb-2" th:text="${rest.getNombre()}"></h5>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <h6 th:if="${rest.getValoracion() == null}" th:text="|Valoración: 0|"></h6>
                                                     <h6 th:unless="${rest.getValoracion() == null}" th:text="|Valoración: ${rest.getValoracion()}|"></h6>
                                                 </div>
-                                                <div class="col-6">
-                                                    <h6 th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
+                                                <div class="col-4">
+                                                    <h6 th:if="${rest.getCalificaciones() == null}" th:text="|Calificaciones: 0|"></h6>
+                                                    <h6 th:unless="${rest.getCalificaciones() == null}" th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
+                                                </div>
+                                                <div class="col-4">
+                                                    <h6 th:text="|Precio Promedio: ${rest.getPreciopromedio()}|"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -390,7 +398,7 @@
                                     <td  class="align-content-center">
                                         <div style=text-align:center>
                                             <a class="btn btn-danger btn-circle"
-                                               th:href="@{'/cliente/listaPlatos?idRest='+${rest.getIdRestaurante()}}">
+                                               th:href="@{'/cliente/listaPlatos?idRest='+${rest.getIdrestaurante()}}">
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>

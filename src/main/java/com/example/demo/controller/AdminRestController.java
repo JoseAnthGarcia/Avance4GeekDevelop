@@ -506,11 +506,7 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<String> lista_codigos = pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(), 6);
-        List<PedidoReporteDTO> lista = new ArrayList<PedidoReporteDTO>();
-        for (String codigo : lista_codigos) {
-            lista.add(pedidoRepository.pedidoReporte(codigo, codigo));
-        }
+        List<PedidoReporteDTO> lista = pedidoRepository.pedidoReporte(restaurante.getIdrestaurante(), 6);
         model.addAttribute("listareporte", lista);
         return "AdminRestaurante/reporteVentas";
     }

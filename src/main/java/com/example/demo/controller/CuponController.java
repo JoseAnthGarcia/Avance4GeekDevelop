@@ -43,22 +43,26 @@ public class CuponController {
     RestauranteRepository restauranteRepository;
 
     @GetMapping(value = {"/lista", ""})
-    public String listarCupones(Model model) {
+    public String listarCupones(Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
         Date today = Calendar.getInstance().getTime();
         String todayAsString = df.format(today);
         System.out.println(todayAsString);
 
-        return findPaginated("", "3000-05-21", todayAsString, 0, 1, model);
+        return findPaginated("", "3000-05-21", todayAsString, 0, 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                @ModelAttribute @RequestParam(value = "fechainicio", required= false) String fechainicio,
+                                @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
+                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -73,12 +77,14 @@ public class CuponController {
             textBuscador = "";
         }
         System.out.println(textBuscador);
-        LocalDate fechafin2 = LocalDate.parse(fechafin);
+        LocalDate fechafin2;
         if (fechafin == null || fechafin.equals("")) {
             fechafin2 = LocalDate.parse("3000-05-21");
+        } else {
+            fechafin2 = LocalDate.parse(fechafin);
         }
         LocalDate fechainicio2;
-        if (fechainicio == null || fechainicio.equals("")){
+        if (fechainicio == null || fechainicio.equals("")) {
             fechainicio2 = LocalDate.now();
         } else {
             fechainicio2 = LocalDate.parse(fechainicio);
@@ -97,7 +103,10 @@ public class CuponController {
             inputPMin = inputPrecio;
         }
         System.out.println(inputPrecio);
-        page = cuponService.findPaginated2(pageNo, pageSize, textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int id = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        page = cuponService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
         listaCupon = page.getContent();
 
         model.addAttribute("texto", textBuscador);
@@ -110,7 +119,6 @@ public class CuponController {
 
         return "AdminRestaurante/listaCupones";
     }
-
 
 
     @GetMapping("/nuevo")
@@ -155,7 +163,7 @@ public class CuponController {
 
     @GetMapping("/editar")
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
-                              Model model,@RequestParam("fechainicio") String fechainicio,
+                              Model model, @RequestParam("fechainicio") String fechainicio,
                               @RequestParam("fechafin") String fechafin,
                               @RequestParam("id") int id) {
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
@@ -175,16 +183,16 @@ public class CuponController {
     @GetMapping("/actualizar")
     public String actualizarCupon(@RequestParam("id") int id,
                                   @RequestParam("estado") String estado,
-                                  RedirectAttributes attr){
+                                  RedirectAttributes attr) {
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         LocalDate date = LocalDate.now();
         if (optionalCupon.isPresent()) {
             Cupon cupon = optionalCupon.get();
-            LocalDate fecha=cupon.getFechafin();
-            String fecha2= fecha.toString();
-            System.out.println("------Fecha parseada-----"+fecha2);
-            System.out.println("------Fecha actual-----"+date);
-            if(fecha.isAfter(date)) {
+            LocalDate fecha = cupon.getFechafin();
+            String fecha2 = fecha.toString();
+            System.out.println("------Fecha parseada-----" + fecha2);
+            System.out.println("------Fecha actual-----" + date);
+            if (fecha.isAfter(date)) {
                 switch (estado) {
                     case "0":
                         cupon.setEstado(0);
@@ -200,7 +208,7 @@ public class CuponController {
                         break;
                 }
                 cuponRepository.save(cupon);
-            }else{
+            } else {
                 return "redirect:/cupon/lista";
             }
         }

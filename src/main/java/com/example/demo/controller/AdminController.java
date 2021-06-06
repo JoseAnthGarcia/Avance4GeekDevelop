@@ -8,6 +8,10 @@ import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -229,6 +233,40 @@ public class AdminController  {
             }
         }
 
+    }
+    @GetMapping("/images")
+    public ResponseEntity<byte[]> mostrarUsuario(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario= usuarioOptional.get();
+            byte[] image = usuario.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
+    @GetMapping("/imagesRest")
+    public ResponseEntity<byte[]> mostrarRestaurante(@RequestParam("id") int id) {
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(id);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            byte[] image = restaurante.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
     }
     @GetMapping("/rechazarSolicitudRest")
     public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){

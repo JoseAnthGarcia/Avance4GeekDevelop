@@ -194,8 +194,8 @@
                                         </thead>
                                         <tbody>
 
-                                            <tr th:each="cupon : ${listaCupon}" >
-                                                <td th:text="${(cuponStat.index+1)+(pageSize*(currentPage - 1))}"></td>
+                                            <tr th:each="cupon, v: ${listaCupon}" >
+                                                <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>

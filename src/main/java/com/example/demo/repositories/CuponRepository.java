@@ -19,7 +19,7 @@ public interface CuponRepository extends JpaRepository<Cupon, Integer> {
             nativeQuery = true)
     Cupon buscarPorNombre(String nombre);
 
-    Page<Cupon> findByIdrestauranteAndNombreIsContainingAndFechafinBetweenAndDescuentoGreaterThanEqualAndDescuentoLessThanEqualOrderByFechafinDesc(int idrestaurante, String nombre, LocalDate fechainicio, LocalDate fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
+    Page<Cupon> findByIdrestauranteAndNombreIsContainingAndFechafinBetweenAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(int idrestaurante, String nombre, LocalDate fechainicio, LocalDate fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
 
     @Query(value="select c.idcupon, c.nombre as 'nombrecupon', \n" +
             "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +

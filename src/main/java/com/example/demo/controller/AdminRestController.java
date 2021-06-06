@@ -696,10 +696,12 @@ public class AdminRestController {
         //Manipular input de buscadores
         System.out.println(inputValoracion);
         String inputValoracion2;
-        if (inputValoracion == null || inputValoracion != 1 || inputValoracion != 2 || inputValoracion != 3 || inputValoracion != 4 || inputValoracion != 5) {
+        if (inputValoracion == null || inputValoracion==6) {
             inputValoracion2 = "";
         } else {
+            System.out.println("###entre###");
             inputValoracion2 = String.valueOf(inputValoracion);
+            System.out.println(inputValoracion2);
         }
 
         if (fechafin == null || fechafin.equals("")) {

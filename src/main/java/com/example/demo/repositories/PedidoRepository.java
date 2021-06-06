@@ -48,7 +48,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
 
-    Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqual(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, Pageable pageable);
+    Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualOrderByEstadoAsc(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, Pageable pageable);
 
     @Query(value = "select *from pedido where idrestaurante=?1 and codigo=?2 ", nativeQuery = true)
     Pedido pedidosXrestauranteXcodigo (int idrestaurante, String codigo);
@@ -113,13 +113,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "  where pe.codigo=?1", nativeQuery = true)
     ValoracionReporteDTO valoracionReporte(String codigo);
 
-    @Query(value="select pl.idplato as id,pl.nombre as nombre, c.nombre as nombrecat, sum(php.cantidad) as suma from plato_has_pedido php \n" +
+    @Query(value="select * from (select pl.idplato as id,pl.nombre as nombre, c.nombre as nombrecat, sum(php.cantidad) as suma from plato_has_pedido php \n" +
             "inner join pedido p on php.codigo=p.codigo\n" +
             "inner join plato pl on pl.idplato=php.idplato \n" +
             "inner join categoriarestaurante c on pl.idcategoriarestaurante=c.idcategoria \n" +
-            "where p.idrestaurante=?1 and p.estado=?2\n" +
-            "group by php.idplato ", nativeQuery = true)
-    Page<PlatoReporteDTO> reportePlato(int id, int estado, Pageable pageable);
+            "where p.idrestaurante=?1 and p.estado=?2 and (pl.nombre like %?3%) and (c.idcategoria like %?4%)\n" +
+            "group by php.idplato) as T2 having suma >= ?5 and suma <=?6", nativeQuery = true)
+    Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, int cantMin, int cantMax, Pageable pageable);
 
 
 

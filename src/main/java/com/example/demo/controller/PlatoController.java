@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
-import com.example.demo.repositories.CategoriaExtraRepository;
-import com.example.demo.repositories.CategoriasRestauranteRepository;
-import com.example.demo.repositories.PlatoRepository;
-import com.example.demo.repositories.RestauranteRepository;
+import com.example.demo.repositories.*;
 import com.example.demo.service.PlatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +42,8 @@ public class PlatoController {
     RestauranteRepository restauranteRepository;
     @Autowired
     CategoriasRestauranteRepository categoriaRespository;
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @GetMapping(value = {"/categoria", ""})
     public String listaCategorias(Model model, HttpSession session) {
@@ -54,7 +54,8 @@ public class PlatoController {
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         model.addAttribute("estadoRestaurante",restaurante.getEstado());
-
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         return "AdminRestaurante/categorias";
     }
 
@@ -149,6 +150,8 @@ public class PlatoController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaPlatos", listaPlatos);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
 
         return "AdminRestaurante/listaPlatos";
 
@@ -163,6 +166,8 @@ public class PlatoController {
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         model.addAttribute("listaCategorias", listaCategorias);
         for (Categorias lista : listaCategorias) {
             if (lista.getIdcategoria() == idcategoria) {
@@ -184,6 +189,8 @@ public class PlatoController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         for (Categorias lista : listaCategorias) {
@@ -206,7 +213,7 @@ public class PlatoController {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
+
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
@@ -240,6 +247,7 @@ public class PlatoController {
                     plato.setFoto(file.getBytes());
                     plato.setFotonombre(fileName);
                     plato.setFotocontenttype(file.getContentType());
+                    attr.addFlashAttribute("msg", "Plato creado exitosamente");
                     platoRepository.save(plato);
                 }catch (IOException e){
                     e.printStackTrace();
@@ -255,6 +263,7 @@ public class PlatoController {
                     plato.setFoto(platoOptional.get().getFoto());
                     plato.setFotonombre(platoOptional.get().getFotonombre());
                     plato.setFotocontenttype(platoOptional.get().getFotocontenttype());
+                    attr.addFlashAttribute("msg2", "Plato editado exitosamente");
                     platoRepository.save(plato);
                 }
             }
@@ -305,6 +314,8 @@ public class PlatoController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         for (Categorias lista : listaCategorias) {
@@ -332,6 +343,8 @@ public class PlatoController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
         for (Categorias lista : listaCategorias) {
@@ -344,7 +357,7 @@ public class PlatoController {
             Plato plato = platoOptional.get();
             plato.setDisponible(false);
             platoRepository.save(plato);
-            attr.addFlashAttribute("msg", "Plato borrado exitosamente");
+            attr.addFlashAttribute("msg3", "Plato borrado exitosamente");
             attr.addFlashAttribute("tipo", "borrado");
         }
 

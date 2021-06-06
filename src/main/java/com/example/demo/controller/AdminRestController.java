@@ -485,7 +485,8 @@ public class AdminRestController {
 
 
     @GetMapping("/detallePedido")
-    public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido) {
+    public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido,
+                                   @RequestParam(value = "v",required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
@@ -508,11 +509,13 @@ public class AdminRestController {
         for (int i = 0; i < listaExtras.size(); i++) {
             sumatotalExtra = sumatotalExtra.add(listaExtras.get(i).getPreciototal());
         }
+        System.out.println("##############V= "+v);
         model.addAttribute("detalles", detallesPedido);
         model.addAttribute("platos", listaPlatos);
         model.addAttribute("extras", listaExtras);
         model.addAttribute("sumaPlato", sumatotalPlato);
         model.addAttribute("sumaExtra", sumatotalExtra);
+        model.addAttribute("v",v);
         return "AdminRestaurante/detallePedido";
     }
 

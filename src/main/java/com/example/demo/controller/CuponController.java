@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import ch.qos.logback.core.util.CachingDateFormatter;
+import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.Cupon;
 import com.example.demo.entities.Extra;
 import com.example.demo.entities.Restaurante;
@@ -10,6 +11,7 @@ import com.example.demo.repositories.CuponRepository;
 import java.text.DateFormat;
 import java.time.LocalDate;
 
+import com.example.demo.repositories.PedidoRepository;
 import com.example.demo.repositories.RestauranteRepository;
 import com.example.demo.service.CuponService;
 import org.apache.tomcat.jni.Local;
@@ -41,6 +43,8 @@ public class CuponController {
     CuponService cuponService;
     @Autowired
     RestauranteRepository restauranteRepository;
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model, HttpSession session) {
@@ -64,6 +68,8 @@ public class CuponController {
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
         }
@@ -121,8 +127,14 @@ public class CuponController {
     }
 
 
+
     @GetMapping("/nuevo")
-    public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon) {
+    public String nuevoCupon(@ModelAttribute("cupon") Cupon cupon,Model model, HttpSession session) {
+        Usuario adminRest=(Usuario)session.getAttribute("usuario");
+        int idadmin=adminRest.getIdusuario();
+        Restaurante restaurante= restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         return "AdminRestaurante/nuevoCupon";
     }
 
@@ -134,7 +146,8 @@ public class CuponController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         if (bindingResult.hasErrors()) {
             return "AdminRestaurante/nuevoCupon";
         }
@@ -165,7 +178,12 @@ public class CuponController {
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
                               Model model, @RequestParam("fechainicio") String fechainicio,
                               @RequestParam("fechafin") String fechafin,
-                              @RequestParam("id") int id) {
+                              @RequestParam("id") int id,HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int ida = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(ida);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         System.out.println(fechainicio);
         if (optionalCupon.isPresent()) {
@@ -183,7 +201,12 @@ public class CuponController {
     @GetMapping("/actualizar")
     public String actualizarCupon(@RequestParam("id") int id,
                                   @RequestParam("estado") String estado,
-                                  RedirectAttributes attr) {
+                                  RedirectAttributes attr,HttpSession session,Model model){
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int ida = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(ida);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         LocalDate date = LocalDate.now();
         if (optionalCupon.isPresent()) {

@@ -98,17 +98,17 @@ public class AdminRestController {
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
-        Date date = new Date();
+        Date date=new Date();
         DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
         String fecharegistro = LocalDate.now().toString();
-        fecharegistro = fecharegistro + " " + hourFormat.format(date);
+        fecharegistro=fecharegistro+" "+hourFormat.format(date);
         System.out.println(fecharegistro);
         adminRest.setFecharegistro(fecharegistro);
         Boolean fecha_naci = true;
-        boolean validarFoto = true;
+        boolean validarFoto=true;
         int naci = 0;
         String[] parts = adminRest.getFechanacimiento().split("-");
-        try {
+        try{
             naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
@@ -117,25 +117,25 @@ public class AdminRestController {
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
-        } catch (NumberFormatException e) {
+    }catch(NumberFormatException e){
             System.out.println("Error capturado");
-        }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
-        if (file != null) {
+    }
+        System.out.println("SOY LA FECH DE CUMPLE"+adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci "+fecha_naci);
+        if (file!=null){
             System.out.println("No soy nul 1111111111111111111111111111111111111111111");
             System.out.println(file);
-            if (file.isEmpty()) {
+            if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
-            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
                 System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
                 return "/AdminRestaurante/registroAR";
             }
         }
@@ -166,7 +166,7 @@ public class AdminRestController {
         } else {
             return "/AdminRestaurante/registroAR";
         }
-    }
+}
 
     @PostMapping("/guardarRestaurante")
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
@@ -204,26 +204,26 @@ public class AdminRestController {
 
         boolean validarFoto = true;
 
-        if (file != null) {
+        if (file!=null){
             System.out.println("No soy nul 1111111111111111111111111111111111111111111");
             System.out.println(file);
-            if (file.isEmpty()) {
+            if(file.isEmpty()){
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
-            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+            }else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
                 System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+            if (fileName.contains("..")){
+                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
                 return "/AdminRestaurante/registroResturante";
             }
         }
 
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto) {
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val||!validarFoto) {
 
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
@@ -235,7 +235,7 @@ public class AdminRestController {
                 model.addAttribute("msg", "Se deben seleccionar 4 categorías");
             }
             return "/AdminRestaurante/registroResturante";
-        } else if (validarFoto) {
+        } else if (validarFoto){
             try {
                 restaurante.setFoto(file.getBytes());
                 restaurante.setFotonombre(fileName);
@@ -250,7 +250,8 @@ public class AdminRestController {
                 return "/AdminRestaurante/registroResturante";
             }
             return "redirect:/plato/";
-        } else {
+        }
+        else {
             return "/AdminRestaurante/registroResturante";
         }
     }
@@ -268,14 +269,14 @@ public class AdminRestController {
         System.out.println(usuario.getNombres());
         int id = usuario.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        int estado = -1;
+        int estado=-1;
         try {
-            estado = restaurante.getEstado();
-        } catch (NullPointerException e) {
+            estado=restaurante.getEstado();
+        }catch (NullPointerException e){
 
         }
 
-        model.addAttribute("estadoRestaurante", estado);
+        model.addAttribute("estadoRestaurante",estado);
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
         return "AdminRestaurante/adminCreado";
@@ -506,7 +507,11 @@ public class AdminRestController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<PedidoReporteDTO> lista = pedidoRepository.pedidoReporte(restaurante.getIdrestaurante(), 6);
+        List<String> lista_codigos = pedidoRepository.listarPedidosXestadoXrestaurante(restaurante.getIdrestaurante(), 6);
+        List<PedidoReporteDTO> lista = new ArrayList<PedidoReporteDTO>();
+        for (String codigo : lista_codigos) {
+            lista.add(pedidoRepository.pedidoReporte(codigo, codigo));
+        }
         model.addAttribute("listareporte", lista);
         return "AdminRestaurante/reporteVentas";
     }

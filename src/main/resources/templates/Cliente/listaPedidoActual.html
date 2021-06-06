@@ -291,15 +291,17 @@
                             <div class="col-sm-3 mb-1 ">
                                 <div class="input-group">
                                     <input type="text" class="form-control bg-light border-0 small" name="texto"
-                                           placeholder="Búsqueda por restarurante...">
+                                           th:value="${texto.equals('')?'':texto}"
+                                           th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                                 </div>
                             </div>
                             <div class="col-sm-2 mb-1">
                                 <select class="form-control" name="estado">
-                                    <option value="1">Aceptado</option>
-                                    <option value="3">Preparando</option>
-                                    <option value="4">Listo</option>
-                                    <option value="5">En camino</option>
+                                    <option value="" disabled th:selected="${estado.equals('7')}">Estados</option>
+                                    <option value="1" th:selected="${estado.equals('1')}">Aceptado</option>
+                                    <option value="3" th:selected="${estado.equals('3')}">Preparando</option>
+                                    <option value="4" th:selected="${estado.equals('4')}">Listo</option>
+                                    <option value="5" th:selected="${estado.equals('5')}">En camino</option>
                                 </select>
                             </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
@@ -364,16 +366,23 @@
                                     </tbody>
 								</table>
 							</div>
-							<div class="pagination topnav">
-								<a href="#">«</a>
+							<nav aria-label="Pagination">
+
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a class="page-link active" th:text="${page}" th:href="@{'/cliente/pedidoActual?page='+${page}}"></a>
+                                    </li>
+                                </ul>
+
+								<!--<a href="#">«</a>
 								<a href="#" class="active">1</a>
 								<a href="#">2</a>
 								<a href="#">3</a>
 								<a href="#">4</a>
 								<a href="#">5</a>
 								<a href="#">6</a>
-								<a href="#">»</a>
-							</div>
+								<a href="#">»</a>-->
+							</nav>
                         </div>
 				
                 <!-- /.container-fluid -->
@@ -391,7 +400,7 @@
                 </div>
             </footer>
             <!-- End of Footer -->
-
+        </div>
         </div>
         <!-- End of Content Wrapper -->
 
@@ -427,25 +436,20 @@
         </div>
     </div>
 
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-    <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
-    <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
-    <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
-
 </body>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+
+<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+
+</html>
 
 </html>

@@ -68,8 +68,7 @@ public class CuponController {
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
-        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
-        model.addAttribute("listaNotiRest",listaNotificacion);
+
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
         }
@@ -112,11 +111,17 @@ public class CuponController {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
         page = cuponService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
         listaCupon = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoP", inputPrecio);
+        model.addAttribute("fechainicio", fechainicio2);
+        model.addAttribute("fechafin", fechafin2);
+
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + fechainicio2 + "\n" + fechafin2);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

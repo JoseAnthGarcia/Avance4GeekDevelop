@@ -105,9 +105,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "\t\t\twhere php.codigo=p.codigo and p.idrestaurante =?1 and p.estado = ?2) as T2", nativeQuery = true)
     List<PedidoReporteDTO> pedidoReporte(int idrestaurante, int estado);
 
-    @Query(value="select * from (select pe.codigo as codigo, pe.valoracionrestaurante as valoracion, date_format(pe.fechapedido,'%Y-%m-%d') as fecha, pe.comentariorestaurante as comentario \n" +
+    @Query(value="select pe.codigo as 'codigo', pe.valoracionrestaurante as 'valoracion', date_format(pe.fechapedido,'%Y-%m-%d') as 'fecha', pe.comentariorestaurante as 'comentario' \n" +
             "from pedido pe\n" +
-            "where pe.idrestaurante=?1 and pe.estado=?2) as T2 having valoracion like %?3% and fecha between ?4 and ?5", nativeQuery = true)
+            "where pe.idrestaurante=?1 and pe.estado=?2 and pe.valoracionrestaurante like %?3% and date_format(pe.fechapedido,'%Y-%m-%d') between ?4 and ?5", countQuery = "select count(*) from pedido pe \n" +
+            "where pe.idrestaurante=?1 and pe.estado=?2 and pe.valoracionrestaurante like %?3% and date_format(pe.fechapedido,'%Y-%m-%d') between ?4 and ?5", nativeQuery = true)
     Page<ValoracionReporteDTO> valoracionReporte(int id, int estado, String valoracion, String fechainicio, String fechafin, Pageable pageable);
 
     @Query(value="select * from (select pl.idplato as id,pl.nombre as nombre, c.nombre as nombrecat, sum(php.cantidad) as suma from plato_has_pedido php \n" +

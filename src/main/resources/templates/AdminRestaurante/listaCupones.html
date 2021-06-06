@@ -114,10 +114,12 @@
 
                                 <div class="col-sm-2 mb-1">
                                     <input placeholder="Desde" class="form-control" name="fechainicio"
+                                           th:value="${fechainicio}"
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                                 <div class="col-sm-2 mb-1">
                                     <input placeholder="Caducidad" class="form-control" name="fechafin"
+                                           th:value="${fechafin}"
                                            onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
 
@@ -235,7 +237,7 @@
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

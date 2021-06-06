@@ -70,201 +70,35 @@
                     </div> -->
 
                     <div class="container mt-4 mb-4">
-                        <div class="row mb-5 mr-xl-5">
+                        <div class="row mb-5 mr-xl-5" th:each=" cupon :${listaCuponesenviar}">
                             <div class="col-6">
                                 <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
+                                    <img src="img/cupon2.png" alt="Avatar"
                                          class="image2 shadow" style="height: 250px; width: 400px">
                                     <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #1</h1>
+                                        <h1 class="text2 font-weight-bolder text-left" th:text="${cupon.getNombrecupon()}"></h1>
                                     </a>
                                 </div>
 
                             </div>
                             <div class="col-6 text-left">
-                                <form>
                                     <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
+                                    <input class="form-control" type="text" style="background: #ededed" th:value="${cupon.getNombrerestaurante()}" disabled>
 
                                     <div class="form-check-inline">
                                         <label>
                                             Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
+                                            <input class="form-control mr-4" type="text" style="background: #ededed" th:value="|- S/. ${cupon.getDescuento()}|" disabled>
                                         </label>
                                         <label>
                                             Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
+                                            <input class="form-control" type="text" style="background: #ededed" th:value="${cupon.getFechafin()}" disabled>
                                         </label>
                                     </div>
                                     <h6>Política: </h6>
                                     <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #2</h1>
-                                    </a>
-                                </div>
+                                              style="background: #ededed" th:value="${cupon.getPolitica()}" disabled></textarea>
 
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #3</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #4</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #5</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #6</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background:#ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
                             </div>
                         </div>
 

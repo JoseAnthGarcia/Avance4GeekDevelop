@@ -84,6 +84,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where pe.idrestaurante=?1 and php.codigo=?2",nativeQuery = true)
     List<PlatoPorPedidoDTO> platosPorPedido(int idrestaurante, String codigopedido);
 
+
+
+
     @Query(value = "SELECT e.nombre, ehp.preciounitario,ehp.cantidad,ehp.preciounitario*ehp.cantidad as preciototal  FROM extra_has_pedido ehp\n" +
             "inner join extra e on e.idextra=ehp.idextra\n" +
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
@@ -94,7 +97,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
             "where php.codigo = ?1", nativeQuery = true)
-    List<Plato_has_PedidoDTO> detalle2(String codigo);
+    Page<Plato_has_PedidoDTO> detalle2(String codigo, Pageable pageable);
 
 
     @Query(value ="select ped.codigo, r.nombre as 'nombrerest',\n" +
@@ -114,10 +117,38 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value="SELECT codigo FROM pedido where idrestaurante=?1 and estado=?2 ", nativeQuery = true)
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
+
+
+
     @Query(value="select distinct php.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d')  as fecha, p.preciototal as preciototal from plato_has_pedido php\n" +
             "\t\tinner join pedido p on php.codigo=p.codigo\n" +
             "\t\twhere php.codigo=p.codigo and p.idrestaurante = ?1 and p.estado = ?2", nativeQuery = true)
     List<PedidoReporteDTO> pedidoReporte(int idrestaurante, int estado);
+
+    @Query(value ="select r.nombre , count(p.idrestaurante) as 'cantidad'\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , round(avg(p.tiempoentrega)) as \"tiempoentrega\"\n" +
+            "from pedido p \n" +
+            "left join restaurante r on p.idrestaurante=r.idrestaurante \n" +
+            "where p.idcliente= ?1 and ((EXTRACT(MONTH from p.fechapedido))> ?2 and EXTRACT(MONTH from p.fechapedido) <= ?3 )\n" +
+            "and lower(r.nombre) like %?4% \n" +
+            " group by p.idrestaurante having count(r.idrestaurante) like %?5%" ,nativeQuery = true)
+
+    Page<ReportePedidoCDTO> reportetiempo(int idcliente, int limit1mes, int limit2mes,String texto,String limitcant,Pageable pageable );
+
+    @Query(value = "select  r.nombre as \"nombrerest\"\n" +
+            "            ,EXTRACT(MONTH from p.fechapedido) as \"mes\" ,p.fechapedido\n" +
+            "            ,c.nombre as \"nombrecupon\", c.descuento\n" +
+            "\t\tfrom pedido p \n" +
+            "            inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
+            "            left join cliente_has_cupon clhp on p.idcupon = clhp.idcupon\n" +
+            "            inner join cupon c on c.idcupon = clhp.idcupon\n" +
+            "            where p.idcliente=?1 and clhp.utilizado=1 and\n" +
+            "              (EXTRACT(MONTH from p.fechapedido) > ?2  and  EXTRACT(MONTH from p.fechapedido)<=?3)\n" +
+            "              and lower(r.nombre) like %?4% and lower(c.nombre) like %?5%\n" +
+            "\t\tgroup by r.idrestaurante\n" , nativeQuery = true)
+
+    Page<ReporteDineroDTO> reportedinero(int idcliente, int limit1mes, int limit2mes,String nombre,String nombrec,Pageable pageable );
+
 
     @Query(value="select pe.codigo as 'codigo', pe.valoracionrestaurante as 'valoracion', date_format(pe.fechapedido,'%Y-%m-%d') as 'fecha', pe.comentariorestaurante as 'comentario' \n" +
             "from pedido pe\n" +
@@ -144,6 +175,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             " group by p.idrestaurante having count(r.idrestaurante) like %?5%",nativeQuery = true)
 
     Page<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,String texto,String limitcant,Pageable pageable);
+
+
+
+
 
     @Query(value = "select pe.codigo,dis.nombre as lugar, date_format(pe.fechapedido, '%H:%i') as hora, u.nombres as cliente  from pedido pe\n" +
             "    inner join ubicacion ubi on pe.idubicacion=ubi.idubicacion\n" +

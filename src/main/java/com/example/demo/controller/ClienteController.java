@@ -4,9 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
-import com.example.demo.service.HistorialPedidoService;
-import com.example.demo.service.PedidoActualService;
-import com.example.demo.service.ReportePedidoCService;
+import com.example.demo.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -83,6 +81,16 @@ public class ClienteController {
 
     @Autowired
     ReportePedidoCService reportePedidoCService;
+
+
+    @Autowired
+    ReporteTiempoService reporteTiempoService;
+
+    @Autowired
+    ReporteDineroService reporteDineroService;
+
+    @Autowired
+    Detalle2Service detalle2Service;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -696,10 +704,25 @@ public class ClienteController {
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model){
+    public String detallePedidoActual(@RequestParam Map<String, Object> params,@RequestParam("codigo") String codigo, Model model){
 
         model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
-        model.addAttribute("listapedido2", pedidoRepository.detalle2(codigo));
+
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        if(codigo==null){
+            codigo="";
+        }
+        Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo,pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
+        model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("codigo",codigo);
+
 
 
         return "Cliente/detallePedidoActual";
@@ -794,33 +817,76 @@ public class ClienteController {
 
     @GetMapping("/reporteDinero")
     public String reporteDinero(
-            @RequestParam Map<String, Object> params,Model model, HttpSession httpSession){
+            @RequestParam Map<String, Object> params,Model model, HttpSession httpSession,
+            @RequestParam(value = "texto",required = false) String texto,
+            @RequestParam(value = "nombrec",required = false) String nombrec,
+            @RequestParam(value = "mes",required = false) String mes){
+
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
+        int limitSup;
+        int limitInf;
 
-        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),0,12,"","",pageRequest);
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m=c1.get(Calendar.MONTH) +1;
+        if(texto==null&& mes==null && nombrec==null){
+            mes=Integer.toString(m);
+            limitSup=6;
+            limitInf=5;
+            texto = "";
+
+            nombrec="";
+        }else {
+
+            if (texto == null) {
+                texto = "";
+            }
+
+            if(nombrec==null){
+                nombrec="";
+            }
+
+            try {
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+
+            } catch (NumberFormatException e) {
+                limitSup = 13;
+                limitInf = 0;
+            }
+
+            if (mes == null) {
+                mes = "13";
+            }
+        }
+
+        Page<ReporteDineroDTO> listapedidos= reporteDineroService.findpage(usuario1.getIdusuario(),limitInf,limitSup,texto,nombrec,pageRequest);
         int totalPage = listapedidos.getTotalPages();
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages",pages);
         }
         BigDecimal totalsuma1= new BigDecimal(0);
-        for(ReportePedido rep:listapedidos){
+        for(ReporteDineroDTO rep:listapedidos){
             System.out.println(rep.getDescuento());
             totalsuma1=totalsuma1.add(rep.getDescuento());
         }
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
         model.addAttribute("totalsuma",totalsuma1);
+        model.addAttribute("texto",texto);
+        model.addAttribute("mes",mes);
+        model.addAttribute("nombrec",nombrec);
 
         return "Cliente/reporteDineroCliente";
     }
 
 
     @GetMapping("/reportePedido")
-    public String reportePedido(@RequestParam Map<String, Object> params ,Model model, HttpSession httpSession,@RequestParam(value = "texto",required = false) String texto,
+    public String reportePedido(@RequestParam Map<String, Object> params ,Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto",required = false) String texto,
                                 @RequestParam(value = "numpedidos",required = false) String numpedidos,
                                 @RequestParam(value = "mes",required = false) String mes
                                 ){
@@ -834,7 +900,7 @@ public class ClienteController {
         int limitSup;
         int limitInf;
 
-        if(texto==null&& texto==null&& mes==null){
+        if(texto==null&& numpedidos==null&& mes==null){
             mes=Integer.toString(m);
             limitSup=6;
             limitInf=5;
@@ -890,25 +956,70 @@ public class ClienteController {
     }
 
     @GetMapping("/reporteTiempo")
-    public String reporteTiempo(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession){
+    public String reporteTiempo(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto",required = false) String texto,
+                                @RequestParam(value = "numpedidos",required = false) String numpedidos,
+                                @RequestParam(value = "mes",required = false) String mes){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m=c1.get(Calendar.MONTH) +1;
 
-        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),0,12,"","",pageRequest);
+
+
+        int limitSup;
+        int limitInf;
+
+        if(texto==null&& numpedidos==null&& mes==null){
+            mes=Integer.toString(m);
+            limitSup=m;
+            limitInf=m-1;
+            texto = "";
+            numpedidos = "";
+        }else {
+
+            if (texto == null) {
+                texto = "";
+            }
+            if (numpedidos == null) {
+                numpedidos = "";
+            }
+
+
+            try {
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+
+            } catch (NumberFormatException e) {
+                limitSup = 13;
+                limitInf = 0;
+            }
+
+            if (mes == null) {
+                mes = "13";
+            }
+        }
+
+        Page<ReportePedidoCDTO> listapedidos= reporteTiempoService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
         int totalPage = listapedidos.getTotalPages();
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages",pages);
         }
         int totalsuma1= 0;
-        for(ReportePedido rep:listapedidos){
+        for(ReportePedidoCDTO rep:listapedidos){
            // System.out.println(rep.getTiempoEntrega());
-            totalsuma1=totalsuma1+ rep.getTiempoEntrega();
+            totalsuma1=totalsuma1+ rep.getTiempoentrega();
         }
+
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
-        model.addAttribute("totalsuma",totalsuma1);
+        model.addAttribute("totalsuma1",totalsuma1);
+        model.addAttribute("texto",texto);
+        model.addAttribute("mes",mes);
+        model.addAttribute("numpedidos",numpedidos);
+
         return "Cliente/reporteTiempoCliente";
     }
 

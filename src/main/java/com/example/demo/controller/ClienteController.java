@@ -6,6 +6,7 @@ import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.HistorialPedidoService;
 import com.example.demo.service.PedidoActualService;
+import com.example.demo.service.ReportePedidoCService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +80,9 @@ public class ClienteController {
 
     @Autowired
     HistorialPedidoService historialPedidoService;
+
+    @Autowired
+    ReportePedidoCService reportePedidoCService;
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -789,14 +793,23 @@ public class ClienteController {
 
 
     @GetMapping("/reporteDinero")
-    public String reporteDinero(Model model, HttpSession httpSession){
+    public String reporteDinero(
+            @RequestParam Map<String, Object> params,Model model, HttpSession httpSession){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),0,12,"","",pageRequest);
+        int totalPage = listapedidos.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
         BigDecimal totalsuma1= new BigDecimal(0);
         for(ReportePedido rep:listapedidos){
             System.out.println(rep.getDescuento());
-            totalsuma1.add(rep.getDescuento());
+            totalsuma1=totalsuma1.add(rep.getDescuento());
         }
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
@@ -807,31 +820,87 @@ public class ClienteController {
 
 
     @GetMapping("/reportePedido")
-    public String reportePedido(Model model, HttpSession httpSession){
+    public String reportePedido(@RequestParam Map<String, Object> params ,Model model, HttpSession httpSession,@RequestParam(value = "texto",required = false) String texto,
+                                @RequestParam(value = "numpedidos",required = false) String numpedidos,
+                                @RequestParam(value = "mes",required = false) String mes
+                                ){
+
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m=c1.get(Calendar.MONTH) +1;
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+        int limitSup;
+        int limitInf;
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
-        List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),6);
-        List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),6);
+        if(texto==null&& texto==null&& mes==null){
+            mes=Integer.toString(m);
+            limitSup=6;
+            limitInf=5;
+            texto = "";
+            numpedidos = "";
+        }else {
+
+            if (texto == null) {
+                texto = "";
+            }
+            if (numpedidos == null) {
+                numpedidos = "";
+            }
+
+
+            try {
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+
+            } catch (NumberFormatException e) {
+                limitSup = 13;
+                limitInf = 0;
+            }
+
+            if (mes == null) {
+                mes = "13";
+            }
+        }
+
+        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
+
+        List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitSup);
+        List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),limitSup);
+        int totalPage = listapedidos.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
         BigDecimal totalsuma= new BigDecimal(0);
         for(ReportePedido rep:listapedidos){
-            totalsuma.add(rep.getTotal());
+            System.out.println(rep.getTotal());
+            totalsuma=totalsuma.add(rep.getTotal());
         }
+        System.out.println(totalsuma);
         model.addAttribute("totalsuma",totalsuma);
         model.addAttribute("listapedidos",listapedidos);
         model.addAttribute("listarestTop", listarestTop);
-
-
        model.addAttribute("listarestPl", listaPl);
+       model.addAttribute("texto",texto);
+       model.addAttribute("mes",mes);
+       model.addAttribute("numpedidos",numpedidos);
         return "Cliente/reportePedidoCliente";
     }
 
     @GetMapping("/reporteTiempo")
-    public String reporteTiempo(Model model, HttpSession httpSession){
+    public String reporteTiempo(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),0,12,"","",pageRequest);
+        int totalPage = listapedidos.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
         int totalsuma1= 0;
         for(ReportePedido rep:listapedidos){
            // System.out.println(rep.getTiempoEntrega());

@@ -68,7 +68,6 @@ public class CuponController {
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
-
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
         }

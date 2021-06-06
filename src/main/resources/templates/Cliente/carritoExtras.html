@@ -1,9 +1,47 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">>
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Categoria de Restaurantes ')"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Custom fonts for this template -->
+    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
+
+    <title>Carrito de Extras</title>
+
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+</head>
 <body id="page-top">
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -30,9 +68,9 @@
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/listaRestaurantes}">Restaurantes</a>
+                    <a class="collapse-item" th:href="@{/cliente/listaRestaurantes}">Restaurantes</a>
 
-                    <a class="collapse-item" th:href="@{cliente/categorias}">Categorías</a>
+                    <a class="collapse-item" th:href="@{/cliente/categorias}">Categorías</a>
                 </div>
             </div>
         </li>
@@ -47,9 +85,9 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/pedidoActual}">Pedido Actual</a>
-                    <a class="collapse-item" th:href="@{cliente/historialPedidos}">Historial de Pedidos</a>
-                    <a class="collapse-item" th:href="@{cliente/listaReportes}">Generar Reportes</a>
+                    <a class="collapse-item" th:href="@{/cliente/pedidoActual}">Pedido Actual</a>
+                    <a class="collapse-item" th:href="@{/cliente/historialPedidos}">Historial de Pedidos</a>
+                    <a class="collapse-item" th:href="@{/cliente/listaReportes}">Generar Reportes</a>
                 </div>
             </div>
         </li>
@@ -241,153 +279,142 @@
                 </ul>
 
             </nav>
-            <!-- End of Topbar -->
+            <!-- End of Top bar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <form>
-                        <div class="form-group row mt-3">
-                            <div class="col-sm-3 mb-1 ">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar...">
+                <form>
+                    <div class="form-group row mt-3">
+
+                        <div class="col-sm-3 mb-1 ">
+                            <div class="input-group">
+                                <div class="form-check-label">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <input id="buscador" type="text" class="form-control bg-light small"
+                                               placeholder="Búsqueda por plato..." style="border-color: lightgray">
+                                        <button class="btn" style="background-color:#701111; color:white" type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2 mb-1" style="margin-right: 10px" >
-                                <a class="btn btn-secondary " >Quitar filtros</a>
+
                             </div>
                         </div>
-                    </form>
-
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3" style="background-color: #701111;">
-                            <h5 class="font-weight-bold text-white text-center mb-0">CATEGORIAS</h5>
+                        <div class="col-sm-3 mb-1">
+                            <select id="buscadorPrecios" class="form-control" style="border-color: lightgray">
+                                <option value="">Precio</option>
+                                <option value="">S./00.00 hasta S./5.00</option>
+                                <option value="">S./5.00 hasta S./10.00</option>
+                                <option value="">S./10.00 hasta S./15.00</option>
+                                <option value="">S./15.00 hasta S./20.00</option>
+                                <option value="">S./20.00 a más</option>
+                            </select>
                         </div>
-                        <div class="container">
-                            <div class="row mb-5 mt-5 ml-5">
-                                <div class="col-6">
-                                    <div class="container2">
-                                        <img src="img/amazonicas.jpg" alt="Avatar"
-                                             class="image2 shadow"
-                                             style="height: 200px; width: 300px">
-                                        <a class="overlay2" style="height: 200px; width: 300px" href="listaRestaurantes.html">
-                                            <h1 class="text2 font-weight-bolder">AMAZONAS</h1>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="container2">
-                                        <img src="img/oriental.jpg" alt="Avatar"
-                                             class="image2 shadow"
-                                             style="height: 200px; width: 300px">
-                                        <a class="overlay2" style="height: 200px; width: 300px" href="listaRestaurantes.html">
-                                            <h1 class="text2 font-weight-bolder">ORIENTALS</h1>
-                                        </a>
-                                    </div>
-                                </div>
-                                <!--
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4 mt-4"
-                                             style="margin-left: 50%; margin-top: 30px">
-                                            <div class="container2">
-                                                <img src="img/amazonicas.jpg" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px" href="#">
-                                                    <H1 class="text2 font-weight-bolder">AMAZONAS</H1>
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4 mt-4" style="margin-left: 50%">
-                                            <div class="container2">
-                                                <img src="img/oriental.jpg" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px">
-                                                    <H1 class="text2 font-weight-bolder">ORIENTALS</H1>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4 mt-4"
-                                             style="margin-left: 50%; margin-top: 10px; margin-bottom: 200px">
-                                            <div class="container2">
-                                                <img src="img/marina.jpg" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px">
-                                                    <H1 class="text2 font-weight-bolder">MARINO</H1>
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4 mt-4"
-                                             style="margin-left: 50%; margin-top: 10px; margin-bottom: 70px">
-                                            <div class="container2">
-                                                <img src="img/postres.jpg" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px">
-                                                    <H1 class="text2 font-weight-bolder">POSTRES</H1>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-                            </div>
-                            <div class="row mb-5 mt-5 ml-5">
-                                <div class="col-6">
-                                    <div class="container2">
-                                        <img src="img/postres.jpg" alt="Avatar"
-                                             class="image2 shadow"
-                                             style="height: 200px; width: 300px">
-                                        <a class="overlay2" style="height: 200px; width: 300px" href="listaRestaurantes.html">
-                                            <h1 class="text2 font-weight-bolder">POSTRES</h1>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="container2">
-                                        <img src="img/marina.jpg" alt="Avatar"
-                                             class="image2 shadow"
-                                             style="height: 200px; width: 300px">
-                                        <a class="overlay2" style="height: 200px; width: 300px" href="listaRestaurantes.html">
-                                            <h1 class="text2 font-weight-bolder">MARINO</h1>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-sm-2 mb-1 mt-md-auto">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <a class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
+                </form>
 
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+                        <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE EXTRAS</h5>
+                    </div>
+                    <div class="card-body">
+                        <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
+                            <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
+                                No se encontraron resultados en la búsqueda
+                            </div> -->
+
+                        <div class="table-responsive">
+                            <div class="mb-2" style="color: red">Ingrese un número</div>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-center">
+                                        Extra
+                                    </th>
+                                    <th class="text-center">
+                                        Precio
+                                    </th>
+                                    <th class="text-center">
+                                        Cantidad
+                                    </th>
+                                    <th class="text-center">
+                                        Subtotal
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="extra : ${session.extrasCarrito}">
+                                    <td style="width: 100px">
+                                        <div class="ml-sm-4 mb-4">
+                                            <input class="form-check-input" type="checkbox" value="">
+                                        </div>
+                                    </td>
+                                    <td style="width: 500px">
+                                        <div class="form-check-inline">
+                                            <img class="img-profile rounded-circle" alt="list-style-image"
+                                                 style="width: 35px; height: 35px"
+                                                 th:src="@{'/cliente/imagenExtra?id='+${extra.getExtra().getIdextra()}}">
+                                            <div class="ml-3" th:text="${extra.getExtra().getNombre()}"></div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 250px" th:text="|S/. ${extra.getPreciounitario()}|"></td>
+                                    <td style="width: 250px">
+                                        <div class="form-check-inline">
+                                            <button class="btn btn-cerrito mr-3" style="color: #ffffff; background-color: #701111"><i
+                                                    class="fas fa-plus"></i></button>
+                                            <input class="form-control ml-3 mr-3 mb-3 mt-3" type="text" size="5%"
+                                                   id="extra" style="background: #ededed" name="cantidadExtra" th:value="${extra.getCantidad()}">
+                                            <button class="btn btn-cielito "style="color: #FFFFFF; background-color: #2d4a8d"><i
+                                                    class="fas fa-minus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td style="width: 250px" th:text="|S/. ${extra.getPreciounitario() * extra.getCantidad()}|"></td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <div class="container">
+                            <div class="row justify-content-between mb-3">
+                                <div class="col justify-content-start">
+                                    <button class="btn btn-trash mr-3"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-eliminar mr-3"><i class="fas fa-times"></i></button>
+                                </div>
+                                <div class="col text-right">
+                                    <a class="btn btn-back mr-3" href="listaProductos.html"><i class="fas fa-arrow-left"></i> Regresar
+                                    </a>
+                                    <a class="btn btn-pay mr-3" href="pagoPedido.html"><i class="fas fa-arrow-right"></i> Ir a Pagar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pagination" style=" margin-left: 30% ;align-content: center">
+                            <a href="#">&laquo;</a>
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#">6</a>
+                            <a href="#">&raquo;</a>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
             <!-- /.container-fluid -->
+
         </div>
         <!-- End of Main Content -->
 
@@ -412,7 +439,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -435,7 +462,6 @@
     </div>
 </div>
 
-
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -445,13 +471,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 </body>
 

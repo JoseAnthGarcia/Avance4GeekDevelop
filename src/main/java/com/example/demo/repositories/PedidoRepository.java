@@ -27,12 +27,17 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<Pedido> pedidosPorCliente(int idCliente, String texto, int valoracion, int fechaPedido);
 
 
-    @Query(value="select r.nombre, r.idrestaurante,ped.fechapedido, ped.tiempoentrega, ped.estado, ped.codigo,r.foto as 'foto' from pedido ped\n" +
-            "            inner join restaurante r on ped.idrestaurante = r.idrestaurante \n" +
-            "            where ped.idcliente = ?1  and concat(lower(r.nombre),lower(r.nombre)) like %?2% \n" +
-            "            and ped.estado >?3 and  ped.estado <=?4 ", nativeQuery = true)
-
+    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
+            "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+            "p.idcliente as 'idcliente' from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.idcliente=?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
+            " as pedidosT\n" +
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
+
 
     @Query(value="select r.nombre, r.idrestaurante,p.fechapedido, p.tiempoentrega, p.estado, p.codigo,r.foto as 'foto' , p.valoracionrestaurante, p.comentariorestaurante, p.valoracionrepartidor,p.comentariorepartidor  " +
             "from pedido p\n" +
@@ -77,7 +82,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
             "where ehp.codigo=?1",nativeQuery = true)
     List<ExtraPorPedidoDTO> extrasPorPedido(String codigopedido);
-    @Query(value="SELECT pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
+    @Query(value="SELECT php.codigo,pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
             ", php.observacionplatillo\n" +
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
@@ -85,25 +90,31 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<Plato_has_PedidoDTO> detalle2(String codigo);
 
 
-    @Query(value ="select ped.codigo,r.nombre as 'nombrerest',\n" +
-            "      clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
-            "      ped.fechapedido, ped.tiempoentrega from pedido ped\n" +
-            "      inner join restaurante r on r.idrestaurante = ped.idrestaurante\n" +
-            "      inner join cliente_has_cupon clhp on ped.idcupon= clhp.idcupon\n" +
-            "      where ped.codigo = ?1", nativeQuery = true)
+    @Query(value ="select ped.codigo, r.nombre as 'nombrerest',\n" +
+            "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
+            "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento \n" +
+            "from pedido ped \n" +
+            "left join restaurante r on ped.idrestaurante=r.idrestaurante\n" +
+            "left join cliente_has_cupon clhp on ped.idcupon = clhp.idcupon\n" +
+            "left join cupon c on ped.idcupon = c.idcupon\n"+
+            "where ped.codigo = ?1", nativeQuery = true)
 
     List<Pedido1DTO> detalle1(String codigo);
 
-    @Query(value="select * from pedido",nativeQuery = true)
+    @Query(value="select * from pedido where codigo=?1",nativeQuery = true)
     Pedido encontrarporId(String id);
 
     @Query(value="SELECT codigo FROM pedido where idrestaurante=?1 and estado=?2 ", nativeQuery = true)
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
-    @Query(value="select * from(select distinct php.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d')  as fecha, p.preciototal as preciototal from plato_has_pedido php\n" +
-            "            inner join pedido p on php.codigo=p.codigo\n" +
-            "\t\t\twhere php.codigo=p.codigo and p.idrestaurante =?1 and p.estado = ?2) as T2", nativeQuery = true)
-    List<PedidoReporteDTO> pedidoReporte(int idrestaurante, int estado);
+    @Query(value="select php.codigo as codigo, date_format(p.fechapedido,'%d-%m-%y')  as fecha, sum(php.cantidad*php.preciounitario) as montoplatos, ex.monto as montoextras,\n" +
+            "\tc.descuento as descuento, p.preciototal as preciototal from plato_has_pedido php\n" +
+            "\tinner join pedido p on php.codigo=p.codigo\n" +
+            "\tinner join cupon c on c.idcupon=p.idcupon\n" +
+            "    inner join (select extra.codigo, sum(extra.preciounitario*extra.cantidad) as monto from extra_has_pedido extra\n" +
+            "    where extra.codigo=?1) ex on ex.codigo=p.codigo\n" +
+            "  where php.codigo=?2", nativeQuery = true)
+    PedidoReporteDTO pedidoReporte(String codigo, String codigo2);
 
     @Query(value="select pe.codigo as 'codigo', pe.valoracionrestaurante as 'valoracion', date_format(pe.fechapedido,'%Y-%m-%d') as 'fecha', pe.comentariorestaurante as 'comentario' \n" +
             "from pedido pe\n" +

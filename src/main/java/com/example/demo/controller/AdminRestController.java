@@ -681,7 +681,7 @@ public class AdminRestController {
 
         System.out.println(listaCategorias.get(2).getIdcategoria());
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
-
+        System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

@@ -121,5 +121,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by php.idplato ", nativeQuery = true)
     Page<PlatoReporteDTO> reportePlato(int id, int estado, Pageable pageable);
 
-
+    @Query(value = "select pe.codigo,dis.nombre as lugar, date_format(pe.fechapedido, '%H:%i') as hora, u.nombres as cliente  from pedido pe\n" +
+            "    inner join ubicacion ubi on pe.idubicacion=ubi.idubicacion\n" +
+            "    inner join usuario u on pe.idcliente = u.idusuario\n" +
+            "    inner join distrito dis on dis.iddistrito=ubi.iddistrito\n" +
+            "where pe.estado=0 and pe.idrestaurante=?1 and date_format(pe.fechapedido,'%d-%m-%y')=date_format(now(),'%d-%m-%y') ORDER BY hora ASC limit ?2",nativeQuery = true)
+    List<NotifiRestDTO> notificacionPeidosRestaurante(int idRestaurante, int cantidad);
 }

@@ -109,9 +109,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "  where php.codigo=?2", nativeQuery = true)
     PedidoReporteDTO pedidoReporte(String codigo, String codigo2);
 
-    @Query(value="select pe.codigo as codigo, pe.valoracionrestaurante as valoracion, date_format(pe.fechapedido,'%d-%m-%y')  as fecha, pe.comentariorestaurante as comentario from pedido pe\n" +
-            "  where pe.codigo=?1", nativeQuery = true)
-    ValoracionReporteDTO valoracionReporte(String codigo);
+    @Query(value="select * from (select pe.codigo as codigo, pe.valoracionrestaurante as valoracion, date_format(pe.fechapedido,'%Y-%m-%d') as fecha, pe.comentariorestaurante as comentario \n" +
+            "from pedido pe\n" +
+            "where pe.idrestaurante=?1 and pe.estado=?2) as T2 having valoracion like %?3% and fecha between ?4 and ?5", nativeQuery = true)
+    Page<ValoracionReporteDTO> valoracionReporte(int id, int estado, String valoracion, String fechainicio, String fechafin, Pageable pageable);
 
     @Query(value="select * from (select pl.idplato as id,pl.nombre as nombre, c.nombre as nombrecat, sum(php.cantidad) as suma from plato_has_pedido php \n" +
             "inner join pedido p on php.codigo=p.codigo\n" +
@@ -138,6 +139,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     List<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,int limitcant1, int limitcant2);
 
+    @Query(value = "select pe.codigo,dis.nombre as lugar, date_format(pe.fechapedido, '%H:%i') as hora, u.nombres as cliente  from pedido pe\n" +
+            "    inner join ubicacion ubi on pe.idubicacion=ubi.idubicacion\n" +
+            "    inner join usuario u on pe.idcliente = u.idusuario\n" +
+            "    inner join distrito dis on dis.iddistrito=ubi.iddistrito\n" +
+            "where pe.estado=0 and pe.idrestaurante=?1 and date_format(pe.fechapedido,'%d-%m-%y')=date_format(now(),'%d-%m-%y') ORDER BY hora ASC limit ?2",nativeQuery = true)
+    List<NotifiRestDTO> notificacionPeidosRestaurante(int idRestaurante, int cantidad);
 
     @Query(value="select r.nombre as 'nombrerest' , count(p.idrestaurante) as `numpedidos` ,\n" +
             "EXTRACT(MONTH from p.fechapedido) as `mes` from pedido p \n" +
@@ -152,19 +159,4 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by pl.idplato order by sum(cantidad) desc  limit 0,3 ", nativeQuery = true)
 
     List<ReporteTop3P> reporteTop3Pl(int idcliente, int mes);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

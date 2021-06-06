@@ -846,7 +846,7 @@ public class ClienteController {
             }
         }
 
-        model.addAttribute("listaCupones", restauranteRepository.listaRestaurante(iddistritoactual));
+       // model.addAttribute("listaCupones", restauranteRepository.listaRestaurante(iddistritoactual));
         return "Cliente/listaCupones";
     }
 

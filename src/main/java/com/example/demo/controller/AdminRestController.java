@@ -512,7 +512,9 @@ public class AdminRestController {
         for (String codigo : lista_codigos) {
             lista.add(pedidoRepository.pedidoReporte(codigo, codigo));
         }
-        model.addAttribute("listareporte", lista);
+        List<NotifiRestDTO> listaNotificacion= pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(),3);
+        model.addAttribute("listaNotiRest",listaNotificacion);
+        model.addAttribute("listareporte",lista);
         return "AdminRestaurante/reporteVentas";
     }
 

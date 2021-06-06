@@ -77,7 +77,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
             "where ehp.codigo=?1",nativeQuery = true)
     List<ExtraPorPedidoDTO> extrasPorPedido(String codigopedido);
-    @Query(value="SELECT pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
+    @Query(value="SELECT php.codigo,pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
             ", php.observacionplatillo\n" +
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
@@ -85,15 +85,17 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<Plato_has_PedidoDTO> detalle2(String codigo);
 
 
-    @Query(value ="select ped.codigo,r.nombre as 'nombrerest',\n" +
-            "      clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
-            "      ped.fechapedido, ped.tiempoentrega from pedido ped\n" +
-            "      inner join restaurante r on r.idrestaurante = ped.idrestaurante\n" +
-            "      inner join cliente_has_cupon clhp on ped.idcupon= clhp.idcupon\n" +
-            "      where ped.codigo = ?1", nativeQuery = true)
+    @Query(value ="select ped.codigo, r.nombre as 'nombrerest',\n" +
+            "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
+            "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento \n" +
+            "from pedido ped \n" +
+            "left join restaurante r on ped.idrestaurante=r.idrestaurante\n" +
+            "left join cliente_has_cupon clhp on ped.idcupon = clhp.idcupon\n" +
+            "left join cupon c on ped.idcupon = c.idcupon\n"+
+            "where ped.codigo = ?1", nativeQuery = true)
 
     List<Pedido1DTO> detalle1(String codigo);
 
-    @Query(value="select * from pedido",nativeQuery = true)
+    @Query(value="select * from pedido where codigo=?1",nativeQuery = true)
     Pedido encontrarporId(String id);
 }

@@ -38,7 +38,6 @@
 							<h6 class="col-3 offset-md-3" style="color:black" th:text="|Restaurante : ${p1.getNombrerest()}|"></h6>
 						</div>
                     </div>
-					<div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
@@ -67,12 +66,33 @@
                                         <tbody class="justify-content-center" >
                                             <tr th:each="p2, info:${listapedido2}">
                                                 <td th:text="${info.index +1}">1</td>
-                                                <td th:text="${p2.getNombreplato()}">Arroz con pollo</td>
-                                                <td th:text="${p2.getCantidad()}">1</td>
-                                                <td th:text="${p2.getPreciounitario()}"> S/. 18.00</td>
-                                                <td>S/. 18.00</td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" data-target="#verComent"></i></td>
+                                                <td th:text="${p2.getNombreplato()}"></td>
+                                                <td th:text="${p2.getCantidad()}"></td>
+                                                <td th:text="${p2.getPreciounitario()}"></td>
+                                                <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
+												<td><i class="fas fa-comments" href="#" data-toggle="modal" th:data-target="${'#coment'+p2.getIdplato()}"
+                                                       th:href="${'#coment'+p2.getIdplato()}"></i></td>
+<!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
 
+                                                <div class="modal fade" th:id="${'coment'+p2.getIdplato()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true"   >
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Observación:</h5>
+                                                                <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" th:text="${p2.getObservacionplatillo()}"></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" th:text="|No realizó observación a ${p2.getNombreplato()}|"></div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
                                             </tr>
 
                                         </tbody>
@@ -92,46 +112,48 @@
                                 </div>
 							<br>
                         </div>
-                        <div th:each="p3: ${listapedido1}">
+                    <div th:each="p3:${listapedido1}">
                         <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Costo</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getPreciototal()}">S/. 36.00</h6>
-						</div>
-                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black"  >Delivery</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 6.00|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 6.00|"></h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Cupones</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1}"  th:text="|SI|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0}"  th:text="|NO|"></h6>
-						</div>	
-				        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black"></h6>
-							<h6 class="col-3 offset-md-3" style="color:black">S/. 50</h6>
-						</div>	
-				        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Estado</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">En camino</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Método de Pago</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|">Online</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Fecha de entrega</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Tiempo estimado de entrega</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getTiempoentrega()}"></h6>
-						</div>
-
+                            <h6 class="col-3" style="color:black">Costo</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
                         </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black"  >Delivery</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 5.00|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 8.00|"></h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Cupones</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0}"  th:text="|NO|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Estado</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black">En camino</h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Método de Pago</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|">Online</h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Fecha de entrega</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Tiempo estimado de entrega</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|${p3.getTiempoentrega()} - ${p3.getTiempoentrega()+30} min|"></h6>
+                        </div>
+                    </div>
 
 				<div style="text-align:center">
 					<a  class="btn btn-primary" href="listaPedidoActual.html" type="submit">Regresar</a>
@@ -204,26 +226,6 @@
       </div>
     </div>
 	
-	<!-- Ver Comentario-->
-
-    <div class="modal fade" id="verComent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true"   >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Observación:</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body" th:text="${p2.getObservacionplatillo()}"></div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
 
     <!-- Bootstrap core JavaScript-->
     <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>

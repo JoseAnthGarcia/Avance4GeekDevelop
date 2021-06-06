@@ -207,7 +207,7 @@ public class CuponController {
     @GetMapping("/actualizar")
     public String actualizarCupon(@RequestParam("id") int id,
                                   @RequestParam("estado") String estado,
-                                  RedirectAttributes attr,HttpSession session,Model model){
+                                  RedirectAttributes attr,HttpSession session, Model model){
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int ida = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(ida);

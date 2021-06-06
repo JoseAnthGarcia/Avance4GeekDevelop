@@ -386,6 +386,7 @@ public class AdminRestController {
 
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax);
 
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -592,7 +593,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reporteVentasService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, fechainicio, fechafin, textCodigo, inputPrecioMin, inputPrecioMax);
+        page = reporteVentasService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, fechainicio, fechafin, textCodigo, inputPrecioMin * 20 - 20, inputPrecioMax * 20);
         listaVentasReporte = page.getContent();
 
         //Enviar atributos a la vista
@@ -631,14 +632,14 @@ public class AdminRestController {
             pageNo = 1;
         }
         int inputID = 1;
-        int pageSize = 2;
+        int pageSize = 5;
         Page<ValoracionReporteDTO> page;
         List<ValoracionReporteDTO> listaValoracionReporte;
 
         //Manipular input de buscadores
         System.out.println(inputValoracion);
         String inputValoracion2;
-        if (inputValoracion == null || inputValoracion == 6) {
+        if (inputValoracion == null || inputValoracion != 1 || inputValoracion != 2 || inputValoracion != 3 || inputValoracion != 4 || inputValoracion != 5) {
             inputValoracion2 = "";
         } else {
             inputValoracion2 = String.valueOf(inputValoracion);

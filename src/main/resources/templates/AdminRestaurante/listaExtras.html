@@ -157,6 +157,16 @@
 
                             </div>
                             <div class="card-body">
+                                <div class="card-body">
+                                    <div class="alert alert-danger" role="alert"
+                                         th:if="${msg3!=null}" th:text="${msg3}">
+                                    </div>
+                                    <div class="alert alert-success" role="alert"
+                                         th:if="${msg!=null}" th:text="${msg}">
+                                    </div>
+                                    <div class="alert alert-warning" role="alert"
+                                         th:if="${msg2!=null}" th:text="${msg2}">
+                                    </div>
                                 <div th:if="${totalItems!=0}" class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>

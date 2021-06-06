@@ -272,57 +272,52 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
+                <form method="get" th:action="@{'/cliente/reportePedido'}">
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small"
-                                       placeholder="Búsqueda por restarurante...">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-
-                                    </button>
-                                </div>
+                                <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small" name="texto"
+                                       th:value="${texto.equals('')?'':texto}"
+                                       th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                             </div>
                         </div>
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="busquedaNumeroPedidos" class="form-control" id="exampleRestaurante"
-                                       placeholder="N° de pedidos">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                    </button>
-                                </div>
+                                <input type="busquedaNumeroPedidos" class="form-control" name="numpedidos"
+                                       th:value="${numpedidos.equals('')?'':numpedidos}"
+                                       th:placeholder="${numpedidos.equals('')?'N° de pedidos':numpedidos}"
+                                       >
+
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosot</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
+                            <select class="form-control" name="mes">
+                                <option value="" disabled th:selected="${mes.equals('13')}">Estados</option>
+                                <option value="1" th:selected="${mes.equals('1')}">Enero</option>
+                                <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
+                                <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
+                                <option value="4" th:selected="${mes.equals('4')}">Abril</option>
+                                <option value="5" th:selected="${mes.equals('5')}">Mayo</option>
+                                <option value="6" th:selected="${mes.equals('6')}">Junio</option>
+                                <option value="7" th:selected="${mes.equals('7')}">Julio</option>
+                                <option value="8" th:selected="${mes.equals('8')}">Agosto</option>
+                                <option value="9" th:selected="${mes.equals('9')}">Septiembre</option>
+                                <option value="10" th:selected="${mes.equals('10')}">Octubre</option>
+                                <option value="11" th:selected="${mes.equals('11')}">Noviembre</option>
+                                <option value="12" th:selected="${mes.equals('12')}">Diciembre</option>
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="button">
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2" style="margin-right: 10px">
-                            <a class="btn btn-secondary ">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/cliente/reportePedido'}">Quitar filtros</a>
                         </div>
                     </div>
-                </form>
+                </form >
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
@@ -348,16 +343,15 @@
                             <div style="color:black; text-align:center" >Restaurantes</div>
                             <h6 style="color: black"  th:each="ped,info: ${listarestTop}" th:text="${ped.getNombrerest()}"></h6>
 
-
                         </div>
                         <br>
-
+                        </br>
                         <div class="col-3" style="background-color:#F2E2AA">
                             <div style="color:black; text-align:center">Platos mas pedidos</div>
                         <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
                         </div>
                     </div>
-                    </br>
+
 
                     <div class="text-center">
                         <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>

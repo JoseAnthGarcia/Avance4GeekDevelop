@@ -799,11 +799,11 @@ public class ClienteController {
     public String reporteDinero(Model model, HttpSession httpSession){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,"","");
         BigDecimal totalsuma1= new BigDecimal(0);
         for(ReportePedido rep:listapedidos){
             System.out.println(rep.getDescuento());
-            totalsuma1.add(rep.getDescuento());
+            totalsuma1=totalsuma1.add(rep.getDescuento());
         }
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
@@ -814,23 +814,63 @@ public class ClienteController {
 
 
     @GetMapping("/reportePedido")
-    public String reportePedido(Model model, HttpSession httpSession){
+    public String reportePedido(Model model, HttpSession httpSession,@RequestParam(value = "texto",required = false) String texto,
+                                @RequestParam(value = "numpedidos",required = false) String numpedidos,
+                                @RequestParam(value = "mes",required = false) String mes
+                                ){
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        int limitSup;
+        int limitInf;
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        if(texto==null&& texto==null&& mes==null){
+            mes="6";
+            limitSup=6;
+            limitInf=5;
+            texto = "";
+            numpedidos = "";
+        }else {
+
+
+            if (texto == null) {
+                texto = "";
+            }
+            if (numpedidos == null) {
+
+            }
+
+            int i = 1;
+
+            try {
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+
+            } catch (NumberFormatException e) {
+                limitSup = 13;
+                limitInf = 0;
+            }
+            if (mes == null) {
+                mes = "13";
+            }
+        }
+
+
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos);
         List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),6);
         List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),6);
         BigDecimal totalsuma= new BigDecimal(0);
         for(ReportePedido rep:listapedidos){
-            totalsuma.add(rep.getTotal());
+            System.out.println(rep.getTotal());
+            totalsuma=totalsuma.add(rep.getTotal());
         }
+        System.out.println(totalsuma);
         model.addAttribute("totalsuma",totalsuma);
         model.addAttribute("listapedidos",listapedidos);
         model.addAttribute("listarestTop", listarestTop);
-
-
        model.addAttribute("listarestPl", listaPl);
+       model.addAttribute("texto",texto);
+       model.addAttribute("mes",mes);
+       model.addAttribute("numpedidos",numpedidos);
         return "Cliente/reportePedidoCliente";
     }
 
@@ -838,7 +878,7 @@ public class ClienteController {
     public String reporteTiempo(Model model, HttpSession httpSession){
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,0,12);
+        List<ReportePedido> listapedidos= pedidoRepository.reportexmes(usuario1.getIdusuario(),0,12,"","");
         int totalsuma1= 0;
         for(ReportePedido rep:listapedidos){
            // System.out.println(rep.getTiempoEntrega());

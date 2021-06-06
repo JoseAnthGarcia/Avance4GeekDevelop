@@ -481,13 +481,6 @@ public class ClienteController {
     }
 
 
-    @GetMapping("/reporteDinero")
-    public String reporteDinero() {
-
-
-        return "Cliente/reporteDineroCliente";
-    }
-
 
 
 
@@ -546,6 +539,25 @@ public class ClienteController {
         return "Cliente/reporteTiempoCliente";
     }
 
+    @GetMapping("/listaCupones")
+    public String listaCupones(Model model, HttpSession httpSession) {
 
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        String direccionactual = usuario.getDireccionactual();
+        int iddistritoactual = 1;
+        //buscar que direccion de milista de direcciones coincide con mi direccion actual
+
+        List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+
+        for (ClienteDTO cl : listadirecc) {
+            if (cl.getDireccion().equalsIgnoreCase(direccionactual)) {
+                iddistritoactual = cl.getIddistrito();
+                break;
+            }
+        }
+
+        model.addAttribute("listaCupones", restauranteRepository.listaRestaurante(iddistritoactual));
+        return "Cliente/listaCupones";
+    }
 
 }

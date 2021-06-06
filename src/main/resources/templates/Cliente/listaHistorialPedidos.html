@@ -55,7 +55,6 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" th:href="@{/cliente/listaRestaurantes}">Restaurantes</a>
 
-                    <a class="collapse-item" th:href="@{/cliente/categorias}">Categorías</a>
                 </div>
             </div>
         </li>
@@ -161,7 +160,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -608,23 +607,21 @@
                                                         th:form="${'valoraForm1'+pedido.getCodigo()}"> Aceptar
                                                 </button>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-3">
+                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                        <div class="text-center"><i style="font-size:6em; color:#2C8287"
+                                                                    class="fas fa-eye"></i>
+                                        </div>
+                                    </a>
+                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                        <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
+                                    </a>
+                                </div>
+                            </div>
 
-                            </div>
-                            <div class="col-3">
-                                <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                    <div class="text-center"><i style="font-size:6em; color:#2C8287"
-                                                                class="fas fa-eye"></i>
-                                    </div>
-                                </a>
-                                <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                    <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
-                                </a>
-                            </div>
                         </div>
                         <div class="topbar-divider d-none d-sm-block"></div>
 

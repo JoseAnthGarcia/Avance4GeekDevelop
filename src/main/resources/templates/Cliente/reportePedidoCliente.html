@@ -347,24 +347,26 @@
                     <div class="justify-content-center row">
                         <div class="card col-3" style="background-color:#F2E2AA" >
                             <div style="color:black; text-align:center" >Restaurantes</div>
-                            <div >
-                            <h6 style="color: black"  >A</h6>
-                            </div>
+                            <h6 style="color: black"  th:each="ped,info: ${listarestTop}" th:text="${ped.getNombrerest()}"></h6>
+
+
                         </div>
+                        <br>
 
                         <div class="col-3" style="background-color:#F2E2AA">
                             <div style="color:black; text-align:center">Platos mas pedidos</div>
-<!--                          <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6> -->
+                        <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
                         </div>
                     </div>
+                    </br>
 
                     <div class="text-center">
-                        <h3 style="color:black">Consumo Total: S/ 500</h3>
+                        <h3 style="color:black" th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <thead>
+
                                 <tr>
                                     <th>
                                         N°

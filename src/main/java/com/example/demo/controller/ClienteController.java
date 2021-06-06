@@ -72,6 +72,9 @@ public class ClienteController {
     @Autowired
     PedidoActualService pedidoActualService;
 
+    @Autowired
+    CuponRepository cuponRepository;
+
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
 
@@ -234,6 +237,7 @@ public class ClienteController {
 
         return "Cliente/listaRestaurantes";
     }
+
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -460,7 +464,7 @@ public class ClienteController {
                 break;
             case "5":
                 limitInf = 40;
-                limitSup = 5000;
+                limitSup = 50;
                 break;
             default:
                 limitInf = 0;
@@ -833,20 +837,17 @@ public class ClienteController {
     public String listaCupones(Model model, HttpSession httpSession) {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        String direccionactual = usuario.getDireccionactual();
-        int iddistritoactual = 1;
-        //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
-        List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+        List<CuponClienteDTO> cuponClienteDTOS = cuponRepository.listaCupones();
+        List<CuponClienteDTO> listaCuponesenviar = new ArrayList<CuponClienteDTO>();
 
-        for (ClienteDTO cl : listadirecc) {
-            if (cl.getDireccion().equalsIgnoreCase(direccionactual)) {
-                iddistritoactual = cl.getIddistrito();
-                break;
+        for (CuponClienteDTO cupon : cuponClienteDTOS) {
+            if ((cupon.getIdcliente() == usuario.getIdusuario() && cupon.getUtilizado() != 1) || cupon.getNombrescliente() == null) {
+                listaCuponesenviar.add(cupon);
             }
         }
 
-       // model.addAttribute("listaCupones", restauranteRepository.listaRestaurante(iddistritoactual));
+        model.addAttribute("listaCuponesenviar", listaCuponesenviar);
         return "Cliente/listaCupones";
     }*/
 

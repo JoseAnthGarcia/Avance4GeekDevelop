@@ -26,6 +26,7 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -310,21 +311,29 @@ public class AdminRestController {
     }
 
     @GetMapping("/listaPedidos")
-    public String listaPedidos(Model model, HttpSession session) {
+    public String listaPedidos(Model model, HttpSession session) throws ParseException {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginated("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String today = dtf.format(now);
+        System.out.println(today);
+
+        return findPaginated("", 0, 0, today , "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
+                                @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
+                                @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+                                @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) throws ParseException {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -368,6 +377,53 @@ public class AdminRestController {
             inputPMax = inputPrecio;
             inputPMin = inputPrecio;
         }
+
+        System.out.println(fechafin + "############");
+        Date fechafin2;
+        String fechafin3;
+        if (fechafin == null || fechafin.equals("")) {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechafin2 = simpleDateFormat.parse("3000-05-21");
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechafin3 = simpleDateFormat2.format(fechafin2);
+            System.out.println(fechafin3);
+        } else {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechafin2 = simpleDateFormat.parse(fechafin);
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechafin3 = simpleDateFormat2.format(fechafin2);
+            System.out.println(fechafin3);
+            model.addAttribute("fechafin", fechafin3);
+
+        }
+
+        System.out.println(fechainicio + "############");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = new Date();
+        String today = dateFormat.format(date);
+        Date fechainicio2;
+        String fechainicio3;
+        if (fechainicio == null || fechainicio.equals("")) {
+            fechainicio2 = date;
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechainicio3 = simpleDateFormat.format(fechainicio2);
+            System.out.println(fechainicio3);
+        } else {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            fechainicio2 = simpleDateFormat.parse(fechainicio);
+            String pattern2 = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+            fechainicio3 = simpleDateFormat2.format(fechainicio2);
+            System.out.println(fechainicio3);
+            model.addAttribute("fechainicio", fechainicio3);
+        }
+
         System.out.println("#################");
         System.out.println(inputEstadoMin);
         System.out.println(inputEstadoMax);
@@ -377,14 +433,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20);
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20, fechainicio3, fechafin3);
         listaPedidos = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoE", inputEstado);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
 
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);

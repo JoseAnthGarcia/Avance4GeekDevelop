@@ -104,7 +104,7 @@
                         <form method="get" th:action="@{/restaurante/page}">
 
                             <div class="form-group row">
-                                <div class="col-sm-2 mb-1">
+                                <div class="col-sm-1 mb-1">
                                     <select class="form-control" id="textEstado" name="textEstado">
                                         <option value="0" th:selected="${textoE==0}">Estado</option>
                                         <option value="1" th:selected="${textoE==1}">Pendiente</option>
@@ -116,12 +116,20 @@
                                         <option value="7" th:selected="${textoE==7}">Entregado</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3 mb-1 ">
+                                <div class="col-sm-2 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="exampleCliente"
                                            th:value="${texto}"
                                            placeholder="Búsqueda cliente"
                                            name="textBuscador">
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input placeholder="Desde" class="form-control" name="fechainicio"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input placeholder="Caducidad" class="form-control" name="fechafin"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="textPrecio" name="textPrecio">
@@ -138,7 +146,7 @@
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{'/restaurante/listaPedidos'}">Quitar filtros</a>
                                 </div>
@@ -295,7 +303,7 @@
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP} + '&textEstado=' + ${textoE}}"
+                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP} + '&textEstado=' + ${textoE} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

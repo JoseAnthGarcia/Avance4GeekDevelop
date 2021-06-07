@@ -82,7 +82,7 @@ public class RepartidorController {
         if(pedidoAct==null){
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
-            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
 
             pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
             List<Pedido> pedidos =pagina.getContent();
@@ -185,7 +185,7 @@ public class RepartidorController {
             model.addAttribute("pedidoAct", pedidoAct);
             List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.getRestaurante().getIdrestaurante(), pedidoAct.getCodigo());
             model.addAttribute("platosPorPedido", platosPorPedido);
-            List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
+            List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
             model.addAttribute("direcciones", direcciones);
             return "Repartidor/pedidoActual";
         }else{

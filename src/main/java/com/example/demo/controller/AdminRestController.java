@@ -250,7 +250,7 @@ public class AdminRestController {
                 session.invalidate();
                 return "/AdminRestaurante/registroResturante";
             }
-            return "redirect:/plato/";
+            return "redirect:/paginabienvenida/";
         } else {
             return "/AdminRestaurante/registroResturante";
         }

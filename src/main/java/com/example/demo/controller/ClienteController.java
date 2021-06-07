@@ -1085,12 +1085,9 @@ public class ClienteController {
         //CUPONES
         List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
-
-
-
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
-        List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
+        //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
         Integer idRest = (Integer) session.getAttribute("idRest");
         ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("carritoExtra");
@@ -1159,7 +1156,6 @@ public class ClienteController {
         System.out.println(carrito);
         session.setAttribute("carrito",carrito);
         session.setAttribute("delivery",delivery);
-        model.addAttribute("listaCupones",listaCupones);
         model.addAttribute("montoCarrito",subTotalCarrito);
         model.addAttribute("listaCupones",listaCupones1);
         model.addAttribute("montoExtras",subTotalExtras);

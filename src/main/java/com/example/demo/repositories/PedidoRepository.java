@@ -116,8 +116,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
 
-
-
     @Query(value="select distinct php.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d')  as fecha, p.preciototal as preciototal from plato_has_pedido php\n" +
 
             "\t\tinner join pedido p on php.codigo=p.codigo\n" +

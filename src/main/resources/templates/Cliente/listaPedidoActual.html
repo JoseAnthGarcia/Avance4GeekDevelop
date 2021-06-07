@@ -222,7 +222,8 @@
                     </div>
                         <div class="card-body">
                             <div style=text-align:center>
-                                <h6>Si su pedido ya ha sido entregado o cancelado dirijase al Historial de Pedidos</h6>
+                                <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>
+                                <h6 th:if="${listaPedidos.size()>0}">Si su pedido ya ha sido entregado o cancelado dirijase al Historial de Pedidos</h6>
                                 <h6></h6>
                             </div>
                             <div class="table-responsive">

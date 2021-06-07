@@ -40,7 +40,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
-
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
@@ -57,7 +56,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
 
-    List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
+    Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
 
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
@@ -168,8 +167,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by php.idplato) as T2 having suma >= ?5 and suma <=?6", nativeQuery = true)
     Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, int cantMin, int cantMax, Pageable pageable);
 
-//.
-
     @Query(value ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
             ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +
             "from pedido p \n" +
@@ -204,4 +201,21 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by pl.idplato order by sum(cantidad) desc  limit 0,3 ", nativeQuery = true)
 
     List<ReporteTop3P> reporteTop3Pl(int idcliente, int mes);
+
+    @Query(value = "select m.nombre, `cantmd`, `cantdd` from mes m\n" +
+            "left join (select month(fechapedido) as `mes`, count(codigo) as `cantmd`\n" +
+            "from pedido where year(fechapedido)=?1 and mismodistrito=1 and estado=6 and idrepartidor=?2 group by month(fechapedido)) md\n" +
+            "on md.`mes`=m.idmes\n" +
+            "left join (select month(fechapedido) as `mes`, count(codigo) as `cantdd`\n" +
+            "from pedido where year(fechapedido)=?1 and mismodistrito=0 and estado=6 and idrepartidor=?2 group by month(fechapedido)) dd\n" +
+            "on dd.`mes`=m.idmes", nativeQuery = true)
+    List<ReporteIngresosDTO> reporteIngresos(int anio, int idRepartidor);
+
+    @Query(value = "select year(max(fechapedido)) from pedido", nativeQuery = true)
+    int hallarMaxAnioPedido();
+
+    @Query(value = "select year(min(fechapedido)) from pedido", nativeQuery = true)
+    int hallarMinAnioPedido();
+
+
 }

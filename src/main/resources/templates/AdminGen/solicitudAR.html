@@ -118,7 +118,8 @@
                                     <tr th:each="adminR, v : ${listaAdminRestSolicitudes}">
                                         <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/images?id='+${adminR.idusuario}}" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <!-- Main Content<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">-->
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">

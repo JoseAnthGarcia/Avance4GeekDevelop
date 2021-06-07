@@ -156,6 +156,10 @@
                                             </li>
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
+                                                <h5
+                                                    th:text="${'Código: '+detalles.get(0).getCodigo()}"><b></b>
+                                                </h5>
+
                                                 <!--<h5 th:if="${detalles.get(0).getMetodopago()==0}"
                                                     th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo
                                                 </h5>
@@ -354,8 +358,8 @@
                                            th:data-target="${'#myModal4'}"
                                            th:href="${'#myModal4'}">Listo</a>
                                         <a th:if="${detalles.get(0).getEstado()==6 && v.equals('1')}" th:href="@{/restaurante/reporteVentas}" type="button" class="btn btn-warning mr-1">Regresar</a>
-                                        <a th:if="${(detalles.get(0).getEstado()==2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
-                                        <a th:if="${(detalles.get(0).getEstado()!=2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()==2) && (!v.equals('1')|| v.equals('null'))}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()!=2) && (!v.equals('1') || v.equals('null'))}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
                                     </div>
 
 
@@ -448,7 +452,7 @@
                     </div>
                     <div class="container"></div>
                     <div class="modal-footer">
-                        <a th:href="@{'/restaurante/prepararPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
+                        <a th:href="@{'/restaurante/prepararPedido?v=0&id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
                         <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
                     </div>
                 </div>
@@ -463,7 +467,7 @@
                     </div>
                     <div class="container"></div>
                     <div class="modal-footer">
-                        <a th:href="@{'/restaurante/pedidoListo?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
+                        <a th:href="@{'/restaurante/pedidoListo?v=0&id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
                         <a href="#" data-dismiss="modal" class="btn">No</a>
                     </div>
                 </div>

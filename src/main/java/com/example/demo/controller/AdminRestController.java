@@ -505,7 +505,8 @@ public class AdminRestController {
     @GetMapping("/prepararPedido")
     public String preparaPedido(@RequestParam("id") String id,
                                 RedirectAttributes attr,
-                                Model model, HttpSession session) {
+                                Model model, HttpSession session,
+                                @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
@@ -519,13 +520,14 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
     }
 
     @GetMapping("/pedidoListo")
     public String listoPedido(@RequestParam("id") String id,
                               RedirectAttributes attr,
-                              Model model, HttpSession session) {
+                              Model model, HttpSession session,
+                              @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
@@ -539,7 +541,7 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
     }
 
 

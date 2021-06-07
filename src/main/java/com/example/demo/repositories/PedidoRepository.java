@@ -215,5 +215,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value = "select year(min(fechapedido)) from pedido", nativeQuery = true)
     int hallarMinAnioPedido();
 
+    Pedido findByCodigo(String codigo);
+
 
 }

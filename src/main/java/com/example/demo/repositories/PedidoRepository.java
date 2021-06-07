@@ -40,8 +40,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
-    List<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2);
-
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +

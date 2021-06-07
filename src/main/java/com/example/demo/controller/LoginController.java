@@ -63,50 +63,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm(Authentication auth, HttpSession session) {
-        try {
-            String rol = "";
-            for (GrantedAuthority role : auth.getAuthorities()) {
-                rol = role.getAuthority();
-                break;
-            }
-
-            String correo = auth.getName();
-            Usuario usuario = usuarioRepository.findByCorreo(correo);
-
-            session.setAttribute("usuario", usuario);
-
-            switch (rol) {
-                case "cliente":
-                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones);
-                    return "redirect:/cliente/listaRestaurantes";
-                case "administradorG":
-                    return "redirect:/admin/usuarios";
-                case "administrador":
-                    return "redirect:/admin/usuarios";
-                case "administradorR":
-                    Restaurante restaurante = null;
-                    try {
-                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                    } catch (NullPointerException e) {
-                        System.out.println("Fallo");
-                    }
-                    if (restaurante == null|| restaurante.getEstado()==2) {
-                        return "redirect:/restaurante/paginabienvenida";
-                    } else if(restaurante.getEstado()==1){
-                        return "redirect:/plato/";
-                    }
-                case "repartidor":
-                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones1);
-                    //TODO: agregar redireccion a repartidor
-                    return "somewhere";
-                default:
-                    return "somewhere"; //no tener en cuenta
-            }
-
-        } catch (NullPointerException n) {
-        }
         return "Cliente/login";
     }
 
@@ -138,7 +94,7 @@ public class LoginController {
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
-                return "red irect:/admin/usuarios";
+                return "redirect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":

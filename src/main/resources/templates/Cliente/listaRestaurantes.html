@@ -11,10 +11,10 @@
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
 
     </ul>
     <!-- End of Sidebar -->
@@ -188,13 +188,14 @@
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control"
+                                    style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
-                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
-                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
-                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
-                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
-                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./15.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./15.00 hasta S./25.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./25.00 hasta S./40.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./40.00 a más</option>
+
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2 ">
@@ -311,16 +312,28 @@
                         <div class="container">
 
 
-                            <div class="pagination" style=" margin-left: 30% ;align-content: center">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
+                <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center" >
+                    <li class="page-item" th:each="page : ${pages}">
+                        <a th:unless="${texto == null && idPrecio == null && val == null && idCategoria == null }"
+                           class="page-link active" th:text="${page}"
+                           th:href="@{'/cliente/listaRestaurantes?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&val='+${val}+'&idCategoria='+${idCategoria}}"></a>
+                    </li>
+                </ul>
+                </nav>
+
+                            <!--
+                                    <div class="pagination" style=" margin-left: 30% ;align-content: center">
+
+                                        <a href="#" class="active">1</a>
+                                        <a href="#">2</a>
+                                        <a href="#">3</a>
+                                        <a href="#">4</a>
+                                        <a href="#">5</a>
+                                        <a href="#">6</a>
+
+                                    </div>
+                                    -->
                         </div>
                     </div>
 
@@ -360,7 +373,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -401,4 +414,5 @@
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+
 </html>

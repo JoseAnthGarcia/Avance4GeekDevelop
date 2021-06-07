@@ -249,24 +249,21 @@ public class ClienteController {
         switch (idPrecio){
             case "1":
                 limitInfP = 0;
-                limitSupP = 10;
+                limitSupP = 15;
                 break;
             case "2":
-                limitInfP = 10;
+                limitInfP = 15;
                 limitSupP = 20;
                 break;
             case "3":
-                limitInfP = 20;
-                limitSupP = 30;
-                break;
-            case "4":
-                limitInfP = 30;
+                limitInfP = 25;
                 limitSupP = 40;
                 break;
-            case "5":
-                limitInfP = 50;
+            case "4":
+                limitInfP = 40;
                 limitSupP = 5000;
                 break;
+
             default:
                 limitInfP = 0;
                 limitSupP = 5000;
@@ -1087,6 +1084,12 @@ public class ClienteController {
                                  HttpSession session){
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
+        //CUPONES
+        List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
+
+
+
+
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
 
@@ -1159,6 +1162,7 @@ public class ClienteController {
         session.setAttribute("carrito",carrito);
 
         model.addAttribute("montoCarrito",subTotalCarrito);
+        model.addAttribute("listaCupones",listaCupones1);
         model.addAttribute("montoExtras",subTotalExtras);
         model.addAttribute("delivery",delivery);
 
@@ -1798,6 +1802,7 @@ public class ClienteController {
                 limitInf=0;
         }
 
+        //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
         Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(),texto, limitInf,limitSup,pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
@@ -1808,7 +1813,6 @@ public class ClienteController {
         model.addAttribute("total", totalPage);
 
 
-        httpSession.setAttribute("listaCupones",cuponClienteDTOS);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", cuponClienteDTOS);

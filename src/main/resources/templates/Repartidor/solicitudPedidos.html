@@ -20,11 +20,39 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(listaDistritos=${listaDistritos})"></nav>
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
+
+                <form th:action="@{'/repartidor/cambiarDistrito'}" method="post" class="mb-3">
+                    <div class=" row">
+                        <div class="col-lg-2"  >
+                            <span style="position:relative; top:10% ">Distrito actual:</span>
+
+                        </div>
+                        <div class="col-lg-2" >
+
+                            <select class="form-control" style="border-color:lightgray; position: relative; right: 40%" name="idubicacion">
+                                <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
+                                        th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
+                            </select>
+
+
+                        </div>
+                        <div class="col-lg-2" style="position:relative; right: 6%">
+                            <button type="submit"  class="btn btn-dark">Seleccionar distrito</button>
+                        </div>
+
+                        <div th:if="${msg != null}" th:text="${msg}" class="col-3 alert alert-danger" ></div>
+
+                    </div>
+                </form>
+
+
+
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -45,39 +73,45 @@
                                     <th scope="col">Pedido</th>
                                     <th scope="col">Hora de registro </th>
                                     <th scope="col">Aceptar</th>
-                                    <th scope="col">Rechazar</th>
+                                    <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${i.index+1}" >1</th>
-                                    <td th:text="${pedido.restaurante.nombre}">Arroz con pollo - Restaurante amarillo</td>
+                                    <td >
+                                        <a th:href="@{'/repartidor/listaPedidos?numPag=' + ${currentPage}+'&idPedido='+${pedido.codigo}}" th:text="${pedido.restaurante.nombre}" class="btn">
+
+                                        </a>
+                                        </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
                                     <td>
                                        <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn">
                                            <i class="fas fa-check-circle" style="color: green"></i>
                                        </a>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <a th:href="@{/repartidor/rechazarPedido}" class="btn">
                                             <i class="fas fa-times-circle" style="color: red"></i>
                                         </a>
-                                    </td>
+                                    </td>-->
                                 </tr>
                                 </tbody>
 
                             </table>
 
                             <!--Pagination -->
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
+                            <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/repartidor/listaPedidos?numPag=' + ${i}}"
+                                       th:utext="${i}"
+                                       class="active mt-2 no "></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+
+                                </div>
                             </div>
                             <!-- End of pagination -->
 
@@ -90,7 +124,7 @@
 
 
 
-                <div class="container-fluid">
+                <div class="container-fluid" th:if="${pedidoDetalle != null}">
 
                     <div class="card">
 
@@ -99,25 +133,36 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="row">
-                                            <h1 class="card-title" style="color: black">Ceviche - Restaurante Marino</h1>
-                                            <p class="card-text">Dirección de restaurante: Av. Universitaria 345<br>
+                                            <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}">Ceviche - Restaurante Marino</h1>
+                                            <p class="card-text" th:utext="'Dirección de restaurante: '+${pedidoDetalle.restaurante.direccion}
+                                            +'<br>Direción de envio: '+${pedidoDetalle.cliente.direccionactual}
+                                            +'<br>Hora de registro de pedido: '+${pedidoDetalle.fechapedido}
+                                            +'<br>Método de pago : '+${pedidoDetalle.metodopago.tipo}+'-S/.'+${pedidoDetalle.cantidadapagar}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>
                                                 Producto: Ceviche<br>
                                                 Hora de registro de pedido:   17:49<br>
-                                                Método de pago : Efectivo</p>
+                                                Método de pago : Efectivo</p><br>
+
                                         </div>
+                                        <div style="position: relative; bottom: 4%; right: 3%"  class="mt-0 ml-0">
+                                            <p class="card-text mt-0 mb-0">Platos:</p>
+                                            <p  class="card-text mb-0" th:each="plato : ${platosPorPedido}"th:utext="'-'+${plato.nombre}"></p>
+
+                                        </div>
+
                                         <div class="row mt-3">
                                             <div class="col-sm-6">
-                                                <i class="fas fa-check-circle" style="color: green"></i>
+                                                <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedidoDetalle.codigo}}" class="btn">
+                                                    <i class="fas fa-check-circle" style="color: green"></i>
+                                                </a>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <i class="fas fa-times-circle" style="color: red"></i>
-                                            </div>
+
                                         </div>
 
                                     </div>
                                     <div class="col-sm-6">
-                                        <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">
+                                        <img  th:src="@{'/repartidor/images?id='+${pedidoDetalle.restaurante.idrestaurante}}" class="img-fluid">
+                                        <!-- <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">-->
                                     </div>
                                 </div>
                             </div>
@@ -164,30 +209,64 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" href="/html/login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
-
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 </body>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>
+
+
 
 </html>

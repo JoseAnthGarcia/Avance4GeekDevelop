@@ -217,17 +217,18 @@
                             <div class="col-11 d-sm-flex justify-content-center">
                                 <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
                             </div>
-							<div class="col-1 d-sm-flex justify-content-center" >
+							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
                                 <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
                         </div>
 						<br>
 						
-						<div class="text-center">
-							<h3 style="color:#000000" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+						<div class="text-center" >
+							<h3 th:if style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+                            <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS DE LA BUSQUEDA|"></h3>
 						</div>
-                        <div class="card-body"   >
+                        <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
                              <table id="reporteDinero" class="table table-bordered">
                                  <thead>

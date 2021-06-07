@@ -93,6 +93,9 @@ public class ClienteController {
     @Autowired
     Detalle2Service detalle2Service;
 
+    @Autowired
+    CuponClienteService cuponClienteService;
+
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
 
@@ -911,7 +914,7 @@ public class ClienteController {
          */
 
 
-
+        model.addAttribute("total",totalPage);
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
         model.addAttribute("totalsuma",totalsuma1);
@@ -974,10 +977,13 @@ public class ClienteController {
         List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitSup);
         List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),limitSup);
         int totalPage = listapedidos.getTotalPages();
+
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages",pages);
+
         }
+
         BigDecimal totalsuma= new BigDecimal(0);
         for(ReportePedido rep:listapedidos){
             System.out.println(rep.getTotal());
@@ -991,6 +997,7 @@ public class ClienteController {
        model.addAttribute("listarestPl", listaPl);
        model.addAttribute("texto",texto);
        model.addAttribute("mes",mes);
+       model.addAttribute("total",totalPage);
        model.addAttribute("numpedidos",numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
@@ -1066,20 +1073,63 @@ public class ClienteController {
     }
 
     @GetMapping("/listaCupones")
-    public String listaCupones(Model model, HttpSession httpSession) {
+    public String listaCupones(@RequestParam Map<String, Object> params ,@RequestParam(value = "texto",required = false) String texto,
+                               @RequestParam(value = "descuento",required = false) String descuento,Model model, HttpSession httpSession) {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+        int limitSup;
+        int limitInf;
 
-        List<CuponClienteDTO> cuponClienteDTOS = cuponRepository.listaCupones();
-        List<CuponClienteDTO> listaCuponesenviar = new ArrayList<CuponClienteDTO>();
 
-        for (CuponClienteDTO cupon : cuponClienteDTOS) {
-            if ((cupon.getIdcliente() == usuario.getIdusuario() && cupon.getUtilizado() != 1) || cupon.getNombrescliente() == null) {
-                listaCuponesenviar.add(cupon);
-            }
+        if(texto==null ){
+            texto= "";
         }
+        if(descuento==null){
+            descuento="7";
+        }
+
+        switch (descuento){
+            case "1":
+                limitSup=10;
+                limitInf=0;
+                break;
+
+            case "2":
+                limitSup=20;
+                limitInf=10;
+                break;
+
+            case "3":
+                limitSup=30;
+                limitInf=20;
+                break;
+
+            case "4":
+                limitSup=40;
+                limitInf=30;
+                break;
+
+            default:
+                limitSup=100;
+                limitInf=0;
+        }
+
+
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(),texto, limitInf,limitSup,pageRequest);
+        int totalPage = cuponClienteDTOS.getTotalPages();
+        if(totalPage > 0){
+            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages",pages);
+        }
+        model.addAttribute("total", totalPage);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        model.addAttribute("listaCuponesenviar", listaCuponesenviar);
+        model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
+        model.addAttribute("texto",texto);
+        model.addAttribute("descuento",descuento);
+
         return "Cliente/listaCupones";
     }
 

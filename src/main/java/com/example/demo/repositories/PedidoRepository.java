@@ -215,5 +215,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value = "select year(min(fechapedido)) from pedido", nativeQuery = true)
     int hallarMinAnioPedido();
 
+    @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
+            "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +
+            "chp.utilizado, cl.nombres as 'nombrescliente', cl.idusuario as 'idcliente'\n" +
+            "from cupon c\n" +
+            "left join restaurante r on r.idrestaurante=c.idrestaurante\n" +
+            "left join cliente_has_cupon chp on chp.idcupon = c.idcupon\n" +
+            "left join usuario cl on cl.idusuario = chp.idcliente\n" +
+            "where c.estado=2 and (chp.utilizado is null  || chp.utilizado = 0) \n" +
+            "and (cl.idusuario is null || cl.idusuario = ?1) and \n" +
+            "r.nombre like %?2%  and (c.descuento >=?3 and c.descuento<= ?4)",nativeQuery = true)
+    Page<CuponClienteDTO> listaCupones(int idCliente,String texto, int limitInf, int limitSup, Pageable pageable);
+
+
+
 
 }

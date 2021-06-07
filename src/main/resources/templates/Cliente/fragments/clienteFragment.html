@@ -46,17 +46,10 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse">
+        <a class="nav-link" th:href="@{/cliente/listaRestaurantes}" >
             <i class="fas fa-utensils"></i>
             <span>Nuevo Pedido</span>
         </a>
-        <div id="submenu1" class="collapse" aria-expanded="false">
-            <ul class="flex-column pl-2 nav">
-                <li class="nav-item">
-                    <a class="nav-link py-0" th:href="@{/cliente/listaRestaurantes}"><span>Restaurantes</span></a>
-                </li>
-            </ul>
-        </div>
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->

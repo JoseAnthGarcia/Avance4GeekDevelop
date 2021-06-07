@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -23,6 +24,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -56,54 +58,13 @@ public class LoginController {
     UrlCorreoRepository urlCorreoRepository;
 
     @Autowired
+    PedidoRepository pedidoRepository;
+
+    @Autowired
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
-    public String loginForm(Authentication auth, HttpSession session) {
-        try {
-            String rol = "";
-            for (GrantedAuthority role : auth.getAuthorities()) {
-                rol = role.getAuthority();
-                break;
-            }
-
-            String correo = auth.getName();
-            Usuario usuario = usuarioRepository.findByCorreo(correo);
-
-            session.setAttribute("usuario", usuario);
-
-            switch (rol) {
-                case "cliente":
-                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones);
-                    return "redirect:/cliente/listaRestaurantes";
-                case "administradorG":
-                    return "redirect:/admin/usuarios";
-                case "administrador":
-                    return "redirect:/admin/usuarios";
-                case "administradorR":
-                    Restaurante restaurante = null;
-                    try {
-                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                    } catch (NullPointerException e) {
-                        System.out.println("Fallo");
-                    }
-                    if (restaurante == null|| restaurante.getEstado()==2) {
-                        return "redirect:/restaurante/paginabienvenida";
-                    } else if(restaurante.getEstado()==1){
-                        return "redirect:/plato/";
-                    }
-                case "repartidor":
-                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones1);
-                    //TODO: agregar redireccion a repartidor
-                    return "somewhere";
-                default:
-                    return "somewhere"; //no tener en cuenta
-            }
-
-        } catch (NullPointerException n) {
-        }
+    public String loginForm() {
         return "Cliente/login";
     }
 
@@ -117,6 +78,7 @@ public class LoginController {
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
@@ -131,7 +93,7 @@ public class LoginController {
         //redirect:
         switch (rol) {
             case "cliente":
-                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
@@ -151,10 +113,17 @@ public class LoginController {
                     return "redirect:/plato/";
                 }
             case "repartidor":
-                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
-                return "redirect:/repartidor/listaPedidos";
+                Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+
+                if(pedidoAct==null){
+                    return "redirect:/repartidor/listaPedidos";
+                }else{
+                    return "redirect:/repartidor/pedidoActual";
+                }
+
             default:
                 return "somewhere"; //no tener en cuenta
         }
@@ -173,10 +142,13 @@ public class LoginController {
     }
 
 
+
+
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                 BindingResult bindingResult2,
+                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -193,8 +165,10 @@ public class LoginController {
             bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
+
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
+
 
 
         try {
@@ -225,10 +199,15 @@ public class LoginController {
         } catch (NumberFormatException n) {
         }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-        ) {
+
+
+
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci) {
 
             //----------------------------------------
+
+
+
 
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
@@ -246,6 +225,9 @@ public class LoginController {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
 
+
+
+
             //   String direccion;
             model.addAttribute("Usuario_has_distrito", new Ubicacion());
             //distritos
@@ -253,6 +235,8 @@ public class LoginController {
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("direccion", ubicacion.getDireccion());
+
+
             return "Cliente/registro";
         } else {
             cliente.setEstado(1);
@@ -278,6 +262,8 @@ public class LoginController {
             clienteRepository.save(cliente);
 
             ubicacion.setUsuario(cliente);
+
+
             ubicacionRepository.save(ubicacion);
 
             /////----------------Envio Correo--------------------/////

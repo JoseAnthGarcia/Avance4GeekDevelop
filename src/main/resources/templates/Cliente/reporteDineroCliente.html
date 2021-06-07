@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Reporte Dinero')"></head>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Historial de Pedidos')"></head>
 
 <body id="page-top">
 <!-- Page Wrapper -->
@@ -11,7 +8,6 @@
 
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
-
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -48,8 +44,7 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;"
-                                                type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -72,7 +67,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
+                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -86,38 +81,24 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -130,9 +111,9 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold "
-                                style="background-color:white; color:#701111; border:#701111;"
-                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
+                            >
 
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
@@ -153,18 +134,18 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -177,62 +158,54 @@
                 </ul>
 
             </nav>
-            <!-- End of Topbar -->
-
-            <!-- End of Topbar -->
+                <!-- End of Topbar -->
 				<!-- Begin Page Content -->
                 <div class="container-fluid">
-					<form>
+					<form  method="get" th:action="@{'/cliente/reporteDinero'}">
                         <div class="form-group row mt-3">
                             <div class="col-sm-2 mb-1 ">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Búsqueda por restarurante...">
-                                    <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
+                                    <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
+                                           name="texto"
+                                           th:value="${texto.equals('')?'':texto}"
+                                           th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                                 </div>
                             </div>
 							<div class="col-sm-2 mb-1 ">
                                 <div class="input-group">
-                                    <input type="busquedaNumeroPedidos" class="form-control" id="exampleCumpon" placeholder="Cupón">
-                                    <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
+                                    <input type="busquedaNumeroPedidos" class="form-control" id="exampleCumpon" name="nombrec"
+                                           th:value="${nombrec.equals('')?'':nombrec}"
+                                           th:placeholder="${nombrec.equals('')?'Cupón':nombrec}">
+
                                 </div>
 								
                             </div>
 							<div class="col-sm-2 mb-1">
-                                <select class="form-control  ">
-                                <option value="" disabled selected>Mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-								<option value="3">Marzo</option>
-								<option value="4">Abril</option>
-								<option value="5">Mayo</option>
-								<option value="6">Junio</option>
-								<option value="7">Julio</option>
-								<option value="8">Agosot</option>
-								<option value="9">Septiembre</option>
-								<option value="10">Octubre</option>
-								<option value="11">Noviembre</option>
-								<option value="12">Diciembre</option>
+                                <select class="form-control" name="mes">
+                                <option value="13" disabled  th:selected="${mes.equals('13')}">Mes</option>
+                                <option value="1" th:selected="${mes.equals('1')}">Enero</option>
+                                <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
+                                <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
+                                <option value="4" th:selected="${mes.equals('4')}">Abril</option>
+                                <option value="5" th:selected="${mes.equals('5')}">Mayo</option>
+                                <option value="6" th:selected="${mes.equals('6')}">Junio</option>
+                                <option value="7" th:selected="${mes.equals('7')}">Julio</option>
+                                <option value="8" th:selected="${mes.equals('8')}">Agosto</option>
+                                <option value="9" th:selected="${mes.equals('9')}">Septiembre</option>
+                                <option value="10" th:selected="${mes.equals('10')}">Octubre</option>
+                                <option value="11" th:selected="${mes.equals('11')}">Noviembre</option>
+                                <option value="12" th:selected="${mes.equals('12')}">Diciembre</option>
                             </select>
+
                             </div>
-							<div class="col-sm-2 mb-1">
-							<input placeholder="Fecha" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
-                             </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
-                                <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                        type="submit">
                                     <i class="fas fa-filter"></i>
                                 </button>
                             </div>
-                            <div class="col-sm-2" style="margin-right: 10px" >
-                                <a class="btn btn-secondary " >Quitar filtros</a>
+                            <div class="col-sm-2" style="margin-right: 10px">
+                                <a class="btn btn-secondary" th:href="@{'/cliente/reporteDinero'}">Quitar filtros</a>
                             </div>
                         </div>
                     </form>
@@ -244,17 +217,18 @@
                             <div class="col-11 d-sm-flex justify-content-center">
                                 <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
                             </div>
-							<div class="col-1 d-sm-flex justify-content-center">
+							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
                                 <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
                         </div>
 						<br>
 						
-						<div class="text-center">
-							<h3 style="color:black" th:text="|Total dinero ahorrado: ${totalsuma}|"></h3>
+						<div class="text-center" >
+							<h3 th:if style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+                            <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS DE LA BUSQUEDA|"></h3>
 						</div>
-                        <div class="card-body">
+                        <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
                              <table id="reporteDinero" class="table table-bordered">
                                  <thead>
@@ -281,8 +255,8 @@
                                     <td th:text="${info.index+1} "></td>
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
-                                    <td th:text="${ped.getFechaPedido()}"></td>
-                                    <td th:text="${ped.getDescuento()}"></td>
+                                    <td th:text="${ped.getFechapedido()}"></td>
+                                    <td th:text="|S/ ${ped.getDescuento()}|"></td>
                                 </tr>
                                 
                             </tbody>
@@ -290,20 +264,35 @@
                              </table>
                             
                             </div>
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>                               
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                             </div>
+
+                            <div th:if="${pages >= 1}" class="pagination text-center">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
+                                       th:utext="${i}"
+                                       class="active mt-2"></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                </div>
+                            </div>
+
+                            <nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}" style="color:#701111;">
+                                        <a style="color:#701111;" th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
+                                           th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+
+
                         </div>
                     </div>
 					<div style="text-align:center">
-					<a  class="btn btn-primary"  type="submit">Regresar</a>
+                        <a  class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
 					</div>
                 </div>
                 <!-- /.container-fluid -->
@@ -322,9 +311,11 @@
             <!-- End of Footer -->
 
         </div>
+</div>
         <!-- End of Content Wrapper -->
 
     </div>
+
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -332,7 +323,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-<!-- Logout Modal-->
+    <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -355,19 +346,26 @@
     </div>
 </div>
 
+
 </body>
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
+<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
-<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
 <script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;

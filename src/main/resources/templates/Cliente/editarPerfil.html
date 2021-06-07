@@ -93,7 +93,7 @@
                             </h6>
                             <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
@@ -102,6 +102,8 @@
                                 <div>
                                     <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
@@ -294,11 +296,11 @@
 </body>
 
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+<script src="@{/vendor/jquery/jquery.min.js}"></script>
+<script src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<script tsrc="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
 <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>

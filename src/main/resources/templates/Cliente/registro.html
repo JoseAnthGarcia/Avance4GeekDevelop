@@ -160,15 +160,11 @@
                                  th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
                         </div>
-                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <label style="color: black">Foto de Perfil</label>
-                            <div class="custom-file">
-                                <input type="file" style="border-color:lightgray" id="inputGroupFile03">
-                                <label class="custom-file-label " for="inputGroupFile03" style="border-color:lightgray">Foto de
-                                    Perfil</label>
-                            </div>
-                        </div>
+                        <div class="col-sm-6 mb-2 mb-sm-0">
 
+
+
+                        </div>
 
                     </div>
 
@@ -276,32 +272,13 @@
             <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.html">Volver</a>
+                <a class="btn btn-primary" th:href="@{/login}">Volver</a>
             </div>
         </div>
     </div>
 </div>
 <!-- Registrar Modal-->
-<div class="modal fade" id="registrarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Confirmación de envío de solicitud</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por parte del
-                administrador.
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="registroValidacion.html">Enviar</a>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
@@ -318,6 +295,38 @@
 
 <!-- Page level custom scripts -->
 <script th:src="@{/js/demo/datatables-demo.js}"></script>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>
 
 
 </body>

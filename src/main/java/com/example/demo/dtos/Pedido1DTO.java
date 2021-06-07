@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public interface Pedido1DTO {
     String getCodigo();
     String getNombrerest();
-    int getUtilizado();
+    Integer getUtilizado();
     BigDecimal getPreciototal();
     int getMismodistrito();
     int getEstado();

@@ -86,38 +86,26 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -188,7 +176,7 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn" th:href="@{'/cliente/mostrarCarrito?idRest='+${idRest}+'&idPlato='+${plato.getIdplato()}}"><i class="fas fa-cart-plus" style="color: white"></i></a>
+                                <a class="btn" th:href="@{'/cliente/mostrarCarrito?idPlato='+${plato.getIdplato()}+'&idPage=1'}"><i class="fas fa-cart-plus" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
                                 <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
@@ -224,20 +212,21 @@
                                         <label for="cantidad"><strong style="color:#000000;">Añadir: </strong></label>
                                         <input name="idPlato" th:value="${plato.getIdplato()}" type="hidden">
                                         <input name="idRest" th:value="${idRest}" type="hidden">
+                                        <input type="hidden" name="idPage" value="1">
                                         <input size="2%" class="form-control ml-3 mr-sm-1 mb-3" type="text" name="cantidadPlato" id="cantidad"
                                                style="border-color: lightgray">
                                         <span>uni.</span>
                                     </div>
-                            <!-- <div class="ml-2 mb-3" style="color:#EE2D20;">Ingrese un número </div> &lt;!&ndash; | Ingrese más de un plato | Debe agregar un valor mayor que 1 &ndash;&gt; -->
+                                 <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCant != null}" th:text="${msgValCant}"></div>
                                 </div>
                                 <br>
                                 <div class="form-check-inline align-content-xl-end mb-5">
                                     <button class="btn btn-cielito mr-3" style="background-color: #2d4a8d; color: #FFFFFF" type="submit"><i
                                             class="fas fa-cart-plus mr-2"></i>Añadir al carrito
                                     </button>
-                                    <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}"><i
+                                    <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos'}"><i
                                             class="fas fa-arrow-left"></i> Regresar</a>
-                                    <a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="pagoPedido.html"><i
+                                    <a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="terminarCompra.html"><i
                                             class="fas fa-arrow-right"></i> Ir a Pagar</a>
                                 </div>
 
@@ -249,63 +238,48 @@
 
                 </div>
 
-
-                <form> <!--  th:action="@{'/cliente/buscadorCliente'}" method="get" -->
-                    <input type="hidden" name="idUsuario"> <!-- th:value="${cliente.idusuario}" -->
+                <div th:if="${listaExtras.size() != 0}">
+                <form method="get" th:action="@{'/cliente/detallePlato'}"> <!--  th:action="@{'/cliente/buscadorCliente'}" method="get" -->
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
-                            <input type="text" class="form-control"
-                                   name="textoPedido"
-                                   placeholder="Búsqueda por nombre ...">
-                            <!-- th:if="${textoBuscador == null}"
-                            <input th:unless="${textoBuscador == null}" type="text" class="form-control"
-                                   name="textoPedido" th:value="${textoBuscador}"
-                                   placeholder="Búsqueda por repartidor o restaurante"> -->
+                            <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                   th:placeholder="${texto.equals('') ? 'Búsqueda por plato...' : texto}"
+                                   th:value="${texto.equals('') ? '' : texto}"
+                                   style="border-color: lightgray">
                         </div>
                         <div class="col-sm-2 mb-1 ">
                             <!-- th:if="${valoracionBuscador == null}" -->
                             <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled selected>Precio</option>
-                                <option value="1">S./00.00 hasta S./10.00</option>
-                                <option value="2">S./10.00 hasta S./20.00</option>
-                                <option value="3">S./20.00 hasta S./30.00</option>
-                                <option value="4">S./30.00 hasta S./40.00</option>
-                                <option value="5">S./50.00 a más</option>
+                                <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
+                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <!--th:if="${fechaPedidoBuscador == null}" -->
                             <select id="buscadorCategoria" name="idPrecio" class="form-control" style="border-color: lightgray">
                                 <!-- TODO MANDAR LISTA DE CATEGORÍA-->
-                                <option value="" disabled selected>Categoría</option>
-                                <option value="1">a</option>
-                                <option value="2">b</option>
-                                <option value="3">c</option>
-                                <option value="4">d</option>
-                                <option value="5">e</option>
+                                <option value="" disabled th:selected="${idCategoria.equals('5')}">Categoría</option>
+                                <option value="1" th:selected="${idCategoria.equals('1')}">Bebidas</option>
+                                <option value="2" th:selected="${idCategoria.equals('2')}">Cubiertos</option>
+                                <option value="3" th:selected="${idCategoria.equals('3')}">Ensaladas</option>
+                                <option value="4" th:selected="${idCategoria.equals('4')}">Guarniciones</option>
                             </select>
-                            <!--<select th:unless="${fechaPedidoBuscador == null}" class="form-control" name="fechaPedido">
-                                <option value="" disabled selected>Fecha de Registro</option>
-                                <option th:selected="${fechaPedidoBuscador == 1}" value="1">Hoy</option>
-                                <option th:selected="${fechaPedidoBuscador == 7}" value="7">Esta semana</option>
-                                <option th:selected="${fechaPedidoBuscador == 30}" value="30">Este mes</option>
-                                <option th:selected="${fechaPedidoBuscador == 365}" value="365">Este año</option>
-                            </select>-->
                         </div>
 
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="submit">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <!--th:href="@{'/admin/detalle?idUsuario='+${cliente.idusuario}}" -->
-                            <a href="#" class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{'/cliente/detallePlato'}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
-
+                </div>
                 <!-- /.container-fluid -->
                 <div class="card shadow ">
                     <div class="card-header py-3 " style="background-color: #701111;">
@@ -314,11 +288,12 @@
                         </div>
                     </div>
                     <div th:if="${msgAddExtra != null}" th:text="${msgAddExtra}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
+                    <h2 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
 
                     <div class="card-body">
                         <div class="container-fluid">
                             <div class="table-responsive ">
-                                <table>
+                                <table th:if="${listaExtras.size() != 0}" class="table table-bordered">
                                     <thead>
                                     <th class="text-center">Extras</th>
                                     <th class="text-center">Nombre</th>
@@ -328,19 +303,24 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="extra : ${listaExtras}">
-                                        <td class="text-center mb-3"><img th:src="@{'/cliente/imagenExtra?id='+${extra.getIdextra()}}" style="width: 200px; height: 200px"></td>
-                                        <td class="text-center mb-3" th:text="${extra.getNombre()}"></td>
-                                        <td class="text-center mb-3" th:text="|S/. ${extra.getPreciounitario()}|"></td>
-                                        <td class="text-center mb-3" th:text="${extra.getTipo()}"></td>
+                                        <td class="text-center">
+                                            <div class="mb-2 mt-2">
+                                                <img th:src="@{'/cliente/imagenExtra?id='+${extra.getIdextra()}}" style="width: 100px; height: 100px">
+                                            </div>
+                                        </td>
+                                        <td class="text-center" th:text="${extra.getNombre()}"></td>
+                                        <td class="text-center" th:text="|S/. ${extra.getPreciounitario()}|"></td>
+                                        <td class="text-center" th:text="${extra.getTipo()}"></td>
                                         <td class="text-center ">
                                             <div class="form-check-inline">
                                                 <form th:action="@{'/cliente/aniadirExtras'}" method="post">
-                                                    <input name="idExtra" th:value="${extra.getIdextra()}" type="hidden">
-                                                    <input name="idRest" th:value="${idRest}" type="hidden">
-                                                    <input class="form-control ml-5 mr-2" name="cantidadExtra" type="text" size="5%" style="border-color: lightgray">uni.
-                                                    <button class="btn btn-cerrito ml-3" style="background-color: #701111" type="submit">
-                                                        <i class="fas fa-plus" style="color: #FFFFFF"></i>
-                                                    </button>
+                                                    <div class="form-check-inline">
+                                                        <input name="idExtra" th:value="${extra.getIdextra()}" type="hidden">
+                                                        <input class="form-control ml-5 mr-2" name="cantidadExtra" type="text" size="2%" style="border-color: lightgray">uni.
+                                                        <button class="btn btn-cerrito ml-3" style="background-color: #701111" type="submit">
+                                                            <i class="fas fa-plus" style="color: #FFFFFF"></i>
+                                                        </button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </td>
@@ -349,16 +329,13 @@
                                 </table>
                             </div>
 
-                            <div class="pagination" style=" margin-left: 30% ;align-content: center">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
+                            <nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}+'&idPlato='+${plato.getIdplato()}}"></a>
+                                    </li>
+                                </ul>
+                            </nav>
 
                         </div>
                     </div>
@@ -401,7 +378,7 @@
             </div>
         </div>
     </div>
-
+</body>
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -412,5 +389,5 @@
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
-</body>
+
 </html>

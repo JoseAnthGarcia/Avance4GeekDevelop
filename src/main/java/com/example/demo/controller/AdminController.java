@@ -8,6 +8,10 @@ import com.example.demo.service.RepartidorService;
 import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -230,6 +234,40 @@ public class AdminController  {
         }
 
     }
+    @GetMapping("/images")
+    public ResponseEntity<byte[]> mostrarUsuario(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario= usuarioOptional.get();
+            byte[] image = usuario.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
+    @GetMapping("/imagesRest")
+    public ResponseEntity<byte[]> mostrarRestaurante(@RequestParam("id") int id) {
+        Optional<Restaurante> restauranteOpt = restauranteRepository.findById(id);
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
+            byte[] image = restaurante.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(restaurante.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
     @GetMapping("/rechazarSolicitudRest")
     public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
 
@@ -242,6 +280,7 @@ public class AdminController  {
                 Restaurante restaurante = restauranteOpt.get();
                 restaurante.setEstado(3);
                 restauranteRepository.save(restaurante);
+
 
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }else{
@@ -266,7 +305,7 @@ public class AdminController  {
 // HOLA
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
-                                 @RequestParam(value = "tipo", required = false) String tipo){
+                                 @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -282,6 +321,14 @@ public class AdminController  {
                 usuario.setFechaadmitido(hourdateFormat.format(date));
                 //
                 usuarioRepository.save(usuario);
+                /////----------------Envio Correo--------------------/////
+
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+
+
+                /////-----------------------------------------  ------/////
                 return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
@@ -292,7 +339,7 @@ public class AdminController  {
 
     @GetMapping("/rechazarSolicitud")
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
-                                    @RequestParam(value = "tipo", required = false) String tipo){
+                                    @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -303,6 +350,14 @@ public class AdminController  {
                 Usuario usuario = usuarioOpt.get();
                 usuario.setEstado(3);
                 usuarioRepository.save(usuario);
+                /////----------------Envio Correo--------------------/////
+
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+
+
+                /////-----------------------------------------  ------/////
                 return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
@@ -407,14 +462,14 @@ public class AdminController  {
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones", ubicacionRepository.findByUsuario(usuario));
+                    model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
                     return "/AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones", ubicacionRepository.findByUsuario(usuario));
+                    model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                     return "/AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);
@@ -531,7 +586,7 @@ public class AdminController  {
 
     @PostMapping("/guardar")
     public String guardarAdmin(@ModelAttribute("usuario") @Valid Usuario usuario,
-                               BindingResult bindingResult, RedirectAttributes attr) {
+                               BindingResult bindingResult, RedirectAttributes attr) throws MessagingException {
 
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
 
@@ -550,12 +605,10 @@ public class AdminController  {
                 /////----------------Envio Correo--------------------/////
 
                 String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                //sendEmailHtml(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
-
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
                 /////-----------------------------------------------/////
-
 
 
 
@@ -637,8 +690,8 @@ public class AdminController  {
             /////----------------Envio Correo--------------------/////
 
             String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-            sendHtmlMail(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+            //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
 
             /////-----------------------------------------  ------/////
@@ -687,6 +740,31 @@ public class AdminController  {
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
         String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+    public void sendHtmlMailAceptado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailRechazado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

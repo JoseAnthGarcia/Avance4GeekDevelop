@@ -86,38 +86,26 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -207,80 +195,83 @@
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
-                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{'/cliente/listaPlatos'}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3" style="background-color: #701111;">
-                        <div class="row">
-                            <div class="col-1">
-                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
-                            </div>
-                            <div class="col-9 mt-2">
-                                <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
-                            </div>
-                        </div>
+                        <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
                     </div>
 
                     <div class="container mt-4 mb-4">
 
-                     <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
+                        <div th:if="${msgAdd != null}" class="alert alert-info ml-2 mr-2" role="alert">
                             Se agregó un plato al carrito
-                        </div>-->
-                        <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
-                            <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
-                                No se encontraron resultados en la búsqueda
-                            </div> -->
+                        </div>
+
+                        <h2 th:if="${listaPlato.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
+                        <div style="color: red" th:if="${msgValCant != null}" th:text="${msgValCant}" class="mr-2 mt-1"></div>
+                        <div style="color: red" th:if="${msgVal != null}" th:text="${msgVal}" class="mr-2 mt-1"></div>
+                        <h2 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
 
                         <div class="row mb-5">
-
-                            <div class="col text-center" th:each="plato : ${listaPlato}">
+                            <div th:if="${listaPlato.size() != 0}" class="col text-center" th:each="plato : ${listaPlato}">
                                     <div style="color:#000000;" class="ml-3 mt-1 text-left">
                                         <strong th:text="|Precio:  |"></strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
                                     </div>
                                     <div class="container2">
                                         <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
                                              class="image2 shadow"  style="height: 200px; width: 300px">
-                                        <a class="overlay2" th:href="@{'/cliente/detallePlato?idRest='+${idRest}+'&idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
+                                        <a class="overlay2" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
                                             <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
                                         </a>
                                     </div>
-                                    <div class="form-check-inline">
-                                        <!-- label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label> -->
+                                <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
+                                <div class="form-check-inline">
                                         <div class="form-check-inline">
-                                            <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                                   style="border-color: lightgray">
-                                            <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                    class="fas fa-plus"></i></button>
-                                        </div>
+                                                    <input type="hidden" name="idPlato" th:value="${plato.getIdplato()}">
+                                                    <input type="hidden" name="idPage" value="0">
+                                                    <input id="cantidadPlato" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
+                                                           style="border-color: lightgray" name="cantidadPlato">
+                                                    <button class="btn btn-cielito mr-3" style="color: #ffffff; background-color: #701111" type="submit"><i
+                                                            class="fas fa-plus"></i></button>
+
+                                            </div>
                                     </div>
+                                </form>
                             </div>
 
                         </div>
                         <div class="container">
                             <div class="row justify-content-between mb-3">
                                 <div class="col text-right">
-                                    <a class="btn btn-back mr-3" href="listaRestaurantes.html"><i
+                                    <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaRestaurantes'}"><i
                                             class="fas fa-arrow-left"></i> Regresar
                                     </a>
-                                    <a class="btn btn-pay mr-3 disabled" href="pagoPedido.html"><i
-                                            class="fas fa-arrow-right"></i> Ir a Pagar
+                                  <a class="btn btn-info mr-3" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
+                                            class="fas fa-cart-plus"></i> Ir al carrito
                                     </a>
                                 </div>
                             </div>
 
-                            <div class="pagination" style=" margin-left: 30% ;align-content: center">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
+                            <!--<div class="pagination" style=" margin-left: 30% ;align-content: center">
+                                <a href="#" class="active" style="background-color: #701111">1</a>
                                 <a href="#">2</a>
                                 <a href="#">3</a>
                                 <a href="#">4</a>
                                 <a href="#">5</a>
                                 <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
+                            </div>-->
+
+                            <nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${texto == null && idPrecio == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/listaPlatos?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}}"></a>
+                                    </li>
+                                </ul>
+                            </nav>
 
                         </div>
 
@@ -343,21 +334,21 @@
 
 </body>
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js" ></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<script src="/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js" ></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+<script src="/vendor/bootstrap/js/sb-admin-2.min.js" ></script>
 
 <!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+<script src="/vendor/datatables/jquery.dataTables.min.js" ></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+<script  src="/js/demo/datatables-demo.js"></script>
 
 </html>
 

@@ -156,7 +156,11 @@
                                             </li>
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:if="${detalles.get(0).getMetodopago()==0}"
+                                                <h5
+                                                    th:text="${'Código: '+detalles.get(0).getCodigo()}"><b></b>
+                                                </h5>
+
+                                                <!--<h5 th:if="${detalles.get(0).getMetodopago()==0}"
                                                     th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo
                                                 </h5>
                                                 <h5 th:if="${detalles.get(0).getMetodopago()==1}"
@@ -165,7 +169,7 @@
                                                 <h5 th:if="${detalles.get(0).getMetodopago()==2}"
                                                     th:text="${'Método de Pago: Online'}"><b>Método de Pago: </b>Efectivo
                                                 </h5>
-                                                <span class="text-light "><h6></h6></span>
+                                                --><span class="text-light "><h6></h6></span>
                                             </li>
                                         </ul>
                                     </td>
@@ -354,8 +358,8 @@
                                            th:data-target="${'#myModal4'}"
                                            th:href="${'#myModal4'}">Listo</a>
                                         <a th:if="${detalles.get(0).getEstado()==6 && v.equals('1')}" th:href="@{/restaurante/reporteVentas}" type="button" class="btn btn-warning mr-1">Regresar</a>
-                                        <a th:if="${(detalles.get(0).getEstado()==2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
-                                        <a th:if="${(detalles.get(0).getEstado()!=2) && !v.equals('1')}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()==2) && (!v.equals('1')|| v.equals('null'))}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning mr-1" style="max-width: 12rem; position: center">Regresar</a>
+                                        <a th:if="${(detalles.get(0).getEstado()!=2) && (!v.equals('1') || v.equals('null'))}" th:href="@{/restaurante/listaPedidos}" type="button" class="btn btn-warning">Regresar</a>
                                     </div>
 
 
@@ -409,7 +413,7 @@
                             brevemente</h4>
                     </div>
                     <div class="container"></div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="justify-content: flex-start; display: block">
                         <form id="rechazar" method="GET"
                               th:action="@{/restaurante/rechazarPedido}">
                             <input name="id" type="text" class="form-control mb-2"
@@ -448,7 +452,7 @@
                     </div>
                     <div class="container"></div>
                     <div class="modal-footer">
-                        <a th:href="@{'/restaurante/prepararPedido?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
+                        <a th:href="@{'/restaurante/prepararPedido?v=0&id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Aceptar</a>
                         <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
                     </div>
                 </div>
@@ -463,7 +467,7 @@
                     </div>
                     <div class="container"></div>
                     <div class="modal-footer">
-                        <a th:href="@{'/restaurante/pedidoListo?id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
+                        <a th:href="@{'/restaurante/pedidoListo?v=0&id='+${detalles.get(0).getCodigo()}}" class="btn btn-primary">Sí</a>
                         <a href="#" data-dismiss="modal" class="btn">No</a>
                     </div>
                 </div>

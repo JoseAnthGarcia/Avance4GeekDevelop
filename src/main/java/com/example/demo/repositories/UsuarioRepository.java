@@ -20,6 +20,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
+    @Query(value = "select ub.* from ubicacion ub\n" +
+            "inner join usuario u on u.idusuario = ub.idusuario\n" +
+            "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
+    List<Ubicacion> findUbicacionActual(int idUsuario);
+
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
     //List<Usuario> findEmployeesByEmailAndEmployeeIdNot(String email,int id);
@@ -119,10 +124,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
  */
 
     @Query(value = "SELECT p.codigo, p.preciototal, p.estado, r.nombre\n" +
-            "FROM pedido p\n" +
-            "left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
-            "left join usuario u on  p.idcliente = u.idusuario\n" +
-            "where (p.estado=1 or p.estado=3 or p.estado=4 or p.estado=5) and (p.idcliente=?1) limit ?2;" ,nativeQuery = true)
-    List<NotiDTO> notificacionCliente(int id, int size);
+            "            FROM pedido p\n" +
+            "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
+            "            left join usuario u on  p.idcliente = u.idusuario\n" +
+            "            where (p.idcliente=?1) and (p.estado=0)\n" +
+            "            order by p.fechapedido desc limit 3\n" +
+            "            ;" ,nativeQuery = true)
+    List<NotiDTO> notificacionCliente(int id);
 
 }

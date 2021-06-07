@@ -43,39 +43,31 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item">
-        <a class="nav-link" href="pedidoActual.html">
+        <a class="nav-link" th:href="@{'/repartidor/pedidoActual'}">
             <i class="fas fa-motorcycle"></i>
             <span>Entrega actual</span></a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="solicitudPedidos.html">
+        <a class="nav-link" th:href="@{'/repartidor/listaPedidos'}">
             <i class="fas fa-exclamation-circle"></i>
             <span>Solicitudes de pedidos</span></a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="estadísticas.html">
+        <a class="nav-link" th:href="@{'/repartidor/estadisticas'}">
             <i class="fas fa-chart-bar"></i>
             <span>Estadisticas</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
+        <a class="nav-link" th:href="@{'/repartidor/tipoReporte'}">
             <i class="fas fa-fw fa-folder"></i>
             <span>Reportes</span>
 
         </a>
-        <div class="collapse" id="submenu1" aria-expanded="false">
-            <ul class="flex-column pl-2 nav">
-                <li class="nav-item"><a class="nav-link py-0" href="reporteDeliverys.html"><span>Reporte de deliverys</span></a></li>
-            </ul>
-            <ul class="flex-column pl-2 nav">
-                <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Reporte de ingresos</span></a></li>
-            </ul>
 
-        </div>
     </li>
     <hr class="sidebar-divider my-0">
 
@@ -91,23 +83,26 @@
 
 
 
-<nav th:fragment="navbar(listaDistritos)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <div class="form-group row">
-        <div class="col-sm-12 mb-2 mb-sm-0 " style="position: relative; left: 330%; bottom: 5%">
-            <div class="col-sm-2">
-                <label class="form-label">Direccion actual:</label>
-            </div>
-            <div class="col-sm-10">
+<nav th:fragment="navbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <!--
+    <form th:action="@{'/repartidor/cambiarDistrito'}" method="post">
+    <div class=" row"style="position: relative; left: 55%">
+        <div class="col-lg-6" >
+            <span style="position: relative; top: 13% ; left: 11%">Distrito actual:</span>
 
-                <select class="form-select" style="border-color:lightgray" name="distritos">
+        </div>
+        <div class="col-lg-6" >
 
-                    <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
-                            th:text="${dist.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dist.nombre}"></option>
+                <select class="form-control" style="border-color:lightgray" name="idubicacion">
+                    <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
+                            th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
                 </select>
-            </div>
+            <button type="submit">Seleccionar distrito</button>
+
         </div>
 
     </div>
+     </form> -->
     <!-- Sidebar Toggle (Topbar) -->
     <form class="form-inline">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -186,21 +181,28 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali, el crack</span>
-                <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                          th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
+                <img class="img-profile rounded-circle" src="http://cdn.onlinewebfonts.com/svg/img_568656.png">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="editarPerfil.html">
+                <a class="dropdown-item" th:href="@{/repartidor/editarPerfil}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Editar Perfil
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="../login.html" data-toggle="modal" data-target="#logoutModal">
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+
+
+
+                <!-- LOGOUT-->
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" ></i>
                     Cerrar Sesión
                 </a>
+
+
             </div>
         </li>
 

@@ -318,7 +318,7 @@
                             <li class="page-item" th:each="page : ${pages}">
                                 <a th:unless="${texto == null && numpedidos == null && mes==null  }"
                                    class="page-link active" th:text="${page}"
-                                   th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}}"></a>
+                                   th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
                             </li>
                         </ul>
                     </nav>

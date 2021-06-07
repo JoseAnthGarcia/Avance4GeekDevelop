@@ -62,7 +62,7 @@ public class LoginController {
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
-    public String loginForm(Authentication auth, HttpSession session) {
+    public String loginForm() {
         return "Cliente/login";
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import com.example.demo.dtos.PlatosDTO;
 import com.example.demo.dtos.RestauranteDTO;
+import com.example.demo.entities.Distrito;
 import com.example.demo.entities.Restaurante;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Usuario;
@@ -17,6 +18,10 @@ import java.util.List;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer> {
     Page<Restaurante> findByEstado(int estado, Pageable pageable);
 
+    @Query(value = "select d.* from distrito d " +
+            "       inner join restaurante r on r.iddistrito = d.iddistrito" +
+            "       where r.idrestaurante = ?1 ",nativeQuery = true)
+    Distrito findDistritoById(Integer idRest);
 
     @Query(value = "select * from restaurante where idadministrador = ?1", nativeQuery = true)
     Restaurante encontrarRest (int id);

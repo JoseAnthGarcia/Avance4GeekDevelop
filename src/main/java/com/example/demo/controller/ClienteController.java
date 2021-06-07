@@ -1035,11 +1035,23 @@ public class ClienteController {
                                  RedirectAttributes attr, Model model,
                                  HttpSession session){
         Pedido pedido = new Pedido();
-        Usuario usuario = session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        //Ubicacion poolDirecciones = (Ubicacion) session.getAttribute("poolDirecciones");
+        List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
+        List<Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
+        Integer idRest = (Integer) session.getAttribute("idRest");
+        ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
+        ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("carritoExtra");
+
+        Distrito distritoRestaurante = restauranteRepository.findDistritoById(idRest);
+        double subTotalCarrito = 0.00;
+        double subTotalExtras = 0.00;
+        double delivery = 0.00;
+        int cantVal = 0;
+
         System.out.println(observacion);
         System.out.println(platoGuardar);
         System.out.println(cantidad);
-        ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         System.out.println(carrito);
 
         // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
@@ -1048,7 +1060,7 @@ public class ClienteController {
                 platoGuardar.size() != carrito.size()){
             return "redirect:/cliente/mostrarCarrito";
         }
-        int cantVal = 0;
+
         for (int i = 0; i < cantidad.size(); i++) {
             try{
                  cantVal = Integer.parseInt(cantidad.get(i));
@@ -1068,31 +1080,45 @@ public class ClienteController {
                 return "redirect:/cliente/mostrarCarrito";
             }
         }
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        double suma = 0.00;
-        double delivery = 0.00;
+
         for(int i = 0; i < carrito.size(); i++){
             carrito.get(i).setObservacionplatillo(observacion.get(i));
             carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
             carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
-            suma = suma + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+            subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+        }
+        for(int i = 0; i < carritoExtra.size(); i++){
+            subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
         }
 
-       // model.addAttribute("")
-
-        //pedido.setPreciototal(suma);
-
+        for (Ubicacion u : direcciones_distritos) {
+            if(u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())){
+                if(u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()){
+                    delivery = 5.00;
+                    break;
+                }
+            }
+        }
+        if(delivery == 0.00){ delivery = 8.00; }
 
 
 
         //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
         System.out.println(carrito);
         session.setAttribute("carrito",carrito);
-        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+
+        model.addAttribute("montoCarrito",subTotalCarrito);
+        model.addAttribute("montoExtras",subTotalExtras);
+        model.addAttribute("delivery",delivery);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/terminarCompra";
     }
 
+    @PostMapping("/generarPedido")
+    public String generarPedido(){
 
+        return "/.";
+    }
 
     @GetMapping("/listaReportes")
     public String listaReportes(Model model, HttpSession session) {
@@ -1519,6 +1545,9 @@ public class ClienteController {
                 listaCuponesenviar.add(cupon);
             }
         }
+
+        httpSession.setAttribute("listaCupones",listaCuponesenviar);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", listaCuponesenviar);
         return "Cliente/listaCupones";

@@ -1185,15 +1185,17 @@ public class ClienteController {
         List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
         List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
 
-     /*   for(int i = 0; i < listaPlatos.size(); i++){
-            carrito.get(i).setObservacionplatillo(observacion.get(i));
-            carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
-            carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
-            subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+        BigDecimal precioTotalPlatos = new BigDecimal(0);
+        for(int i = 0; i < listaPlatos.size(); i++){
+            BigDecimal subtotal =  listaPlatos.get(i).getPreciounitario().multiply(new BigDecimal(listaPlatos.get(i).getCantidad()));
+            precioTotalPlatos = precioTotalPlatos.add(subtotal);
         }
-        for(int i = 0; i < carritoExtra.size(); i++){
-            subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
-        }*/
+
+        BigDecimal precioTotalExtras = new BigDecimal(0);
+        for(int i = 0; i < listaExtra.size(); i++){
+            BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
+            precioTotalExtras = precioTotalExtras.add(subTotal1);
+        }
 
         Pedido pedido = new Pedido();
 

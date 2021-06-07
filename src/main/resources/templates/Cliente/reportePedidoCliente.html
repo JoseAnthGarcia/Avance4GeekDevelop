@@ -260,12 +260,14 @@
                 </div>
 
                 <br>
-                <div class="text-center"     >
-                    <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }"
+                <div class="text-center" >
+                    <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
                         th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
+                    <h3 th:if="${total==0}" th:text="|No se encontraron resultados|"></h3>
 
                 </div>
-                <div class="card-body"     th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
+
+                <div class="card-body"     th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
                     <div class="table-responsive">
                         <table id="reportePedido" class="table table-bordered">
 

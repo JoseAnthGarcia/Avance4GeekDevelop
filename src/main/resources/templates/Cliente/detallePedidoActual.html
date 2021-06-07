@@ -273,7 +273,7 @@
                         </div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Cupones</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0}"  th:text="|NO|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
@@ -287,7 +287,13 @@
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Estado</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black">En camino</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==0}" >|Pendiente|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==1}" >|Aceptado|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" >|Cancelado|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==3}" >|Preparando|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==4}" >|Pedido Listo|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==5}" >|En camino|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==6}" >|Entregado|</h6>
                         </div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Método de Pago</h6>
@@ -304,8 +310,26 @@
                     </div>
 
 				<div style="text-align:center">
-					<a  class="btn btn-primary" type="submit">Regresar</a>
-					<a  class="btn btn-danger"  href="#" data-toggle="modal" data-target="#cancelarPedido" >Cancelar Pedido</a>
+					<a  class="btn btn-primary" th:href="@{cliente/pedidoActual}" type="submit">Regresar</a>
+					<a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
+                    <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel4">¿Desea cancelar el pedido?</h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                                    <button class="btn btn-primary" th:href="@{'/cliente/cancelarPedido?id='+${listapedido1.get(0).getCodigo()}}" type="submit">Sí</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 					</div>
                 <!-- /.container-fluid -->
 

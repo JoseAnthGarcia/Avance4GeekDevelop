@@ -207,8 +207,8 @@
                                     </ul>
                                 </div>
 
-                                <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane fade" id="pagoOnline">
+                                <div class="tab-content" th:if="${idMetodoPago !=null}" >
+                                    <div th:if="${idMetodoPago == 1}" role="tabpanel" class="tab-pane fade" id="pagoOnline">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -236,11 +236,10 @@
                                                     <br>
                                                 </div>
                                                 <div class="col-6">
-                                                    <select class="form-control form-control-sm">
-                                                        <option selected>Seleccionar una tarjeta</option>
-                                                        <option value="1">Visa</option>
-                                                        <option value="2">Mastercard</option>
-                                                    </select>
+                                                    <select class="form-control form-control-sm mb-4" form="generarPedido">
+                                                        <option th:each="tarjeta : ${listaTarjetas}"
+                                                                th:text="|${tarjeta.getNumerotarjeta()}|"
+                                                                th:value="${tarjeta.getIdtarjeta()}"></option>
                                                     <br>
                                                     <div class="input-group input-group-sm mb-3">
                                                         <input type="text" class="form-control text-center">
@@ -284,7 +283,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane active fade" id="pagoEfectivo">
+                                    <div th:if="${idMetodoPago == 2}"  role="tabpanel" class="tab-pane active fade" id="pagoEfectivo">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -312,7 +311,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane fade" id="pagoPOS">
+                                    <div th:if="${idMetodoPago == 3}"  role="tabpanel" class="tab-pane fade" id="pagoPOS">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -424,18 +423,18 @@
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
                                     </div>
                                 </div>
-                                <div class="container mt-sm-2">
+                               <!-- <div class="container mt-sm-2">
                                     <div class="row justify-content-between">
                                         <div class="col-sm-7">
                                             <label>Seleccione una tarjeta</label>
                                             <select class="form-control form-control-sm mb-4" form="terminarCompra">
-                                                <option th:each="tarjeta : ${listaTarjetas}"
-                                                th:text="|${tarjeta.getNumerotarjeta()}|"
-                                                th:value="${tarjeta.getIdtarjeta()}"></option>
+                                            <option th:each="tarjeta : ${listaTarjetas}"
+                                                    th:text="|${tarjeta.getNumerotarjeta()}|"
+                                                    th:value="${tarjeta.getIdtarjeta()}"></option>
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <div class="row">
                                     <div class="col">

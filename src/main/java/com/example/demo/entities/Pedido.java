@@ -56,7 +56,16 @@ public class Pedido implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idubicacion", nullable = false)
     private Ubicacion ubicacion;
+    
+    private String cantidadapagar;
 
+    public String getCantidadapagar() {
+        return cantidadapagar;
+    }
+
+    public void setCantidadapagar(String cantidadapagar) {
+        this.cantidadapagar = cantidadapagar;
+    }
 
     public String getComentariorestaurante() {
         return comentariorestaurante;

@@ -57,6 +57,15 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "idubicacion", nullable = false)
     private Ubicacion ubicacion;
 
+    private BigDecimal canitidadapagar;
+
+    public BigDecimal getCanitidadapagar() {
+        return canitidadapagar;
+    }
+
+    public void setCanitidadapagar(BigDecimal canitidadapagar) {
+        this.canitidadapagar = canitidadapagar;
+    }
 
     public String getComentariorestaurante() {
         return comentariorestaurante;

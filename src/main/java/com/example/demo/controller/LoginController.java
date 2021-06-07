@@ -61,6 +61,11 @@ public class LoginController {
     @GetMapping("/login")
     public String loginForm(Authentication auth, HttpSession session) {
         try {
+
+            if(session.getAttribute("carrito") != null){
+                session.removeAttribute("carrito");
+            }
+
             String rol = "";
             for (GrantedAuthority role : auth.getAuthorities()) {
                 rol = role.getAuthority();
@@ -117,6 +122,7 @@ public class LoginController {
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;

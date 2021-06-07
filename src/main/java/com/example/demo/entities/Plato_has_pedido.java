@@ -23,16 +23,18 @@ public class Plato_has_pedido implements Serializable {
     //@MapsId("codigo")
     //@JoinColumn(name = "codigo")
     //private Pedido pedido;
+    private String codigo;
 
     // cantidad de un plato
-    @NotBlank
-    @Digits(integer= 1000,fraction = 0)
-    @Min(value = 0)
     private int cantidad;
 
     // creo q deberia ser el subtotal
     private BigDecimal preciounitario;
     private String observacionplatillo;
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public Plato getPlato() { return plato; }
 

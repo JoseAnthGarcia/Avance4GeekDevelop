@@ -42,7 +42,6 @@
 <script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
 
-
 <body id="page-top">
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -317,6 +316,15 @@
                                 <option value="5" th:selected="${val.equals('5')}">5</option>
                             </select>
                         </div>
+                        <div class="col-sm-2 mb-2 ">
+                            <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idCategoria.equals('6')}">Categorias</option>
+                                <option th:each="categoria : ${categorias}"
+                                        th:value="|${categoria.getIdcategoria()}-${categoria.getIdcategoria() + 1}|"
+                                        th:text="${categoria.getNombre()}"
+                                        th:selected="${idCategoria.equals(categoria.getIdcategoria()+'-'+categoria.getIdcategoria())}"></option>
+                            </select>
+                        </div>
                         <!-- TODO BUSCADOR DE CATEGORÍAS -->
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
@@ -383,7 +391,8 @@
                                                     <h6 th:unless="${rest.getCalificaciones() == null}" th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
                                                 </div>
                                                 <div class="col-4">
-                                                    <h6 th:text="|Precio Promedio: ${rest.getPreciopromedio()}|"></h6>
+                                                    <h6 th:if="${rest.getPreciopromedio() != null}" th:text="|Precio Promedio: S/. ${rest.getPreciopromedio()}|"></h6>
+                                                    <h6 th:if="${rest.getPreciopromedio() == null}" th:text="|Precio Promedio: S/. 0|"></h6>
                                                 </div>
                                             </div>
                                         </div>

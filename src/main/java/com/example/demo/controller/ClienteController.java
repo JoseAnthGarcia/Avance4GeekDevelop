@@ -1031,13 +1031,51 @@ public class ClienteController {
         return "redirect:/cliente/"+urlDetalle+params;
     }
 
+    @PostMapping("/modificarExtra")
+    public String modificarExtra(@RequestParam(value = "cantidad", required = false) List<String> cantidad,
+                                 @RequestParam(value = "extraGuardar", required = false) List<Integer> extraGuardar,
+                                 RedirectAttributes attr, Model model,
+                                 HttpSession session){
+        Extra extra = new Extra();
+        List<Extra_has_pedido> carritoExtra = (List<Extra_has_pedido>) session.getAttribute("carritoExtra");
+
+        int cantVal = 0;
+
+        // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
+       if (cantidad.size() != extraGuardar.size() ||
+                extraGuardar.size() != carritoExtra.size()){
+            return "redirect:/cliente/mostrarCarrito"; //TODO redireccionar al mismo sitio
+        }
+
+        for (int i = 0; i < cantidad.size(); i++) {
+            try{
+                cantVal = Integer.parseInt(cantidad.get(i));
+                if(cantVal <= 0 && cantVal > 20){
+                    attr.addFlashAttribute("msgInt","Ingrese una cantidad entre 0 y 20");
+                    return "redirect:/cliente/mostrarCarrito";
+                }
+            }catch (NumberFormatException e){
+                attr.addFlashAttribute("msgInt","Ingrese un número");
+                return "redirect:/cliente/mostrarCarrito";
+            }
+        }
+
+        for (int i = 0; i < carritoExtra.size(); i++) {
+            carritoExtra.get(i).getIdextra().setIdextra(extraGuardar.get(i));
+            carritoExtra.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
+        }
+        session.setAttribute("carritoExtra",carritoExtra);
+        attr.addFlashAttribute("msgExtra", "Se actualizaron los datos correctamente");
+        return "redirect:/cliente/mostrarCarrito";
+    }
+
+
     @PostMapping("/terminarCompra")
     public String terminarCompra(@RequestParam("cantidad") List<String> cantidad,
                                  @RequestParam("platoGuardar") List<Integer> platoGuardar,
                                  @RequestParam("observacion") List<String> observacion,
                                  RedirectAttributes attr, Model model,
                                  HttpSession session){
-        Pedido pedido = new Pedido();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
@@ -1106,7 +1144,6 @@ public class ClienteController {
             }
         }
         if(delivery == 0.00){ delivery = 8.00; }
-
 
         //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
         System.out.println(carrito);

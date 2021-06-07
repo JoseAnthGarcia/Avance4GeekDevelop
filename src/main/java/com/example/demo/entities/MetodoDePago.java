@@ -10,16 +10,6 @@ public class MetodoDePago implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idmetodopago;
     private int tipo;
-    private float cantidadapagar;
-
-
-    public int getIdmetodopago() {
-        return idmetodopago;
-    }
-
-    public void setIdmetodopago(int idmetodopago) {
-        this.idmetodopago = idmetodopago;
-    }
 
     public int getTipo() {
         return tipo;
@@ -29,11 +19,4 @@ public class MetodoDePago implements Serializable {
         this.tipo = tipo;
     }
 
-    public float getCantidadapagar() {
-        return cantidadapagar;
-    }
-
-    public void setCantidadapagar(float cantidadapagar) {
-        this.cantidadapagar = cantidadapagar;
-    }
 }

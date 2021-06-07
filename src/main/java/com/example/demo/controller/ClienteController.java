@@ -34,6 +34,8 @@ import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -1117,11 +1119,26 @@ public class ClienteController {
     @PostMapping("/generarPedido")
     public String generarPedido(@RequestParam("cupon") String idCupon,
                                 @RequestParam("ubicacion") Ubicacion ubicacion,
+                                @RequestParam("delivery") Double precioDelivery,
                                 HttpSession session){
         //recibo cupon, tarjeta, direccion
+        //TODO: llenar cupon
+        Cupon cupon = null;
+        //TODO: llenar metodoPago
+        MetodoDePago metodoDePago = null;
 
         List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
         List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
+
+        for(int i = 0; i < listaPlatos.size(); i++){
+            carrito.get(i).setObservacionplatillo(observacion.get(i));
+            carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
+            carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
+            subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+        }
+        for(int i = 0; i < carritoExtra.size(); i++){
+            subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
+        }
 
         Pedido pedido = new Pedido();
 
@@ -1136,6 +1153,33 @@ public class ClienteController {
 
         pedido.setCodigo(codigoAleatorio);
         //TODO:Precio total
+        pedido.setEstado(0);
+
+        //seteo fecha
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        pedido.setFechapedido(hourdateFormat.format(date));
+        //seteo mismoDistrito
+        //TODO: validar cantidad tiempo de entrega
+        if(precioDelivery==5.00){
+            pedido.setTiempoentrega(30);
+            pedido.setMismodistrito(true);
+        }else{
+            pedido.setTiempoentrega(30);
+            pedido.setMismodistrito(false);
+        }
+        pedido.setRestaurante(restauranteRepository.findById(listaPlatos.get(0).getPlato().getIdrestaurante()).get());
+        if(cupon!=null){
+            pedido.setCupon(cupon);
+        }
+        Usuario cliente = (Usuario) session.getAttribute("usuario");
+        pedido.setCliente(cliente);
+        pedido.setMetodopago(metodoDePago);
+        pedido.setUbicacion(ubicacion);
+
+
+
+
 
 
         pedido = pedidoRepository.save(pedido);

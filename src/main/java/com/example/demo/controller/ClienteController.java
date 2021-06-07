@@ -97,7 +97,7 @@ public class ClienteController {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario(),3));
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/editarPerfil";
 
     }
@@ -145,6 +145,7 @@ public class ClienteController {
             if (telfValid) {
                 model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
             }
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "Cliente/editarPerfil";
 
 
@@ -152,6 +153,7 @@ public class ClienteController {
             usuario1.setTelefono(telefonoNuevo); //usar save para actualizar
             httpSession.setAttribute("usuario", usuario1); //TODO: preguntar profe
             clienteRepository.save(usuario1);
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "redirect:/cliente/listaRestaurantes";
         }
 
@@ -251,7 +253,7 @@ public class ClienteController {
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/listaRestaurantes";
     }
 
@@ -271,7 +273,7 @@ public class ClienteController {
         }
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/listaDirecciones";
     }
 
@@ -283,24 +285,25 @@ public class ClienteController {
         httpSession.setAttribute("usuario",usuario);
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         clienteRepository.save(usuario);
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "redirect:/cliente/listaDirecciones";
     }
 
     @PostMapping("/eliminarDireccion")
     public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session, Model model){
-
+        Usuario usuarioS = (Usuario) session.getAttribute("usuario");
         for (String idUbicacion : listaIdDireccionesAeliminar) {
             //validad int idUbicacion:
             int idUb = Integer.parseInt(idUbicacion);
             Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
-            Usuario usuarioS = (Usuario) session.getAttribute("usuario");
+
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
                 ubicacionRepository.delete(ubicacion);
             }
 
         }
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuarioS.getIdusuario()));
         return "redirect:/cliente/listaDirecciones";
     }
 
@@ -374,6 +377,7 @@ public class ClienteController {
 
             model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
             model.addAttribute("listaDistritos", distritosRepository.findAll());
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
             return "Cliente/listaDirecciones";
 
         }else{
@@ -389,6 +393,7 @@ public class ClienteController {
             ubicacionRepository.save(ubicacion);
             httpSession.setAttribute("listaDirecciones",listaDirecciones);
             model.addAttribute("listaDistritos", distritosRepository.findAll());
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
             return "redirect:/cliente/listaDirecciones";
         }
 
@@ -444,7 +449,7 @@ public class ClienteController {
     public String listaplatos(@RequestParam("idRest") int idRest,
                               @RequestParam(value = "texto",required = false) String texto,
                               @RequestParam(value = "idPrecio",required = false) String idPrecio,
-                              Model model) {
+                              Model model,HttpSession httpSession) {
         Integer limitInf = 0;
         Integer limitSup = 5000;
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
@@ -487,22 +492,23 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
-
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         List<PlatosDTO> listaPlato = platoRepository.listaPlato(idRest, texto, limitInf, limitSup);
         model.addAttribute("listaPlato",listaPlato);
         model.addAttribute("idRest",idRest);
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
          return "/Cliente/listaProductos";
     }
 
     @GetMapping("/detallePlato")
     public String detallePedido(@RequestParam("idRest") int idRest,
                                 @RequestParam("idPlato") int idPlato,
-                                Model model) {
+                                Model model,HttpSession httpSession) {
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
         Optional<Plato> platoOpt = platoRepository.findById(idPlato);
-
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         if(platoOpt.isPresent() || restauranteOpt.isPresent()){
             Plato plato = platoOpt.get();
             Restaurante restaurante = restauranteOpt.get();
@@ -512,21 +518,24 @@ public class ClienteController {
             model.addAttribute("listaExtras",listaExtras);
             model.addAttribute("idRest",idRest);
             model.addAttribute("nombreRest",restaurante.getNombre());
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "Cliente/detallePlato";
         }else{
             //model.addAttribute("idRest",idRest);
             //model.addAttribute("idPlato",idPlato);
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "redirect: cliente/listaPlatos?idRest="+idRest+"&idPlato="+idPlato;
         }
     }
 
     @GetMapping("/mostrarCarrito")
     public String mostrarCarrito(@RequestParam("idRest") Integer idRest,
-                                 Model model){
+                                 Model model, HttpSession httpSession){
         //ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         //List<Plato_has_pedido> carritoL = (List<Plato_has_pedido>) session.getAttribute("carrito");
-
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         //model.addAttribute("carrito",carritoL);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         model.addAttribute("idRest",idRest);
         return "Cliente/carritoCompras";
     }
@@ -536,12 +545,12 @@ public class ClienteController {
                                  @RequestParam("idRest") Integer idRest,
                                  @RequestParam("cantidadPlato") int cantidadPlato,
                                  HttpSession session,
-                                 RedirectAttributes attr){
+                                 RedirectAttributes attr, Model model){
         //carrito
         ArrayList<Plato_has_pedido> carrito = new ArrayList<>();
         Plato_has_pedido php = new Plato_has_pedido();
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
-
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         if(platoOptional.isPresent()){
             //GUARDANDO TODOS LOS ATRIBUTOS NECESARIOS A CARRITO
             Plato plato = platoOptional.get();
@@ -569,18 +578,22 @@ public class ClienteController {
         //TODO por ahora solo funcionará si el flujo es LISTA DE PLATOS - DETALLE - VER CARRITO
         String urlDetalle = "detallePlato";
         String params = "?idRest="+idRest+"&idPlato="+idPlato;
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "redirect:/cliente/"+urlDetalle+params;
     }
 
     @PostMapping("/restarCarrito")
-    public String restarCarrito(){
-
+    public String restarCarrito(HttpSession session, Model model){
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "/";
     }
 
     @GetMapping("/mostrarExtrasCarrito")
     public String mostrarExtrasCarrito(@RequestParam("idRest") Integer idRest,
-                                       Model model){
+                                       Model model,HttpSession session){
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         model.addAttribute("idRest",idRest);
         return "Cliente/carritoExtras";
     }
@@ -591,7 +604,7 @@ public class ClienteController {
                                 @RequestParam("idPlato") Integer idPlato,
                                 @RequestParam(value = "cantidadExtra") int cantidadExtra,
                                 HttpSession session,
-                                RedirectAttributes attr){
+                                RedirectAttributes attr, Model model){
         //extras de carrito
         ArrayList<Extra_has_pedido> extrasCarrito = new ArrayList<>();
         Extra_has_pedido ehp = new Extra_has_pedido();
@@ -619,27 +632,35 @@ public class ClienteController {
         //TODO por ahora solo funcionará si el flujo es LISTA DE PLATOS - DETALLE - VER CARRITO
         String urlDetalle = "detallePlato";
         String params = "?idRest="+idRest+"&idPlato="+idPlato;
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "redirect:/cliente/"+urlDetalle+params;
     }
 
 
     @PostMapping("/restarExtrasCarrito")
-    public String restarExtrasCarrito(){
+    public String restarExtrasCarrito(Model model, HttpSession session){
 
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "/";
     }
 
     @GetMapping("/terminarCompra")
-    public String terminarCompra(){
+    public String terminarCompra(Model model, HttpSession session){
 
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "/";
     }
 
 
 
     @GetMapping("/listaReportes")
-    public String listaReportes() {
+    public String listaReportes(Model model, HttpSession session) {
 
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaReportes";
     }
 
@@ -699,14 +720,16 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("estado", estado);
 
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaPedidoActual";
     }
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam Map<String, Object> params,@RequestParam("codigo") String codigo, Model model){
+    public String detallePedidoActual(@RequestParam Map<String, Object> params,@RequestParam("codigo") String codigo, Model model, HttpSession session){
 
         model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
@@ -724,7 +747,7 @@ public class ClienteController {
         model.addAttribute("codigo",codigo);
 
 
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedidoActual";
     }
     //HISTORIAL PEDIDOS
@@ -774,7 +797,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("estado", estado);
 
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
 
         return "Cliente/listaHistorialPedidos";
     }
@@ -790,7 +813,7 @@ public class ClienteController {
             pedido1.setComentariorestaurante(comentRest);
             pedidoRepository.save(pedido1);
         }
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "redirect:/cliente/historialPedidos";
     }
 
@@ -808,6 +831,7 @@ public class ClienteController {
             pedido1.setComentariorepartidor(comentRest);
             pedidoRepository.save(pedido1);
         }
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "redirect:/cliente/historialPedidos";
     }
 
@@ -879,7 +903,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("mes",mes);
         model.addAttribute("nombrec",nombrec);
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteDineroCliente";
     }
 
@@ -952,6 +976,7 @@ public class ClienteController {
        model.addAttribute("texto",texto);
        model.addAttribute("mes",mes);
        model.addAttribute("numpedidos",numpedidos);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
     }
 
@@ -1019,7 +1044,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("mes",mes);
         model.addAttribute("numpedidos",numpedidos);
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";
     }
 
@@ -1036,7 +1061,7 @@ public class ClienteController {
                 listaCuponesenviar.add(cupon);
             }
         }
-
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", listaCuponesenviar);
         return "Cliente/listaCupones";
     }

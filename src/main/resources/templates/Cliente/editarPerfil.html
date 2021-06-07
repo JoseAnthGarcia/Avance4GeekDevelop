@@ -102,6 +102,8 @@
                                 <div>
                                     <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">

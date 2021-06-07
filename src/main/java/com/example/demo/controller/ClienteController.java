@@ -1125,7 +1125,30 @@ public class ClienteController {
     }
 
     @PostMapping("/generarPedido")
-    public String generarPedido(){
+    public String generarPedido(@RequestParam("cupon") String idCupon,
+                                @RequestParam("ubicacion") Ubicacion ubicacion,
+                                HttpSession session){
+        //recibo cupon, tarjeta, direccion
+
+        List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
+        List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
+
+        Pedido pedido = new Pedido();
+
+        String codigoAleatorio = "";
+        while (true) {
+            codigoAleatorio = generarCodigAleatorio();
+            Pedido pedido1 = pedidoRepository.findByCodigo(codigoAleatorio);
+            if (pedido1 == null) {
+                break;
+            }
+        }
+
+        pedido.setCodigo(codigoAleatorio);
+        //TODO:Precio total
+
+
+        pedido = pedidoRepository.save(pedido);
 
         return "/.";
     }
@@ -1561,6 +1584,18 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", listaCuponesenviar);
         return "Cliente/listaCupones";
+    }
+
+    public String generarCodigAleatorio() {
+        char[] chars = "1234567890".toCharArray();
+        int charsLength = chars.length;
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int tamCodigo = 10;
+        for (int i = 0; i < tamCodigo; i++) {
+            buffer.append(chars[random.nextInt(charsLength)]);
+        }
+        return buffer.toString();
     }
 
 }

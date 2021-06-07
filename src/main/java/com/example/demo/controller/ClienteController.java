@@ -89,7 +89,7 @@ public class ClienteController {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario(),3));
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/editarPerfil";
 
     }

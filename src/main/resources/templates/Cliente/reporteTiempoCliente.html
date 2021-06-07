@@ -359,7 +359,20 @@
                                     <td th:text="${pedido.getNombre()}"></td>
                                     <td th:text="${pedido.getCantidad()}"></td>
                                     <td th:text="${pedido.getTiempoentrega()}"></td>
-                                    <td th:text="${pedido.getMes()}"></td>
+                                    <option value="13"  th:selected="${mes.equals('13')}">Mes</option>
+                                    <td th:if="${pedido.getMes()==1}" th:text="|Enero|"></td>
+                                    <td th:if="${pedido.getMes()==2}" th:text="|Febrero|"></td>
+                                    <td th:if="${pedido.getMes()==3}" th:text="|Marzo|"></td>
+                                    <td th:if="${pedido.getMes()==4}" th:text="|Abril|"></td>
+                                    <td th:if="${pedido.getMes()==5}" th:text="|Mayo|"></td>
+                                    <td th:if="${pedido.getMes()==6}" th:text="|Junio|"></td>
+                                    <td th:if="${pedido.getMes()==7}" th:text="|Julio|"></td>
+                                    <td th:if="${pedido.getMes()==8}" th:text="|Agosto|"></td>
+                                    <td th:if="${pedido.getMes()==9}" th:text="|Septiembre|"></td>
+                                    <td th:if="${pedido.getMes()==10}" th:text="|Octubre|"></td>
+                                    <td th:if="${pedido.getMes()==11}" th:text="|Noviembre|"></td>
+                                    <td th:if="${pedido.getMes()==12}" th:text="|Diciembre|"></td>
+
                                 </tr>
 
 								

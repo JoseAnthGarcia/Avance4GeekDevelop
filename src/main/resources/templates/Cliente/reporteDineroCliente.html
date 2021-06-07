@@ -288,7 +288,7 @@
                             </div>
 							<div class="col-sm-2 mb-1">
                                 <select class="form-control" name="mes">
-                                <option value="" disabled th:selected="${mes.equals('13')}">Mes</option>
+                                <option value="13"  th:selected="${mes.equals('13')}">Mes</option>
                                 <option value="1" th:selected="${mes.equals('1')}">Enero</option>
                                 <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
                                 <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
@@ -304,10 +304,6 @@
                             </select>
 
                             </div>
-							<div class="col-sm-2 mb-1">
-							<input placeholder="Fecha" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
-                             </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
                                 <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                         type="submit">
@@ -374,17 +370,6 @@
                             
                             </div>
 
-                            <div th:if="${pages >= 1}" class="pagination text-center">
-                                <div th:each="i: ${#numbers.sequence(1,pages)}">
-
-                                    <a th:if="${pages != i}"
-
-                                       th:utext="${i}" th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
-                                       class="active mt-2"></a>
-                                    <a th:unless="${currentPage != i}"
-                                       th:utext="${i}" class="text-white" style="pointer-events: none"></a>
-
-                                </div>
 
 
                             <nav aria-label="Pagination">

@@ -833,8 +833,8 @@ public class ClienteController {
         int m=c1.get(Calendar.MONTH) +1;
         if(texto==null&& mes==null && nombrec==null){
             mes=Integer.toString(m);
-            limitSup=6;
-            limitInf=5;
+            limitSup=m;
+            limitInf=m-1;
             texto = "";
 
             nombrec="";
@@ -929,7 +929,7 @@ public class ClienteController {
                 mes = "13";
             }
         }
-//aea
+
         Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
 
         List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitSup);

@@ -339,25 +339,33 @@
             <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn" style="background-color:#701111; color:white" href="../login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 </body>
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
+<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
-<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
 
 </html>
 

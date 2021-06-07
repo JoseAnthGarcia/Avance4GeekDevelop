@@ -20,6 +20,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
+    @Query(value = "select ub.* from ubicacion ub\n" +
+            "inner join usuario u on u.idusuario = ub.idusuario\n" +
+            "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
+    List<Ubicacion> findUbicacionActual(int idUsuario);
+
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
     //List<Usuario> findEmployeesByEmailAndEmployeeIdNot(String email,int id);

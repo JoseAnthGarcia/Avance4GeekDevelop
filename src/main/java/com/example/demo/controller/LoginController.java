@@ -62,7 +62,7 @@ public class LoginController {
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
-    public String loginForm(Authentication auth, HttpSession session) {
+    public String loginForm() {
         return "Cliente/login";
     }
 
@@ -76,6 +76,7 @@ public class LoginController {
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;

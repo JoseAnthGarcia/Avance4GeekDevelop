@@ -19,15 +19,13 @@ public class Plato_has_pedido implements Serializable {
     @JoinColumn(name = "idplato")
     private Plato plato;
 
-    //@ManyToOne
-    //@MapsId("codigo")
-    //@JoinColumn(name = "codigo")
-    //private Pedido pedido;
+    @ManyToOne
+    @MapsId("codigo")
+    @JoinColumn(name = "codigo")
+    private Pedido pedido;
+    //private String codigo;
 
     // cantidad de un plato
-    @NotBlank
-    @Digits(integer= 1000,fraction = 0)
-    @Min(value = 0)
     private int cantidad;
 
     // creo q deberia ser el subtotal
@@ -38,9 +36,9 @@ public class Plato_has_pedido implements Serializable {
 
     public void setPlato(Plato plato) { this.plato = plato; }
 
-    //public Pedido getPedido() { return pedido; }
+    public Pedido getPedido() { return pedido; }
 
-    //public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
 
     public Plato_has_pedidoKey getIdplatohaspedido() { return idplatohaspedido; }
 

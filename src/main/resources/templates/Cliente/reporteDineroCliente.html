@@ -182,7 +182,7 @@
                             </div>
 							<div class="col-sm-2 mb-1">
                                 <select class="form-control" name="mes">
-                                <option value="13"  th:selected="${mes.equals('13')}">Mes</option>
+                                <option value="13" disabled  th:selected="${mes.equals('13')}">Mes</option>
                                 <option value="1" th:selected="${mes.equals('1')}">Enero</option>
                                 <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
                                 <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
@@ -217,7 +217,7 @@
                             <div class="col-11 d-sm-flex justify-content-center">
                                 <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
                             </div>
-							<div class="col-1 d-sm-flex justify-content-center">
+							<div class="col-1 d-sm-flex justify-content-center" >
                                 <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
@@ -225,9 +225,9 @@
 						<br>
 						
 						<div class="text-center">
-							<h3 style="color:#000000" th:text="|Total dinero ahorrado: ${totalsuma}|"></h3>
+							<h3 style="color:#000000" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
 						</div>
-                        <div class="card-body">
+                        <div class="card-body"   >
                             <div class="table-responsive">
                              <table id="reporteDinero" class="table table-bordered">
                                  <thead>
@@ -255,7 +255,7 @@
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getFechapedido()}"></td>
-                                    <td th:text="${ped.getDescuento()}"></td>
+                                    <td th:text="|S/ ${ped.getDescuento()}|"></td>
                                 </tr>
                                 
                             </tbody>
@@ -264,7 +264,18 @@
                             
                             </div>
 
+                            <div th:if="${pages >= 1}" class="pagination text-center">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
+                                       th:utext="${i}"
+                                       class="active mt-2"></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                </div>
+                            </div>
 
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">

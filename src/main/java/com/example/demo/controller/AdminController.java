@@ -281,6 +281,7 @@ public class AdminController  {
                 restaurante.setEstado(3);
                 restauranteRepository.save(restaurante);
 
+
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }else{
                 return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -304,7 +305,7 @@ public class AdminController  {
 // HOLA
     @GetMapping("/aceptarSolicitud")
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
-                                 @RequestParam(value = "tipo", required = false) String tipo){
+                                 @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -320,6 +321,14 @@ public class AdminController  {
                 usuario.setFechaadmitido(hourdateFormat.format(date));
                 //
                 usuarioRepository.save(usuario);
+                /////----------------Envio Correo--------------------/////
+
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+
+
+                /////-----------------------------------------  ------/////
                 return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
@@ -330,7 +339,7 @@ public class AdminController  {
 
     @GetMapping("/rechazarSolicitud")
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
-                                    @RequestParam(value = "tipo", required = false) String tipo){
+                                    @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -341,6 +350,14 @@ public class AdminController  {
                 Usuario usuario = usuarioOpt.get();
                 usuario.setEstado(3);
                 usuarioRepository.save(usuario);
+                /////----------------Envio Correo--------------------/////
+
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+
+
+                /////-----------------------------------------  ------/////
                 return "redirect:/admin/solicitudes?tipo="+tipo;
             }else{
                 return ""; //Retornar pagina principal
@@ -569,7 +586,7 @@ public class AdminController  {
 
     @PostMapping("/guardar")
     public String guardarAdmin(@ModelAttribute("usuario") @Valid Usuario usuario,
-                               BindingResult bindingResult, RedirectAttributes attr) {
+                               BindingResult bindingResult, RedirectAttributes attr) throws MessagingException {
 
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
 
@@ -588,12 +605,10 @@ public class AdminController  {
                 /////----------------Envio Correo--------------------/////
 
                 String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                //sendEmailHtml(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
-
+                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
                 /////-----------------------------------------------/////
-
 
 
 
@@ -675,8 +690,8 @@ public class AdminController  {
             /////----------------Envio Correo--------------------/////
 
             String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-            sendHtmlMail(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+            //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
 
             /////-----------------------------------------  ------/////
@@ -725,6 +740,31 @@ public class AdminController  {
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
         String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+    public void sendHtmlMailAceptado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailRechazado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("/Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

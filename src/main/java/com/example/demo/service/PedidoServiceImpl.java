@@ -28,6 +28,6 @@ public class PedidoServiceImpl implements PedidoService {
         Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
         Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
 
-        return pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito(), pageable);
+        return pedidoRepository.findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(4, ubicacionActual.getDistrito(), pageable);
     }
 }

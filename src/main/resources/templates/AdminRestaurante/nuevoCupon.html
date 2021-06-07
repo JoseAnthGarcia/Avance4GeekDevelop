@@ -54,7 +54,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -118,7 +118,6 @@
                                                     <div class="col-md-8 mb-4 ml-5">
                                                         <div th:if="${cupon.getIdcupon() != 0}">
                                                             <input type="hidden" th:field="*{idcupon}">
-                                                            <input th:field="*{fechainicio}">
                                                             <input type="hidden" th:field="*{estado}">
                                                         </div>
                                                         <div class="form-group">

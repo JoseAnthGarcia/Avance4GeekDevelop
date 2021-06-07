@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Reportes')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Lista Reportes')"></head>
 
 
 <body id="page-top">
@@ -10,76 +10,8 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-utensils"></i>
-                <span>Nuevo Pedido</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/listaRestaurantes}">Restaurantes</a>
-
-                    <a class="collapse-item" th:href="@{cliente/categorias}">Categorías</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{cliente/pedidoActual}">Pedido Actual</a>
-                    <a class="collapse-item" th:href="@{cliente/historialPedidos}">Historial de Pedidos</a>
-                    <a class="collapse-item" th:href="@{cliente/listaReportes}">Generar Reportes</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/cliente/editarPerfil}">
-                <i class="fas fa-user-circle"></i>
-                <span>Editar Perfil</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " th:href="@{/tarjeta/lista}">
-                <i class="fas fa-credit-card"></i>
-                <span>Tarjetas</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -116,7 +48,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -139,7 +72,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -153,38 +86,26 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -197,9 +118,9 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
-                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
-                            >
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
 
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
@@ -220,23 +141,23 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
                             <div class="dropdown-divider"></div>
-                            <form th:action="@{/logout}" method="post">
-                                <button class="btn btn-primary" type="submit">Cerrar Sesión
-                                </button>
-                            </form>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
                         </div>
                     </li>
 
@@ -244,6 +165,9 @@
                 </ul>
 
             </nav>
+            <!-- End of Topbar -->
+
+            <!-- End of Topbar -->
             <!-- --->
 
                 <!-- Begin Page Content -->
@@ -258,7 +182,8 @@
                                 <div class="col-sm-6" style="padding-left:28em; padding-top:2em">
                                     <div class="col-sm-6 mb-4" >
                                         <div class="container2">
-											<img th:src="@{/img/reloj.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+											<img src="https://image.flaticon.com/icons/png/512/46/46011.png
+                                                " alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
                                                 <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reporteTiempo}">
                                                     <H1 class="text2 font-weight-bolder">TIEMPO</H1>
                                                 </a>
@@ -266,11 +191,13 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-2" style="padding-left:20em;">
                                 <div class="padre">
                                     <div class="hijo">
                                         <div class="container2">
-                                            <img th:src="@{/img/dinero.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAgVBMVEX///8BAQEAAAD4+Pj39/f7+/uVlZX09PSHh4d7e3vx8fERERGZmZlnZ2caGhqdnZ28vLwWFhba2trIyMjk5OTU1NRwcHCQkJAdHR2vr686Ojq1tbXl5eXCwsKpqaktLS01NTWCgoIlJSVGRkZOTk5gYGBqampYWFhNTU11dXUqKioD32XJAAAR/ElEQVR4nO1dCZviqhJVII1G2y3GaNS4t6P//wc+CshmAAMx4+15nrt8zmhSOVBUFUulOp0PPvjgg/eB0reKx6RtCd7Gb1uEEf6mZQEefi9B4uOWJWDseS2LMIr3cMviaYd6TgOBYAL/NhSP2X2cKBJCmfjn3e9R6rl1IfEI9djDNbNScA8n+Uw88RjDZ+Lh9qwLHUQQeC7W+MRNASScxfNmwfi5eMzAmtG+H0jW8E0oYugF4iCeXZh9MopnHc0e1fOtG5FwCZ787KqoHrStu/j0s148Y0+Jk50hTD09yrqfP5vrWGSSQTy1dhZcgZiZo554GK14eDLqomRCAn/I/M/W4OJd2pfbXn4ZkeI1bcQagd2e2Lc/s6CphnawlGl9E9ABZudIDXuvFO89Fc8GIBvkTjEhdy/ypgQEEgeHRpmOuZlRzlCKx1wV1CqEuRa7SBChsrwrayb20b4LwT5gvX6Zry30IQZ3rroJjHH2Q+rOUIwBPiQcRiFTTnBm9ioqhHakBRDilTehYB2oa8glVJtdTqnnNAgJaDdxUW5+dSqeQAfpTBWBge4acWctQ7VN+OwOXLzjnCKzHbyFlBxYyNpxVlG4qZThuREkPNqiLga4pnjfw8zTN5kVYJy6Iwc1AO0mHVcVFeI5L6wlyCLRTsNZp4gGsUsPUspNXKfJA4gWxpoxCDriYQdHX5YBN3cx9jCjZB6t4bICp6jxg/BlgzGQATTdxVJ5cJnfWD7rI237gqt9xboFTIBdLvM7xG+koql4vTNlje9sRV8A7OPmGvRURssCnolvm+AHH3zwwQcffPDBB+0hGI7b3gx+L/qIYfvup2gRW4S6XYRaP7TwPiwYQUbxH+7Eb8Fw8u7naA8fhr8fH4a/Hx+Gvx//Nwz/YY//IxhexsF7V3Nbwry3RJxhF8Lv+/hfi07DE/DqpoA/9N55HvTV8C9FesBwMPin5lHBAz9OEDqy9+4nexFWD/wkQaB4e/ezvQRrHUH42H/3070AoYEg68Xxu5+vOQYFgihF4W/Cdz9gU/RKLuIy3IbB+FbgiAbvfsKGoAUuaJh5wNz4/HprM8wJLosrpf4yjW/O87c93Etwz/qqW45FfbGyuPztE41cSVHw8FUIFufr10duYUbwVPnuhi7/qRV+t8aeZAyrfo/+txSUbJwoJloltYTfevqk7zZnfRVDuml5Oum5nuFaZwyTJvJNByRfk52KPex0hI/Pm3gAg+JG4om2iSnPlKANaWIPu7UU9pf70W4/RczzNbArkLmlGYeQ0sWPuzeh6GHPdzuRjr3OcrRbTmNOceYon8IRUD3B9IP7UUFI6+H/WF8JJ1yHoKSDuEEvgniqSUEtHCRvQFEkvzkku/P8QRGcSYo/Dh4edyjuQAaj6tFAQnrK1llRCePG2tC+C7l4r3MoUkR9W1Xl4ok6N5CrKHwhM/jcehFjkdznQFBk2HbinCJwPK1t7sKenVBN9+A8+Uxm8Lkw5AOAOhjSXPy8i/hEN0bpLL9XW1kxz92i6s6R2Qqd/P8ODAkkptCOg4KTXLzwidN9PudF53oRDj+tzrNQld/mSbwYtNklrYD1HxuATvEMt3LywgBNl8u4W1rOGKye34N64OmxdnjBgwny3Ey4ZL4QcIPULbUHdChVofl5XyQoSA6erXgTHsl4WhMp3tMAloboE/jMEgiMJuIWcoue5zmM0L5fj6veXFeN4xFTyPsx5EhL3SIUO+YPevxtCg5uQor35GNyBerMTiqOJrtKRBa43gZ4aX43ccsA5VdS5zd2ZOKz9Lrgj4JjZBaPjUYuVWDipKK+7zM77fCigBRprF4QH97QA0mkW9XHPmS+eb7Zist3LXhO+YPcxLi4iQxemkBYaF9/vCxz1Gw/YYijaqRPilhHb2318LmNdu9AIV645AfxwbXEUbmJiHkYVSc9FOatTnmcwI02TV8UL1SoKtD8p0yx+nygQR6tNatl/szJX1MezTRey2SmQKlAm3Nxb6aqp8z+MidVb4g4zijYOHjJ8od2VpkUtzMqv8GQvNjy0hOhDQfhMxR2FVE1gOOmtGW0/uKsnCI6K8T/C2dRonyu8e5HaQt5J7quUf3XscgY/jvnasrI18OtFjb+i5ivlVP6zNY0W/F/M/wgOiNN8Dn7/Qzni6nYtUBX1dc5w1+rpfN0soSmqq+D329pvKyTkOq8Re4Qf++hoYtx93CX8f+9xxXyHeB99ctZ9uXurz/YyzDP1bTqL04ZQ9NizX8dcR57Ps4TC4elXhK0baN+BYfHz72Jw2x5FhoecJXT2JUHW4LSM4vobi+0ggQp0a1+slEYGia3O7/qqjWGxYlu8Uc3lJ8TfoGvuD2uU0qZg5E8PTfK2hP9qXXHTfD1nbXK1LDumRRWK9B1K1Z+5nwFXFJsdIQhk6IkmFHMCXafH0vGs1XvNEjJsSuBIBys1Pz+XqSI0PF0jgdpHAAU1a7SDp6OoKRYImg6UOCHST9OyXXT3p+K7UHdiaBZeV2tdEKYpyS8ICad6BlyiiORGJAKRl/VW+DNdnzZPx5g5o98lM2DBpodHK0G8YvQoTnBNDhSG5uy5eG/u5TJzdfRdVTlJu85RVO5baYdwZFBh15zVL8n06kShtVqzTCZTLbbbcAQhuGMYc4hZqT5yCfhqv9H0XHZ4wmc0qbRpYdoKb4qo0Qy1JmCHPxgiIgS/WD8fdRyy9hdou2c7w2Kv9OZ/YnyNuhlWUGSoWJ4PcCTDA9Xfcel5EaLcZgNvD8pRd1maiXtid9m8aoVw9oM2ZOmFEwddzqsH8ytJ+MTtNTeGvYqcgsM6L/ufHB9hj8GkwAYXL62Su8VphQX+puTyW2X9vXp0PA8bRn1GX6pRwsgXiSBYStqLCgixQJ9ES3lAddnOEEqcufDOnw6Yi4pReM84e0M84P1Arvr16Tm6WNylFHm3fT7tzNMkyOA3I9lNvIMTQXFb8OP3s5QznXQ18xh93clKBrT7d7PUCwsOB6rv6URrn7l7P0Mb+KnjuH+PqWoHYrfwhq9ennUguFYRDWO8b6PJMVqApDENz9p+s4+3CKYEqv2ZGthi/hYRFpZ32Jm/0aGoZgSOy8N9UQvVhfWJBZ8deadWkoQUETI+SBNLBY2dLZqLV408OoUJguGHQg+p65LJ5vkPBCLItrgbQGBxMt3mmwYnkDFnMz5fJy++ALp+5AFhr3o9Zv2kmFUZ/tDugvbHPnZV1ycc6nG4dO6Ww2QMqwThI3Fb63cRQhvZSmvqClWTzctpov2uBce1dJSsWmpd2gVhP3KhBmpdnxbPWLVg7F1v9diODNs2Sp+vVDQUwamrpXt6oE5KTQ9FbL9DfAeF1ygOoHu+F2kovczUfwYqgM6LcrwOjVPT1dyN7zf1bMeqDyPxR7VZjyUFwl5b/aVNtSjruVuMNQ1xE/qygHDexwP7vUYytmFjDqIoTzfvEAQ6B21ay/UvTog5UcIn6V39kYx2u1QUktEv+g88woZioOw2Rs9gN4+0k+ZeBqrS+pcnrCmzyoRjzKIj3G8q7czKHZmxWJ7UTmrT3jN1gP2Q5MTx7zuk8Oh/2JGnrFynzceLU8j/fZXGUG+ss/7DWr+yOS+B4pXaXYTc4jH9JN2XNIXOamsOqCnp0g7vXi5PA3qRW1yMwxOfD5WB3w8kn6QZtcchFFeHdD2RDOdh7NOuTqg1qIyAV/H+D6tyxBLhn6nUp7vITlAbgyaN41ldcBame6bWTAZ927XHV/nm6KfeSl9UsMQciOZLYWtv3oMc3dRKM/Hi1pVCvP8PN2GhwRlFo8aUjv9WRgk0eE7Lm/+sdvuB1nogIV4dW05iHd7U8hTrcvwT7pYBF2WVniEJMSKhI3sxL32XpRXB3xUb7qZhathdDvfq5uXuf8ZQa+IOQ4vfqgmyGv5dg78dYV1GcrhFYlcHn5bUU+yKkF6Fu18j/DsYZEa5M/DdTI8XE7Lx63arhIIwWyFv0JKZMFpqgNCcp3c3qvLUM4ubjLfgnBfps4No6aDh/A2EjayVsnw57o/DuqwKjFc7iCcXkNRqzSRsQqoU0uyXqnJMEhVr1SeT60jkezEfPXRo/4mnCRj1lnxcbRD0/u9Pqu8/xiWsFEFe8Setgd9wrPriNUcPw3GmLtIPZCnrT+YnvJglncWrJNocf2TD60BdG483dWj9qC5090S7Y8IdsE9bXIhs6I8vc2zZEjkU9M0VNKW5+uk66uPdhD+YjmYLqeQv20g+EBrcDz99IbJZDZn8Q8L64Fir6NVUQrl6ygf6nYMO+ItY7A0L2J6YsrPnGp2i5eD5QCNppqzWEXsr/1ovA5nD3tcMDNjFDlDdTI+T+QWScqWDM/57EIETqaod6WmwDrwdGLTDaRmNT0tDlEShHN9sBmBnYmnPe2rIKB6L5WZh5YMiz/3eN1506/3KoqouxzEu11cUt740o+SbTCrt2cX8aWXXaR9a4znd7LUSkuG4+KOPNa/20dgrpjmI37WccDc8O78cxivt+HcOu6OhL2L9CUGcZ4gackwcxf1MC/1FMPxfLlFyXpbs7M0kI7IdKIIZxMyS4aZu6iL7c/pGF+/D+PVJNykMWjT7LoaDHNYMsTy4IhNF7x+Ha1NhtJ4vDkH4qtNhpd2tqLt0CrDKJ1dvBOtMhRHs42nRtpHqwwt3UU7aJXhxtZdtIFWGeKpvbt4OVplKFN5mr5wtBnaZSjdxVsTO4etMrSKJ14PTGeT1bVVhqs3uQs/nCT9y6mwrNMWw9Rd/K03iW+CybB/PSqW4mqesLNm6GerL/v+Kmxvd3oerKPFSUEsn2zWs+fWDEn68jgp+fsreOVBCn8WjHvfu+L8X72gUzvhxJphnr9a4HnuTRpq7Wa2HfaKyoiOIrZQE2TfG07+l2DP8PtRYLYwdkhC20CAbsLV8HAuMsvuChQrBNNf3Wu7K3uGQ5XOZKJ337WOgPubYDVcnO7dCrPCDZcFFc1/t7/exo9ZK69luE5F6mner9F6rnxtqj/fJtH3aacnVqLYnWa/G8XXfrIO7d++XjuzK8OsvJKt53k+rGaSJqbMm/Uup0EdZoW7s98v95deMpn5zm86lgyvwy/AsIyxCjIoROE6Og+e0owXw/4lrkmsuDQ8iH+iZDtvHuHXz7AsPyTq8kbdBMPvgebZ+SCaIs23Wm6nW7QyLXjbYqsVLitnpSndj98WduhpmPR3FSJIDKJjPX1Eg3M/moRtnFHUp3LLhUM1xepB39k2KqYmou5IVFI5avyZxO5ySAJrL2ODSlGwMkENRd0yRiG9dJTtpT2cAJPK+NNbBTP3l8FboKds42LlrApFNrxMjY5LKcKcYobjdfG1Duy3KhphcrSxMxz958vyPM075xaDnw7arrShRZB8PWBo+ON4XXvUeP42+XLy0x988MEHH3zwwQcf/HPY/IW9vreF1AD/L0inm78y0dMIb/3t4n9HhhYEzkJrv21QcK0sw/E9+y8Qz4u+6U/wAf1nBwyfA2S4dCKUZiCmDqgB6vlYVzqP542J0/aNKGKjDOOFlBM05WU9AyT2kUo6S4q8OmCTWhVUqIlLQaysmo4zRV6qhFBN3k2BebPqgBjqoljfoMDrSQKhQTj2oeKMxgiIDFCZVaWpzvYcGIqxUGrfC7wH0zH4NNNVDahLBplvav2hsjqgp86uqwkiZVi3jzwGL/57kiOpA4Vj3tjXGEryWB1QX97LKAPSgB1Kr3EVrZFdZwKhvLSkTjhX3WL+oItDI9wWOlmZPBVEKI/9OOal8zz98CI5Q6ZjlLqYU8xluBSMEhln4jpRz9b6JpTXOTJcxzMV0tqObqXXIBXfKMMEUJlUP7NEPxvhkMSPsWHf1MtyzrBjbTnMExtNMoxXi5QiKd7eUoGfN7duWthN+BKXfnguwwD5EgUsQ0bbm3AbTM3CM/PsWN+xI2Q4h85pMOq5EPR9n4pg0YTUyWInFaVMyHMZBhSKE1oThAq2UDbs2XUkbT6nCp28EG+TSUmev2htZHisXse7iarKLkXDCS/P17D0mifzF63vAiEiobUiFKIuz1dHBi/F3XBaCcn4LgEp+Hm/Zr/g6osCaoENBOo3n597hmK+pst8i7KUjqVgrWSY7uNUKpuJb6o+NWQ0VtFm4v+C8MZLOx988MG/i/8Bbgy38OI43qkAAAAASUVORK5CYII="
+                                                 alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
                                             <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reporteDinero}">
                                                 <h1 class="text2 font-weight-bolder">DINERO</h1>
                                             </a>
@@ -278,7 +205,9 @@
                                     </div>
                                     <div class="hijo">
                                         <div class="container2">
-                                            <img  th:src="@{/img/food.PNG}" alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                            <img
+            src="https://st2.depositphotos.com/1915171/42955/v/600/depositphotos_429556560-stock-illustration-food-delivery-app-line-icon.jpg"
+            alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
 											<a class="overlay2" style="height: 200px; width: 200px" th:href="@{/cliente/reportePedido}">
 													<H1 class="text2 font-weight-bolder">PEDIDOS</H1>
 											</a>
@@ -327,28 +256,28 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-      <div class="modal-dialog" role="document">
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-              <form th:action="@{/logout}" method="post">
-                  <button class="btn btn-primary" type="submit">Cerrar Sesión
-                  </button>
-              </form>
-          </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 	
 	
     <!-- Bootstrap core JavaScript-->

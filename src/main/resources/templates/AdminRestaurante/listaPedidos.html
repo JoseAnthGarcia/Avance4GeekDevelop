@@ -56,7 +56,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -104,7 +104,7 @@
                         <form method="get" th:action="@{/restaurante/page}">
 
                             <div class="form-group row">
-                                <div class="col-sm-2 mb-1">
+                                <div class="col-sm-1 mb-1">
                                     <select class="form-control" id="textEstado" name="textEstado">
                                         <option value="0" th:selected="${textoE==0}">Estado</option>
                                         <option value="1" th:selected="${textoE==1}">Pendiente</option>
@@ -116,7 +116,7 @@
                                         <option value="7" th:selected="${textoE==7}">Entregado</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3 mb-1 ">
+                                <div class="col-sm-2 mb-1 ">
                                     <input type="text" class="form-control"
                                            id="exampleCliente"
                                            th:value="${texto}"
@@ -124,7 +124,15 @@
                                            name="textBuscador">
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <select class="form-control" id="textPrecio" name="textPrecio">
+                                    <input placeholder="Desde" class="form-control" name="fechainicio"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input placeholder="Caducidad" class="form-control" name="fechafin"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <select class="form-control" id="inputPrecio" name="inputPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.20.00</option>
                                         <option value="2" th:selected="${textoP==2}">S/.20.00 hasta S/.40.00</option>
@@ -138,7 +146,7 @@
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-4 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{'/restaurante/listaPedidos'}">Quitar filtros</a>
                                 </div>
@@ -204,7 +212,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="pedidos,v:${listaPedidos} ">
-                                                <td th:text="${(v.index+1)+(5*(currentPage - 1))}"></td>
+                                                <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:if="${pedidos.estado==0}" th:text="|${'PENDIENTE'}|"></td>
                                                 <td th:if="${pedidos.estado==1}" th:text="|${'ACEPTADO'}|"></td>
                                                 <td th:if="${pedidos.estado==2}" th:text="|${'CANCELADO'}|"></td>
@@ -237,7 +245,7 @@
                                                                                     class="btn btn-dark btn-circle align"><i
                                                         class="fas fa-times text-white"></i></a></td>
                                                 <td><a style="color: #dce3f9"
-                                                       class="btn btn-info btn-circle align" th:href="@{'/restaurante/detallePedido?codigoPedido='+${pedidos.codigo}}"><i
+                                                       class="btn btn-info btn-circle align" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${pedidos.codigo}}"><i
                                                         class="fas fa-eye text-white"></i></a></td>
 
                                                 <div class="modal" th:id="${'myModal1'+pedidos.codigo}">
@@ -295,7 +303,7 @@
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP} + '&textEstado=' + ${textoE}}"
+                                           th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP} + '&textEstado=' + ${textoE} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

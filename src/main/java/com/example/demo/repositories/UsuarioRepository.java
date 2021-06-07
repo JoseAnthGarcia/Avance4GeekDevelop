@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.dtos.ClienteDTO;
+import com.example.demo.dtos.NotiDTO;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
@@ -117,5 +118,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
  */
 
+    @Query(value = "SELECT p.codigo, p.preciototal, p.estado, r.nombre\n" +
+            "            FROM pedido p\n" +
+            "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
+            "            left join usuario u on  p.idcliente = u.idusuario\n" +
+            "            where (p.idcliente=?1) and (p.estado=0)\n" +
+            "            order by p.estado desc limit 3\n" +
+            "            ;" ,nativeQuery = true)
+    List<NotiDTO> notificacionCliente(int id);
 
 }

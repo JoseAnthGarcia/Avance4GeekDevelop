@@ -121,7 +121,7 @@
                                     <tr th:each="rest, v : ${listaRestaurantes}">
                                         <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img src="https://www.semana.com/resizer/_bpQyli33yut_6S_MjSOFS2tyK8=/1200x675/filters:format(jpg):quality(70)//cloudfront-us-east-1.images.arcpublishing.com/semana/VNSQA6I7DJDVXD5LWSSL5PBXQI.jpg" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/imagesRest?id='+${rest.idrestaurante}}" class="img-fluid img-thumbnail" alt="Sheep">
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">

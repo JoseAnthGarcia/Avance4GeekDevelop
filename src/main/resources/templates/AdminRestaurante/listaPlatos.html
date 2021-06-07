@@ -56,7 +56,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -122,20 +122,6 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-2 mb-1">
-                                    <select class="form-control" id="textDisponible" name="textDisponible"
-                                            style="justify-content: right">
-                                        <option value="2"
-                                                th:selected="${textoD==2}">Disponibilidad
-                                        </option>
-                                        <option value="1"
-                                                th:selected="${textoD==1}">Disponible
-                                        </option>
-                                        <option value="0"
-                                                th:selected="${textoD==0}">No disponible
-                                        </option>
-                                    </select>
-                                </div>
 
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
@@ -159,7 +145,7 @@
                                     <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto"
-                                        th:text="|Lista de Platos - ${nombreCate}|"></h5>
+                                        th:text="|LISTA DE PLATOS - ${nombreCate.toUpperCase()}|"></h5>
                                 </div>
 
                             </div>

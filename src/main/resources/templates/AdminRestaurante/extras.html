@@ -56,7 +56,7 @@
                   </h6>
                   <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                   <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                     th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                     th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                     <div class="mr-3">
                       <div class="icon-circle notificacion">
                         <i class="fas fa-file-alt text-white"></i>
@@ -116,7 +116,7 @@
                         <img th:src="@{/imagenes/extra/bebidas.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=1'}">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/extra/lista?idcategoria=1'}">
 
                           <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
                             Bebidas
@@ -133,7 +133,7 @@
                         <img th:src="@{/imagenes/extra/guarniciones.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=4'}">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/extra/lista?idcategoria=4'}">
                           <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
                             Guarniciones
                           </div></h1>
@@ -152,7 +152,7 @@
                         <img  th:src="@{/imagenes/extra/cubiertos.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=2'}">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/extra/lista?idcategoria=2'}">
                           <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
                             Cubiertos
                           </div></h1>
@@ -170,7 +170,7 @@
                         <img th:src="@{/imagenes/extra/ensaladas.jpg}" alt="Avatar"
                              class="image2 shadow"
                              style="height: 300px; width: 400px">
-                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'extra/lista?idcategoria=3'}">
+                        <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/extra/lista?idcategoria=3'}">
                           <h1 style="font-weight: bolder;"><div style="text-transform: uppercase;font-size: 1em;" class="text2 font-weight-bolder">
                             Ensaladas
                           </div></h1>

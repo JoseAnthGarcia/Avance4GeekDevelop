@@ -56,7 +56,7 @@
                                     </h6>
                                     <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -194,8 +194,8 @@
                                         </thead>
                                         <tbody>
 
-                                            <tr th:each="cupon : ${listaCupon}" >
-                                                <td th:text="${(cuponStat.index+1)+(2*(currentPage - 1))}"></td>
+                                            <tr th:each="cupon, v: ${listaCupon}" >
+                                                <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${cupon.nombre}"></td>
                                                 <td th:switch="${cupon.estado}">
                                                     <div th:case="${0}" th:text="|Bloqueado|"></div>
@@ -235,7 +235,7 @@
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

@@ -9,6 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -18,10 +21,10 @@ public class PedidoServiceImpl implements PedidoService {
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<Pedido> findPaginated(int pageNo, int pageSize, int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax) {
+    public Page<Pedido> findPaginated(int pageNo, int pageSize, int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.pedidoRepository.findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqual(idrestaurante,
-                nombre, inputEstadoMin, inputEstadoMax, inputPMin, inputPMax, pageable);
+        return this.pedidoRepository.findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(idrestaurante,
+                nombre, inputEstadoMin, inputEstadoMax, inputPMin, inputPMax, fechainicio, fechafin, pageable);
     }
 
     public Page<Pedido> pedidosPaginacion(int numeroPag, int tamPag, HttpSession session){

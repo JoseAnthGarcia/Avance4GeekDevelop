@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido Actual')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido')"></head>
 
 
 <body id="page-top">
@@ -10,7 +10,8 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Cliente/fragments/general.html :: sidebar"></ul>
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
+
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,10 +21,165 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Cliente/fragments/general.html :: navbar"></nav>
-            <!-- End of Topbar -->
-                <!-- End of Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-6 static-top shadow">
 
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Buscar..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+
+                    <!-- Nav Item - Alerts -->
+
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="${session.usuario.direccionactual} ">
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
+                            <i class="fas fa-tags"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter">3+</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
+                                Pedidos Pendientes
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
+                            >Mostrar todos mis pedidos pendientes</a>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Messages -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="messagesDropdown">
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-mobile"></i>
+                                </div>
+                                <div class="font-weight">
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
+                                    <div class="small text-gray-500">Teléfono</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Editar Perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
@@ -38,7 +194,6 @@
 							<h6 class="col-3 offset-md-3" style="color:black" th:text="|Restaurante : ${p1.getNombrerest()}|"></h6>
 						</div>
                     </div>
-					<div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
@@ -67,12 +222,33 @@
                                         <tbody class="justify-content-center" >
                                             <tr th:each="p2, info:${listapedido2}">
                                                 <td th:text="${info.index +1}">1</td>
-                                                <td th:text="${p2.getNombreplato()}">Arroz con pollo</td>
-                                                <td th:text="${p2.getCantidad()}">1</td>
-                                                <td th:text="${p2.getPreciounitario()}"> S/. 18.00</td>
-                                                <td>S/. 18.00</td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" data-target="#verComent"></i></td>
+                                                <td th:text="${p2.getNombreplato()}"></td>
+                                                <td th:text="${p2.getCantidad()}"></td>
+                                                <td th:text="${p2.getPreciounitario()}"></td>
+                                                <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
+												<td><i class="fas fa-comments" href="#" data-toggle="modal" th:data-target="${'#coment'+p2.getIdplato()}"
+                                                       th:href="${'#coment'+p2.getIdplato()}"></i></td>
+<!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
 
+                                                <div class="modal fade" th:id="${'coment'+p2.getIdplato()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true"   >
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Observación:</h5>
+                                                                <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" th:text="${p2.getObservacionplatillo()}"></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" th:text="|No realizó observación a ${p2.getNombreplato()}|"></div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
                                             </tr>
 
                                         </tbody>
@@ -92,46 +268,48 @@
                                 </div>
 							<br>
                         </div>
-                        <div th:each="p3: ${listapedido1}">
+                    <div th:each="p3:${listapedido1}">
                         <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Costo</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getPreciototal()}">S/. 36.00</h6>
-						</div>
-                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black"  >Delivery</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 6.00|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 6.00|"></h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Cupones</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1}"  th:text="|SI|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0}"  th:text="|NO|"></h6>
-						</div>	
-				        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black"></h6>
-							<h6 class="col-3 offset-md-3" style="color:black">S/. 50</h6>
-						</div>	
-				        <div class="dropdown-divider" style="border-color:#701111;" ></div>
-				        <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Estado</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">En camino</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Método de Pago</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|">Online</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Fecha de entrega</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Tiempo estimado de entrega</h6>
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getTiempoentrega()}"></h6>
-						</div>
-
+                            <h6 class="col-3" style="color:black">Costo</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
                         </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black"  >Delivery</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 5.00|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 8.00|"></h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Cupones</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0}"  th:text="|NO|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Estado</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black">En camino</h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Método de Pago</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|">Online</h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Fecha de entrega</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h6 class="col-3" style="color:black">Tiempo estimado de entrega</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|${p3.getTiempoentrega()} - ${p3.getTiempoentrega()+30} min|"></h6>
+                        </div>
+                    </div>
 
 				<div style="text-align:center">
 					<a  class="btn btn-primary" href="listaPedidoActual.html" type="submit">Regresar</a>
@@ -167,23 +345,27 @@
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn" style="background-color:#701111; color:white" href="../login.html">Cerrar Sesión</a>
-          </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-primary" type="submit">Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-	
+
+
 	<!-- Cancelar Pedido-->
     <div class="modal fade" id="cancelarPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -204,26 +386,6 @@
       </div>
     </div>
 	
-	<!-- Ver Comentario-->
-
-    <div class="modal fade" id="verComent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true"   >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Observación:</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body" th:text="${p2.getObservacionplatillo()}"></div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
 
     <!-- Bootstrap core JavaScript-->
     <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>

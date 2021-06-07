@@ -31,24 +31,30 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY))", nativeQuery = true)
     Page<Restaurante> buscarRest(String nombreRest, String ruc,int fechaRegistro, Pageable pageable);
 
-    @Query(value = "SELECT r.idrestaurante as 'idRestaurante'\n" +
-            "        , r.fotonombre as 'fotonombre'\n" +
-            "        , r.fotocontenttype as 'fotocontenttype'\n" +
-            "        , r.foto as 'foto'\n" +
-            "        , r.iddistrito as 'distrito'\n" +
-            "        , r.estado as 'estado'\n" +
-            "        , r.nombre as 'nombre'\n" +
-            "        , r.direccion as 'direccion'\n" +
-            "        , ceil(avg(p.valoracionrestaurante)) as 'valoracion'\n" +
-            "        , truncate((count(p.valoracionrestaurante))/4 , 0) as 'calificaciones' \n" +
-            "        , group_concat(DISTINCT c.nombre separator ' - ') as 'categorias'\n" +
-            "from restaurante r \n" +
-            "left join pedido p on (r.idrestaurante = p.idrestaurante)\n" +
-            "inner join restaurante_has_categoriarestaurante rhc on r.idrestaurante = rhc.idrestaurante\n" +
-            "inner join categoriarestaurante c on rhc.idcategoria = c.idcategoria\n" +
-            "where r.estado = 1 \n" +
-            "group by r.idrestaurante\n" +
-            "order by r.iddistrito = ?1 DESC;", nativeQuery = true)
-    List<RestauranteDTO> listaRestaurante(int iddistrito);
+    @Query(value = "select r.idrestaurante, r.nombre, r.foto, r.fotocontenttype, r.fotonombre \n" +
+            "        , ceil(`prom_val`) as 'valoracion' \n" +
+            "        , `cant_val` as 'calificaciones' \n" +
+            "        , truncate(`prom_prec`,2) as 'preciopromedio' \n" +
+            "        ,`categorias` from restaurante r \n" +
+            "left join (select  r.idrestaurante,\n" +
+            "avg(p.valoracionrestaurante) as `prom_val`,\n" +
+            "count(p.valoracionrestaurante) as `cant_val`\n" +
+            "from  pedido p\n" +
+            "left join restaurante r\n" +
+            "on p.idrestaurante=r.idrestaurante\n" +
+            "group by r.idrestaurante) t on t.idrestaurante=r.idrestaurante\n" +
+            "left join (select  r.idrestaurante, avg(p.precio) as `prom_prec`  from plato p\n" +
+            "left join restaurante r\n" +
+            "on p.idrestaurante=r.idrestaurante\n" +
+            "group by r.idrestaurante) t2 on t2.idrestaurante=r.idrestaurante\n" +
+            "left join (select rhcr.idrestaurante, group_concat( cr.nombre separator ' - ') as `categorias`\n" +
+            "from restaurante_has_categoriarestaurante rhcr\n" +
+            "left join categoriarestaurante cr on rhcr.idcategoria=cr.idcategoria \n" +
+            "group by rhcr.idrestaurante) t3 on t3.idrestaurante=r.idrestaurante\t\n" +
+            "where r.nombre like %?1% and `cant_val` > 0 and r.estado = 1\n" +
+            "and `prom_prec` is null or (`prom_prec` >= ?2 and `prom_prec` < ?3) \n" +
+            "and `prom_val` is null or (`prom_val` >= ?4 and `prom_val` < ?5)\n" +
+            "order by r.iddistrito = ?6 DESC;", nativeQuery = true)
+    List<RestauranteDTO> listaRestaurante(String texto, Integer limitInfP, Integer limitSupP, Integer limitInfVal, Integer limitSupVal, Integer iddistrito);
 
 }

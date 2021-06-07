@@ -13,5 +13,7 @@ public interface Pedido1DTO {
     int getIdmetodopago();
     LocalDate getFechapedido();
     int getTiempoentrega();
-
+    String getNombrecupon();
+    int getDescuento();
+    int getIdcliente();
 }

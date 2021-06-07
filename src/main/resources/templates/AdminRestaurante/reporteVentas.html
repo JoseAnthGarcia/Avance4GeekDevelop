@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+
     <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reporte de ventas')"></head>
 
     <body id="page-top">
@@ -19,44 +20,135 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav th:replace="AdminRestaurante/fragments/adminRestFragment.html :: topbar"></nav>
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <form class="form-inline">
+                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </form>
+
+                        <!-- Topbar Search -->
+                        <!-- Topbar Navbar -->
+                        <ul class="navbar-nav ml-auto">
+
+                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                            <li class="nav-item dropdown no-arrow d-sm-none">
+                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </a>
+                            </li>
+
+                            <!-- Nav Item - Alerts campanita Notificaciones -->
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bell fa-fw"></i>
+                                    <!-- Counter - Alerts -->
+                                    <span class="badge badge-danger badge-counter"
+                                          th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                          th:text="${listaNotiRest.size()}"></span>
+                                </a>
+                                <!-- Dropdown - Alerts -->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
+                                     aria-labelledby="alertsDropdown">
+                                    <h6 class="notificacion">
+                                        Nuevos Pedidos
+                                    </h6>
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos
+                                        pendientes</p>
+                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                       class="dropdown-item d-flex align-items-center"
+                                       th:each="p,in:${listaNotiRest}"
+                                       th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle notificacion">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500"
+                                                 th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm
+                                            </div>
+                                            <span class="font-weight-bold"
+                                                  th:text="${p.getCliente()}">Arroz con pollo</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item text-center small text-gray-500"
+                                       th:href="@{/restaurante/listaPedidos}">Ver todos los
+                                        pedidos</a>
+                                </div>
+                            </li>
+
+                            <div class="topbar-divider d-none d-sm-block"></div>
+
+                            <!-- Nav Item - User Information -->
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                              th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
+                                    <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
+                                         type="image/png" alt="avatar">
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+                                    <form id="cerrar" th:action="@{/logout}" method="post">
+                                        <a class="nav-link" data-toggle="modal"
+                                           href="#logoutModal" data-target="#logoutModal"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar
+                                            Sesión
+                                        </a>
+                                    </form>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </nav>
                     <!-- End of Topbar -->
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form>
+                        <form method="get" th:action="@{/restaurante/pageVen}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
                                     <input type="text" class="form-control"
-                                           id="exampleVentas"
-                                           placeholder="Búsqueda por código">
+                                           id="examplePlato"
+                                           th:value="${textCodigo}"
+                                           placeholder="Búsqueda por plato"
+                                           name="textCodigo">
                                 </div>
                                 <div class="col-sm-2 mb-2">
-                                    <input placeholder="Desde" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+                                    <input placeholder="Desde" class="form-control" name="fechainicio"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                                 <div class="col-sm-2 mb-2">
-                                    <input placeholder="Hasta" class="form-control" type="text"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
+                                    <input placeholder="Hasta" class="form-control" name="fechafin"
+                                           onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
 
                                 <div class="col-sm-2 mb-2">
-                                    <select class="form-control">
-                                        <option value="">Monto total</option>
-                                        <option value="">S./00.00 hasta S./5.00</option>
-                                        <option value="">S./5.00 hasta S./10.00</option>
-                                        <option value="">S./10.00 hasta S./15.00</option>
-                                        <option value="">S./15.00 hasta S./20.00</option>
+                                    <select class="form-control" id="inputPrecio" name="inputPrecio">
+                                        <option value="0" th:selected="${inputPrecio==0}">Monto total</option>
+                                        <option value="1" th:selected="${inputPrecio==1}">S/.0.00 hasta S/.20.00</option>
+                                        <option value="2" th:selected="${inputPrecio==2}">S/.20.00 hasta S/.40.00</option>
+                                        <option value="3" th:selected="${inputPrecio==3}">S/.40.00 hasta S/.60.00</option>
+                                        <option value="4" th:selected="${inputPrecio==4}">S/.60.00 a más</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-1 mb-3 ml-0">
-                                    <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                    <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                            type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
                                 <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                                    <a class="btn btn-secondary">Quitar filtros</a>
+                                    <a class="btn btn-secondary"
+                                       th:href="@{'/restaurante/reporteVentas'}">Quitar filtros</a>
                                 </div>
                             </div>
                         </form>
@@ -68,13 +160,13 @@
 
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
                                         VENTAS</h5>
-                                    <a class="btn btn-warning mr-1">Exportar</a>
+                                    <button class="btn btn-warning mr-1" onclick="exportTableToExcel('tabla3', 'reporteVentas')">Exportar</button>
                                 </div>
 
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                <div th:if="${totalItems!=0}" class="table-responsive">
+                                    <table id="tabla3" class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -87,43 +179,42 @@
                                                     Fecha
                                                 </th>
                                                 <th>
-                                                    Monto platos
-                                                </th>
-                                                <th>
-                                                    Monto extras
-                                                </th>
-                                                <th>
-                                                    Descuento
-                                                </th>
-                                                <th>
                                                     Monto total
+                                                </th>
+                                                <th>
+                                                    Visualizar
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="lista,v:${listareporte} ">
-                                            <td th:text="${(v.index+1)}"></td>
-                                            <td th:text="${lista.getCodigo()}"></td>
-                                            <td th:text="${lista.getFecha()}"></td>
-                                            <td th:text="${'S/. '+lista.getMontoplatos()}"></td>
-                                            <td th:text="${'S/. '+lista.getMontoextras()}"></td>
-                                            <td th:text="${'S/. '+lista.getDescuento()}"></td>
-                                            <td th:text="${'S/. '+lista.getPreciototal()}"></td>
-                                        </tr>
+                                            <tr th:each="lista,v:${listaVentasReportes} ">
+                                                <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
+                                                <td th:text="${lista.getCodigo()}"></td>
+                                                <td th:text="${lista.getFecha()}"></td>
+                                                <td th:text="${'S/. '+lista.getPreciototal()}"></td>
+                                                <td><a style="color: #dce3f9"
+                                                       class="btn btn-info btn-circle align"
+                                                       th:href="@{'/restaurante/detallePedido?v=1&codigoPedido='+${lista.getCodigo()}}"><i
+                                                        class="fas fa-eye text-white"></i></a></td>
+                                            </tr>
                                         </tbody>
 
                                     </table>
 
                                 </div>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a href="#">&laquo;</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
+                                <div th:if="${totalItems==0}">
+                                    <h3 class="text-lg-center text-danger">No hay coincidencias con su búsqueda.</h3>
+                                </div>
+                                <div th:if="${totalPages >= 1}" class="pagination text-center">
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/restaurante/pageVen?pageNo=' + ${i} + '&textCodigo='+ ${textCodigo} + '&inputPrecio='+ ${inputPrecio} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
+                                           th:utext="${i}"
+                                           class="active mt-2"></a>
+                                        <a th:unless="${currentPage != i}"
+                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +260,7 @@
                     <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salir</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>
@@ -178,6 +269,39 @@
         <!-- Begin Scripts -->
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
+        <script>
+
+            function exportTableToExcel(tableID, filename = ''){
+                var downloadLink;
+                var dataType = 'application/vnd.ms-excel' +  ';charset=utf-8';
+                var tableSelect = document.getElementById(tableID);
+                var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+                // Specify file name
+                filename = filename?filename+'.xls':'excel_data.xls';
+
+                // Create download link element
+                downloadLink = document.createElement("a");
+
+                document.body.appendChild(downloadLink);
+
+                if(navigator.msSaveOrOpenBlob){
+                    var blob = new Blob(['ufeff', tableHTML], {
+                        type: dataType
+                    });
+                    navigator.msSaveOrOpenBlob( blob, filename);
+                }else{
+                    // Create a link to the file
+                    downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+                    // Setting the file name
+                    downloadLink.download = filename;
+
+                    //triggering the function
+                    downloadLink.click();
+                }
+            }
+        </script>
 
     </body>
 </html>

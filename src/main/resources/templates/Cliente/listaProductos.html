@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Productos')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Tarjetas')"></head>
 
 
 <body id="page-top">
@@ -10,7 +10,8 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Cliente/fragments/general.html :: sidebar"></ul>
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
+
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,8 +21,166 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Cliente/fragments/general.html :: navbar"></nav>
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-6 static-top shadow">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Buscar..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+
+                    <!-- Nav Item - Alerts -->
+
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="${session.usuario.direccionactual} ">
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
+                            <i class="fas fa-tags"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter">3+</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
+                                Pedidos Pendientes
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">#12345</div>
+                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
+                            >Mostrar todos mis pedidos pendientes</a>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Messages -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="messagesDropdown">
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-mobile"></i>
+                                </div>
+                                <div class="font-weight">
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
+                                    <div class="small text-gray-500">Teléfono</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Editar Perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </nav>
             <!-- End of Topbar -->
+
+            <!-- End of Topbar -->
+
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -29,14 +188,13 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <input id="idRest" name="idRest" type="hidden" th:value="${idRest}">
-                            <input id="texto" name="texto" type="text" class="form-control bg-light small"
-                                   th:value="${texto.equals('')?'':texto}"
-                                   th:placeholder="${texto.equals('')?'Búsqueda por plato...':texto}"
+                            <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                   th:placeholder="${texto.equals('') ? 'Búsqueda por plato...' : texto}"
+                                   th:value="${texto.equals('') ? '' : texto}"
                                    style="border-color: lightgray">
                         </div>
                         <div class="col-sm-3 mb-1">
-                            <select id="buscadorPrecios" name="idPrecio" class="form-control"
-                                    style="border-color: lightgray">
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
                                 <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
                                 <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
@@ -46,12 +204,10 @@
                             </select>
                         </div>
                         <div class="col-sm-2 mb-1 mt-md-auto">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
-                                    type="submit">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
-                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar
-                                filtros</a>
+                            <a th:href="@{'/cliente/listaPlatos?idRest='+${idRest}}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -60,8 +216,7 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <div class="row">
                             <div class="col-1">
-                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus"
-                                                                             style="color: white"></i></a>
+                                <a class="btn" href="carritoCompras.html"><i class="fas fa-cart-plus" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
                                 <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
@@ -71,9 +226,9 @@
 
                     <div class="container mt-4 mb-4">
 
-                        <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
-                               Se agregó un plato al carrito
-                           </div>-->
+                     <!--   <div class="alert alert-info ml-2 mr-2" role="alert">
+                            Se agregó un plato al carrito
+                        </div>-->
                         <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
                             <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
                                 No se encontraron resultados en la búsqueda
@@ -82,33 +237,25 @@
                         <div class="row mb-5">
 
                             <div class="col text-center" th:each="plato : ${listaPlato}">
-                                <div style="color:#000000;" class="ml-3 mt-1 text-left">
-                                    <strong>Precio:</strong>
-                                    <h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
-                                </div>
-
-
-                                <div class="container2">
-                                    <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
-                                         class="image2 shadow" style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="../Cliente/detalleProducto.html"
-                                       style="height: 200px; width: 300px">
-                                        <h1 class="text2 font-weight-bolder text-left"
-                                            th:text="${plato.getNombre()}"></h1>
-                                    </a>
-                                </div>
-
-
-                                <div class="form-check-inline">
-                                    <label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br>
-                                        número</label>
-                                    <div class="form-check-inline">
-                                        <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                               style="border-color: lightgray">
-                                        <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
-                                                class="fas fa-plus"></i></button>
+                                    <div style="color:#000000;" class="ml-3 mt-1 text-left">
+                                        <strong th:text="|Precio:  |"></strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
                                     </div>
-                                </div>
+                                    <div class="container2">
+                                        <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
+                                             class="image2 shadow"  style="height: 200px; width: 300px">
+                                        <a class="overlay2" th:href="@{'/cliente/detallePlato?idRest='+${idRest}+'&idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
+                                            <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
+                                        </a>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <!-- label for="cantidad1" style="color: red" class="mr-2 mt-1">Ingrese un <br> número</label> -->
+                                        <div class="form-check-inline">
+                                            <input id="cantidad1" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
+                                                   style="border-color: lightgray">
+                                            <button class="btn btn-cielito mr-3" style="color: #ffffff"><i
+                                                    class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
                             </div>
 
                         </div>
@@ -162,6 +309,10 @@
 
 </div>
 <!-- End of Page Wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -174,7 +325,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <form th:action="@{/logout}" method="post">
@@ -186,22 +337,27 @@
     </div>
 </div>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
 
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 </body>
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+
 </html>
 

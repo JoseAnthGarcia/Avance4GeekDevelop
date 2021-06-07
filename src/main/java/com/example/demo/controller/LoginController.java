@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,8 @@ public class LoginController {
     public String acces() {
         return "/accessDenied";
     }
-
+    
+    //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
@@ -136,7 +138,7 @@ public class LoginController {
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
-                return "redirect:/admin/usuarios";
+                return "red irect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":

@@ -2,45 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<title>Pedido Actual</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
-
-<!-- Custom fonts for this template -->
-<link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-<link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-<!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-<link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<!-- Custom styles for this page -->
-<link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-<link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
-
-
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
-
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Lista Pedidos')"></head>
 
 
 <body id="page-top">
@@ -48,76 +10,8 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-utensils"></i>
-                <span>Nuevo Pedido</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{/cliente/listaRestaurantes}">Restaurantes</a>
-
-                    <a class="collapse-item" th:href="@{/cliente/categorias}">Categorías</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" th:href="@{/cliente/pedidoActual}">Pedido Actual</a>
-                    <a class="collapse-item" th:href="@{/cliente/historialPedidos}">Historial de Pedidos</a>
-                    <a class="collapse-item" th:href="@{/cliente/listaReportes}">Generar Reportes</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/cliente/editarPerfil}">
-                <i class="fas fa-user-circle"></i>
-                <span>Editar Perfil</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " th:href="@{/tarjeta/lista}">
-                <i class="fas fa-credit-card"></i>
-                <span>Tarjetas</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -154,7 +48,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -177,7 +72,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -235,9 +130,9 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
-                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
-                            >
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
 
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
@@ -258,18 +153,18 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
-
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -282,38 +177,37 @@
                 </ul>
 
             </nav>
-                <!-- End of Topbar -->
+            <!-- End of Topbar -->
+
+            <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <form>
+                    <form method="get" th:action="@{'/cliente/pedidoActual'}">
                         <div class="form-group row mt-3">
                             <div class="col-sm-3 mb-1 ">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Búsqueda por restarurante...">
-                                    <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
+                                    <input type="text" class="form-control bg-light border-0 small" name="texto"
+                                           th:value="${texto.equals('')?'':texto}"
+                                           th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
                                 </div>
                             </div>
                             <div class="col-sm-2 mb-1">
-                                <select class="form-control">
-                                    <option value="1">Aceptado</option>
-                                    <option value="3">Preparando</option>
-                                    <option value="4">Listo</option>
-                                    <option value="5">En camino</option>
-
+                                <select class="form-control" name="estado">
+                                    <option value="" disabled th:selected="${estado.equals('7')}">Estados</option>
+                                    <option value="1" th:selected="${estado.equals('1')}">Aceptado</option>
+                                    <option value="3" th:selected="${estado.equals('3')}">Preparando</option>
+                                    <option value="4" th:selected="${estado.equals('4')}">Listo</option>
+                                    <option value="5" th:selected="${estado.equals('5')}">En camino</option>
                                 </select>
                             </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
-                                <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                                <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                     <i class="fas fa-filter"></i>
                                 </button>
                             </div>
                             <div class="col-sm-2" style="margin-right: 10px" >
-                                <a class="btn btn-secondary " >Quitar filtros</a>
+                                <a class="btn btn-secondary " th:href="@{'/cliente/pedidoActual'}" >Quitar filtros</a>
                             </div>
                         </div>
                     </form>
@@ -347,7 +241,7 @@
 														<input class="form-control ph-center" type="text" th:placeholder="|Fecha de entrega: ${pedido.getFechapedido()}|" aria-label="Disabled input example" disabled>
 													</div>	
 													<div class="row mb-2">
-															<input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()}|" aria-label="Disabled input example" disabled>
+															<input class="form-control col-6" type="text" th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|" aria-label="Disabled input example" disabled>
 
                                                         <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==3}"  th:placeholder="|Estado : Preparando |" aria-label="Disabled input example" disabled>
                                                         <input width="" class="form-control col-5 ml-4" type="text"  th:if="${pedido.getEstado==5}"  th:placeholder="|Estado : En camino |" aria-label="Disabled input example" disabled>
@@ -369,16 +263,14 @@
                                     </tbody>
 								</table>
 							</div>
-							<div class="pagination topnav">
-								<a href="#">«</a>
-								<a href="#" class="active">1</a>
-								<a href="#">2</a>
-								<a href="#">3</a>
-								<a href="#">4</a>
-								<a href="#">5</a>
-								<a href="#">6</a>
-								<a href="#">»</a>
-							</div>
+
+							<nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${texto == null && estado == null}" class="page-link active" th:text="${page}" th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
+                                    </li>
+                                </ul>
+							</nav>
                         </div>
 				
                 <!-- /.container-fluid -->
@@ -396,7 +288,7 @@
                 </div>
             </footer>
             <!-- End of Footer -->
-
+        </div>
         </div>
         <!-- End of Content Wrapper -->
 
@@ -410,47 +302,40 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-primary" type="submit">Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn" style="background-color:#701111; color:white" href="../login.html">Cerrar Sesión</a>
             </div>
         </div>
     </div>
-
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-    <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
-    <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
-    <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+</div>
 
 </body>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+
+<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+
+</html>
 
 </html>

@@ -111,7 +111,7 @@
                             </h6>
                             <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
@@ -233,12 +233,15 @@
                                                 <td th:text="${p2.getCantidad()}"></td>
                                                 <td th:text="${p2.getPreciounitario()}"></td>
                                                 <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" th:data-target="${'#coment'+p2.getIdplato()}"
-                                                       th:href="${'#coment'+p2.getIdplato()}"></i></td>
+												<td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
+                                                       th:href="${'#comentario'+p2.getIdplato()}">
+                                                    <i class="fas fa-comments" style="color:gray" ></i>
+                                                </a></td>
 <!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
 
-                                                <div class="modal fade" th:id="${'coment'+p2.getIdplato()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                     aria-hidden="true"   >
+                                                <div class="modal fade" th:id="${'comentario'+p2.getIdplato()}"
+                                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true" >
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -247,8 +250,10 @@
                                                                     <span aria-hidden="true">×</span>
                                                                 </button>
                                                             </div>
-                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" th:text="${p2.getObservacionplatillo()}"></div>
-                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" th:text="|No realizó observación a ${p2.getNombreplato()}|"></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" >
+                                                                <h6 th:text="${p2.getObservacionplatillo()}"></h6></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" >
+                                                                <h6 th:text="|No realizó observación a ${p2.getNombreplato()}|"></h6></div>
                                                             <div class="modal-footer">
                                                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
                                                             </div>
@@ -267,7 +272,7 @@
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
                                         <a th:unless="${codigo == null   }" class="page-link active" th:text="${page}"
-                                           th:href="@{'/cliente/reporteTiempo?page='+${page}+'&codigo='+${codigo}}"></a>
+                                           th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
                                     </li>
                                 </ul>
                             </nav>
@@ -297,7 +302,7 @@
                             <h6 class="col-3" style="color:black"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5}|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+8}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
@@ -320,9 +325,9 @@
                     </div>
 
 				<div style="text-align:center">
-					<a  class="btn btn-primary" th:href="@{/cliente/pedidoActual}" type="submit">Regresar</a>
-					<a  class="btn btn-danger" href="#" data-toggle="modal" data-target="#cancelarPedido" >Cancelar Pedido</a>
-					</div>			
+					<a  class="btn btn-primary" type="submit">Regresar</a>
+					<a  class="btn btn-danger"  href="#" data-toggle="modal" data-target="#cancelarPedido" >Cancelar Pedido</a>
+					</div>
                 <!-- /.container-fluid -->
 
     </div>
@@ -374,8 +379,6 @@
 
 </div>
 
-</div>
-</div>
 </body>
 
 

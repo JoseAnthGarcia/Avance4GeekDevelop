@@ -45,6 +45,7 @@ public class Pedido implements Serializable {
 
     private Integer valoracionrepartidor;
 
+
     @ManyToOne
     @JoinColumn(name = "idrepartidor")
     private Usuario repartidor;

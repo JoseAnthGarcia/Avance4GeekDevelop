@@ -90,7 +90,7 @@ public class LoginController {
         //redirect:
         switch (rol) {
             case "cliente":
-                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
@@ -110,7 +110,7 @@ public class LoginController {
                     return "redirect:/plato/";
                 }
             case "repartidor":
-                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
                 Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);

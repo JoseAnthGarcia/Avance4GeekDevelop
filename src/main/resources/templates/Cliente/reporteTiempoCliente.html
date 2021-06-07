@@ -86,7 +86,7 @@
                             </h6>
                             <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
@@ -292,7 +292,7 @@
                     </div>
 
 					<div style="text-align:center">
-					<a  class="btn btn-primary" th:href="@{/cliente/reporteTiempo}" type="submit">Regresar</a>
+					<a  class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
 					</div>
                 </div>
                 <!-- /.container-fluid -->

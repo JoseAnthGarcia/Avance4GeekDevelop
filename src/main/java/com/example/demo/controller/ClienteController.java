@@ -261,13 +261,13 @@ public class ClienteController {
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
-        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         model.addAttribute("listaDirecciones", listaDirecciones);
 
         ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
         for (Ubicacion ubicacion : listaDirecciones) {
-            if (!ubicacion.getDireccion().equals(usuario.getDireccionactual())) {
+            if ((!ubicacion.getDireccion().equals(usuario.getDireccionactual())) && ubicacion.getBorrado()==0) {
                 listaUbicacionesSinActual.add(ubicacion);
             }
         }
@@ -299,7 +299,8 @@ public class ClienteController {
 
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
-                ubicacionRepository.delete(ubicacion);
+                ubicacion.setBorrado(1);
+                ubicacionRepository.save(ubicacion);
             }
 
         }
@@ -319,7 +320,7 @@ public class ClienteController {
         }
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        List<Ubicacion> listaDir = ubicacionRepository.findByUsuario(usuario1);
+        List<Ubicacion> listaDir = ubicacionRepository.findByUsuarioVal(usuario1);
         Boolean dist_u_val = true;
         try {
             Integer u_dist = distrito;
@@ -364,13 +365,13 @@ public class ClienteController {
 
            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
-            List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+            List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
             model.addAttribute("listaDirecciones", listaDirecciones);
 
             ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
             for(Ubicacion ubicacion: listaDirecciones){
-                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
+                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())&& ubicacion.getBorrado()==0){
                     listaUbicacionesSinActual.add(ubicacion);
                 }
             }

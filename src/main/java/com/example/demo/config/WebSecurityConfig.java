@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 
         http.logout()
+                .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true);
 

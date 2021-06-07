@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido Actual')"></head>
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido Actual')"></head>
 
-
+</head>
 <body id="page-top">
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Cliente/fragments/general.html :: sidebar"></ul>
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,8 +21,149 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Cliente/fragments/general.html :: navbar"></nav>
-            <!-- End of Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-6 static-top shadow">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Buscar..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+
+                    <!-- Nav Item - Alerts -->
+
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="${session.usuario.direccionactual} ">
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                            <i class="fas fa-tags"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter">3+</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown">
+                            <h6 class="notificacion">
+                                Pedido actual
+                            </h6>
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                <div class="mr-3">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Messages -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="messagesDropdown">
+                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
+                            >
+
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-mobile"></i>
+                                </div>
+                                <div class="font-weight">
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
+                                    <div class="small text-gray-500">Teléfono</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Editar Perfil
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -70,12 +212,15 @@
                                                 <td th:text="${p2.getCantidad()}"></td>
                                                 <td th:text="${p2.getPreciounitario()}"></td>
                                                 <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" th:data-target="${'#coment'+p2.getIdplato()}"
-                                                       th:href="${'#coment'+p2.getIdplato()}"></i></td>
+												<td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
+                                                       th:href="${'#comentario'+p2.getIdplato()}">
+                                                    <i class="fas fa-comments" style="color:gray" ></i>
+                                                </a></td>
 <!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
 
-                                                <div class="modal fade" th:id="${'coment'+p2.getIdplato()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                     aria-hidden="true"   >
+                                                <div class="modal fade" th:id="${'comentario'+p2.getIdplato()}"
+                                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true" >
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -84,8 +229,10 @@
                                                                     <span aria-hidden="true">×</span>
                                                                 </button>
                                                             </div>
-                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" th:text="${p2.getObservacionplatillo()}"></div>
-                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" th:text="|No realizó observación a ${p2.getNombreplato()}|"></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" >
+                                                                <h6 th:text="${p2.getObservacionplatillo()}"></h6></div>
+                                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" >
+                                                                <h6 th:text="|No realizó observación a ${p2.getNombreplato()}|"></h6></div>
                                                             <div class="modal-footer">
                                                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
                                                             </div>
@@ -100,16 +247,17 @@
                                     </table>
 
                                 </div>
-                                <div class="pagination  justify-content-center" style="align-items-center">
-                                    <a  href="#">&laquo;</a>
-                                    <a  href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
-                                </div>
+                            <nav aria-label="Pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${codigo == null   }" class="page-link active" th:text="${page}"
+                                           th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+
+
 							<br>
                         </div>
                     <div th:each="p3:${listapedido1}">
@@ -133,7 +281,7 @@
                             <h6 class="col-3" style="color:black"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5}|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+8}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
@@ -156,9 +304,9 @@
                     </div>
 
 				<div style="text-align:center">
-					<a  class="btn btn-primary" href="listaPedidoActual.html" type="submit">Regresar</a>
-					<a  class="btn btn-danger" href="#" data-toggle="modal" data-target="#cancelarPedido" >Cancelar Pedido</a>
-					</div>			
+					<a  class="btn btn-primary" type="submit">Regresar</a>
+					<a  class="btn btn-danger"  href="#" data-toggle="modal" data-target="#cancelarPedido" >Cancelar Pedido</a>
+					</div>
                 <!-- /.container-fluid -->
 
     </div>
@@ -181,7 +329,6 @@
 	
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
@@ -189,61 +336,44 @@
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn" style="background-color:#701111; color:white" href="../login.html">Cerrar Sesión</a>
-          </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-primary" type="submit">Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-	
-	<!-- Cancelar Pedido-->
-    <div class="modal fade" id="cancelarPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">¿Desea cancelar su pedido?</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">¿Está seguro de cancelar su pedido</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-            <a class="btn" style="background-color:#701111; color:white" href="listaPedidoActual.html">Cancelar</a>
-          </div>
-        </div>
-      </div>
-    </div>
-	
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-    <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../bootstrap/js/demo/datatables-demo.js"></script>
+</div>
 
 </body>
 
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 </html>

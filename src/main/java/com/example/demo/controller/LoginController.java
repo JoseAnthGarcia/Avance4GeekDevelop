@@ -56,54 +56,13 @@ public class LoginController {
     UrlCorreoRepository urlCorreoRepository;
 
     @Autowired
+    PedidoRepository pedidoRepository;
+
+    @Autowired
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
-    public String loginForm(Authentication auth, HttpSession session) {
-        try {
-            String rol = "";
-            for (GrantedAuthority role : auth.getAuthorities()) {
-                rol = role.getAuthority();
-                break;
-            }
-
-            String correo = auth.getName();
-            Usuario usuario = usuarioRepository.findByCorreo(correo);
-
-            session.setAttribute("usuario", usuario);
-
-            switch (rol) {
-                case "cliente":
-                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones);
-                    return "redirect:/cliente/listaRestaurantes";
-                case "administradorG":
-                    return "redirect:/admin/usuarios";
-                case "administrador":
-                    return "redirect:/admin/usuarios";
-                case "administradorR":
-                    Restaurante restaurante = null;
-                    try {
-                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                    } catch (NullPointerException e) {
-                        System.out.println("Fallo");
-                    }
-                    if (restaurante == null|| restaurante.getEstado()==2) {
-                        return "redirect:/restaurante/paginabienvenida";
-                    } else if(restaurante.getEstado()==1){
-                        return "redirect:/plato/";
-                    }
-                case "repartidor":
-                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
-                    session.setAttribute("poolDirecciones", listaDirecciones1);
-                    //TODO: agregar redireccion a repartidor
-                    return "somewhere";
-                default:
-                    return "somewhere"; //no tener en cuenta
-            }
-
-        } catch (NullPointerException n) {
-        }
+    public String loginForm() {
         return "Cliente/login";
     }
 
@@ -117,6 +76,7 @@ public class LoginController {
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
@@ -131,11 +91,11 @@ public class LoginController {
         //redirect:
         switch (rol) {
             case "cliente":
-                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
-                return "red irect:/admin/usuarios";
+                return "redirect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":
@@ -151,10 +111,17 @@ public class LoginController {
                     return "redirect:/plato/";
                 }
             case "repartidor":
-                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
-                return "redirect:/repartidor/listaPedidos";
+                Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+
+                if(pedidoAct==null){
+                    return "redirect:/repartidor/listaPedidos";
+                }else{
+                    return "redirect:/repartidor/pedidoActual";
+                }
+
             default:
                 return "somewhere"; //no tener en cuenta
         }

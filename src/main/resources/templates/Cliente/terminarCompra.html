@@ -1,103 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../bootstrap/css/sb-admin-2.css" rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-    <link href="../Cliente/cssC/estilosCliente.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Pago Pedido')"></head>
 
-    <title>Pago de Pedido</title>
-</head>
+
 <body id="page-top">
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-utensils"></i>
-                <span>Nuevo Pedido</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaRestaurantes.html">Restaurantes</a>
-
-                    <a class="collapse-item" href="">Categorías</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaPedidoActual.html">Pedido Actual</a>
-                    <a class="collapse-item" href="listaHistorialPedidos.html">Historial de Pedidos</a>
-                    <a class="collapse-item" href="listaReportes.html">Generar Reportes</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="editarPerfil.html">
-                <i class="fas fa-user-circle"></i>
-                <span>Editar Perfil</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " href="tarjetas.html">
-                <i class="fas fa-credit-card"></i>
-                <span>Tarjetas</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -115,7 +29,6 @@
                         <i class="fa fa-bars"></i>
                     </button>
                 </form>
-
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -149,12 +62,12 @@
                     <!-- Nav Item - Alerts -->
 
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
-                            Los Eneldos 204
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="${session.usuario.direccionactual} ">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
                             <i class="fas fa-map-marker-alt"></i>
                         </a>
                     </li>
@@ -173,16 +86,16 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
@@ -190,21 +103,14 @@
                                     <img class="icon-circle" src="img/rosaNautica.jpg">
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="listaPedidoActual.html">Mostrar
-                                todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -218,15 +124,16 @@
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
                             <h6 class="dropdown-header font-weight-bold "
-                                style="background-color:white; color:#701111; border:#701111;">
-                                Joham Romucho
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
                                 <div class="mr-3">
                                     <i class="fas fa-mobile"></i>
                                 </div>
                                 <div class="font-weight">
-                                    <div class="text-truncate">999999999</div>
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
                                     <div class="small text-gray-500">Teléfono</div>
                                 </div>
                             </a>
@@ -239,16 +146,19 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfil.html">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -268,7 +178,8 @@
 
                 <div class="card shadow mb-4 mt-5">
                     <div class="card-header py-3" style="background-color: #701111;">
-                        <h5 class="font-weight-bold text-white text-center">LITTLE CEASERS</h5>
+                        <!-- MANDAR EL NOMBRE DEL REST -->
+                        <h5 class="font-weight-bold text-white text-center" th:text="${session.idRest}"></h5>
 
                     </div>
 
@@ -461,11 +372,18 @@
                                             <button class="btn" data-toggle="modal"
                                                     data-target="#carritoModal"><i class="fas fa-eye"></i></button>
                                         </div>
+                                        <div class="form-check-inline">
+                                            <h6 style="color:#000000; size: auto" class="ml-3 mt-2 mr-3"><strong>Extras</strong>
+                                            </h6>
+                                            <button class="btn" data-toggle="modal"
+                                                    data-target="#carritoModal"><i class="fas fa-eye"></i></button>
+                                        </div>
                                         <h6 style="color:#000000;" class="ml-3 mt-2"><strong>Delivery</strong></h6>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 56.00</strong></h6>
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 8.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoExtras}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${delivery}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
@@ -482,7 +400,7 @@
                                         </select>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong>S/. 64.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
                                         <br>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>- S/. 10.00</strong></h6>
                                     </div>
@@ -490,27 +408,30 @@
 
                                 <div class="form-check-inline">
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- ONLINE -->
+                                        <input class="form-check-input" name="metodoPago" type="checkbox" value="3">
                                         <i class="fab fa-cc-visa" style="color: darkblue"></i>
                                         <i class="fab fa-cc-mastercard" style="color: darkred"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- POS -->
+                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="2">
                                         <i class="fab fa-paypal" style="color: darkred;"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- EFECTIVO -->
+                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="1">
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
                                     </div>
                                 </div>
                                 <div class="container mt-sm-2">
                                     <div class="row justify-content-between">
                                         <div class="col-sm-7">
+                                            <label>Seleccione una tarjeta</label>
                                             <select class="form-control form-control-sm mb-4">
-                                                <option selected>Seleccionar una tarjeta</option>
-                                                <option value="1">Visa - 123456789</option>
-                                                <option value="2">Mastercard - 456789123</option>
-                                                <option value="3">Otras - 369852147</option>
+                                                <option th:each="tarjeta : ${listaTarjetas}"
+                                                th:text="|${tarjeta.getNumerotarjeta()}|"
+                                                th:value="${tarjeta.getIdtarjeta()}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -520,11 +441,10 @@
                                     <div class="col">
                                         <label for="direcc" class="ml-4"><strong>Dirección Actual</strong></label>
                                         <div class="form-check-inline">
-                                            <select class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray">
-                                                <option selected> Seleccionar su dirección </option>
-                                                <option> Av. Carlos Izaguirre, Los Olivos </option>
-                                                <option> Av. Ramirez, La Molina </option>
-                                                <option> Av. Honorio Delgado, SMP </option>
+                                            <select class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray" name="ubicacion">
+                                                <option th:each="direccion :${listaDirecciones}"
+                                                th:value="${direccion.getIdubicacion()}"
+                                                th:selected="${distritoActual != null}"></option>
                                             </select>
                                             <button class="btn btn-cielito ml-2" type="submit">Seleccionar</button>
                                         </div>
@@ -534,16 +454,16 @@
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
                                 <div class="row justify-content-between">
                                     <div class="col-6">
-                                        <h4 style="color: #701111" class="ml-3"><strong>Monto Total: </strong></h4>
+                                        <h4 style="color: #701111" class="ml-3" ><strong>Monto Total: </strong></h4>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 54.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
                                 <div class="container">
                                     <div class="row justify-content-end mb-3">
-                                        <a class="btn btn-back mr-3" href="carritoCompras.html"><i
+                                        <a class="btn btn-back mr-3" th:href="${}"><i
                                                 class="fas fa-arrow-left"></i> Regresar
                                         </a>
                                         <button class="btn btn-pay mr-4" data-toggle="modal"
@@ -666,7 +586,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <form th:action="@{/logout}" method="post">

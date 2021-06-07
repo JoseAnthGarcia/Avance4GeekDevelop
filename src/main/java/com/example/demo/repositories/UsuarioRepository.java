@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.dtos.ClienteDTO;
+import com.example.demo.dtos.NotiDTO;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
@@ -18,6 +19,11 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
+
+    @Query(value = "select ub.* from ubicacion ub\n" +
+            "inner join usuario u on u.idusuario = ub.idusuario\n" +
+            "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
+    List<Ubicacion> findUbicacionActual(int idUsuario);
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
@@ -117,5 +123,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
  */
 
+    @Query(value = "SELECT p.codigo, p.preciototal, p.estado, r.nombre\n" +
+            "            FROM pedido p\n" +
+            "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
+            "            left join usuario u on  p.idcliente = u.idusuario\n" +
+            "            where (p.idcliente=?1) and (p.estado=0)\n" +
+            "            order by p.estado desc limit 3\n" +
+            "            ;" ,nativeQuery = true)
+    List<NotiDTO> notificacionCliente(int id);
 
 }

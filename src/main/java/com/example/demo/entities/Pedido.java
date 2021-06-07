@@ -16,11 +16,13 @@ public class Pedido implements Serializable {
 
     //TODO SOLO MAPEARÉ LO NECESARIO PARA QUE FUNCIONE LA VISTA DE ADMIN
     @ManyToOne
-    @JoinColumn(name = "idcliente")
+    @JoinColumn(name = "idcliente", nullable = false)
     private Usuario cliente;
 
-    /*
-    private int idcupon;*/
+    @ManyToOne
+    @JoinColumn(name="idcupon")
+    private Cupon cupon;
+
     @ManyToOne
     @JoinColumn(name = "idmetodopago", nullable = false)
     private MetodoDePago metodopago;
@@ -45,6 +47,7 @@ public class Pedido implements Serializable {
 
     private Integer valoracionrepartidor;
 
+
     @ManyToOne
     @JoinColumn(name = "idrepartidor")
     private Usuario repartidor;
@@ -56,6 +59,25 @@ public class Pedido implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idubicacion", nullable = false)
     private Ubicacion ubicacion;
+
+    @Column(nullable = true)
+    private Float cantidadapagar;
+
+    public Float getCantidadapagar() {
+        return cantidadapagar;
+    }
+
+    public void setCantidadapagar(Float cantidadapagar) {
+        this.cantidadapagar = cantidadapagar;
+    }
+
+    public Cupon getCupon() {
+        return cupon;
+    }
+
+    public void setCupon(Cupon cupon) {
+        this.cupon = cupon;
+    }
 
 
     public String getComentariorestaurante() {

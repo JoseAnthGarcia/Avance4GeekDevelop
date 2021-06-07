@@ -58,15 +58,23 @@ public class Pedido implements Serializable {
     private Ubicacion ubicacion;
 
     @Column(nullable = true)
-    private BigDecimal cantidadapagar;
+    private Float cantidadapagar;
 
-    public BigDecimal getCantidadapagar() {
+    public Float getCantidadapagar() {
         return cantidadapagar;
     }
 
-    public void setCantidadapagar(BigDecimal cantidadapagar) {
+    public void setCantidadapagar(Float cantidadapagar) {
         this.cantidadapagar = cantidadapagar;
     }
+
+   /*public BigDecimal getCantidadapagar() {
+            return cantidadapagar;
+        }
+
+        public void setCantidadapagar(BigDecimal cantidadapagar) {
+            this.cantidadapagar = cantidadapagar;
+    }*/
 
     public String getComentariorestaurante() {
         return comentariorestaurante;

@@ -4,6 +4,8 @@ import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.dtos.ReporteIngresosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
+import com.example.demo.service.PedidoRepartidorService;
+import com.example.demo.service.PedidoRepartidorServiceImpl;
 import com.example.demo.service.PedidoService;
 import com.example.demo.service.PedidoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +55,9 @@ public class RepartidorController {
     @Autowired
     PedidoRepository pedidoRepository;
 
+
     @Autowired
-    PedidoServiceImpl pedidoService;
+    PedidoRepartidorService pedidoRepartidorService;
 
     @Autowired
     RestauranteRepository restauranteRepository;
@@ -81,7 +84,7 @@ public class RepartidorController {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuario(repartidor);
 
-            pagina = pedidoService.pedidosPaginacion(numPag, tamPag, session);
+            pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
             List<Pedido> pedidos =pagina.getContent();
 
 
@@ -145,7 +148,7 @@ public class RepartidorController {
         }
 
         int tamPag = 5;
-        pagina = pedidoService.pedidosPaginacion(numPag, tamPag, session);
+        pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
         List<Pedido> pedidos =pagina.getContent();
         model.addAttribute("tamPag",tamPag);
         model.addAttribute("currentPage",numPag);

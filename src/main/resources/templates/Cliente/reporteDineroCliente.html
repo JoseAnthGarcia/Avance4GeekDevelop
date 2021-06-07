@@ -217,17 +217,18 @@
                             <div class="col-11 d-sm-flex justify-content-center">
                                 <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
                             </div>
-							<div class="col-1 d-sm-flex justify-content-center" >
+							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
                                 <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
                         </div>
 						<br>
 						
-						<div class="text-center">
-							<h3 style="color:#000000" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+						<div class="text-center" >
+							<h3 th:if style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+                            <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS DE LA BUSQUEDA|"></h3>
 						</div>
-                        <div class="card-body"   >
+                        <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
                              <table id="reporteDinero" class="table table-bordered">
                                  <thead>
@@ -323,42 +324,48 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
                     </button>
-                </div>
-                <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-primary" type="submit">Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 
 </body>
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
+<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
-<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
 <script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;

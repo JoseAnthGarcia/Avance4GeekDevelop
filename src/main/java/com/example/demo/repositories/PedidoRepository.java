@@ -37,7 +37,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) ")
+            "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 || p.estado=0) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
@@ -218,6 +218,20 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     int hallarMinAnioPedido();
 
     Pedido findByCodigo(String codigo);
+
+    @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
+            "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +
+            "chp.utilizado, cl.nombres as 'nombrescliente', cl.idusuario as 'idcliente'\n" +
+            "from cupon c\n" +
+            "left join restaurante r on r.idrestaurante=c.idrestaurante\n" +
+            "left join cliente_has_cupon chp on chp.idcupon = c.idcupon\n" +
+            "left join usuario cl on cl.idusuario = chp.idcliente\n" +
+            "where c.estado=2 and (chp.utilizado is null  || chp.utilizado = 0) \n" +
+            "and (cl.idusuario is null || cl.idusuario = ?1) and \n" +
+            "r.nombre like %?2%  and (c.descuento >=?3 and c.descuento<= ?4)",nativeQuery = true)
+    Page<CuponClienteDTO> listaCupones(int idCliente,String texto, int limitInf, int limitSup, Pageable pageable);
+
+
 
 
 }

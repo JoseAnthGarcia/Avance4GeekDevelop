@@ -10,7 +10,7 @@ public interface CuponClienteDTO {
     LocalDate getFechafin();
     String getPolitica();
     String getNombrerestaurante();
-    Integer getUtilizado();
+    int getUtilizado();
     String getNombrescliente();
-    Integer getIdcliente();
+    int getIdcliente();
 }

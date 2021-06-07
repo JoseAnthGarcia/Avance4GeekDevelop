@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -23,6 +24,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -140,10 +142,13 @@ public class LoginController {
     }
 
 
+
+
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                 BindingResult bindingResult2,
+                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -160,8 +165,10 @@ public class LoginController {
             bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
+
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
+
 
 
         try {
@@ -192,10 +199,15 @@ public class LoginController {
         } catch (NumberFormatException n) {
         }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-        ) {
+
+
+
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci) {
 
             //----------------------------------------
+
+
+
 
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
@@ -213,6 +225,9 @@ public class LoginController {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
 
+
+
+
             //   String direccion;
             model.addAttribute("Usuario_has_distrito", new Ubicacion());
             //distritos
@@ -220,6 +235,8 @@ public class LoginController {
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("direccion", ubicacion.getDireccion());
+
+
             return "Cliente/registro";
         } else {
             cliente.setEstado(1);
@@ -245,6 +262,8 @@ public class LoginController {
             clienteRepository.save(cliente);
 
             ubicacion.setUsuario(cliente);
+
+
             ubicacionRepository.save(ubicacion);
 
             /////----------------Envio Correo--------------------/////

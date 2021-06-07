@@ -250,7 +250,7 @@ public class AdminRestController {
                 session.invalidate();
                 return "/AdminRestaurante/registroResturante";
             }
-            return "redirect:/plato/";
+            return "redirect:/paginabienvenida/";
         } else {
             return "/AdminRestaurante/registroResturante";
         }
@@ -323,7 +323,7 @@ public class AdminRestController {
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", 0, 0, today , "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", 0, 0, today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
@@ -381,7 +381,8 @@ public class AdminRestController {
         System.out.println(fechafin + "############");
         Date fechafin2;
         String fechafin3;
-        if (fechafin == null || fechafin.equals("")) {
+        if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
+            System.out.println("entre");
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             fechafin2 = simpleDateFormat.parse("3000-05-21");
@@ -390,6 +391,7 @@ public class AdminRestController {
             fechafin3 = simpleDateFormat2.format(fechafin2);
             System.out.println(fechafin3);
         } else {
+            System.out.println("entre a");
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             fechafin2 = simpleDateFormat.parse(fechafin);
@@ -408,7 +410,7 @@ public class AdminRestController {
 
         Date fechainicio2;
         String fechainicio3;
-        if (fechainicio == null || fechainicio.equals("")) {
+        if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio2 = date;
             String pattern = "yyyy-MM-dd 00:00:00";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -503,7 +505,8 @@ public class AdminRestController {
     @GetMapping("/prepararPedido")
     public String preparaPedido(@RequestParam("id") String id,
                                 RedirectAttributes attr,
-                                Model model, HttpSession session) {
+                                Model model, HttpSession session,
+                                @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
@@ -517,13 +520,14 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
     }
 
     @GetMapping("/pedidoListo")
     public String listoPedido(@RequestParam("id") String id,
                               RedirectAttributes attr,
-                              Model model, HttpSession session) {
+                              Model model, HttpSession session,
+                              @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
@@ -537,12 +541,13 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
     }
 
 
     @GetMapping("/detallePedido")
-    public String detalleDelPedido(Model model, HttpSession session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido,
+    public String detalleDelPedido(Model model, HttpSession
+            session, @RequestParam(value = "codigoPedido", required = false) String codigoPedido,
                                    @RequestParam(value = "v", required = false) String v) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
@@ -587,12 +592,14 @@ public class AdminRestController {
     }
 
     @GetMapping("/pageVen")
-    public String findPaginatedRepVen(@ModelAttribute @RequestParam(value = "textCodigo", required = false) String textCodigo,
+    public String findPaginatedRepVen(@ModelAttribute @RequestParam(value = "textCodigo", required = false) String
+                                              textCodigo,
                                       @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                       @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                       @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
+                                              session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -624,14 +631,14 @@ public class AdminRestController {
             inputPrecioMax = inputPrecio;
         }
 
-        if (fechafin == null || fechafin.equals("")) {
+        if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
             model.addAttribute("fechafin", fechafin);
 
         }
 
-        if (fechainicio == null || fechainicio.equals("")) {
+        if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
             model.addAttribute("fechainicio", fechainicio);
@@ -679,11 +686,13 @@ public class AdminRestController {
     }
 
     @GetMapping("/pageVal")
-    public String findPaginatedRepVal(@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
-                                      @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
-                                      @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+    public String findPaginatedRepVal
+            (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
+             @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
+             @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
+             @RequestParam(value = "pageNo", required = false) Integer pageNo,
+             @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
+                     session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -696,7 +705,7 @@ public class AdminRestController {
         //Manipular input de buscadores
         System.out.println(inputValoracion);
         String inputValoracion2;
-        if (inputValoracion == null || inputValoracion==6) {
+        if (inputValoracion == null || inputValoracion == 6) {
             inputValoracion2 = "";
         } else {
             System.out.println("###entre###");
@@ -704,14 +713,14 @@ public class AdminRestController {
             System.out.println(inputValoracion2);
         }
 
-        if (fechafin == null || fechafin.equals("")) {
+        if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
             model.addAttribute("fechafin", fechafin);
 
         }
 
-        if (fechainicio == null || fechainicio.equals("")) {
+        if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
             model.addAttribute("fechainicio", fechainicio);
@@ -758,11 +767,13 @@ public class AdminRestController {
     }
 
     @GetMapping("/page2")
-    public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
+    public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String
+                                         textBuscador,
                                  @ModelAttribute @RequestParam(value = "inputCantidad", required = false) Integer inputCantidad,
                                  @ModelAttribute @RequestParam(value = "inputCategoria", required = false) Integer inputCategoria,
                                  @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
+                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
+                                         session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;

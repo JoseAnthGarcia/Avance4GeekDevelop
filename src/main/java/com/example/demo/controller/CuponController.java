@@ -82,13 +82,13 @@ public class CuponController {
         }
         System.out.println(textBuscador);
         LocalDate fechafin2;
-        if (fechafin == null || fechafin.equals("")) {
+        if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin2 = LocalDate.parse("3000-05-21");
         } else {
             fechafin2 = LocalDate.parse(fechafin);
         }
         LocalDate fechainicio2;
-        if (fechainicio == null || fechainicio.equals("")) {
+        if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio2 = LocalDate.now();
         } else {
             fechainicio2 = LocalDate.parse(fechainicio);

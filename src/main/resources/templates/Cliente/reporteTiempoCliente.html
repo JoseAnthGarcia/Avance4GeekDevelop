@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Historial de Pedidos')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Reporte de Tiempo')"></head>
 
 <body id="page-top">
 <!-- Page Wrapper -->
@@ -81,38 +81,24 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -229,7 +215,7 @@
                             <div class="col-11 d-sm-flex justify-content-center">
                                 <h5 class="font-weight-bold text-white">REPORTES DE TIEMPO</h5>
                             </div>
-							<div class="col-1 d-sm-flex justify-content-center">
+							<div class="col-1 d-sm-flex justify-content-center" th:if="${totalsuma1}>0" >
                                 <button class="btn btn-warning mr-1 "onclick="exportTableToExcel('reporteTiempo','reporteTiempo')">Exportar</button>
 							</div>	
 						</div>
@@ -237,9 +223,10 @@
 						
 						<br>
 						<div class="text-center">
-							<h3 style="color:black" th:text="|Promedio tiempo delivery: ${totalsuma1}|"></h3>
+							<h3 style="color:black" th:if="${totalsuma1}>0"th:text="|Promedio tiempo delivery: ${totalsuma1} minutos|"></h3>
+                            <h3 th:if="${totalsuma1==0}" th:text="|No se encontraron reultados|"></h3>
 						</div>
-                        <div class="card-body">
+                        <div class="card-body" th:if="${totalsuma1}>0">
                             <div class="table-responsive">
                              <table id='reporteTiempo' class="table table-bordered">
                                  <thead>
@@ -266,8 +253,7 @@
                                     <td th:text="${info.index+1}"></td>
                                     <td th:text="${pedido.getNombre()}"></td>
                                     <td th:text="${pedido.getCantidad()}"></td>
-                                    <td th:text="${pedido.getTiempoentrega()}"></td>
-                                    <option value="13"  th:selected="${mes.equals('13')}">Mes</option>
+                                    <td th:text="|${pedido.getTiempoentrega()} minutos|"></td>
                                     <td th:if="${pedido.getMes()==1}" th:text="|Enero|"></td>
                                     <td th:if="${pedido.getMes()==2}" th:text="|Febrero|"></td>
                                     <td th:if="${pedido.getMes()==3}" th:text="|Marzo|"></td>
@@ -297,10 +283,6 @@
                                     </li>
                                 </ul>
                             </nav>
-
-
-
-
 
 
                         </div>
@@ -338,27 +320,27 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
                     </button>
-                </div>
-                <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-primary" type="submit">Cerrar Sesión
-                        </button>
-                    </form>
+                </form>
             </div>
         </div>
     </div>
-    </div>
+</div>
     <!-- Bootstrap core JavaScript-->
 
 </body>

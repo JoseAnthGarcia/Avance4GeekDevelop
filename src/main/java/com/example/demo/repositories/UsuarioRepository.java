@@ -119,10 +119,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
  */
 
     @Query(value = "SELECT p.codigo, p.preciototal, p.estado, r.nombre\n" +
-            "FROM pedido p\n" +
-            "left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
-            "left join usuario u on  p.idcliente = u.idusuario\n" +
-            "where (p.estado=1 or p.estado=3 or p.estado=4 or p.estado=5) and (p.idcliente=?1) limit ?2;" ,nativeQuery = true)
-    List<NotiDTO> notificacionCliente(int id, int size);
+            "            FROM pedido p\n" +
+            "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
+            "            left join usuario u on  p.idcliente = u.idusuario\n" +
+            "            where (p.idcliente=?1) and (p.estado=0)\n" +
+            "            order by p.estado desc limit 3\n" +
+            "            ;" ,nativeQuery = true)
+    List<NotiDTO> notificacionCliente(int id);
 
 }

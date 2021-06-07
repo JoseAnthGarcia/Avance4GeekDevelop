@@ -98,7 +98,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Page<Plato_has_PedidoDTO> detalle2(String codigo, Pageable pageable);
 
 
-    @Query(value ="select ped.codigo, r.nombre as 'nombrerest',\n" +
+    @Query(value ="select DISTINCT(ped.codigo), r.nombre as 'nombrerest',\n" +
             "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
             "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento \n" +
             "from pedido ped \n" +

@@ -49,6 +49,9 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 public class ClienteController {
 
     @Autowired
+    TarjetaRepository tarjetaRepository;
+
+    @Autowired
     RestauranteClienteService restauranteClienteService;
 
     @Autowired
@@ -314,13 +317,13 @@ public class ClienteController {
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
-        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         model.addAttribute("listaDirecciones", listaDirecciones);
 
         ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
         for (Ubicacion ubicacion : listaDirecciones) {
-            if (!ubicacion.getDireccion().equals(usuario.getDireccionactual())) {
+            if ((!ubicacion.getDireccion().equals(usuario.getDireccionactual())) && ubicacion.getBorrado()==0) {
                 listaUbicacionesSinActual.add(ubicacion);
             }
         }
@@ -352,7 +355,8 @@ public class ClienteController {
 
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             if(!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())){
-                ubicacionRepository.delete(ubicacion);
+                ubicacion.setBorrado(1);
+                ubicacionRepository.save(ubicacion);
             }
 
         }
@@ -372,7 +376,7 @@ public class ClienteController {
         }
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        List<Ubicacion> listaDir = ubicacionRepository.findByUsuario(usuario1);
+        List<Ubicacion> listaDir = ubicacionRepository.findByUsuarioVal(usuario1);
         Boolean dist_u_val = true;
         try {
             Integer u_dist = distrito;
@@ -417,13 +421,13 @@ public class ClienteController {
 
            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
-            List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+            List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
             model.addAttribute("listaDirecciones", listaDirecciones);
 
             ArrayList<Ubicacion> listaUbicacionesSinActual = new ArrayList<>();
 
             for(Ubicacion ubicacion: listaDirecciones){
-                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())){
+                if(!ubicacion.getDireccion().equals(usuario.getDireccionactual())&& ubicacion.getBorrado()==0){
                     listaUbicacionesSinActual.add(ubicacion);
                 }
             }
@@ -1038,9 +1042,10 @@ public class ClienteController {
                                  HttpSession session){
         Pedido pedido = new Pedido();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        //Ubicacion poolDirecciones = (Ubicacion) session.getAttribute("poolDirecciones");
-        List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
-        List<Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
+
+        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
+
         Integer idRest = (Integer) session.getAttribute("idRest");
         ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("carritoExtra");
@@ -1049,6 +1054,7 @@ public class ClienteController {
         double subTotalCarrito = 0.00;
         double subTotalExtras = 0.00;
         double delivery = 0.00;
+        Ubicacion distritoActual = null;
         int cantVal = 0;
 
         System.out.println(observacion);
@@ -1093,8 +1099,9 @@ public class ClienteController {
             subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
         }
 
-        for (Ubicacion u : direcciones_distritos) {
+        for (Ubicacion u : listaDirecciones) {
             if(u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())){
+                distritoActual = u;
                 if(u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()){
                     delivery = 5.00;
                     break;
@@ -1104,7 +1111,6 @@ public class ClienteController {
         if(delivery == 0.00){ delivery = 8.00; }
 
 
-
         //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
         System.out.println(carrito);
         session.setAttribute("carrito",carrito);
@@ -1112,6 +1118,11 @@ public class ClienteController {
         model.addAttribute("montoCarrito",subTotalCarrito);
         model.addAttribute("montoExtras",subTotalExtras);
         model.addAttribute("delivery",delivery);
+
+        model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
+        model.addAttribute("listaDirecciones",listaDirecciones);
+        model.addAttribute("distritoActual",distritoActual);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/terminarCompra";
     }

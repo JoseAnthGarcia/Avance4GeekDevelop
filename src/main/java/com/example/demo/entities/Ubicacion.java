@@ -22,7 +22,15 @@ public class Ubicacion implements Serializable {
 
     private String direccion;
     private String coordenadas;
+    private int borrado;
 
+    public int getBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(int borrado) {
+        this.borrado = borrado;
+    }
 
     public int getIdubicacion() {
         return idubicacion;

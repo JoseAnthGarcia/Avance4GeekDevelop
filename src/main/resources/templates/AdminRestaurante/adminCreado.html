@@ -214,7 +214,9 @@
                                      aria-labelledby="userDropdown">
                                     <form id="cerrar" th:action="@{/logout}" method="post">
                                         <a class="nav-link" data-toggle="modal"
-                                           href="#logoutModal1" data-target="#logoutModal1">Cerrar Sesión
+                                           href="#logoutModal1" data-target="#logoutModal1"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar
+                                            Sesión
                                         </a>
                                     </form>
                                 </div>
@@ -292,10 +294,10 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Sí</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>

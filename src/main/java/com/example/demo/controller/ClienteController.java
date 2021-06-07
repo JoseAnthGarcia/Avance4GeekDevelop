@@ -1178,7 +1178,7 @@ public class ClienteController {
         List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
         List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
 
-        for(int i = 0; i < listaPlatos.size(); i++){
+     /*   for(int i = 0; i < listaPlatos.size(); i++){
             carrito.get(i).setObservacionplatillo(observacion.get(i));
             carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
             carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
@@ -1186,7 +1186,7 @@ public class ClienteController {
         }
         for(int i = 0; i < carritoExtra.size(); i++){
             subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
-        }
+        }*/
 
         Pedido pedido = new Pedido();
 

@@ -148,7 +148,7 @@ public class LoginController {
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
-                                 @RequestParam("photo") MultipartFile file, Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -202,34 +202,12 @@ public class LoginController {
 
 
 
-        boolean validarfile = false;
-        boolean validartipo=false;
-
-
-
-        String fileName = "";
-        StringTokenizer validarTipo= new StringTokenizer(file.getContentType());
-        if(validarTipo.countTokens()>10){
-            validartipo=true;
-        }
-        if(!file.getContentType().contains("jpeg")&&!file.getContentType().contains("png")&&!file.getContentType().contains("web")){
-            validarfile=true;
-        }
-
-
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-        || validarfile|| validartipo ) {
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci) {
 
             //----------------------------------------
 
 
-            if(validartipo){
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-            }
 
-            if(validarfile){
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-            }
 
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
@@ -257,7 +235,7 @@ public class LoginController {
             //distritos -->
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("direccion", ubicacion.getDireccion());
-            model.addAttribute("photo",file);
+
 
             return "Cliente/registro";
         } else {
@@ -285,16 +263,7 @@ public class LoginController {
 
             ubicacion.setUsuario(cliente);
 
-            try {
-                cliente.setFoto(file.getBytes());
-                cliente.setFotonombre(fileName);
-                cliente.setFotocontenttype(file.getContentType());
-                clienteRepository.save(cliente);
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
-                return "Cliente/registro";
-            }
+
             ubicacionRepository.save(ubicacion);
 
             /////----------------Envio Correo--------------------/////

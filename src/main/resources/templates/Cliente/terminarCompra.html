@@ -179,7 +179,7 @@
                 <div class="card shadow mb-4 mt-5">
                     <div class="card-header py-3" style="background-color: #701111;">
                         <!-- MANDAR EL NOMBRE DEL REST -->
-                        <h5 class="font-weight-bold text-white text-center" th:text="${session.idRest}"></h5>
+                        <h5 class="font-weight-bold text-white text-left" th:text="|Ya casi Acabas|"></h5>
 
                     </div>
 
@@ -376,7 +376,7 @@
                                             <h6 style="color:#000000; size: auto" class="ml-3 mt-2 mr-3"><strong>Extras</strong>
                                             </h6>
                                             <button class="btn" data-toggle="modal"
-                                                    data-target="#carritoModal"><i class="fas fa-eye"></i></button>
+                                                    data-target="#carritoExtraModal"><i class="fas fa-eye"></i></button>
                                         </div>
                                         <h6 style="color:#000000;" class="ml-3 mt-2"><strong>Delivery</strong></h6>
                                     </div>
@@ -384,6 +384,7 @@
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoExtras}|"></strong></h6>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${delivery}|"></strong></h6>
+                                        <input name="delivery" form="generarPedido" th:value="${delivery}" hidden>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
@@ -392,35 +393,34 @@
                                         <h4 style="color: #701111" class="ml-3"><strong>Submonto: </strong></h4>
                                         <br>
                                         <h7 class="ml-3"><strong>¿Desea agregar un cupón? </strong></h7>
-                                        <select class="form-control form-control-sm ml-3 mt-2">
-                                            <option selected>Seleccionar un cupón</option>
-                                            <option value="1">-50% por ser perrón</option>
-                                            <option value="2">-75% por Bienvenida</option>
-                                            <option value="3">-15% por Primera Compra</option>
+                                        <select class="form-control form-control-sm ml-3 mt-2" name="cupon" form="terminarCompra">
+                                            <option th:each="cupon : ${listaCupones}"
+                                                    th:value="${cupon.getIdcupon()}"
+                                            th:text="|- S/. ${cupon.getDescuento()} por ${cupon.getPolitica()}|"></option>
                                         </select>
                                     </div>
                                     <div class="col-4">
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
                                         <br>
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>- S/. 10.00</strong></h6>
+                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|- S/. ${descuento}|"></strong></h6>
                                     </div>
                                 </div>
-
+                                </form>
                                 <div class="form-check-inline">
                                     <div class="container mt-4">
                                         <!-- ONLINE -->
-                                        <input class="form-check-input" name="metodoPago" type="checkbox" value="3">
+                                        <input class="form-check-input" name="metodoPago" form="terminarCompra" type="checkbox" value="3">
                                         <i class="fab fa-cc-visa" style="color: darkblue"></i>
                                         <i class="fab fa-cc-mastercard" style="color: darkred"></i>
                                     </div>
                                     <div class="container mt-4">
                                         <!-- POS -->
-                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="2">
+                                        <input class="form-check-input" type="checkbox" form="terminarCompra" name="metodoPago" value="2">
                                         <i class="fab fa-paypal" style="color: darkred;"></i>
                                     </div>
                                     <div class="container mt-4">
                                         <!-- EFECTIVO -->
-                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="1">
+                                        <input class="form-check-input" type="checkbox" form="terminarCompra" name="metodoPago" value="1">
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
                                     </div>
                                 </div>
@@ -428,7 +428,7 @@
                                     <div class="row justify-content-between">
                                         <div class="col-sm-7">
                                             <label>Seleccione una tarjeta</label>
-                                            <select class="form-control form-control-sm mb-4">
+                                            <select class="form-control form-control-sm mb-4" form="terminarCompra">
                                                 <option th:each="tarjeta : ${listaTarjetas}"
                                                 th:text="|${tarjeta.getNumerotarjeta()}|"
                                                 th:value="${tarjeta.getIdtarjeta()}"></option>
@@ -441,7 +441,12 @@
                                     <div class="col">
                                         <label for="direcc" class="ml-4"><strong>Dirección Actual</strong></label>
                                         <div class="form-check-inline">
-                                            <select class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray" name="ubicacion">
+                                            <select th:if="${ubicaion == null} class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray" name="ubicacion" form="terminarCompra">
+                                                <option th:each="direccion :${listaDirecciones}"
+                                                th:value="${direccion.getIdubicacion()}"
+                                                th:selected="${distritoActual != null}"></option>
+                                            </select>
+                                            <select th:if="${ubicaion != null}" class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray" name="ubicacion" form="terminarCompra">
                                                 <option th:each="direccion :${listaDirecciones}"
                                                 th:value="${direccion.getIdubicacion()}"
                                                 th:selected="${distritoActual != null}"></option>
@@ -457,13 +462,16 @@
                                         <h4 style="color: #701111" class="ml-3" ><strong>Monto Total: </strong></h4>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
+                                        <h6 th:if="${descuento == null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
+                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito + montoExtras - descuento}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
                                 <div class="container">
+                                    <form th:action="@{'/cliente/generarPedido'}" method="post" id="generarPedido"></form>
+
                                     <div class="row justify-content-end mb-3">
-                                        <a class="btn btn-back mr-3" th:href="${}"><i
+                                        <a class="btn btn-back mr-3" th:href="@{'/cliente/mostrarCarrito'}"><i
                                                 class="fas fa-arrow-left"></i> Regresar
                                         </a>
                                         <button class="btn btn-pay mr-4" data-toggle="modal"
@@ -555,7 +563,60 @@
     </div>
 </div>
 
-<!-- Termiar Modal -->
+<!-- Extra Modal -->
+<div class="modal fade" id="carritoExtraModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Carrito de Extras</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                        <div class="col-4 text-left">
+                            <div class="form-check-inline">
+                                <img class="img-profile rounded-circle" alt="list-style-image"
+                                     style="width: 35px; height: 35px"
+                                     src="img/gaseosa.jpg">
+                                <div class="ml-1"> Inca Kola</div>
+                            </div>
+                        </div>
+                        <div class="col text-center">S/. 5.00</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-left">
+                            <div class="form-check-inline">
+                                <img class="img-profile rounded-circle" alt="list-style-image"
+                                     style="width: 35px; height: 35px"
+                                     src="img/pizza.jpg">
+                                <div class="ml-1"> Americana</div>
+                            </div>
+                        </div>
+                        <div class="col text-center">S/. 5.00</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-left">
+                            <div class="form-check-inline">
+                                <img class="img-profile rounded-circle" alt="list-style-image"
+                                     style="width: 35px; height: 35px"
+                                     src="img/pizza.jpg">
+                                <div class="ml-1"> Pizza Americana</div>
+                            </div>
+                        </div>
+                        <div class="col text-center">S/. 5.00</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Terminar Modal -->
 <div class="modal fade" id="terminarCompra" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -568,8 +629,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" style="background-color: #2b542c; color: #FFFFFF; border: #701111"
-                   href="listaPedidoActual.html">Terminar Compra</a>
+                <button class="btn btn-primary" style="background-color: #2b542c; color: #FFFFFF; border: #701111"
+                   type="submit" form="terminarCompra">Terminar Compra</button>
             </div>
         </div>
     </div>

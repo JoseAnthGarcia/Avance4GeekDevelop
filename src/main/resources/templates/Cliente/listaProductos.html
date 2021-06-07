@@ -214,7 +214,6 @@
                         <h2 th:if="${listaPlato.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
                         <div style="color: red" th:if="${msgValCant != null}" th:text="${msgValCant}" class="mr-2 mt-1"></div>
                         <div style="color: red" th:if="${msgVal != null}" th:text="${msgVal}" class="mr-2 mt-1"></div>
-                        <h2 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
 
                         <div class="row mb-5">
                             <div th:if="${listaPlato.size() != 0}" class="col text-center" th:each="plato : ${listaPlato}">

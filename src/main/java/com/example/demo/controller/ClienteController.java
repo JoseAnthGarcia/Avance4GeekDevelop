@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -877,7 +878,7 @@ public class ClienteController {
                 limitInf = limitSup - 1;
 
             } catch (NumberFormatException e) {
-                limitSup = 13;
+                limitSup = 0;
                 limitInf = 0;
             }
 
@@ -897,6 +898,20 @@ public class ClienteController {
             System.out.println(rep.getDescuento());
             totalsuma1=totalsuma1.add(rep.getDescuento());
         }
+        //Division
+        /*
+        int denom=listapedidos.getSize();
+        //conversion
+        BigDecimal denomBD= new BigDecimal(denom);
+
+
+        // divide bg1 with bg2 with 3 scale
+        totalsuma1 = totalsuma1.divide(denomBD, 2, RoundingMode.CEILING);
+
+         */
+
+
+
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);
         model.addAttribute("totalsuma",totalsuma1);
@@ -945,7 +960,7 @@ public class ClienteController {
                 limitInf = limitSup - 1;
 
             } catch (NumberFormatException e) {
-                limitSup = 13;
+                limitSup = 0;
                 limitInf = 0;
             }
 
@@ -968,6 +983,7 @@ public class ClienteController {
             System.out.println(rep.getTotal());
             totalsuma=totalsuma.add(rep.getTotal());
         }
+
         System.out.println(totalsuma);
         model.addAttribute("totalsuma",totalsuma);
         model.addAttribute("listapedidos",listapedidos);
@@ -1017,7 +1033,7 @@ public class ClienteController {
                 limitInf = limitSup - 1;
 
             } catch (NumberFormatException e) {
-                limitSup = 13;
+                limitSup = 0;
                 limitInf = 0;
             }
 
@@ -1037,6 +1053,7 @@ public class ClienteController {
            // System.out.println(rep.getTiempoEntrega());
             totalsuma1=totalsuma1+ rep.getTiempoentrega();
         }
+        totalsuma1=totalsuma1/listapedidos.getSize();
 
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos",listapedidos);

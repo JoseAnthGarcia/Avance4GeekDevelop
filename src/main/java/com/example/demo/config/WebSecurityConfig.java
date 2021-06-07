@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 
         http.logout()
-                .logoutSuccessUrl("/avance6/login")
+                .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true);
 

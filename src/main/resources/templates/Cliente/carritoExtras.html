@@ -6,6 +6,7 @@
 
 
 <body id="page-top">
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -135,7 +136,7 @@
                             </h6>
                             <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
@@ -183,9 +184,7 @@
                 </ul>
 
             </nav>
-            <!-- End of Topbar -->
-
-            <!-- End of Topbar -->
+            <!-- End of Top bar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -230,7 +229,7 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
-                        <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE EXTRAS</h5>
+                        <h5 class="font-weight-bold text-white text-lg-center" align="center">Carrito de Extras</h5>
                     </div>
                     <div class="card-body">
                         <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
@@ -243,7 +242,11 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th class="text-center"></th>
+                                    <th class="text-center ">
+                                        <div class="ml-sm-4 mb-4">
+                                            <input class="form-check-input"  type="checkbox" id="master_checkbox">
+                                        </div>
+                                    </th>
                                     <th class="text-center">
                                         Extra
                                     </th>
@@ -262,7 +265,8 @@
                                 <tr th:each="extra : ${session.extrasCarrito}">
                                     <td style="width: 100px">
                                         <div class="ml-sm-4 mb-4">
-                                            <input class="form-check-input" type="checkbox" value="">
+                                            <input class="form-check-input single_check" type="checkbox" th:value="${extra.getIdextra().getIdextra()}" name="extraEliminar" form="eliminarExtra">
+                                            <input class="form-check-input" type="text" th:value="${extra.getIdextra().getIdextra()}" name="extraGuardar" form="modificarExtra" hidden>
                                         </div>
                                     </td>
                                     <td style="width: 500px">
@@ -276,11 +280,11 @@
                                     <td style="width: 250px" th:text="|S/. ${extra.getPreciounitario()}|"></td>
                                     <td style="width: 250px">
                                         <div class="form-check-inline">
-                                            <button class="btn btn-cerrito mr-3" style="color: #ffffff; background-color: #701111"><i
+                                            <button class="btn btn-cerrito mr-3 sumar" th:data-pedido="${extra.getExtra().getIdextra()}"  style="color: #ffffff; background-color: #701111"><i
                                                     class="fas fa-plus"></i></button>
-                                            <input class="form-control ml-3 mr-3 mb-3 mt-3" type="text" size="5%"
-                                                   id="extra" style="background: #ededed" name="cantidadExtra" th:value="${extra.getCantidad()}">
-                                            <button class="btn btn-cielito "style="color: #FFFFFF; background-color: #2d4a8d"><i
+                                            <input class="form-control ml-3 mr-3 mb-3 mt-3 cantidad" th:data-pedido="${extra.getExtra().getIdextra()}" type="text" size="5%" name="cantidad" form="modificarExtra"
+                                                   id="extra" style="background: #ededed" th:value="${extra.getCantidad()}">
+                                            <button class="btn btn-cielito restar"style="color: #FFFFFF; background-color: #2d4a8d"  th:data-pedido="${extra.getExtra().getIdextra()}"><i
                                                     class="fas fa-minus"></i></button>
                                         </div>
                                     </td>
@@ -291,17 +295,18 @@
 
                             </table>
                         </div>
+                        <form th:action="@{'/cliente/modificarExtra'}" method="post" id="modificarExtra"></form>
+                        <form th:action="@{'/cliente/eliminarExtra'}" method="post" id="eliminarExtra"></form>
+
                         <div class="container">
                             <div class="row justify-content-between mb-3">
                                 <div class="col justify-content-start">
-                                    <button class="btn btn-trash mr-3"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-eliminar mr-3"><i class="fas fa-times"></i></button>
+                                    <button class="btn btn-trash mr-3" style="color: #FFFFFF; background-color: #701111" data-toggle="modal" data-target="#vaciarExtras"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-eliminar mr-3" style="color: #FFFFFF; background-color: #e08a3d" data-toggle="modal" data-target="#eliminarExtra"><i class="fas fa-times"></i></button>
                                 </div>
                                 <div class="col text-right">
-                                    <a class="btn btn-back mr-3" href="listaProductos.html"><i class="fas fa-arrow-left"></i> Regresar
-                                    </a>
-                                    <a class="btn btn-pay mr-3" href="pagoPedido.html"><i class="fas fa-arrow-right"></i> Ir a Pagar
-                                    </a>
+                                    <a class="btn btn-back mr-3" style="color: #FFFFFF;background-color: #d6bd1d" th:href="@{'/cliente/mostrarCarrito'}"><i class="fas fa-arrow-left"></i> Regresar</a>
+                                    <button class="btn btn-pay mr-3" style="color: #FFFFFF; background-color: #64a94d" type="submit" form="modificarExtra"><i class="fas fa-arrow-right"></i> Agregar extras</button>
                                 </div>
                             </div>
                         </div>
@@ -345,7 +350,46 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+<!-- Delete Modal-->
+<div class="modal fade" id="eliminarExtra" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro de eliminar un plato?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al selecionar el botón de vaciar, usted eliminará un plato del carrito.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <!--<input type="hidden" name="idRest" th:value="${idRest}" form="eliminarExtra">-->
+                <button class="btn btn-eliminar mr-3" style="color: #FFFFFF; background-color: #701111" type="submit" form="eliminarExtra">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete All Modal-->
+<div class="modal fade" id="vaciarExtras" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">¿Está seguro de eliminar todos los extras?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al selecionar el botón de vaciar, usted vaciará los extras.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-cerrito" style="background-color: #701111; color: #FFFFFF" th:href="@{'/cliente/vaciarExtras'}">Vaciar</a>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -357,7 +401,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <form th:action="@{/logout}" method="post">
@@ -368,7 +412,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
@@ -381,5 +424,32 @@
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 </body>
+<script>
+    let maximo = 20
+    $('.sumar').on('click',function(){
+        let pedido = $(this).data('pedido')
+        let $cantidad_input=$(".cantidad[data-pedido='" + pedido +"']").first()
+        let cantidad = parseInt($cantidad_input.val());
+        if(cantidad!==maximo){
+            $cantidad_input.val(cantidad+ 1)
+        }
+    })
 
+    $('.restar').on('click',function(){
+        let pedido = $(this).data('pedido')
+        let $cantidad_input=$(".cantidad[data-pedido='" + pedido +"']").first()
+        let cantidad = parseInt($cantidad_input.val());
+        if(cantidad!==0){
+            $cantidad_input.val(cantidad - 1)
+        }
+    })
+    $('#master_checkbox').on('change',function(){
+        if(this.checked) {
+            $(".single_check").prop('checked', true);
+        }else{
+            $(".single_check").prop('checked', false);
+        }
+    })
+
+</script>
 </html>

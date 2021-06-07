@@ -4,12 +4,13 @@ import java.math.BigDecimal;
 // para evitar mapear la entidad y malograr la pagenitation
 public interface ExtraDTO {
 
+    String getNombre();
     int getIdextra();
     byte[] getFoto();
     String getFotocontenttype();
     String getFotonombre();
-    String getNombre();
     BigDecimal getPreciounitario();
-    int getDisponible();
     String getTipo();
+    int getDisponible();
+
 }

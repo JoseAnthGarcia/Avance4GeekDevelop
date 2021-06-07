@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entities.Tarjeta;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.TarjetaRepository;
+import com.example.demo.repositories.UsuarioRepository;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class TarjetaController {
     @Autowired
     TarjetaRepository tarjetaRepository;
 
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
     @GetMapping("/lista")
     public String mostrarTarjetas(HttpSession httpSession, Model model, @ModelAttribute("tarjeta") Tarjeta tarjeta) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -33,6 +37,7 @@ public class TarjetaController {
         model.addAttribute("nombre", "");
         model.addAttribute("apellido", "");
         model.addAttribute("cvv", "");
+        model.addAttribute("notificaciones", usuarioRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/tarjetas";
     }
 

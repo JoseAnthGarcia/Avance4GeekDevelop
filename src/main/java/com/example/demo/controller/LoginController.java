@@ -64,7 +64,7 @@ public class LoginController {
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
-    public String loginForm(Authentication auth, HttpSession session) {
+    public String loginForm() {
         return "Cliente/login";
     }
 
@@ -78,6 +78,7 @@ public class LoginController {
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session) {
         String rol = "";
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
@@ -92,7 +93,7 @@ public class LoginController {
         //redirect:
         switch (rol) {
             case "cliente":
-                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
@@ -112,7 +113,7 @@ public class LoginController {
                     return "redirect:/plato/";
                 }
             case "repartidor":
-                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
                 Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);

@@ -128,7 +128,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
             "            left join usuario u on  p.idcliente = u.idusuario\n" +
             "            where (p.idcliente=?1) and (p.estado=0)\n" +
-            "            order by p.estado desc limit 3\n" +
+            "            order by p.fechapedido desc limit 3\n" +
             "            ;" ,nativeQuery = true)
     List<NotiDTO> notificacionCliente(int id);
 

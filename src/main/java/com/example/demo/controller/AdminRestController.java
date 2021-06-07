@@ -401,15 +401,16 @@ public class AdminRestController {
 
         }
 
-        System.out.println(fechainicio + "############");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String today = dateFormat.format(date);
+        System.out.println(today);
+
         Date fechainicio2;
         String fechainicio3;
         if (fechainicio == null || fechainicio.equals("")) {
             fechainicio2 = date;
-            String pattern = "yyyy-MM-dd HH:mm:ss";
+            String pattern = "yyyy-MM-dd 00:00:00";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             fechainicio3 = simpleDateFormat.format(fechainicio2);
             System.out.println(fechainicio3);
@@ -695,10 +696,12 @@ public class AdminRestController {
         //Manipular input de buscadores
         System.out.println(inputValoracion);
         String inputValoracion2;
-        if (inputValoracion == null || inputValoracion != 1 || inputValoracion != 2 || inputValoracion != 3 || inputValoracion != 4 || inputValoracion != 5) {
+        if (inputValoracion == null || inputValoracion==6) {
             inputValoracion2 = "";
         } else {
+            System.out.println("###entre###");
             inputValoracion2 = String.valueOf(inputValoracion);
+            System.out.println(inputValoracion2);
         }
 
         if (fechafin == null || fechafin.equals("")) {

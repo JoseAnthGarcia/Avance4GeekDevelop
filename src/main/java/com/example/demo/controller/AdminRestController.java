@@ -401,16 +401,16 @@ public class AdminRestController {
 
         }
 
-        System.out.println(fechainicio + "############");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String today = dateFormat.format(date);
         System.out.println(today);
+
         Date fechainicio2;
         String fechainicio3;
         if (fechainicio == null || fechainicio.equals("")) {
             fechainicio2 = date;
-            String pattern = "yyyy-MM-dd HH:mm:ss";
+            String pattern = "yyyy-MM-dd 00:00:00";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             fechainicio3 = simpleDateFormat.format(fechainicio2);
             System.out.println(fechainicio3);

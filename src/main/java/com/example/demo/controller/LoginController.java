@@ -55,6 +55,9 @@ public class LoginController {
     UrlCorreoRepository urlCorreoRepository;
 
     @Autowired
+    PedidoRepository pedidoRepository;
+
+    @Autowired
     JavaMailSender javaMailSender;
 
     @GetMapping("/login")
@@ -152,8 +155,14 @@ public class LoginController {
                 List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuario(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
+                Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
-                return "redirect:/repartidor/listaPedidos";
+                if(pedidoAct==null){
+                    return "redirect:/repartidor/listaPedidos";
+                }else{
+                    return "redirect:/repartidor/pedidoActual";
+                }
+
             default:
                 return "somewhere"; //no tener en cuenta
         }

@@ -124,5 +124,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by php.idplato ", nativeQuery = true)
     Page<PlatoReporteDTO> reportePlato(int id, int estado, Pageable pageable);
 
+    @Query(value = "select m.nombre, `cantmd`, `cantdd` from mes m\n" +
+            "left join (select month(fechapedido) as `mes`, count(codigo) as `cantmd`\n" +
+            "from pedido where year(fechapedido)=?1 and mismodistrito=1 and estado=6 and idrepartidor=?2 group by month(fechapedido)) md\n" +
+            "on md.`mes`=m.idmes\n" +
+            "left join (select month(fechapedido) as `mes`, count(codigo) as `cantdd`\n" +
+            "from pedido where year(fechapedido)=?1 and mismodistrito=0 and estado=6 and idrepartidor=?2 group by month(fechapedido)) dd\n" +
+            "on dd.`mes`=m.idmes", nativeQuery = true)
+    List<ReporteIngresosDTO> reporteIngresos(int anio, int idRepartidor);
 
+    @Query(value = "select year(max(fechapedido)) from pedido", nativeQuery = true)
+    int hallarMaxAnioPedido();
+
+    @Query(value = "select year(min(fechapedido)) from pedido", nativeQuery = true)
+    int hallarMinAnioPedido();
 }

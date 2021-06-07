@@ -9,7 +9,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -26,56 +26,30 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <form>
+                <form th:action="@{/repartidor/reporteIngresos}" method="get">
                     <div class=" form-group row" >
-                        <div class="col-sm-4 mb-2 " style="position: relative; left: 33.5%" >
+                        <div class="col-sm-4 mb-2 " style="position: relative; left: 33.5%" th:text="|Ingreso total : S/. ${precioTotal}|">
                            Ingreso total : S/. 1176.00
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control  ">
+                            <select class="form-control" name="anio">
                                 <option value="" disabled selected>Año</option>
-                                <option value="2015">2015</option>
-                                <option value="2016">2016</option>
-                                <option value="2017">2017</option>
-                                <option value="2018">2018</option>
-                                <option value="2019">2019</option>
-                                <option value="2020">2020</option>
-                                <option value="2021">2021</option>
+                                <option th:each="anio:${anios}"
+                                        th:value="${anio}"
+                                        th:text="${anio}"
+                                        th:selected="${anioSelect==anio}"></option>
                             </select>
                         </div>
-                        <div class="col-sm-3 mb-2">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2 mb-sm-0">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Entregas a un</option>
-                                <option value="1">Mismo distrito</option>
-                                <option value="2">Diferente distrito</option>
-                            </select>
-                        </div>
+
                         <div class="col-sm-1 mb-2 mb-sm-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{/repartidor/reporteIngresos}">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -87,7 +61,8 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE INGRESOS - 2021</h5>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto "
+                                th:text="|REPORTE DE INGRESOS - ${anioSelect}|">REPORTE DE INGRESOS - 2021</h5>
                             <a class="btn btn-warning mr-1">Exportar</a>
                         </div>
 
@@ -112,104 +87,22 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td style="width: 300px">Enero</td>
-                                    <td style="width: 250px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Febrero</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Marzo</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Enero</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Abril</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Mayo</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Junio</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Julio</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Agosto</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Septiembre</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Octubre</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Noviembre</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">Diciembre</td>
-                                    <td style="width: 700px">S/.50</td>
-                                    <td style="width: 250px">S/.48</td>
-                                    <td style="width: 160px">S/.98</td>
+                                <tr th:each="reporteMes : ${reporte}">
+                                    <td th:text="${reporteMes.getNombre()}" style="width: 300px">Enero</td>
+                                    <td th:text="|S/.${(reporteMes.getCantmd()==null?0:reporteMes.getCantmd())*4}.00|" style="width: 250px">S/.50</td>
+                                    <td th:text="|S/.${(reporteMes.getCantdd()==null?0:reporteMes.getCantdd())*6}.00|" style="width: 250px">S/.48</td>
+                                    <td th:text="|S/.${(reporteMes.getCantmd()==null?0:reporteMes.getCantmd())*4+(reporteMes.getCantdd()==null?0:reporteMes.getCantdd())*6}.00|" style="width: 160px">S/.98</td>
                                 </tr>
                                 <tr>
                                     <td style="width: 300px"></td>
                                     <td style="width: 700px"></td>
                                     <td style="width: 250px">TOTAL:</td>
-                                    <td style="width: 160px">S/.1176</td>
+                                    <td style="width: 160px" th:text="|S/.${precioTotal}|">S/.1176</td>
                                 </tr>
                                 </tbody>
 
                             </table>
 
-                        </div>
-                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                            <a  href="#">&laquo;</a>
-                            <a  href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
                         </div>
                     </div>
                     <!-- Footer -->

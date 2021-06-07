@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.PlatoPorPedidoDTO;
+import com.example.demo.dtos.ReporteIngresosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.PedidoService;
@@ -19,8 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 
@@ -243,9 +247,57 @@ public class RepartidorController {
     public String reporteDeliverys(){
         return "/Repartidor/reporteDeliverys";
     }
+
     @GetMapping("/reporteIngresos")
-    public String reporteIngresos(){
-        return "/Repartidor/reporteIngresos";
+    public String reporteIngresos(@RequestParam(value = "anio", required = false) String anio,
+                                  HttpSession session,
+                                  Model model){
+        int anioInt = 0;
+
+        Date date = new Date();
+
+        ZoneId timeZone = ZoneId.systemDefault();
+        LocalDate getLocalDate = date.toInstant().atZone(timeZone).toLocalDate();
+        System.out.println(getLocalDate.getYear());
+
+        if(anio==null){
+            anioInt = getLocalDate.getYear();
+        }else{
+            try{
+                //TODO: ver si pone otros numeros
+                anioInt = Integer.parseInt(anio);
+                int anioMax = pedidoRepository.hallarMaxAnioPedido();
+                int anioMin = pedidoRepository.hallarMinAnioPedido();
+                if(anioInt>anioMax || anioInt<anioMin){
+                    anioInt = getLocalDate.getYear();
+                }
+            }catch (NumberFormatException e){
+                anioInt = getLocalDate.getYear();
+            }
+        }
+
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+
+        List<ReporteIngresosDTO> reporteIngresosDTOS = pedidoRepository.reporteIngresos(anioInt, repartidor.getIdusuario());
+
+        BigDecimal precioTotal = new BigDecimal(0);
+        for(ReporteIngresosDTO reporte: reporteIngresosDTOS){
+            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantmd()==null?0:reporte.getCantmd())*4));
+            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantdd()==null?0:reporte.getCantdd())*6));
+        }
+
+        List<Integer> anios = new ArrayList<>();
+
+        for(int i = pedidoRepository.hallarMinAnioPedido(); i<=pedidoRepository.hallarMaxAnioPedido(); i++){
+            anios.add(i);
+        }
+
+        model.addAttribute("precioTotal", precioTotal);
+        model.addAttribute("reporte", reporteIngresosDTOS);
+        model.addAttribute("anioSelect", anioInt);
+        model.addAttribute("anios", anios);
+
+        return "Repartidor/reporteIngresos";
     }
 
 
@@ -388,5 +440,6 @@ public class RepartidorController {
             usuarioRepository.save(usuario);
             return "redirect:/x";
         }*/
+
 
 }

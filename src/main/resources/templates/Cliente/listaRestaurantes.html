@@ -11,10 +11,10 @@
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
 
     </ul>
     <!-- End of Sidebar -->
@@ -94,9 +94,12 @@
                             <h6 class="notificacion">
                                 Pedido actual
                             </h6>
-                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
-                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos
+                                pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                               class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigoPedido='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
@@ -105,8 +108,10 @@
                                 <div>
                                     <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
-                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
-                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}"
+                                          th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}"
+                                          th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
@@ -181,24 +186,26 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto" type="text" class="form-control bg-light small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
                                        style="border-color: lightgray">
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control"
+                                    style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
-                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
-                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
-                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
-                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
-                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./15.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./15.00 hasta S./25.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./25.00 hasta S./40.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./40.00 a más</option>
+
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2 ">
-                            <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
+                            <select id="buscadorValoracion" name="val" class="form-control"
+                                    style="border-color: lightgray">
                                 <option value="" disabled th:selected="${val.equals('6')}">Valoración</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
@@ -208,7 +215,8 @@
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2 ">
-                            <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
+                            <select id="buscadorCategoria" name="idCategoria" class="form-control"
+                                    style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idCategoria.equals('6')}">Categorias</option>
                                 <option th:each="categoria : ${categorias}"
                                         th:value="|${categoria.getIdcategoria()}-${categoria.getIdcategoria() + 1}|"
@@ -218,12 +226,13 @@
                         </div>
                         <!-- TODO BUSCADOR DE CATEGORÍAS -->
                         <div class="input-group-append col-sm-1 mb-2 ">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
-                        <div class="col-sm-2" style="margin-right: 10px" >
-                            <a class="btn btn-secondary" th:href="@{'/cliente/listaRestaurantes'}" >Quitar filtros</a>
+                        <div class="col-sm-2" style="margin-right: 10px">
+                            <a class="btn btn-secondary" th:href="@{'/cliente/listaRestaurantes'}">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -238,7 +247,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th width="10"> N° </th>
+                                    <th width="10"> N°</th>
                                     <th width="50" height="60">
                                         <div style=text-align:center> Restaurante</div>
                                     </th>
@@ -252,7 +261,7 @@
                                             Categoría
                                         </div>
                                     </th>
-                                    <td >
+                                    <td>
                                         <div style=text-align:center>
                                             Acceder
                                         </div>
@@ -266,7 +275,8 @@
                                     <td th:text="${v.index + 1}"></td>
                                     <td>
                                         <div style=text-align:center>
-                                            <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">
+                                            <img width="110" height="100" alt="Avatar"
+                                                 th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">
                                         </div>
                                     </td>
                                     <td>
@@ -274,28 +284,34 @@
                                             <h5 class="mb-2" th:text="${rest.getNombre()}"></h5>
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <h6 th:if="${rest.getValoracion() == null}" th:text="|Valoración: 0|"></h6>
-                                                    <h6 th:unless="${rest.getValoracion() == null}" th:text="|Valoración: ${rest.getValoracion()}|"></h6>
+                                                    <h6 th:if="${rest.getValoracion() == null}"
+                                                        th:text="|Valoración: 0|"></h6>
+                                                    <h6 th:unless="${rest.getValoracion() == null}"
+                                                        th:text="|Valoración: ${rest.getValoracion()}|"></h6>
                                                 </div>
                                                 <div class="col-4">
-                                                    <h6 th:if="${rest.getCalificaciones() == null}" th:text="|Calificaciones: 0|"></h6>
-                                                    <h6 th:unless="${rest.getCalificaciones() == null}" th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
+                                                    <h6 th:if="${rest.getCalificaciones() == null}"
+                                                        th:text="|Calificaciones: 0|"></h6>
+                                                    <h6 th:unless="${rest.getCalificaciones() == null}"
+                                                        th:text="|Calificaciones: ${rest.getCalificaciones()}|"></h6>
                                                 </div>
                                                 <div class="col-4">
-                                                    <h6 th:if="${rest.getPreciopromedio() != null}" th:text="|Precio Promedio: S/. ${rest.getPreciopromedio()}|"></h6>
-                                                    <h6 th:if="${rest.getPreciopromedio() == null}" th:text="|Precio Promedio: S/. 0|"></h6>
+                                                    <h6 th:if="${rest.getPreciopromedio() != null}"
+                                                        th:text="|Precio Promedio: S/. ${rest.getPreciopromedio()}|"></h6>
+                                                    <h6 th:if="${rest.getPreciopromedio() == null}"
+                                                        th:text="|Precio Promedio: S/. 0|"></h6>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
 
-                                    <td >
+                                    <td>
                                         <div style=text-align:center>
                                             <h6 th:text="${rest.getCategorias()}"></h6>
                                         </div>
                                     </td>
 
-                                    <td  class="align-content-center">
+                                    <td class="align-content-center">
                                         <div style=text-align:center>
                                             <a class="btn btn-danger btn-circle"
                                                th:href="@{'/cliente/listaPlatos?idRest='+${rest.getIdrestaurante()}}">
@@ -311,16 +327,28 @@
                         <div class="container">
 
 
-                            <div class="pagination" style=" margin-left: 30% ;align-content: center">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
+                <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center" >
+                    <li class="page-item" th:each="page : ${pages}">
+                        <a th:unless="${texto == null && idPrecio == null && val == null && idCategoria == null }"
+                           class="page-link active" th:text="${page}"
+                           th:href="@{'/cliente/listaRestaurantes?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&val='+${val}+'&idCategoria='+${idCategoria}}"></a>
+                    </li>
+                </ul>
+                </nav>
+
+                            <!--
+                                    <div class="pagination" style=" margin-left: 30% ;align-content: center">
+
+                                        <a href="#" class="active">1</a>
+                                        <a href="#">2</a>
+                                        <a href="#">3</a>
+                                        <a href="#">4</a>
+                                        <a href="#">5</a>
+                                        <a href="#">6</a>
+
+                                    </div>
+                                    -->
                         </div>
                     </div>
 
@@ -337,7 +365,8 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel2">Está seguro que desea eliminar producto?</h5>
+                            <h5 class="modal-title" id="exampleModalLabel2">Está seguro que desea eliminar
+                                producto?</h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -384,19 +413,13 @@
 </body>
 
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page level custom scripts -->
-<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 </html>

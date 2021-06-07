@@ -225,7 +225,7 @@
 						<br>
 						
 						<div class="text-center" >
-							<h3 th:if style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+							<h3  style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
                             <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS DE LA BUSQUEDA|"></h3>
 						</div>
                         <div class="card-body"  th:if="${total>0}" >
@@ -265,18 +265,7 @@
                             
                             </div>
 
-                            <div th:if="${pages >= 1}" class="pagination text-center">
-                                <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
-                                    <a th:if="${currentPage != i}"
-                                       th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&textPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
-                                       th:utext="${i}"
-                                       class="active mt-2"></a>
-                                    <a th:unless="${currentPage != i}"
-                                       th:utext="${i}" class="text-white" style="pointer-events: none"></a>
-
-                                </div>
-                            </div>
 
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
@@ -347,20 +336,7 @@
     </div>
 
 
-</body>
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
-
-<!-- Page level plugins -->
-
-<script th:src="@{/js/estrellitas/jquery.raty.min.js}"></script>
-<script>
+</body><script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
@@ -392,5 +368,23 @@
         }
     }
 </script>
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+
 
 </html>

@@ -186,10 +186,10 @@
                         <div class="col-sm-3 mb-1">
                             <select class="form-control" name="descuento">
                                 <option value="7" th:selected="${descuento.equals('7')}">Descuento</option>
-                                <option value="1" th:selected="${descuento.equals('1')}">S/0 a S/ 10</option>
-                                <option value="2" th:selected="${descuento.equals('2')}">S/10 a S/20</option>
-                                <option value="3" th:selected="${descuento.equals('3')}">S/20 a S/30</option>
-                                <option value="4" th:selected="${descuento.equals('4')}">S/30 a S/40</option>
+                                <option value="1" th:selected="${descuento.equals('1')}">S./0.00 hasta S./10.00</option>
+                                <option value="2" th:selected="${descuento.equals('2')}">S/10.00 hasta S/20.00</option>
+                                <option value="3" th:selected="${descuento.equals('3')}">S/20.00 hasta S/30.00</option>
+                                <option value="4" th:selected="${descuento.equals('4')}">S/30.00 hasta S/40.00</option>
                             </select>
                         </div>
 
@@ -211,7 +211,7 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <h5 class="font-weight-bold text-white text-center mb-0">CUPONES DISPONIBLES</h5>
                     </div>
-
+                    <h1 th:if="${total==0}"  th:text="| |"></h1>
                     <div  class="text-center" >
                       <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
                     </div>
@@ -221,8 +221,8 @@
                             <div class="col-6">
                                 <div class="container2">
                                     <img src="https://kinsta.com/es/wp-content/uploads/sites/8/2018/05/kinsta-cupon-1.png" alt="Avatar"
-                                         class="image2 shadow" style="height: 200px; width: 350px">
-                                    <a class="overlay2" href="#" style="height: 200px; width: 350px">
+                                         class="image2 shadow" style="height: 200px; width: 300px">
+                                    <a class="overlay2" href="#" style="height: 200px; width: 300px">
                                         <h1 class="text2 font-weight-bolder text-left" th:text="${cupon.getNombrecupon()}"></h1>
                                     </a>
                                 </div>
@@ -254,7 +254,7 @@
                                 <li class="page-item" th:each="page : ${pages}">
                                     <a th:unless="${texto == null && descuento == null }"
                                        class="page-link active" th:text="${page}"
-                                       th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
+                                       th:href="@{'/cliente/listaCupones?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -315,6 +315,9 @@
 </div>
 
 
+
+
+</body>
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -324,7 +327,5 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-</body>
 
 </html>

@@ -173,12 +173,12 @@
             </nav>
             <!-- End of Topbar -->
 
-            <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <div class="card shadow mb-4 mt-5">
                     <div class="card-header py-3" style="background-color: #701111;">
+                        <!-- MANDAR EL NOMBRE DEL REST -->
                         <h5 class="font-weight-bold text-white text-center" th:text="${session.idRest}"></h5>
 
                     </div>
@@ -372,11 +372,18 @@
                                             <button class="btn" data-toggle="modal"
                                                     data-target="#carritoModal"><i class="fas fa-eye"></i></button>
                                         </div>
+                                        <div class="form-check-inline">
+                                            <h6 style="color:#000000; size: auto" class="ml-3 mt-2 mr-3"><strong>Extras</strong>
+                                            </h6>
+                                            <button class="btn" data-toggle="modal"
+                                                    data-target="#carritoModal"><i class="fas fa-eye"></i></button>
+                                        </div>
                                         <h6 style="color:#000000;" class="ml-3 mt-2"><strong>Delivery</strong></h6>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 56.00</strong></h6>
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 8.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoExtras}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${delivery}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
@@ -393,7 +400,7 @@
                                         </select>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong>S/. 64.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
                                         <br>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>- S/. 10.00</strong></h6>
                                     </div>
@@ -401,27 +408,30 @@
 
                                 <div class="form-check-inline">
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- ONLINE -->
+                                        <input class="form-check-input" name="metodoPago" type="checkbox" value="3">
                                         <i class="fab fa-cc-visa" style="color: darkblue"></i>
                                         <i class="fab fa-cc-mastercard" style="color: darkred"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- POS -->
+                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="2">
                                         <i class="fab fa-paypal" style="color: darkred;"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <input class="form-check-input" type="checkbox" value="">
+                                        <!-- EFECTIVO -->
+                                        <input class="form-check-input" type="checkbox"  name="metodoPago" value="1">
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
                                     </div>
                                 </div>
                                 <div class="container mt-sm-2">
                                     <div class="row justify-content-between">
                                         <div class="col-sm-7">
+                                            <label>Seleccione una tarjeta</label>
                                             <select class="form-control form-control-sm mb-4">
-                                                <option selected>Seleccionar una tarjeta</option>
-                                                <option value="1">Visa - 123456789</option>
-                                                <option value="2">Mastercard - 456789123</option>
-                                                <option value="3">Otras - 369852147</option>
+                                                <option th:each="tarjeta : ${listaTarjetas}"
+                                                th:text="|${tarjeta.getNumerotarjeta()}|"
+                                                th:value="${tarjeta.getIdtarjeta()}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -431,11 +441,10 @@
                                     <div class="col">
                                         <label for="direcc" class="ml-4"><strong>Dirección Actual</strong></label>
                                         <div class="form-check-inline">
-                                            <select class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray">
-                                                <option selected> Seleccionar su dirección </option>
-                                                <option> Av. Carlos Izaguirre, Los Olivos </option>
-                                                <option> Av. Ramirez, La Molina </option>
-                                                <option> Av. Honorio Delgado, SMP </option>
+                                            <select class="form-control ph-center ml-4" id="direcc" style="border-color: lightgray" name="ubicacion">
+                                                <option th:each="direccion :${listaDirecciones}"
+                                                th:value="${direccion.getIdubicacion()}"
+                                                th:selected="${distritoActual != null}"></option>
                                             </select>
                                             <button class="btn btn-cielito ml-2" type="submit">Seleccionar</button>
                                         </div>
@@ -445,16 +454,16 @@
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
                                 <div class="row justify-content-between">
                                     <div class="col-6">
-                                        <h4 style="color: #701111" class="ml-3"><strong>Monto Total: </strong></h4>
+                                        <h4 style="color: #701111" class="ml-3" ><strong>Monto Total: </strong></h4>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong>S/. 54.00</strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
                                 <div class="container">
                                     <div class="row justify-content-end mb-3">
-                                        <a class="btn btn-back mr-3" href="carritoCompras.html"><i
+                                        <a class="btn btn-back mr-3" th:href="${}"><i
                                                 class="fas fa-arrow-left"></i> Regresar
                                         </a>
                                         <button class="btn btn-pay mr-4" data-toggle="modal"

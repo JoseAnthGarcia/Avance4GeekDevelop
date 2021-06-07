@@ -256,7 +256,7 @@
                                                                     brevemente</h4>
                                                             </div>
                                                             <div class="container"></div>
-                                                            <div class="modal-footer">
+                                                            <div class="modal-footer" style="justify-content: flex-start">
                                                                 <form id="rechazar" method="GET"
                                                                       th:action="@{/restaurante/rechazarPedido}">
                                                                     <input name="id" type="text"
@@ -298,7 +298,7 @@
 
                                 </div>
                                 <div th:if="${totalItems==0}">
-                                    <h3 class="text-lg-center text-danger">No hay coincidencias con su búsqueda.</h3>
+                                    <h3 class="text-lg-center text-danger">No hay resultados.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">

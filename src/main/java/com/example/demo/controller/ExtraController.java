@@ -215,7 +215,6 @@ public class ExtraController {
                     extra.setFotonombre(fileName);
                     extra.setFotocontenttype(file.getContentType());
                     attr.addFlashAttribute("msg", "Extra creado exitosamente");
-                    attr.addFlashAttribute("msg2", "Extra editado exitosamente");
                     model.addAttribute("idcategoria",idc);
                     extraRepository.save(extra);
                 }catch (IOException e){
@@ -234,7 +233,6 @@ public class ExtraController {
                     extra.setFotocontenttype(extraOptional.get().getFotocontenttype());
                     extraRepository.save(extra);
                     attr.addFlashAttribute("msg2", "Extra editado exitosamente");
-                    attr.addFlashAttribute("msg", "Extra creado exitosamente");
                 }
             }
             model.addAttribute("idcategoria",idc);
@@ -291,6 +289,6 @@ public class ExtraController {
             attr.addFlashAttribute("msg3", "Extra borrado exitosamente");
         }
         model.addAttribute("idcategoria",idc);
-        return "redirect:/extra/lista";
+        return "redirect:/extra/lista?idcategoria="+idc;
     }
 }

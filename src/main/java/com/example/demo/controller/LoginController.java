@@ -135,7 +135,7 @@ public class LoginController {
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
-                return "red irect:/admin/usuarios";
+                return "redirect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":

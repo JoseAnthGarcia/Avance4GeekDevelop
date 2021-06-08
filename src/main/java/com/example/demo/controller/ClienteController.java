@@ -1197,7 +1197,8 @@ public class ClienteController {
     }
 
     @PostMapping("/generarPedido")
-    public String generarPedido(@RequestParam("cupon") String idCupon,
+    public String generarPedido(@RequestParam("anio") int anio,
+                                @RequestParam("cupon") String idCupon,
                                 @RequestParam("ubicacion") Ubicacion ubicacion,
                                 @RequestParam("delivery") Double precioDelivery,
                                 HttpSession session){

@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Entity
+@Table(name="movilidad")
 public class Movilidad implements Serializable {
 
     @Id

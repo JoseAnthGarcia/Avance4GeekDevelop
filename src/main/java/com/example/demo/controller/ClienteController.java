@@ -222,6 +222,9 @@ public class ClienteController {
                 break;
             }
         }
+        if(texto==null){
+            texto="";
+        }
 
         if(val == null || val.equals("")){
             val = "6";

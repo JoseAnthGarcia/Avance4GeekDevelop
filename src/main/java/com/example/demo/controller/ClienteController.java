@@ -119,6 +119,9 @@ public class ClienteController {
     @Autowired
     CuponClienteService cuponClienteService;
 
+    @Autowired
+    MetodoPagoRepository metodoPagoRepository;
+
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
 
@@ -246,24 +249,21 @@ public class ClienteController {
         switch (idPrecio){
             case "1":
                 limitInfP = 0;
-                limitSupP = 10;
+                limitSupP = 15;
                 break;
             case "2":
-                limitInfP = 10;
+                limitInfP = 15;
                 limitSupP = 20;
                 break;
             case "3":
-                limitInfP = 20;
-                limitSupP = 30;
-                break;
-            case "4":
-                limitInfP = 30;
+                limitInfP = 25;
                 limitSupP = 40;
                 break;
-            case "5":
-                limitInfP = 50;
+            case "4":
+                limitInfP = 40;
                 limitSupP = 5000;
                 break;
+
             default:
                 limitInfP = 0;
                 limitSupP = 5000;
@@ -1084,6 +1084,12 @@ public class ClienteController {
                                  HttpSession session){
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
+        //CUPONES
+        List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
+
+
+
+
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
 
@@ -1156,6 +1162,7 @@ public class ClienteController {
         session.setAttribute("carrito",carrito);
 
         model.addAttribute("montoCarrito",subTotalCarrito);
+        model.addAttribute("listaCupones",listaCupones1);
         model.addAttribute("montoExtras",subTotalExtras);
         model.addAttribute("delivery",delivery);
 
@@ -1168,76 +1175,144 @@ public class ClienteController {
     }
 
     @PostMapping("/generarPedido")
-    public String generarPedido(@RequestParam("cupon") String idCupon,
-                                @RequestParam("ubicacion") Ubicacion ubicacion,
-                                @RequestParam("delivery") Double precioDelivery,
+    public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
+                                @RequestParam(value = "ubicacion", required = false) String idUbicacion,
+                                @RequestParam(value = "delivery", required = false) String precioDelivery,
+                                @RequestParam(value = "metodoPago", required = false) String idmp,
                                 HttpSession session){
-        //recibo cupon, tarjeta, direccion
+
         //TODO: llenar cupon
         Cupon cupon = null;
+
+        boolean idCuponVal = false;
+        try{
+            int idCuponInt = Integer.parseInt(idCupon);
+            Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
+            if(cuponOpt.isPresent()){
+                cupon = cuponOpt.get();
+                idCuponVal = true;
+            }
+        }catch (NumberFormatException e){
+        }
+
+        Ubicacion ubicacion = null;
+
+        boolean idUbicVal= false;
+        try{
+            int idUbicInt= Integer.parseInt(idUbicacion);
+            Optional<Ubicacion> ubiOpt = ubicacionRepository.findById(idUbicInt);
+            if(ubiOpt.isPresent()){
+                ubicacion = ubiOpt.get();
+                idUbicVal = true;
+            }
+        }catch (NumberFormatException e){
+        }
+
         //TODO: llenar metodoPago
         MetodoDePago metodoDePago = null;
 
-        List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
-        List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
-
-        BigDecimal precioTotalPlatos = new BigDecimal(0);
-        for(int i = 0; i < listaPlatos.size(); i++){
-            BigDecimal subtotal =  listaPlatos.get(i).getPreciounitario().multiply(new BigDecimal(listaPlatos.get(i).getCantidad()));
-            precioTotalPlatos = precioTotalPlatos.add(subtotal);
-        }
-
-        BigDecimal precioTotalExtras = new BigDecimal(0);
-        for(int i = 0; i < listaExtra.size(); i++){
-            BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
-            precioTotalExtras = precioTotalExtras.add(subTotal1);
-        }
-
-        Pedido pedido = new Pedido();
-
-        String codigoAleatorio = "";
-        while (true) {
-            codigoAleatorio = generarCodigAleatorio();
-            Pedido pedido1 = pedidoRepository.findByCodigo(codigoAleatorio);
-            if (pedido1 == null) {
-                break;
+        boolean idMetPaVal= false;
+        try{
+            int idMePaInt= Integer.parseInt(idmp);
+            Optional<MetodoDePago> metPagOpt = metodoPagoRepository.findById(idMePaInt);
+            if(metPagOpt.isPresent()){
+                metodoDePago = metPagOpt.get();
+                idMetPaVal = true;
             }
+        }catch (NumberFormatException e){
         }
 
-        pedido.setCodigo(codigoAleatorio);
-        //TODO:Precio total
-        pedido.setEstado(0);
-
-        //seteo fecha
-        Date date = new Date();
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        pedido.setFechapedido(hourdateFormat.format(date));
-        //seteo mismoDistrito
-        //TODO: validar cantidad tiempo de entrega
-        if(precioDelivery==5.00){
-            pedido.setTiempoentrega(30);
-            pedido.setMismodistrito(true);
-        }else{
-            pedido.setTiempoentrega(30);
-            pedido.setMismodistrito(false);
+        Double precioDel = null;
+        boolean precioDelVal = false;
+        try{
+            precioDel = Double.parseDouble(precioDelivery);
+            precioDelVal = true;
+        }catch (NumberFormatException e){
         }
-        pedido.setRestaurante(restauranteRepository.findById(listaPlatos.get(0).getPlato().getIdrestaurante()).get());
-        if(cupon!=null){
+
+        if(!precioDelVal || !idCuponVal || !idUbicVal || !idMetPaVal){
+            return "redirect:/cliente/listaPlatos";
+        }else {
+
+            List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
+            List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
+
+            BigDecimal precioTotalPlatos = new BigDecimal(0);
+            for (int i = 0; i < listaPlatos.size(); i++) {
+                BigDecimal subtotal = listaPlatos.get(i).getPreciounitario().multiply(new BigDecimal(listaPlatos.get(i).getCantidad()));
+                precioTotalPlatos = precioTotalPlatos.add(subtotal);
+            }
+
+            BigDecimal precioTotalExtras = new BigDecimal(0);
+            for (int i = 0; i < listaExtra.size(); i++) {
+                BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
+                precioTotalExtras = precioTotalExtras.add(subTotal1);
+            }
+
+            BigDecimal desc = new BigDecimal(cupon.getDescuento());
+            BigDecimal precioTotal = precioTotalPlatos.add(precioTotalExtras);
+            precioTotal = precioTotal.subtract(desc);
+
+            Pedido pedido = new Pedido();
+
+            pedido.setPreciototal(precioTotal.floatValue());
+
+            String codigoAleatorio = "";
+            while (true) {
+                codigoAleatorio = generarCodigAleatorio();
+                Pedido pedido1 = pedidoRepository.findByCodigo(codigoAleatorio);
+                if (pedido1 == null) {
+                    break;
+                }
+            }
+
+            pedido.setCodigo(codigoAleatorio);
+
+            pedido.setEstado(0);
+
+            //seteo fecha
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            pedido.setFechapedido(hourdateFormat.format(date));
+            //seteo mismoDistrito
+
+            if (precioDel.equals(Double.parseDouble("5"))) {
+                pedido.setTiempoentrega(45);
+                pedido.setMismodistrito(true);
+            } else {
+                pedido.setTiempoentrega(60);
+                pedido.setMismodistrito(false);
+            }
+            pedido.setRestaurante(restauranteRepository.findById(listaPlatos.get(0).getPlato().getIdrestaurante()).get());
+
             pedido.setCupon(cupon);
+
+            Usuario cliente = (Usuario) session.getAttribute("usuario");
+            pedido.setCliente(cliente);
+            pedido.setMetodopago(metodoDePago);
+            pedido.setUbicacion(ubicacion);
+
+            pedido = pedidoRepository.save(pedido);
+
+            for (Plato_has_pedido plato_has_pedido : listaPlatos) {
+                Plato_has_pedidoKey plato_has_pedidoKey = new Plato_has_pedidoKey();
+                plato_has_pedidoKey.setCodigo(pedido.getCodigo());
+                plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
+                plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
+                platoHasPedidoRepository.save(plato_has_pedido);
+            }
+
+            for (Extra_has_pedido extra_has_pedido : listaExtra) {
+                Extra_has_pedidoKey extra_has_pedidoKey = new Extra_has_pedidoKey();
+                extra_has_pedidoKey.setCodigo(pedido.getCodigo());
+                extra_has_pedidoKey.setIdextra(extra_has_pedido.getExtra().getIdextra());
+                extra_has_pedido.setIdextra(extra_has_pedidoKey);
+                extraHasPedidoRepository.save(extra_has_pedido);
+            }
+
+            return "redirect:/cliente/pedidoActual";
         }
-        Usuario cliente = (Usuario) session.getAttribute("usuario");
-        pedido.setCliente(cliente);
-        pedido.setMetodopago(metodoDePago);
-        pedido.setUbicacion(ubicacion);
 
-
-
-
-
-
-        pedido = pedidoRepository.save(pedido);
-
-        return "/.";
     }
 
     @GetMapping("/listaReportes")
@@ -1727,6 +1802,7 @@ public class ClienteController {
                 limitInf=0;
         }
 
+        //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
         Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(),texto, limitInf,limitSup,pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
@@ -1737,7 +1813,6 @@ public class ClienteController {
         model.addAttribute("total", totalPage);
 
 
-        httpSession.setAttribute("listaCupones",cuponClienteDTOS);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", cuponClienteDTOS);

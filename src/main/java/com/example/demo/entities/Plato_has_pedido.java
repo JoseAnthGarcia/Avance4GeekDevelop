@@ -32,6 +32,8 @@ public class Plato_has_pedido implements Serializable {
     private BigDecimal preciounitario;
     private String observacionplatillo;
 
+
+
     public Plato getPlato() { return plato; }
 
     public void setPlato(Plato plato) { this.plato = plato; }
@@ -40,9 +42,13 @@ public class Plato_has_pedido implements Serializable {
 
     public void setPedido(Pedido pedido) { this.pedido = pedido; }
 
-    public Plato_has_pedidoKey getIdplatohaspedido() { return idplatohaspedido; }
+    public Plato_has_pedidoKey getIdplatohaspedido() {
+        return idplatohaspedido;
+    }
 
-    public void setIdplatohaspedido(Plato_has_pedidoKey idplatohaspedido) { this.idplatohaspedido = idplatohaspedido; }
+    public void setIdplatohaspedido(Plato_has_pedidoKey idplatohaspedido) {
+        this.idplatohaspedido = idplatohaspedido;
+    }
 
     public int getCantidad() { return cantidad; }
 

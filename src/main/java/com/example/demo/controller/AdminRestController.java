@@ -219,7 +219,7 @@ public class AdminRestController {
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "/AdminRestaurante/registroResturante";
+                return "AdminRestaurante/registroResturante";
             }
         }
 
@@ -235,7 +235,7 @@ public class AdminRestController {
             if (listaCategorias.size() != 4) {
                 model.addAttribute("msg", "Se deben seleccionar 4 categorías");
             }
-            return "/AdminRestaurante/registroResturante";
+            return "AdminRestaurante/registroResturante";
         } else if (validarFoto) {
             try {
                 restaurante.setFoto(file.getBytes());
@@ -248,11 +248,11 @@ public class AdminRestController {
                 model.addAttribute("listaDistritos", distritosRepository.findAll());
                 model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
                 session.invalidate();
-                return "/AdminRestaurante/registroResturante";
+                return "AdminRestaurante/registroResturante";
             }
-            return "redirect:/paginabienvenida/";
+            return "redirect:/restaurante/paginabienvenida";
         } else {
-            return "/AdminRestaurante/registroResturante";
+            return "AdminRestaurante/registroResturante";
         }
     }
 

@@ -3,7 +3,7 @@
 
     <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Creación exitosa')"></head>
 
-    <body th:if="${estadoRestaurante!=2}" id="page-top">
+    <body th:if="${(estadoRestaurante!=2&&estadoRestaurante!=1)||estadoRestaurante==null||estadoRestaurante==0}" id="page-top">
 
         <!-- Page Wrapper -->
         <div id="wrapper">
@@ -157,7 +157,7 @@
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
     </body>
-    <body id="page-top1" th:if="${estadoRestaurante==2}">
+    <body id="page-top1" th:if="${estadoRestaurante==2||estadoRestaurante==1}">
 
         <!-- Page Wrapper -->
         <div id="wrapper1">
@@ -245,8 +245,14 @@
                                         class="text-sm-center text-uppercase text"
                                         th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1>
                             </strong>
-                            <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"> Su
+                            <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center" th:if="${estadoRestaurante==2}"> Su
                                 cuenta de restaurante, se está validando...</h1>
+                            <div class="card-body" style="text-align: center" th:if="${estadoRestaurante==1}">
+                                <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center" th:if="${estadoRestaurante==1}">
+                                Su restaurante fue aceptado por un administrador. Puede comenzar a registrar sus platos...
+                                </h1>
+                                <a class="btn btn-primary"  th:href="@{/plato/categoria}" style="width: 30%;">Entrar a mi restaurante</a></div>
+                            <a class="btn-success" type="bu"></a>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>

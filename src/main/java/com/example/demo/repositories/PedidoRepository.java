@@ -80,7 +80,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where res.idrestaurante=?1 and pe.codigo=?2",nativeQuery = true)
     List<DetallePedidoDTO> detallePedido(int idrestaurante, String codigopedido);
 
-    @Query(value = "SELECT p.nombre,php.preciounitario, php.cantidad, php.preciounitario*php.cantidad as preciototal FROM plato_has_pedido php\n" +
+    @Query(value = "SELECT p.nombre,php.preciounitario, php.cantidad, php.preciounitario*php.cantidad as preciototal , php.observacionplatillo as " +
+            "comentario FROM plato_has_pedido php\n" +
             "inner join pedido pe on pe.codigo=php.codigo\n" +
             "inner join restaurante res on res.idrestaurante=pe.idrestaurante\n" +
             "inner join plato p on p.idplato=php.idplato\n" +

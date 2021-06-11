@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de adminsitrador')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de administrador de restaurante')"></head>
     <body id="page-top">
 
         <!-- Page Wrapper -->
@@ -54,7 +54,7 @@
                         <h1 style="color: black">REGÍSTRESE</h1>
                         <p>Complete el siguiente formulario para que el administrador general acepte o rechace su
                             solicitud de administrador.</p>
-                        <form id="nuevo" method="post" th:action="@{/restaurante/guardarAdminR}"
+                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}"
                               th:object="${adminRest}" enctype="multipart/form-data">
 
                             <div class="form-group row">

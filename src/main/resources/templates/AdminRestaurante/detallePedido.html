@@ -205,6 +205,9 @@
                                                     <div style=text-align:center>Plato</div>
                                                 </th>
                                                 <th>
+                                                    <div style=text-align:center>Comentario</div>
+                                                </th>
+                                                <th>
                                                     <div style=text-align:center>Cantidad</div>
                                                 </th>
                                                 <th>
@@ -224,6 +227,11 @@
                                                     </div>
                                                 </td>
                                                 <td th:text="${plato.getNombre()}">
+                                                </td>
+                                                <td>
+                                                    <div style="text-align:center" th:text="${(plato.getComentario()!=null &&
+                                                    !plato.getComentario().isEmpty())? plato.getComentario():'No hay comentarios...'}">
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div style="text-align:center" th:text="${plato.getCantidad()}">
@@ -263,7 +271,7 @@
                                                     <div style=text-align:center>#</div>
                                                 </th>
                                                 <th>
-                                                    <div style=text-align:center>Plato</div>
+                                                    <div style=text-align:center>Extra</div>
                                                 </th>
                                                 <th>
                                                     <div style=text-align:center>Cantidad</div>

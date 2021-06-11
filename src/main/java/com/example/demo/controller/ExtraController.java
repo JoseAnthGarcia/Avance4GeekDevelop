@@ -183,7 +183,7 @@ public class ExtraController {
             if (fileName.contains("..")){
                 model.addAttribute("idcategoria",idc);
                 model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-                return "/AdminRestaurante/nuevoExtra";
+                return "AdminRestaurante/nuevoExtra";
             }
         }
 
@@ -193,16 +193,16 @@ public class ExtraController {
         if (bindingResult.hasErrors()) {
             if (extra.getIdextra() == 0&&!validarFoto) {
                 model.addAttribute("idcategoria",idc);
-                return "/AdminRestaurante/nuevoExtra";
+                return "AdminRestaurante/nuevoExtra";
             }
             if (extra.getIdextra() == 0) {
                 model.addAttribute("idcategoria",idc);
-                return "/AdminRestaurante/nuevoExtra";
+                return "AdminRestaurante/nuevoExtra";
             }else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
                     model.addAttribute("idcategoria",idc);
-                    return "/AdminRestaurante/nuevoExtra";
+                    return "AdminRestaurante/nuevoExtra";
                 } else {
                     model.addAttribute("idcategoria",idc);
                     return "redirect:/extra/lista?idcategoria="+idc;
@@ -221,7 +221,7 @@ public class ExtraController {
                     e.printStackTrace();
                     model.addAttribute("idcategoria",idc);
                     model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
-                    return "/AdminRestaurante/nuevoExtra";
+                    return "AdminRestaurante/nuevoExtra";
                 }
 
             } else {
@@ -239,7 +239,7 @@ public class ExtraController {
             return "redirect:/extra/lista?idcategoria="+idc;
         }
         else {
-            return "/AdminRestaurante/nuevoExtra";
+            return "AdminRestaurante/nuevoExtra";
         }
     }
 
@@ -272,7 +272,7 @@ public class ExtraController {
         if (extraOptional.isPresent()) {
             extra = extraOptional.get();
             model.addAttribute("extra", extra);
-            return "/AdminRestaurante/nuevoExtra";
+            return "AdminRestaurante/nuevoExtra";
         } else {
             return "redirect:/extra/lista";
         }

@@ -175,7 +175,7 @@ public class PlatoController {
                 break;
             }
         }
-        return "/AdminRestaurante/nuevoPlato";
+        return "AdminRestaurante/nuevoPlato";
     }
 
     @PostMapping("/guardar")
@@ -220,7 +220,7 @@ public class PlatoController {
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")){
                 model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-                return "/AdminRestaurante/nuevoPlato";
+                return "AdminRestaurante/nuevoPlato";
             }
         }
 
@@ -228,14 +228,14 @@ public class PlatoController {
 
         if (bindingResult.hasErrors()) {
             if (plato.getIdplato() == 0&&!validarFoto) {
-                return "/AdminRestaurante/nuevoPlato";
+                return "AdminRestaurante/nuevoPlato";
             }
             if(plato.getIdplato() == 0 ){
-                return "/AdminRestaurante/nuevoPlato";
+                return "AdminRestaurante/nuevoPlato";
             }else {
                 Optional<Plato> platoOptional = platoRepository.findById(plato.getIdplato() );
                 if (platoOptional.isPresent()) {
-                    return "/AdminRestaurante/nuevoPlato";
+                    return "AdminRestaurante/nuevoPlato";
                 } else {
 
                     return "redirect:/plato/lista?idcategoria="+idcategoria;
@@ -253,7 +253,7 @@ public class PlatoController {
                     e.printStackTrace();
                     model.addAttribute("idcategoria",idcategoria);
                     model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
-                    return "/AdminRestaurante/nuevoPlato";
+                    return "AdminRestaurante/nuevoPlato";
                 }
 
             } else {
@@ -270,7 +270,7 @@ public class PlatoController {
             return "redirect:/plato/lista?idcategoria="+idcategoria;
         }
         else {
-            return "/AdminRestaurante/nuevoPlato";
+            return "AdminRestaurante/nuevoPlato";
         }
     }
 
@@ -328,7 +328,7 @@ public class PlatoController {
             plato = platoOptional.get();
             model.addAttribute("plato", plato);
             model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
-            return "/AdminRestaurante/nuevoPlato";
+            return "AdminRestaurante/nuevoPlato";
         } else {
             return "redirect:/plato/lista";
         }

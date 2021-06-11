@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -310,7 +311,7 @@ public class RepartidorController {
                                     BindingResult bindingResult,
                                     Movilidad movilidad, Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
-                                    @RequestParam("distritos") ArrayList<Distrito> distritos) {
+                                    @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
         String correo =  usuario.getCorreo();
@@ -327,9 +328,15 @@ public class RepartidorController {
         if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
-        if(distritos.size()>5 || distritos.isEmpty()){
+        if(distritos!=null){
+            if(distritos.size()>5 || distritos.isEmpty()){
+                errorDist=true;
+            }
+        }
+        if(distritos==null){
             errorDist=true;
         }
+
 
         Boolean errorFecha = true;
         try {
@@ -402,7 +409,10 @@ public class RepartidorController {
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             usuario.setFecharegistro(hourdateFormat.format(date));
             //
-
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(usuario.getContrasenia());
+            System.out.println(hashedPassword);
+            usuario.setContrasenia(hashedPassword);
             //--------
             usuario = usuarioRepository.save(usuario);
 

@@ -222,9 +222,6 @@ public class ClienteController {
                 break;
             }
         }
-        if(texto==null){
-            texto="";
-        }
 
         if(val == null || val.equals("")){
             val = "6";
@@ -239,7 +236,7 @@ public class ClienteController {
         }
 
         if(idCategoria == null){
-            idCategoria="6<";
+            idCategoria="0-28";
         }else {
             String[] chain = idCategoria.split("-");
             limitInfCat = Integer.parseInt(chain[0]);

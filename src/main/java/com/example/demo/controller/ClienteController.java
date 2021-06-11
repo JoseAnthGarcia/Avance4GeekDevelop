@@ -146,9 +146,6 @@ public class ClienteController {
         if (clientesxtelefono.isEmpty()) {
             telfUnico = false;
         }
-
-
-
         int telfInt;
         try {
             telfInt = Integer.parseInt(telefonoNuevo);
@@ -857,7 +854,8 @@ public class ClienteController {
 
     @PostMapping("/eliminar")
     public String eliminarPlatos(@RequestParam(value = "platoEliminar",required = false) List<Integer> platoEliminar, HttpSession session,
-                                 Model model, @RequestParam(value = "idPage", required = false) String idPage){
+                                 Model model, @RequestParam(value = "idPage", required = false) String idPage,
+                                 RedirectAttributes attr){
         System.out.println(platoEliminar);
         // 3 elementos
         // 1 elemento - idPlato
@@ -865,7 +863,8 @@ public class ClienteController {
 
 
         if(platoEliminar == null){
-            return "redirect:/cliente/mostrarCarrito";
+            attr.addFlashAttribute("msgNotNull","Tiene que seleccionar un plato para borrar");
+            return "redirect:/cliente/mostrarCarrito?idPage=0";
         }
 
         List<Plato_has_pedido> carrito = (List<Plato_has_pedido>) session.getAttribute("carrito");
@@ -884,12 +883,11 @@ public class ClienteController {
         //en caso elimine el carrito quitar la sesión se debe
         if(carrito.size()==0){
             session.removeAttribute("carrito");
-            return "redirect:/cliente/listaPlatos?idRest="+idRest;
+            return "redirect:/cliente/listaPlatos";
         }
-        model.addAttribute("idPage","0");
         //Actualizando el carrito
         session.setAttribute("carrito",carrito);
-        return "redirect:/cliente/mostrarCarrito?idRest="+idRest;
+        return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
     @PostMapping("/eliminarExtras")
@@ -1095,7 +1093,7 @@ public class ClienteController {
 
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
-
+        //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
         Integer idRest = (Integer) session.getAttribute("idRest");
         ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("carritoExtra");
@@ -1163,7 +1161,7 @@ public class ClienteController {
         //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
         System.out.println(carrito);
         session.setAttribute("carrito",carrito);
-
+        session.setAttribute("delivery",delivery);
         model.addAttribute("montoCarrito",subTotalCarrito);
         model.addAttribute("listaCupones",listaCupones1);
         model.addAttribute("montoExtras",subTotalExtras);
@@ -1174,6 +1172,33 @@ public class ClienteController {
         model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
+        return "Cliente/terminarCompra";
+    }
+
+    @PostMapping("/metodoPago")
+    public String guardarPedido( @RequestParam("metodoPago") List<Integer> metodoDePagos,
+                                 @RequestParam("cupon") String idCupon, HttpSession session,
+                                 @RequestParam("ubicacion") int  ubicacion,  Model model,
+                                 RedirectAttributes attr){
+        Double delivery = (Double) session.getAttribute("delivery");
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if(metodoDePagos.size() != 1){
+            model.addAttribute("msgMet","Ingrese solo un método de pago");
+            return "cliente/metodoPago";
+        }
+
+        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+
+
+        int idMetodoPago = metodoDePagos.get(0);
+        model.addAttribute("idMetodo",idMetodoPago);
+        model.addAttribute("delivery",delivery);
+        model.addAttribute("ubicacion",ubicacion);
+        model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
+        model.addAttribute("listaDirecciones",listaDirecciones);
+
+
         return "Cliente/terminarCompra";
     }
 

@@ -196,8 +196,6 @@
                             <div class="mt-2">
                                 <div class="form-check-inline">
                                     <h2 style="color:#000000;"><strong th:text="${plato.getNombre()}"></strong></h2>
-                                    <button class="btn btn-dark ml-5"><i class="fas fa-arrow-left"></i></button>
-                                    <button class="btn btn-dark ml-3"><i class="fas fa-arrow-right"></i></button>
                                 </div>
 
                                 <hr width="75%" style="border-top: #000000 solid" align="left">
@@ -226,8 +224,8 @@
                                     </button>
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos'}"><i
                                             class="fas fa-arrow-left"></i> Regresar</a>
-                                    <a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="terminarCompra.html"><i
-                                            class="fas fa-arrow-right"></i> Ir a Pagar</a>
+                                    <!--<a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="terminarCompra.html"><i
+                                            class="fas fa-arrow-right"></i> Ir a Pagar</a>-->
                                 </div>
 
                             </form>
@@ -238,7 +236,7 @@
 
                 </div>
 
-                <div th:if="${listaExtras.size() != 0}">
+
                 <form method="get" th:action="@{'/cliente/detallePlato'}"> <!--  th:action="@{'/cliente/buscadorCliente'}" method="get" -->
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
@@ -251,11 +249,11 @@
                             <!-- th:if="${valoracionBuscador == null}" -->
                             <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
-                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./10.00</option>
-                                <option value="2" th:selected="${idPrecio.equals('2')}">S./10.00 hasta S./20.00</option>
-                                <option value="3" th:selected="${idPrecio.equals('3')}">S./20.00 hasta S./30.00</option>
-                                <option value="4" th:selected="${idPrecio.equals('4')}">S./30.00 hasta S./40.00</option>
-                                <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./5.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./5.00 hasta S./10.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./10.00 hasta S./15.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./15.00 hasta S./20.00</option>
+                                <option value="5" th:selected="${idPrecio.equals('5')}">S./20.00 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-2 mb-1">
@@ -279,7 +277,7 @@
                         </div>
                     </div>
                 </form>
-                </div>
+
                 <!-- /.container-fluid -->
                 <div class="card shadow ">
                     <div class="card-header py-3 " style="background-color: #701111;">

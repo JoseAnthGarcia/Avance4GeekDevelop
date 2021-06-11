@@ -172,7 +172,7 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form>
+                <!--<form>
                     <div class="form-group row mt-3">
 
                         <div class="col-sm-3 mb-1 ">
@@ -206,7 +206,7 @@
                             <a class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
-                </form>
+                </form>-->
 
 
                 <!-- DataTales Example -->
@@ -231,6 +231,7 @@
 
                         <div class="table-responsive">
                             <!--<div class="mb-2" style="color: red">Ingrese un número</div>-->
+                            <h2 th:if="${msgNotNull != null}" class="mb-2" style="color: red" th:text="${msgNotNull}"></h2>
                             <h2 th:unless="${session.carrito != null}" class="mb-2" style="color: red">NO AGREGÓ ELEMENTOS AL CARRITO</h2>
                             <table th:if="${session.carrito != null}" class="table table-bordered">
                                 <thead>
@@ -310,7 +311,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="pagination" style=" margin-left: 30% ;align-content: center">
+                        <!--<div class="pagination" style=" margin-left: 30% ;align-content: center">
                             <a href="#">&laquo;</a>
                             <a href="#" class="active">1</a>
                             <a href="#">2</a>
@@ -320,7 +321,7 @@
                             <a href="#">6</a>
                             <a href="#">&raquo;</a>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
             </div>

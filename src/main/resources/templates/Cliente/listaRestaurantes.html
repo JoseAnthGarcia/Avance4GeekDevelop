@@ -210,11 +210,11 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${idCategoria.equals('6')}">Categorias</option>
+                                <option value="" disabled th:selected="${idCategoria.equals('0-28')}">Categorias</option>
                                 <option th:each="categoria : ${categorias}"
                                         th:value="|${categoria.getIdcategoria()}-${categoria.getIdcategoria() + 1}|"
                                         th:text="${categoria.getNombre()}"
-                                        th:selected="${idCategoria.equals(categoria.getIdcategoria()+'-'+categoria.getIdcategoria())}"></option>
+                                        th:selected="${idCategoria.equals(categoria.getIdcategoria()+'-'+(categoria.getIdcategoria()+1))}"></option>
                             </select>
                         </div>
                         <!-- TODO BUSCADOR DE CATEGORÍAS -->

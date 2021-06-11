@@ -236,7 +236,7 @@ public class ClienteController {
         }
 
         if(idCategoria == null){
-            idCategoria="6";
+            idCategoria="0-28";
         }else {
             String[] chain = idCategoria.split("-");
             limitInfCat = Integer.parseInt(chain[0]);

@@ -25,12 +25,12 @@ public class Usuario implements Serializable {
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[/^[A-Za-z0-9áéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[/^[A-Za-z0-9áéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String apellidos;
 
     @Column(nullable = false)

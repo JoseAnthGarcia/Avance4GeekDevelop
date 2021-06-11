@@ -146,9 +146,6 @@ public class ClienteController {
         if (clientesxtelefono.isEmpty()) {
             telfUnico = false;
         }
-
-
-
         int telfInt;
         try {
             telfInt = Integer.parseInt(telefonoNuevo);

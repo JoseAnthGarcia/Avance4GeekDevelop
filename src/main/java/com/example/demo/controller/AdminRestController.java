@@ -249,7 +249,7 @@ public class AdminRestController {
         model.addAttribute("textoE", inputEstado);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + page.getTotalElements() + "\n" + textBuscador + "\n" + inputEstado + "\n" + inputPrecio + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
 
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);

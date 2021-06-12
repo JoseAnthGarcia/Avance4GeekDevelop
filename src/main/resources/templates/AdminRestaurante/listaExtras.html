@@ -17,7 +17,7 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav  class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                         <!-- Sidebar Toggle (Topbar) -->
                         <form class="form-inline">
@@ -44,7 +44,9 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
                                     <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter" th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" th:text="${listaNotiRest.size()}"></span>
+                                    <span class="badge badge-danger badge-counter"
+                                          th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                          th:text="${listaNotiRest.size()}"></span>
                                 </a>
                                 <!-- Dropdown - Alerts -->
                                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
@@ -52,20 +54,27 @@
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
-                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos
+                                        pendientes</p>
+                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                       class="dropdown-item d-flex align-items-center"
+                                       th:each="p,in:${listaNotiRest}"
+                                       th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="small text-gray-500" th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold" th:text="${p.getCliente()}">Arroz con pollo</span>
+                                            <div class="small text-gray-500"
+                                                 th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm
+                                            </div>
+                                            <span class="font-weight-bold"
+                                                  th:text="${p.getCliente()}">Arroz con pollo</span>
                                         </div>
                                     </a>
-                                    <a class="dropdown-item text-center small text-gray-500" th:href="@{/restaurante/listaPedidos}">Ver todos los
+                                    <a class="dropdown-item text-center small text-gray-500"
+                                       th:href="@{/restaurante/listaPedidos}">Ver todos los
                                         pedidos</a>
                                 </div>
                             </li>
@@ -87,7 +96,8 @@
                                     <form id="cerrar" th:action="@{/logout}" method="post">
                                         <a class="nav-link" data-toggle="modal"
                                            href="#logoutModal" data-target="#logoutModal"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar Sesión
+                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar
+                                            Sesión
                                         </a>
                                     </form>
                                 </div>
@@ -138,7 +148,8 @@
                             <div class="card-header py-3 " style="background-color: #701111;">
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
-                                    <a class="btn btn-warning" th:href="@{'/extra/nuevo?idcategoria='+${idcategoria}}"><i
+                                    <a class="btn btn-warning"
+                                       th:href="@{'/extra/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo Extra</a>
                                     <h5 th:if="${idcategoria==1}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
@@ -152,21 +163,18 @@
                                     <h5 th:if="${idcategoria==2}"
                                         class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="${'LISTA DE CUBIERTOS'}"></h5>
-
                                 </div>
-
                             </div>
                             <div class="card-body">
-                                <div class="card-body">
-                                    <div class="alert alert-danger" role="alert"
-                                         th:if="${msg3!=null}" th:text="${msg3}">
-                                    </div>
-                                    <div class="alert alert-success" role="alert"
-                                         th:if="${msg!=null}" th:text="${msg}">
-                                    </div>
-                                    <div class="alert alert-warning" role="alert"
-                                         th:if="${msg2!=null}" th:text="${msg2}">
-                                    </div>
+                                <div class="alert alert-danger" role="alert"
+                                     th:if="${msg3!=null}" th:text="${msg3}">
+                                </div>
+                                <div class="alert alert-success" role="alert"
+                                     th:if="${msg!=null}" th:text="${msg}">
+                                </div>
+                                <div class="alert alert-warning" role="alert"
+                                     th:if="${msg2!=null}" th:text="${msg2}">
+                                </div>
                                 <div th:if="${totalItems!=0}" class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
@@ -196,14 +204,14 @@
                                                        th:href="@{'/extra/editar?idcategoria='+${idcategoria}+'&id='+${extra.getIdextra()}}">
                                                         <i class="fas fa-pen"></i></a></td>
                                             </tr>
-
                                         </tbody>
-
                                     </table>
-
                                 </div>
-                                <div th:if="${totalItems==0}">
-                                    <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                                <div th:if="${totalItems==0 && (!texto.isEmpty() || textoP!=0)}">
+                                    <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                                </div>
+                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoP==0)}">
+                                    <h3 class="text-lg-center text-danger">No hay extras registrados.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
@@ -218,13 +226,11 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- /.container-fluid -->
 
                     </div>
-                    <!-- /.container-fluid -->
-
+                    <!-- End of Main Content -->
                 </div>
-                <!-- End of Main Content -->
-
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">

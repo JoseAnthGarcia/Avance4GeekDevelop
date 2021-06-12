@@ -94,7 +94,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                               th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
-                <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}"
+                <img class="img-profile rounded-circle" th:src="@{|imagenadmin/${session.usuario.getDni()}|}"
                      type="image/png" alt="avatar">
             </a>
             <!-- Dropdown - User Information -->

@@ -4,6 +4,10 @@ import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -68,7 +72,7 @@ public class LoginController {
     UsuarioRepository adminRestRepository;
 
 
-    @GetMapping("/login")
+    @GetMapping(value = {"/login",""})
     public String loginForm() {
         return "Cliente/login";
     }
@@ -741,4 +745,17 @@ public class LoginController {
         return "AdminRestaurante/adminCreado";
     }
 
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 }

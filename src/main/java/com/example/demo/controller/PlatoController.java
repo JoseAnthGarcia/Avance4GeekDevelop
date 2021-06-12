@@ -33,7 +33,8 @@ public class PlatoController {
 
     @Autowired
     PlatoRepository platoRepository;
-
+    @Autowired
+    UsuarioRepository usuarioRepository;
     @Autowired
     PlatoService platoService;
     @Autowired
@@ -44,6 +45,19 @@ public class PlatoController {
     CategoriasRestauranteRepository categoriaRespository;
     @Autowired
     PedidoRepository pedidoRepository;
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 
     @GetMapping(value = {"/categoria", ""})
     public String listaCategorias(Model model, HttpSession session) {

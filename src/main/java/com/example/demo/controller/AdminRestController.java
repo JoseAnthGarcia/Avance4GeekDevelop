@@ -67,6 +67,19 @@ public class AdminRestController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id) {
         Optional<Usuario> optionalUsuario = adminRestRepository.findById(id);

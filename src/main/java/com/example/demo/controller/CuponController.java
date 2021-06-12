@@ -14,10 +14,15 @@ import java.time.LocalDate;
 
 import com.example.demo.repositories.PedidoRepository;
 import com.example.demo.repositories.RestauranteRepository;
+import com.example.demo.repositories.UsuarioRepository;
 import com.example.demo.service.CuponService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +45,8 @@ import java.util.*;
 public class CuponController {
     @Autowired
     CuponRepository cuponRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @Autowired
     CuponService cuponService;
@@ -48,6 +55,19 @@ public class CuponController {
     @Autowired
     PedidoRepository pedidoRepository;
 
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
     @GetMapping(value = {"/lista", ""})
     public String listarCupones(Model model, HttpSession session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");

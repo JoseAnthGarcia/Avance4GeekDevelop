@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.ExtraDTO;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
-import com.example.demo.repositories.CategoriaExtraRepository;
-import com.example.demo.repositories.ExtraRepository;
-import com.example.demo.repositories.PedidoRepository;
-import com.example.demo.repositories.RestauranteRepository;
+import com.example.demo.repositories.*;
 import com.example.demo.service.ExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
@@ -40,7 +37,8 @@ public class ExtraController {
 
     @Autowired
     ExtraRepository extraRepository;
-
+    @Autowired
+    UsuarioRepository usuarioRepository;
     @Autowired
     ExtraService extraService;
     @Autowired
@@ -282,6 +280,19 @@ public class ExtraController {
             byte[] imagenBytes = extra.getFoto();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.parseMediaType(extra.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
             return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
         } else {
             return null;

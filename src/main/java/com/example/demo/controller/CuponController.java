@@ -9,6 +9,7 @@ import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CuponRepository;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 
 import com.example.demo.repositories.PedidoRepository;
@@ -31,6 +32,7 @@ import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Controller
@@ -85,13 +87,22 @@ public class CuponController {
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin2 = LocalDate.parse("3000-05-21");
         } else {
+            try {
             fechafin2 = LocalDate.parse(fechafin);
+            } catch (DateTimeParseException e){
+                return "redirect:/cupon/lista";
+            }
         }
         LocalDate fechainicio2;
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio2 = LocalDate.now();
         } else {
-            fechainicio2 = LocalDate.parse(fechainicio);
+            try {
+                fechainicio2 = LocalDate.parse(fechainicio);
+            } catch (DateTimeParseException e){
+                return "redirect:/cupon/lista";
+            }
+
         }
         System.out.println(fechainicio2);
         if (inputPrecio == null) {

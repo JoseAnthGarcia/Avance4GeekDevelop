@@ -68,7 +68,6 @@ public class AdminRestController {
     UsuarioRepository usuarioRepository;
 
 
-
     @GetMapping("/paginabienvenida")
     public String paginaBienvenida(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -188,24 +187,31 @@ public class AdminRestController {
         Date fechafin2;
         String fechafin3;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
-            System.out.println("entre");
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechafin2 = simpleDateFormat.parse("3000-05-21");
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechafin3 = simpleDateFormat2.format(fechafin2);
-            System.out.println(fechafin3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse("3000-05-21");
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechafin3 = simpleDateFormat2.format(fechafin2);
+                System.out.println(fechafin3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
+
         } else {
-            System.out.println("entre a");
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechafin2 = simpleDateFormat.parse(fechafin);
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechafin3 = simpleDateFormat2.format(fechafin2);
-            System.out.println(fechafin3);
-            model.addAttribute("fechafin", fechafin3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechafin3 = simpleDateFormat2.format(fechafin2);
+                System.out.println(fechafin3);
+                model.addAttribute("fechafin", fechafin3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
 
         }
 
@@ -217,20 +223,29 @@ public class AdminRestController {
         Date fechainicio2;
         String fechainicio3;
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
-            fechainicio2 = date;
-            String pattern = "yyyy-MM-dd 00:00:00";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechainicio3 = simpleDateFormat.format(fechainicio2);
-            System.out.println(fechainicio3);
+            try {
+                fechainicio2 = date;
+                String pattern = "yyyy-MM-dd 00:00:00";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio3 = simpleDateFormat.format(fechainicio2);
+                System.out.println(fechainicio3);
+            } catch (IllegalFormatException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
+
         } else {
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechainicio2 = simpleDateFormat.parse(fechainicio);
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechainicio3 = simpleDateFormat2.format(fechainicio2);
-            System.out.println(fechainicio3);
-            model.addAttribute("fechainicio", fechainicio3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechainicio3 = simpleDateFormat2.format(fechainicio2);
+                System.out.println(fechainicio3);
+                model.addAttribute("fechainicio", fechainicio3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
         }
 
         System.out.println("#################");
@@ -326,7 +341,7 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v=" + v + "&codigoPedido=" + id;
     }
 
     @GetMapping("/pedidoListo")
@@ -347,7 +362,7 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v=" + v + "&codigoPedido=" + id;
     }
 
 
@@ -437,17 +452,34 @@ public class AdminRestController {
             inputPrecioMax = inputPrecio;
         }
 
+        Date fechafin2;
+        Date fechainicio2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
-            model.addAttribute("fechafin", fechafin);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                model.addAttribute("fechafin", fechafin);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteVentas";
+            }
+
 
         }
 
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
-            model.addAttribute("fechainicio", fechainicio);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                model.addAttribute("fechainicio", fechainicio);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteVentas";
+            }
         }
 
 
@@ -519,17 +551,33 @@ public class AdminRestController {
             System.out.println(inputValoracion2);
         }
 
+        Date fechafin2;
+        Date fechainicio2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
-            model.addAttribute("fechafin", fechafin);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                model.addAttribute("fechafin", fechafin);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
 
         }
 
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
-            model.addAttribute("fechainicio", fechainicio);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                model.addAttribute("fechainicio", fechainicio);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
         }
 
 

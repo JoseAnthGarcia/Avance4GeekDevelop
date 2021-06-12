@@ -19,7 +19,7 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav  class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                         <!-- Sidebar Toggle (Topbar) -->
                         <form class="form-inline">
@@ -46,7 +46,9 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
                                     <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter" th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" th:text="${listaNotiRest.size()}"></span>
+                                    <span class="badge badge-danger badge-counter"
+                                          th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                          th:text="${listaNotiRest.size()}"></span>
                                 </a>
                                 <!-- Dropdown - Alerts -->
                                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
@@ -54,20 +56,27 @@
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
-                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos
+                                        pendientes</p>
+                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                       class="dropdown-item d-flex align-items-center"
+                                       th:each="p,in:${listaNotiRest}"
+                                       th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="small text-gray-500" th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold" th:text="${p.getCliente()}">Arroz con pollo</span>
+                                            <div class="small text-gray-500"
+                                                 th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm
+                                            </div>
+                                            <span class="font-weight-bold"
+                                                  th:text="${p.getCliente()}">Arroz con pollo</span>
                                         </div>
                                     </a>
-                                    <a class="dropdown-item text-center small text-gray-500" th:href="@{/restaurante/listaPedidos}">Ver todos los
+                                    <a class="dropdown-item text-center small text-gray-500"
+                                       th:href="@{/restaurante/listaPedidos}">Ver todos los
                                         pedidos</a>
                                 </div>
                             </li>
@@ -75,25 +84,7 @@
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                              th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
-                                    <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
-                                         type="image/png" alt="avatar">
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <form id="cerrar" th:action="@{/logout}" method="post">
-                                        <a class="nav-link" data-toggle="modal"
-                                           href="#logoutModal" data-target="#logoutModal"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar Sesión
-                                        </a>
-                                    </form>
-                                </div>
-                            </li>
+                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
 
                         </ul>
                     </nav>
@@ -113,7 +104,7 @@
                                            name="textBuscador">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select class="form-control" id="textPrecio" name="textPrecio">
+                                    <select class="form-control" id="inputPrecio" name="inputPrecio">
                                         <option value="0" th:selected="${textoP==0}">Precio</option>
                                         <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.15.00</option>
                                         <option value="2" th:selected="${textoP==2}">S/.15.00 hasta S/.30.00</option>
@@ -142,7 +133,8 @@
                             <div class="card-header py-3 " style="background-color: #701111;">
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
-                                    <a class="btn btn-warning" th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
+                                    <a class="btn btn-warning"
+                                       th:href="@{'/plato/nuevo?idcategoria='+${idcategoria}}"><i
                                             class="fas fa-plus fa-sm"></i>&nbspNuevo plato</a>
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto"
                                         th:text="|LISTA DE PLATOS - ${nombreCate.toUpperCase()}|"></h5>
@@ -151,16 +143,13 @@
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-danger" role="alert"
-                                th:if="${msg3!=null}" th:text="${msg3}">
-                            </div>
-                            <div class="alert alert-success" role="alert"
-                                 th:if="${msg!=null}" th:text="${msg}">
-                            </div>
-                            <div class="alert alert-warning" role="alert"
-                                 th:if="${msg2!=null}" th:text="${msg2}">
-                            </div>
-
-                                <div class="table-responsive">
+                                     th:if="${msg3!=null}" th:text="${msg3}">
+                                </div>
+                                <div class="alert alert-success" role="alert"
+                                     th:if="${msg!=null}" th:text="${msg}">
+                                </div>
+                                <div class="alert alert-warning" role="alert"
+                                     th:if="${msg2!=null}" th:text="${msg2}">
                                 </div>
                                 <div th:if="${totalItems!=0}" class="table-responsive">
                                     <table class="table table-bordered">
@@ -197,14 +186,17 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div th:if="${totalItems==0}">
-                                    <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                                <div th:if="${totalItems==0 && (!texto.isEmpty() || textoP!=0)}">
+                                    <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                                </div>
+                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoP==0)}">
+                                    <h3 class="text-lg-center text-danger">No hay platos registrados.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDisponible='+ ${textoD} + '&textPrecio='+ ${textoP}}"
+                                           th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP}}"
                                            th:utext="${i}"
                                            class="active mt-2 no"></a>
                                         <a th:unless="${currentPage != i}"

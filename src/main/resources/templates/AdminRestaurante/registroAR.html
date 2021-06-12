@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de adminsitrador')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de administrador de restaurante')"></head>
     <body id="page-top">
 
         <!-- Page Wrapper -->
@@ -31,14 +31,8 @@
                             </button>
                         </form>
 
-
                         <!-- Topbar Navbar -->
-
-
                         <div class="topbar-divider d-none d-sm-block"></div>
-
-
-                        </ul>
 
                     </nav>
                     <!-- End of Topbar -->
@@ -54,7 +48,7 @@
                         <h1 style="color: black">REGÍSTRESE</h1>
                         <p>Complete el siguiente formulario para que el administrador general acepte o rechace su
                             solicitud de administrador.</p>
-                        <form id="nuevo" method="post" th:action="@{/restaurante/guardarAdminR}"
+                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}"
                               th:object="${adminRest}" enctype="multipart/form-data">
 
                             <div class="form-group row">
@@ -152,7 +146,8 @@
 
                                     <div class="custom-file">
                                         <input type="file" name="photo"
-                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input"
+                                               id="customFile">
                                         <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
                                         <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
                                             style="color: red; font-size: small; text-align: left"></h1>
@@ -239,8 +234,6 @@
                 </div>
             </div>
         </div>
-
-
 
 
         <!-- Begin Scripts -->

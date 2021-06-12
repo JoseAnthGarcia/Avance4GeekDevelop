@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Restaurante creado')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Solicitud enviada')"></head>
 
-    <body id="page-top">
+    <body  id="page-top">
 
         <!-- Page Wrapper -->
         <div id="wrapper">
@@ -43,14 +43,15 @@
 
                             <!-- Nav Item - Alerts -->
 
+
                             <div class="topbar-divider d-none d-sm-block"></div>
 
-                            <!-- Nav Item - User Information -->
-                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
+
 
                         </ul>
 
                     </nav>
+
                     <!-- End of Topbar -->
 
                     <!-- Begin Page Content -->
@@ -66,13 +67,15 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-                            <h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text">
-                                <strong>SU SOLICITUD HA SIDO ENVIADA</strong></h1>
-                            <div class="card-body" style="text-align: center"><a class="btn btn-primary" href="#"
-                                                                                 data-toggle="modal"
-                                                                                 data-target="#logoutModal"
-                                                                                 style="width: 30%;">Cerrar sesión</a>
-                            </div>
+
+                            <strong><h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center">
+                                Su ecuenta está siendo validado por un administrador. Cuando su cuenta sea validada,
+                                podrá registrar su restaurante.</h1></strong>
+                            <a class="btn btn-info"
+                               th:href="@{/login}"><i
+                                    class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Ir al inicio
+                            </a>
+
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
@@ -80,6 +83,8 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
+
+
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -108,29 +113,10 @@
         </a>
 
         <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Begin Scripts -->
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
-
     </body>
 
 </html>

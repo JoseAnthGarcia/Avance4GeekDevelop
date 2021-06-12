@@ -4,6 +4,10 @@ import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -33,6 +37,8 @@ import java.util.*;
 @Controller
 
 public class LoginController {
+    @Autowired
+    CategoriasRestauranteRepository categoriasRestauranteRepository;
 
     @Autowired
     UsuarioRepository usuarioRepository;
@@ -62,8 +68,11 @@ public class LoginController {
 
     @Autowired
     JavaMailSender javaMailSender;
+    @Autowired
+    UsuarioRepository adminRestRepository;
 
-    @GetMapping("/login")
+
+    @GetMapping(value = {"/login",""})
     public String loginForm() {
         return "Cliente/login";
     }
@@ -108,7 +117,7 @@ public class LoginController {
                     System.out.println("Fallo");
                 }
                 if (restaurante == null|| restaurante.getEstado()==2) {
-                    return "redirect:/restaurante/paginabienvenida";
+                    return "redirect:/paginabienvenida";
                 } else if(restaurante.getEstado()==1){
                     return "redirect:/plato/";
                 }
@@ -486,4 +495,267 @@ public class LoginController {
     }
 
 
+
+
+    /** ESTO ES DE RESTAURANTE LOGIN**/
+    @GetMapping("/registro")
+    public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
+        model.addAttribute("adminRest", new Usuario());
+        return "AdminRestaurante/registroAR";
+    }
+
+
+    @PostMapping("/guardarAdminR")
+    public String guardarAdminRest(@ModelAttribute("adminRest") @Valid Usuario adminRest, BindingResult bindingResult,
+                                   @RequestParam("confcontra") String contra2, @RequestParam("photo") MultipartFile file, Model model) {
+
+
+        List<Usuario> usuariosxcorreo = usuarioRepository.findUsuarioByCorreo(adminRest.getCorreo());
+        if (!usuariosxcorreo.isEmpty()) {
+            bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
+        }
+        List<Usuario> usuariosxdni = usuarioRepository.findUsuarioByDni(adminRest.getDni());
+        if (!usuariosxdni.isEmpty()) {
+            bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
+        }
+
+        List<Usuario> usuariosxtelefono = usuarioRepository.findUsuarioByTelefono(adminRest.getTelefono());
+        if (!usuariosxtelefono.isEmpty()) {
+            bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
+        }
+        String fileName = "";
+        System.out.println(contra2);
+        System.out.println(adminRest.getContrasenia());
+        //se agrega rol:
+        adminRest.setRol(rolRepository.findById(3).get());
+        adminRest.setEstado(2);
+        Date date = new Date();
+        DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+        String fecharegistro = LocalDate.now().toString();
+        fecharegistro = fecharegistro + " " + hourFormat.format(date);
+        System.out.println(fecharegistro);
+        adminRest.setFecharegistro(fecharegistro);
+        Boolean fecha_naci = true;
+        boolean validarFoto = true;
+        int naci = 0;
+        String[] parts = adminRest.getFechanacimiento().split("-");
+        try {
+            naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            System.out.println("AÑOOOOOOO " + anio);
+            System.out.println("Naciiiiii " + naci);
+            if (anio - naci >= 18) {
+                fecha_naci = false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error capturado");
+        }
+        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
+        System.out.println("Soy solo fecha_naci " + fecha_naci);
+        if (file != null) {
+            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "AdminRestaurante/registroAR";
+            }
+        }
+
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto) {
+            if (fecha_naci) {
+                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
+            }
+            if (!contra2.equals(adminRest.getContrasenia())) {
+                model.addAttribute("msg", "Las contraseñas no coinciden");
+            }
+            return "AdminRestaurante/registroAR";
+        } else if (validarFoto) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
+            adminRest.setContrasenia(hashedPassword);
+            try {
+                adminRest.setFoto(file.getBytes());
+                adminRest.setFotonombre(fileName);
+                adminRest.setFotocontenttype(file.getContentType());
+                adminRestRepository.save(adminRest);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "AdminRestaurante/registroAR";
+            }
+            return "AdminRestaurante/solicitudAR";
+        } else {
+            return "AdminRestaurante/registroAR";
+        }
+    }
+
+    @PostMapping("/guardarRestaurante")
+    public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
+                                     BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
+
+        List<Restaurante> restauranteByNombre = restauranteRepository.findRestauranteByNombre(restaurante.getNombre());
+        if (!restauranteByNombre.isEmpty()) {
+            model.addAttribute("nombreResta", "El nombre ingresado ya se encuentra en la base de datos");
+        }
+        List<Restaurante> restauranteByDireccion = restauranteRepository.findRestauranteByDireccion(restaurante.getDireccion());
+        if (!restauranteByDireccion.isEmpty()) {
+            model.addAttribute("direccionResta", "La dirección ingresada ya se encuentra en la base de datos");
+        }
+
+        List<Restaurante> restauranteByTelefono = restauranteRepository.findRestauranteByTelefono(restaurante.getTelefono());
+        if (!restauranteByTelefono.isEmpty()) {
+            model.addAttribute("telefonoResta", "El telefono ingresado ya se encuentra en la base de datos");
+        }
+
+        List<Restaurante> restauranteByRuc = restauranteRepository.findRestauranteByRuc(restaurante.getRuc());
+        if (!restauranteByRuc.isEmpty()) {
+            model.addAttribute("rucResta", "El RUC ingresado ya se encuentra en la base de datos");
+        }
+
+        String fileName = "";
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        restaurante.setFecharegistro(hourdateFormat.format(date));
+
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        restaurante.setAdministrador(adminRest);
+        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
+        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
+        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
+        restaurante.setEstado(2);
+        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
+        Distrito distrito = restaurante.getDistrito();
+
+        boolean dist_u_val = true;
+        try {
+            Integer id_distrito = distrito.getIddistrito();
+            int dist_c = distritosRepository.findAll().size();
+            for (int i = 1; i <= dist_c; i++) {
+                if (id_distrito == i) {
+                    dist_u_val = false;
+                }
+            }
+        } catch (NullPointerException n) {
+            dist_u_val = true;
+        }
+
+        boolean validarFoto = true;
+
+        if (file != null) {
+            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "AdminRestaurante/registroResturante";
+            }
+        }
+
+
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto) {
+
+            if (dist_u_val) {
+                model.addAttribute("msg3", "Seleccione una de las opciones");
+                model.addAttribute("msg5", "Complete sus datos");
+            }
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+            model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+            if (listaCategorias.size() != 4) {
+                model.addAttribute("msg", "Se deben seleccionar 4 categorías");
+            }
+            return "AdminRestaurante/registroResturante";
+        } else if (validarFoto) {
+            try {
+                restaurante.setFoto(file.getBytes());
+                restaurante.setFotonombre(fileName);
+                restaurante.setFotocontenttype(file.getContentType());
+                restauranteRepository.save(restaurante);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajeFoto", "Ocurrió un error al subir el archivo");
+                model.addAttribute("listaDistritos", distritosRepository.findAll());
+                model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+                session.invalidate();
+                return "AdminRestaurante/registroResturante";
+            }
+            return "redirect:/paginabienvenida";
+        } else {
+            return "AdminRestaurante/registroResturante";
+        }
+    }
+
+    @GetMapping("/registroRest")
+    public String registrarRestaurante(@ModelAttribute("restaurante") Restaurante restaurante, Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        int id = usuario.getIdusuario();
+        Restaurante restaurant = restauranteRepository.encontrarRest(id);
+        int estado = -1;
+        try {
+            estado = restaurant.getEstado();
+        } catch (NullPointerException e) {
+
+        }
+        if(restaurant==null){
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+            model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+            return "AdminRestaurante/registroResturante";
+        }else{
+            return "redirect:/paginabienvenida";
+        }
+
+    }
+    @GetMapping("/paginabienvenida")
+    public String paginaBienvenida(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        System.out.println(usuario.getNombres());
+        int id = usuario.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        int estado = -1;
+        try {
+            estado = restaurante.getEstado();
+        } catch (NullPointerException e) {
+
+        }
+
+        model.addAttribute("estadoRestaurante", estado);
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+        return "AdminRestaurante/adminCreado";
+    }
+
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 }

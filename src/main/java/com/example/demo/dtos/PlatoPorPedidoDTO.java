@@ -7,4 +7,5 @@ public interface PlatoPorPedidoDTO {
     BigDecimal getPreciounitario();
     int getCantidad();
     BigDecimal getPreciototal();
+    String getComentario();
 }

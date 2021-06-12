@@ -113,7 +113,7 @@ public class LoginController {
                     System.out.println("Fallo");
                 }
                 if (restaurante == null|| restaurante.getEstado()==2) {
-                    return "redirect:/restaurante/paginabienvenida";
+                    return "redirect:/paginabienvenida";
                 } else if(restaurante.getEstado()==1){
                     return "redirect:/plato/";
                 }
@@ -598,6 +598,26 @@ public class LoginController {
     @PostMapping("/guardarRestaurante")
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
                                      BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
+
+        List<Restaurante> restauranteByNombre = restauranteRepository.findRestauranteByNombre(restaurante.getNombre());
+        if (!restauranteByNombre.isEmpty()) {
+            model.addAttribute("nombreResta", "El nombre ingresado ya se encuentra en la base de datos");
+        }
+        List<Restaurante> restauranteByDireccion = restauranteRepository.findRestauranteByDireccion(restaurante.getDireccion());
+        if (!restauranteByDireccion.isEmpty()) {
+            model.addAttribute("direccionResta", "La dirección ingresada ya se encuentra en la base de datos");
+        }
+
+        List<Restaurante> restauranteByTelefono = restauranteRepository.findRestauranteByTelefono(restaurante.getTelefono());
+        if (!restauranteByTelefono.isEmpty()) {
+            model.addAttribute("telefonoResta", "El telefono ingresado ya se encuentra en la base de datos");
+        }
+
+        List<Restaurante> restauranteByRuc = restauranteRepository.findRestauranteByRuc(restaurante.getRuc());
+        if (!restauranteByRuc.isEmpty()) {
+            model.addAttribute("rucResta", "El RUC ingresado ya se encuentra en la base de datos");
+        }
+
         String fileName = "";
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
@@ -676,7 +696,7 @@ public class LoginController {
                 session.invalidate();
                 return "AdminRestaurante/registroResturante";
             }
-            return "redirect:/restaurante/paginabienvenida";
+            return "redirect:/paginabienvenida";
         } else {
             return "AdminRestaurante/registroResturante";
         }
@@ -698,9 +718,27 @@ public class LoginController {
             model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
             return "AdminRestaurante/registroResturante";
         }else{
-            return "redirect:/restaurante/paginabienvenida";
+            return "redirect:/paginabienvenida";
         }
 
+    }
+    @GetMapping("/paginabienvenida")
+    public String paginaBienvenida(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        System.out.println(usuario.getNombres());
+        int id = usuario.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(id);
+        int estado = -1;
+        try {
+            estado = restaurante.getEstado();
+        } catch (NullPointerException e) {
+
+        }
+
+        model.addAttribute("estadoRestaurante", estado);
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
+        return "AdminRestaurante/adminCreado";
     }
 
 }

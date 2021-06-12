@@ -67,26 +67,6 @@ public class AdminRestController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-
-    @GetMapping("/paginabienvenida")
-    public String paginaBienvenida(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        System.out.println(usuario.getNombres());
-        int id = usuario.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        int estado = -1;
-        try {
-            estado = restaurante.getEstado();
-        } catch (NullPointerException e) {
-
-        }
-
-        model.addAttribute("estadoRestaurante", estado);
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-        return "AdminRestaurante/adminCreado";
-    }
-
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id) {
         Optional<Usuario> optionalUsuario = adminRestRepository.findById(id);

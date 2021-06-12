@@ -51,9 +51,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-black-600 small"
+                                    <span class="mr-2 d-none d-lg-inline text-white small"
                                           th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
-                                    <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
+                                    <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}"
                                          type="image/png" alt="avatar">
                                 </a>
                                 <!-- Dropdown - User Information -->
@@ -90,12 +90,12 @@
                             <div class="card-body"></div>
                             <strong><h1 style="text-align: center; color: #FFFFFF"
                                         class="text-sm-center text-uppercase text"
-                                        th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1>
+                                        th:text="${'Bienvenid@ '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1>
                             </strong>
                             <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center">
                                 Vamos a comenzar...</h1>
                             <div class="card-body" style="text-align: center"><a class="btn btn-primary"
-                                                                                 th:href="@{/restaurante/registroRest}"
+                                                                                 th:href="@{/registroRest}"
                                                                                  style="width: 30%;">Registrar mi
                                 restaurante</a></div>
                             <div class="card-body"></div>
@@ -197,7 +197,26 @@
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-white small"
+                                          th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
+                                    <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}"
+                                         type="image/png" alt="avatar">
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+                                    <form id="cerrar" th:action="@{/logout}" method="post">
+                                        <a class="nav-link" data-toggle="modal"
+                                           href="#logoutModal" data-target="#logoutModal"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar
+                                            Sesión
+                                        </a>
+                                    </form>
+                                </div>
+                            </li>
 
                         </ul>
 
@@ -220,11 +239,10 @@
                             <div class="card-body"></div>
                             <strong><h1 style="text-align: center; color: white"
                                         class="text-sm-center text-uppercase text"
-                                        th:text="${'Bienvenido '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1>
+                                        th:text="${'Bienvenid@ '+session.usuario.getNombres() + ' '+session.usuario.getApellidos()}"></h1>
                             </strong>
                             <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"
-                                th:if="${estadoRestaurante==2}"> Su
-                                cuenta de restaurante, se está validando...</h1>
+                                th:if="${estadoRestaurante==2}"> Su solicitud de creación de restaurante está siendo evaluada...</h1>
                             <div class="card-body" style="text-align: center" th:if="${estadoRestaurante==1}">
                                 <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"
                                     th:if="${estadoRestaurante==1}">
@@ -271,12 +289,12 @@
         </a>
 
         <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel1">¿Desea Salir?</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>

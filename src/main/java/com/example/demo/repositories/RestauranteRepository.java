@@ -17,6 +17,10 @@ import java.util.List;
 @Repository
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer> {
     Page<Restaurante> findByEstado(int estado, Pageable pageable);
+    List<Restaurante> findRestauranteByNombre(String nombre);
+    List<Restaurante> findRestauranteByDireccion(String direccion);
+    List<Restaurante> findRestauranteByTelefono(String telefono);
+    List<Restaurante> findRestauranteByRuc(String ruc);
 
     @Query(value = "select d.* from distrito d " +
             "       inner join restaurante r on r.iddistrito = d.iddistrito" +

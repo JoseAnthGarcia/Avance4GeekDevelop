@@ -348,8 +348,36 @@ public class RepartidorController {
         return "Repartidor/reporteIngresos";
     }
 
+    @GetMapping("/reporteDelivery")
+    public String repoteDelivery(){
+        return "Repartidor/reporteDeliverys";
+    }
+
+    /*
+    @PostMapping("/guardarRepartidor")
+    public String guardarRepartidor(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult,
+                                    RedirectAttributes attr, Model model,
+                                    @RequestAttribute("contrasenia1") String contrasenia1, @RequestAttribute("contrasenia2") String contrasenia2) {
+
+        if (bindingResult.hasErrors()) {
 
 
+            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+
+            return "Repartidor/registro";
+        }else if (contrasenia1!=contrasenia2){
+            attr.addFlashAttribute("msg", "Las contraseñas no coinciden");
+            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+
+            return "Repartidor/registro";
+
+        }else {
+
+            usuarioRepository.save(usuario);
+            return "redirect:/x";
+        }*/
 
 
 }

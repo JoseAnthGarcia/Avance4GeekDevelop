@@ -31,7 +31,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Controller
-
 public class LoginController {
 
     @Autowired
@@ -500,7 +499,7 @@ public class LoginController {
         model.addAttribute("distritosSeleccionados", new ArrayList<>());
         model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
         model.addAttribute("listaDistritos", distritosRepository.findAll());
-        return "/Repartidor/registro";
+        return "Repartidor/registro";
     }
 
     @PostMapping("/guardarRepartidor")
@@ -567,7 +566,7 @@ public class LoginController {
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
                 model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "/AdminRestaurante/registroAR";
+                return "Repartidor/registro";
             }
         }
         if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
@@ -603,18 +602,17 @@ public class LoginController {
 
             model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
             model.addAttribute("listaDistritos", distritosRepository.findAll());
-            return "/Repartidor/registro";
+            return "Repartidor/registro";
         }else {
 
             try {
                 usuario.setFoto(file.getBytes());
                 usuario.setFotonombre(fileName);
                 usuario.setFotocontenttype(file.getContentType());
-                usuarioRepository.save(usuario);
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
-                return "/AdminRestaurante/registroAR";
+                return "Repartidor/registro";
             }
             //se agrega rol:
             usuario.setRol(rolRepository.findById(4).get());
@@ -647,7 +645,7 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            return "redirect:/repartidor/registroRepartidor";
+            return "redirect:/registroRepartidor";
         }
 
 

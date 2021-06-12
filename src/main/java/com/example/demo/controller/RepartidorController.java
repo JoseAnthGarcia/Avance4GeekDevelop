@@ -149,7 +149,46 @@ public class RepartidorController {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
 
-        return "Cliente/editarPerfil";
+        return "Repartidor/editarPerfil";
+
+    }
+    @PostMapping("/guardarEditar")
+    public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
+                                 @RequestParam("telefonoNuevo") String telefonoNuevo,
+                                 HttpSession httpSession,
+                                 Model model) {
+
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        boolean valContra = true;
+
+
+
+        Usuario usuario2 =usuarioRepository.findByTelefono(telefonoNuevo);
+
+        if (BCrypt.checkpw(contraseniaConf, usuario.getContrasenia())) {
+            valContra = false;
+        }
+
+        if (valContra || usuario2!=null ) {
+
+            if (usuario2!=null) {
+                model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+            }
+            if (valContra) {
+                model.addAttribute("msg", "Contraseña incorrecta");
+            }
+
+            model.addAttribute("usuario", usuario);
+            return "Repartidor/editarPerfil";
+
+
+        } else {
+            usuario.setTelefono(telefonoNuevo); //usar save para actualizar
+            httpSession.setAttribute("usuario", usuario); //TODO: preguntar profe
+            usuarioRepository.save(usuario);
+            return "redirect:/repartidor/listaPedidos";
+        }
+
 
     }
 

@@ -28,69 +28,72 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 " style="background-color: #701111;">
+                <div class="row">
 
-                        <div class="d-sm-flex align-items-center justify-content-between">
+                    <div class="col-xl-12 col-lg-7">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">EDITAR PERFIL</h5>
+                        <!-- Area Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 " style="background-color: #701111;">
+                                <h6 class="m-0 font-weight-bold text-gray-400 text-center">EDITAR PERFIL</h6>
+                            </div>
+                            <div class="card-header py-3">
 
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <div class="container-fluid">
-                            <div class="container-fluid">
-                                <form method="POST" action="">
+                                <form method="POST" th:action="@{/repartidor/guardarEditar}">
                                     <div class="form-row">
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="nombre">Nombres </label>
-                                            <input type="text" class="form-control " name="dniC"  id="nombre" value="" placeholder="Repartidor " disabled >
+                                            <label>Nombres </label>
+                                            <input type="text" class="form-control"th:value="${session.usuario.nombres}" disabled>
 
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="apellido">Apellido </label>
-                                            <input type="text" class="form-control " name="apellido"  id="apellido" value="" placeholder="x" disabled >
-
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="correo">Correo </label>
-                                            <input type="text" class="form-control " id="correo" placeholder="repatridorx@gmail.com" disabled>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="fecha">Fecha de Nacimiento</label>
-                                            <input type="text" class="form-control " id="fecha" placeholder="06/12/1991" disabled>
+                                            <label>Apellido </label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.apellidos}" disabled>
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="celular">N° de celular</label>
-                                            <input type="text" class="form-control " id="celular"  placeholder="Celular" >
+                                            <label>Correo </label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.correo}" disabled>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Fecha de Nacimiento</label>
+                                            <input type="text" class="form-control"
+                                                   th:value="${session.usuario.fechanacimiento}" disabled>
 
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="contrasena">Contraseña (Confirmación)</label>
-                                            <input type="password" class="form-control " id="contrasena">
-
+                                            <label>N° de celular</label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.telefono}" name="telefonoNuevo" >
+                                            <div th:if="${msg1 != null}" th:text="${msg1}" style="color: red; font-size: small; text-align: left" ></div>
                                         </div>
 
+                                        <div class="col-md-6 mb-3">
+                                            <label>Contraseña (Confirmación)</label>
+                                            <input type="password" class="form-control " name="contraseniaConf" >
+                                            <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
+
+                                        </div>
 
                                         <div class="col-md-12 mb-3">
                                             <div style=text-align:center>
-                                                <button type="submit" href="" class="btn btn-primary" > Guardar  </button>
-                                                <a  class="btn btn-danger" href="" type="submit">Cancelar</a>
+                                                <button  class="btn btn-primary"  type="submit">Guardar</button>
+                                                <a  class="btn btn-danger" th:href="@{/repartidor/listaPedidos}" >Cancelar</a>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
                             </div>
+
                         </div>
+
+
                     </div>
 
+                    <!-- IMAGEN -->
                 </div>
 
             </div>

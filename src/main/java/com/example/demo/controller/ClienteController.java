@@ -128,7 +128,7 @@ public class ClienteController {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/editarPerfil";
+        return "/Cliente/editarPerfil";
 
     }
     @PostMapping("/guardarEditar")
@@ -173,7 +173,7 @@ public class ClienteController {
                 model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
             }
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-            return "Cliente/editarPerfil";
+            return "/Cliente/editarPerfil";
 
 
         } else {
@@ -310,7 +310,7 @@ public class ClienteController {
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/listaRestaurantes";
+        return "/Cliente/listaRestaurantes";
     }
 
     @GetMapping("/listaDirecciones")
@@ -330,7 +330,7 @@ public class ClienteController {
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/listaDirecciones";
+        return "/Cliente/listaDirecciones";
     }
 
 
@@ -435,7 +435,7 @@ public class ClienteController {
             model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-            return "Cliente/listaDirecciones";
+            return "/Cliente/listaDirecciones";
 
         } else {
             Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -687,7 +687,7 @@ public class ClienteController {
             model.addAttribute("texto",texto);
             model.addAttribute("nombreRest",restaurante.getNombre());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-            return "Cliente/detallePlato";
+            return "/Cliente/detallePlato";
         }else{
             //model.addAttribute("idRest",idRest);
             //model.addAttribute("idPlato",idPlato);
@@ -718,7 +718,7 @@ public class ClienteController {
         model.addAttribute("idPage",idPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         model.addAttribute("idRest",idRest);
-        return "Cliente/carritoCompras";
+        return "/Cliente/carritoCompras";
     }
 
     @PostMapping("/aniadirCarrito")
@@ -932,7 +932,7 @@ public class ClienteController {
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         // model.addAttribute("idRest",idRest);
-        return "Cliente/carritoExtras";
+        return "/Cliente/carritoExtras";
     }
 
     @PostMapping("/aniadirExtras")
@@ -1169,7 +1169,7 @@ public class ClienteController {
         model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/terminarCompra";
+        return "/Cliente/terminarCompra";
     }
 
     @PostMapping("/metodoPago")
@@ -1196,7 +1196,7 @@ public class ClienteController {
         model.addAttribute("listaDirecciones",listaDirecciones);
 
 
-        return "Cliente/terminarCompra";
+        return "/Cliente/terminarCompra";
     }
 
     @PostMapping("/generarPedido")
@@ -1413,7 +1413,7 @@ public class ClienteController {
         model.addAttribute("estado", estado);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/listaPedidoActual";
+        return "/Cliente/listaPedidoActual";
     }
 
     @GetMapping("/cancelarPedido")
@@ -1462,7 +1462,7 @@ public class ClienteController {
 
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/detallePedidoActual";
+        return "/Cliente/detallePedidoActual";
     }
 
     //HISTORIAL PEDIDOS
@@ -1514,7 +1514,7 @@ public class ClienteController {
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
 
-        return "Cliente/listaHistorialPedidos";
+        return "/Cliente/listaHistorialPedidos";
     }
 
     @PostMapping("/valorarRest")
@@ -1633,7 +1633,7 @@ public class ClienteController {
         model.addAttribute("mes",mes);
         model.addAttribute("nombrec",nombrec);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/reporteDineroCliente";
+        return "/Cliente/reporteDineroCliente";
     }
 
 
@@ -1711,7 +1711,7 @@ public class ClienteController {
        model.addAttribute("total",totalPage);
        model.addAttribute("numpedidos",numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/reportePedidoCliente";
+        return "/Cliente/reportePedidoCliente";
     }
 
     @GetMapping("/reporteTiempo")
@@ -1780,7 +1780,7 @@ public class ClienteController {
         model.addAttribute("mes",mes);
         model.addAttribute("numpedidos",numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/reporteTiempoCliente";
+        return "/Cliente/reporteTiempoCliente";
     }
 
     @GetMapping("/listaCupones")
@@ -1844,7 +1844,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("descuento",descuento);
 
-        return "Cliente/listaCupones";
+        return "/Cliente/listaCupones";
     }
 
     public String generarCodigAleatorio() {

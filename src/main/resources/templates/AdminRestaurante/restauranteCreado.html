@@ -43,25 +43,10 @@
 
                             <!-- Nav Item - Alerts -->
 
-
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-black-100 small" th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
-                                    <i class="fas fa-user"></i>
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesión
-                                    </a>
-                                </div>
-                            </li>
+                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
 
                         </ul>
 
@@ -72,7 +57,8 @@
                     <div class="container-fluid">
 
                         <!-- DataTales Example -->
-                        <div class="card shadow mb-5 mt-5 mx-auto bg-welcome" style="width: 50%; height: 25%; text-align: center">
+                        <div class="card shadow mb-5 mt-5 mx-auto bg-welcome"
+                             style="width: 50%; height: 25%; text-align: center">
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
@@ -80,8 +66,13 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-                            <h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text"><strong>SU SOLICITUD HA SIDO ENVIADA</strong></h1>
-                            <div class="card-body" style="text-align: center"><a class="btn btn-primary" href="#" data-toggle="modal" data-target="#logoutModal" style="width: 30%;">Cerrar sesión</a></div>
+                            <h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text">
+                                <strong>SU SOLICITUD HA SIDO ENVIADA</strong></h1>
+                            <div class="card-body" style="text-align: center"><a class="btn btn-primary" href="#"
+                                                                                 data-toggle="modal"
+                                                                                 data-target="#logoutModal"
+                                                                                 style="width: 30%;">Cerrar sesión</a>
+                            </div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>

@@ -106,6 +106,8 @@ public class ClienteController {
     @Autowired
     ReportePedidoCService reportePedidoCService;
 
+    @Autowired
+    ClienteHasCuponRepository clienteHasCuponRepository;
 
     @Autowired
     ReporteTiempoService reporteTiempoService;
@@ -1191,6 +1193,15 @@ public class ClienteController {
                                 HttpSession session){
 
         //TODO: llenar cupon
+        int efectivoPagarInt = 0;
+        if(efectivoPagar != null){
+            try {
+                efectivoPagarInt = Integer.parseInt(efectivoPagar);
+            }catch (NumberFormatException e){
+                //VER ESTA VALIDACION FUNKE
+                return "/Cliente/terminarCompra";
+            }
+        }
 
         //Obteniendo el cupon
         Cupon cupon = null;
@@ -1232,6 +1243,8 @@ public class ClienteController {
         }catch (NumberFormatException e){
         }
 
+        BigDecimal delivery = (BigDecimal) session.getAttribute("delivery");
+
         Double precioDel = null;
         boolean precioDelVal = false;
         try{
@@ -1254,20 +1267,18 @@ public class ClienteController {
                 precioTotalPlatos = precioTotalPlatos.add(subtotal);
             }
 
-            BigDecimal precioTotalExtras = BigDecimal.ZERO;
-            /**if(!listaExtra.isEmpty()||listaExtra!=null){
-                for (int i = 0; i < listaExtra.size(); i++) {
-                    BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
-                    precioTotalExtras = precioTotalExtras.add(subTotal1);
-                }
-            }**/
+            BigDecimal precioTotalExtras = new BigDecimal(0);
+            for (int i = 0; i < listaExtra.size(); i++) {
+                BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
+                precioTotalExtras = precioTotalExtras.add(subTotal1);
+            }
 
             BigDecimal desc = new BigDecimal(cupon.getDescuento());
             BigDecimal precioTotal = precioTotalPlatos.add(precioTotalExtras);
             precioTotal = precioTotal.subtract(desc);
+            precioTotal = precioTotal.add(delivery);
 
             Pedido pedido = new Pedido();
-
             pedido.setPreciototal(precioTotal.floatValue());
 
             String codigoAleatorio = "";
@@ -1280,7 +1291,9 @@ public class ClienteController {
             }
 
             pedido.setCodigo(codigoAleatorio);
-
+            if(efectivoPagar != null){
+                pedido.setCantidadapagar((float) efectivoPagarInt);
+            }
             pedido.setEstado(0);
 
             //seteo fecha
@@ -1307,25 +1320,32 @@ public class ClienteController {
 
             pedido = pedidoRepository.save(pedido);
 
-            /*for (Plato_has_pedido plato_has_pedido : listaPlatos) {
+            Cliente_has_cuponKey cliente_has_cuponKey = new Cliente_has_cuponKey();
+            Cliente_has_cupon cliente_has_cupon = new Cliente_has_cupon();
+            cliente_has_cuponKey.setIdcliente(cliente.getIdusuario());
+            cliente_has_cuponKey.setIdcupon(cupon.getIdcupon());
+            cliente_has_cupon.setCliente_has_cuponKey(cliente_has_cuponKey);
+            cliente_has_cupon.setUtilizado(true);
+
+            clienteHasCuponRepository.save(cliente_has_cupon);
+
+            for (Plato_has_pedido plato_has_pedido : listaPlatos) {
                 Plato_has_pedidoKey plato_has_pedidoKey = new Plato_has_pedidoKey();
                 plato_has_pedidoKey.setCodigo(pedido.getCodigo());
                 plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
                 plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
-                plato_has_pedido.setCantidad(2);
-                plato_has_pedido.setObservacionplatillo("ola");
-                plato_has_pedido.setPreciounitario(new BigDecimal(12));
-                System.out.println(pedido.getCodigo());
+                plato_has_pedido.setPedido(pedido);
                 platoHasPedidoRepository.save(plato_has_pedido);
-            }*/
+            }
 
-            /*for (Extra_has_pedido extra_has_pedido : listaExtra) {
+            for (Extra_has_pedido extra_has_pedido : listaExtra) {
                 Extra_has_pedidoKey extra_has_pedidoKey = new Extra_has_pedidoKey();
                 extra_has_pedidoKey.setCodigo(pedido.getCodigo());
                 extra_has_pedidoKey.setIdextra(extra_has_pedido.getExtra().getIdextra());
                 extra_has_pedido.setIdextra(extra_has_pedidoKey);
+                extra_has_pedido.setPedido(pedido);
                 extraHasPedidoRepository.save(extra_has_pedido);
-            }*/
+            }
 
             return "redirect:/cliente/pedidoActual";
         }

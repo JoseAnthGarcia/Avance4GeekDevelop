@@ -245,5 +245,4 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (cl.idusuario is null || cl.idusuario = ?1)",nativeQuery = true)
     List<CuponClienteDTO> listaCupones1(int idCliente);
 
-
 }

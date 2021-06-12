@@ -1041,7 +1041,7 @@ public class ClienteController {
                                  RedirectAttributes attr, Model model,
                                  HttpSession session){
         Extra extra = new Extra();
-        List<Extra_has_pedido> carritoExtra = (List<Extra_has_pedido>) session.getAttribute("carritoExtra");
+        List<Extra_has_pedido> carritoExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
         int cantVal = 0;
 
@@ -1068,7 +1068,7 @@ public class ClienteController {
             carritoExtra.get(i).getIdextra().setIdextra(extraGuardar.get(i));
             carritoExtra.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
         }
-        session.setAttribute("carritoExtra",carritoExtra);
+        session.setAttribute("extrasCarrito",carritoExtra);
         attr.addFlashAttribute("msgExtra", "Se actualizaron los datos correctamente");
         return "redirect:/cliente/mostrarCarrito";
     }
@@ -1083,19 +1083,16 @@ public class ClienteController {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         //CUPONES
-        List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
-
-
-
-
+            List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
         //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
-        Integer idRest = (Integer) session.getAttribute("idRest");
+        int idRest = (Integer) session.getAttribute("idRest");
         ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
-        ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("carritoExtra");
+        ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
-        Distrito distritoRestaurante = restauranteRepository.findDistritoById(idRest);
+        Distrito distritoRestaurante = distritosRepository.findDistritoById(idRest);
+
         double subTotalCarrito = 0.00;
         double subTotalExtras = 0.00;
         double delivery = 0.00;
@@ -1107,30 +1104,38 @@ public class ClienteController {
         System.out.println(cantidad);
         System.out.println(carrito);
 
+        if(carrito == null){
+            System.out.println("No hay nada en el carrito");
+            return "redirect:/cliente/mostrarCarrito?idPage=0";
+        }
+
         // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
         if (cantidad.size() != observacion.size() ||
                 observacion.size() != platoGuardar.size() ||
                 platoGuardar.size() != carrito.size()){
-            return "redirect:/cliente/mostrarCarrito";
+            System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
+            return "redirect:/cliente/mostrarCarrito?idPage=0";
         }
 
         for (int i = 0; i < cantidad.size(); i++) {
             try{
                  cantVal = Integer.parseInt(cantidad.get(i));
                  if(cantVal <= 0 && cantVal > 20){
+                     System.out.println("LAS CANTIDADES NO SON LAS MISMAS");
                      attr.addFlashAttribute("msgInt","Ingrese una cantidad entre 0 y 20");
-                     return "redirect:/cliente/mostrarCarrito";
+                     return "redirect:/cliente/mostrarCarrito?idPage=0";
                  }
             }catch (NumberFormatException e){
+                System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
                 attr.addFlashAttribute("msgInt","Ingrese un número");
-                return "redirect:/cliente/mostrarCarrito";
+                return "redirect:/cliente/mostrarCarrito?idPage=0";
             }
         }
 
         for(int i = 0; i < observacion.size(); i++){
-            if(observacion.get(i).length() <= 256){
+            if(observacion.get(i).length() > 256){
                 attr.addFlashAttribute("msgLen","Ingrese un comentario menor a 256 carácteres");
-                return "redirect:/cliente/mostrarCarrito";
+                return "redirect:/cliente/mostrarCarrito?idPage=0";
             }
         }
 
@@ -1140,8 +1145,13 @@ public class ClienteController {
             carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
             subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
         }
-        for(int i = 0; i < carritoExtra.size(); i++){
-            subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
+
+        if(carritoExtra != null) {
+            for (int i = 0; i < carritoExtra.size(); i++) {
+                subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
+            }
+        }else{
+            subTotalExtras = 0.00;
         }
 
         for (Ubicacion u : listaDirecciones) {
@@ -1166,36 +1176,9 @@ public class ClienteController {
 
         model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
         model.addAttribute("listaDirecciones",listaDirecciones);
-        model.addAttribute("distritoActual",distritoActual);
+     //   model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/terminarCompra";
-    }
-
-    @PostMapping("/metodoPago")
-    public String guardarPedido( @RequestParam("metodoPago") List<Integer> metodoDePagos,
-                                 @RequestParam("cupon") String idCupon, HttpSession session,
-                                 @RequestParam("ubicacion") int  ubicacion,  Model model,
-                                 RedirectAttributes attr){
-        Double delivery = (Double) session.getAttribute("delivery");
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-
-        if(metodoDePagos.size() != 1){
-            model.addAttribute("msgMet","Ingrese solo un método de pago");
-            return "cliente/metodoPago";
-        }
-
-        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
-
-
-        int idMetodoPago = metodoDePagos.get(0);
-        model.addAttribute("idMetodo",idMetodoPago);
-        model.addAttribute("delivery",delivery);
-        model.addAttribute("ubicacion",ubicacion);
-        model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
-        model.addAttribute("listaDirecciones",listaDirecciones);
-
-
         return "Cliente/terminarCompra";
     }
 
@@ -1203,12 +1186,14 @@ public class ClienteController {
     public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
                                 @RequestParam(value = "ubicacion", required = false) String idUbicacion,
                                 @RequestParam(value = "delivery", required = false) String precioDelivery,
+                                @RequestParam(value = "efectivoPagar",required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
                                 HttpSession session){
 
         //TODO: llenar cupon
-        Cupon cupon = null;
 
+        //Obteniendo el cupon
+        Cupon cupon = null;
         boolean idCuponVal = false;
         try{
             int idCuponInt = Integer.parseInt(idCupon);
@@ -1220,8 +1205,8 @@ public class ClienteController {
         }catch (NumberFormatException e){
         }
 
+        //Obteniendo Ubicacion
         Ubicacion ubicacion = null;
-
         boolean idUbicVal= false;
         try{
             int idUbicInt= Integer.parseInt(idUbicacion);
@@ -1256,11 +1241,12 @@ public class ClienteController {
         }
 
         if(!precioDelVal || !idCuponVal || !idUbicVal || !idMetPaVal){
+            // si algunos de estos datos esta mal debería redireccionarte a la misma vista
             return "redirect:/cliente/listaPlatos";
         }else {
 
             List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
-            List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("carritoextras");
+            List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
             BigDecimal precioTotalPlatos = new BigDecimal(0);
             for (int i = 0; i < listaPlatos.size(); i++) {

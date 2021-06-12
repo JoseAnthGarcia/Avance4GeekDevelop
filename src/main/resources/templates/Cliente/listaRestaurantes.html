@@ -316,7 +316,7 @@
                 <ul class="pagination justify-content-center" >
                     <li class="page-item" th:each="page : ${pages}">
                         <a th:unless="${texto == null && idPrecio == null && val == null && idCategoria == null }"
-                           class="page-link active" th:text="${page}"
+                           class="page-link" style="background-color: #701111"  th:text="${page}"
                            th:href="@{'/cliente/listaRestaurantes?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&val='+${val}+'&idCategoria='+${idCategoria}}"></a>
                     </li>
                 </ul>

@@ -389,7 +389,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", 0, 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", "0", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVen")
@@ -397,7 +397,7 @@ public class AdminRestController {
                                               textCodigo,
                                       @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                       @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                      @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
+                                      @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
@@ -416,21 +416,32 @@ public class AdminRestController {
             textCodigo = "";
         }
         System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
+        int inputPrecioInt;
         int inputPrecioMax;
         int inputPrecioMin;
-        if (inputPrecio == 0) {
-            inputPrecioMin = 0;
-            inputPrecioMax = 1000;
-        } else if (inputPrecio == 4) {
-            inputPrecioMin = inputPrecio;
-            inputPrecioMax = 1000;
-        } else {
-            inputPrecioMin = inputPrecio;
-            inputPrecioMax = inputPrecio;
+
+        if (inputPrecio == null) {
+            inputPrecioInt = 0;
         }
+
+        try {
+            inputPrecioInt = Integer.parseInt(inputPrecio);
+            if (inputPrecioInt == 0) {
+                inputPrecioMin = 0;
+                inputPrecioMax = 1000;
+            } else if (inputPrecioInt == 4) {
+                inputPrecioMin = inputPrecioInt;
+                inputPrecioMax = 1000;
+            } else if (inputPrecioInt > 4) {
+                return "redirect:/restaurante/reporteVentas";
+            } else {
+                inputPrecioMin = inputPrecioInt;
+                inputPrecioMax = inputPrecioInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/reporteVentas";
+        }
+
 
         Date fechafin2;
         Date fechainicio2;
@@ -480,9 +491,9 @@ public class AdminRestController {
 
         //Enviar atributos a la vista
         model.addAttribute("textCodigo", textCodigo);
-        model.addAttribute("inputPrecio", inputPrecio);
+        model.addAttribute("inputPrecio", inputPrecioInt);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecio + "\n" + fechainicio + "\n" + fechafin);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecioInt + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);
@@ -500,12 +511,12 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVal(6, "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVal("6", "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVal")
     public String findPaginatedRepVal
-            (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
+            (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) String inputValoracion,
              @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
              @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
              @RequestParam(value = "pageNo", required = false) Integer pageNo,
@@ -522,13 +533,19 @@ public class AdminRestController {
 
         //Manipular input de buscadores
         System.out.println(inputValoracion);
-        String inputValoracion2;
-        if (inputValoracion == null || inputValoracion == 6) {
-            inputValoracion2 = "";
+        int inputValoracion2;
+        if (inputValoracion == null) {
+            inputValoracion = "";
         } else {
-            System.out.println("###entre###");
-            inputValoracion2 = String.valueOf(inputValoracion);
-            System.out.println(inputValoracion2);
+            try {
+                inputValoracion2 = Integer.parseInt(inputValoracion);
+                if (inputValoracion2 >= 6) {
+                    return "redirect:/restaurante/reporteValoracion";
+                }
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
+
         }
 
         Date fechafin2;
@@ -573,13 +590,13 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio, fechafin);
+        page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion, fechainicio, fechafin);
         listaValoracionReporte = page.getContent();
 
         //Enviar atributos a la vista
-        model.addAttribute("inputValoracion", inputValoracion2);
+        model.addAttribute("inputValoracion", inputValoracion);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion2 + "\n" + fechainicio + "\n" + fechafin);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);
@@ -597,17 +614,17 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginated2("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepPla("", "0", "0", 1, restaurante.getIdrestaurante(), model, session);
     }
 
-    @GetMapping("/page2")
-    public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String
-                                         textBuscador,
-                                 @ModelAttribute @RequestParam(value = "inputCantidad", required = false) Integer inputCantidad,
-                                 @ModelAttribute @RequestParam(value = "inputCategoria", required = false) Integer inputCategoria,
-                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
-                                         session) {
+    @GetMapping("/pagePla")
+    public String findPaginatedRepPla(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String
+                                              textBuscador,
+                                      @ModelAttribute @RequestParam(value = "inputCantidad", required = false) String inputCantidad,
+                                      @ModelAttribute @RequestParam(value = "inputCategoria", required = false) String inputCategoria,
+                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
+                                              session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -623,27 +640,46 @@ public class AdminRestController {
             textBuscador = "";
         }
         System.out.println(inputCategoria);
-        String inputCategoria2;
-        if (inputCategoria == null || inputCategoria == 0) {
-            inputCategoria2 = "";
+        int inputCategoria2;
+        if (inputCategoria == null) {
+            inputCategoria = "";
         } else {
-            inputCategoria2 = String.valueOf(inputCategoria);
+            try {
+                inputCategoria2 = Integer.parseInt(inputCategoria);
+                if (inputCategoria2 >= 5) {
+                    return "redirect:/restaurante/reporteValoracion";
+                } else if (inputCategoria2 == 0) {
+                    inputCategoria = "";
+                }
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
+
         }
+
         System.out.println(inputCantidad);
-        if (inputCantidad == null) {
-            inputCantidad = 0;
-        }
+        int inputCantidadInt;
         int inputCantidadMax;
         int inputCantidadMin;
-        if (inputCantidad == 0) {
-            inputCantidadMin = 0;
-            inputCantidadMax = 1000;
-        } else if (inputCantidad == 4) {
-            inputCantidadMin = inputCantidad;
-            inputCantidadMax = 1000;
-        } else {
-            inputCantidadMin = inputCantidad;
-            inputCantidadMax = inputCantidad;
+        if (inputCantidad == null) {
+            inputCantidadInt = 0;
+        }
+        try {
+            inputCantidadInt = Integer.parseInt(inputCantidad);
+            if (inputCantidadInt == 0) {
+                inputCantidadMin = 0;
+                inputCantidadMax = 1000;
+            } else if (inputCantidadInt == 4) {
+                inputCantidadMin = inputCantidadInt;
+                inputCantidadMax = 1000;
+            } else if (inputCantidadInt > 4) {
+                return "redirect:/restaurante/reportePlatos";
+            } else {
+                inputCantidadMin = inputCantidadInt;
+                inputCantidadMax = inputCantidadInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/reportePlatos";
         }
 
         System.out.println("#################");
@@ -655,7 +691,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
+        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
         listaPlatoReporte = page.getContent();
 
         //Enviar atributos a la vista
@@ -667,7 +703,7 @@ public class AdminRestController {
         model.addAttribute("listaCategorias", listaCategorias);
 
         System.out.println(listaCategorias.get(2).getIdcategoria());
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
         System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);

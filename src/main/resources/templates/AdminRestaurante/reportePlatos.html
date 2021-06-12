@@ -92,7 +92,7 @@
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form method="get" th:action="@{/restaurante/page2}">
+                        <form method="get" th:action="@{/restaurante/pagePla}">
 
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-1 ">
@@ -198,7 +198,7 @@
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
-                                           th:href="@{'/restaurante/page2?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputCategoria='+ ${textoC} + '&inputCantidad=' + ${textoCant}}"
+                                           th:href="@{'/restaurante/pagePla?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputCategoria='+ ${textoC} + '&inputCantidad=' + ${textoCant}}"
                                            th:utext="${i}"
                                            class="active mt-2"></a>
                                         <a th:unless="${currentPage != i}"

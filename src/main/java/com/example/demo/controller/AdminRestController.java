@@ -67,221 +67,19 @@ public class AdminRestController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-
-    @GetMapping("/registro")
-    public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
-        model.addAttribute("adminRest", new Usuario());
-        return "AdminRestaurante/registroAR";
-    }
-
-
-    @PostMapping("/guardarAdminR")
-    public String guardarAdminRest(@ModelAttribute("adminRest") @Valid Usuario adminRest, BindingResult bindingResult,
-                                   @RequestParam("confcontra") String contra2, @RequestParam("photo") MultipartFile file, Model model) {
-
-
-        List<Usuario> usuariosxcorreo = usuarioRepository.findUsuarioByCorreo(adminRest.getCorreo());
-        if (!usuariosxcorreo.isEmpty()) {
-            bindingResult.rejectValue("correo", "error.Usuario", "El correo ingresado ya se encuentra en la base de datos");
-        }
-        List<Usuario> usuariosxdni = usuarioRepository.findUsuarioByDni(adminRest.getDni());
-        if (!usuariosxdni.isEmpty()) {
-            bindingResult.rejectValue("dni", "error.Usuario", "El DNI ingresado ya se encuentra en la base de datos");
-        }
-
-        List<Usuario> usuariosxtelefono = usuarioRepository.findUsuarioByTelefono(adminRest.getTelefono());
-        if (!usuariosxtelefono.isEmpty()) {
-            bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
-        }
-        String fileName = "";
-        System.out.println(contra2);
-        System.out.println(adminRest.getContrasenia());
-        //se agrega rol:
-        adminRest.setRol(rolRepository.findById(3).get());
-        adminRest.setEstado(2);
-        Date date = new Date();
-        DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
-        String fecharegistro = LocalDate.now().toString();
-        fecharegistro = fecharegistro + " " + hourFormat.format(date);
-        System.out.println(fecharegistro);
-        adminRest.setFecharegistro(fecharegistro);
-        Boolean fecha_naci = true;
-        boolean validarFoto = true;
-        int naci = 0;
-        String[] parts = adminRest.getFechanacimiento().split("-");
-        try {
-            naci = Integer.parseInt(parts[0]);
-            Calendar fecha = new GregorianCalendar();
-            int anio = fecha.get(Calendar.YEAR);
-            System.out.println("AÑOOOOOOO " + anio);
-            System.out.println("Naciiiiii " + naci);
-            if (anio - naci >= 18) {
-                fecha_naci = false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Error capturado");
-        }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
-        if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
-            if (file.isEmpty()) {
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-                validarFoto = false;
-            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                validarFoto = false;
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "/AdminRestaurante/registroAR";
-            }
-        }
-
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto) {
-            if (fecha_naci) {
-                model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
-            }
-            if (!contra2.equals(adminRest.getContrasenia())) {
-                model.addAttribute("msg", "Las contraseñas no coinciden");
-            }
-            return "/AdminRestaurante/registroAR";
-        } else if (validarFoto) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(adminRest.getContrasenia());
-            adminRest.setContrasenia(hashedPassword);
-            try {
-                adminRest.setFoto(file.getBytes());
-                adminRest.setFotonombre(fileName);
-                adminRest.setFotocontenttype(file.getContentType());
-                adminRestRepository.save(adminRest);
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
-                return "/AdminRestaurante/registroAR";
-            }
-            return "redirect:/login";
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
         } else {
-            return "/AdminRestaurante/registroAR";
+            return null;
         }
     }
-
-    @PostMapping("/guardarRestaurante")
-    public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
-                                     BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
-        String fileName = "";
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-
-        Date date = new Date();
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        restaurante.setFecharegistro(hourdateFormat.format(date));
-
-        Usuario adminRest = (Usuario) session.getAttribute("usuario");
-        restaurante.setAdministrador(adminRest);
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        restaurante.setEstado(2);
-        List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        Distrito distrito = restaurante.getDistrito();
-
-        boolean dist_u_val = true;
-        try {
-            Integer id_distrito = distrito.getIddistrito();
-            int dist_c = distritosRepository.findAll().size();
-            for (int i = 1; i <= dist_c; i++) {
-                if (id_distrito == i) {
-                    dist_u_val = false;
-                }
-            }
-        } catch (NullPointerException n) {
-            dist_u_val = true;
-        }
-
-        boolean validarFoto = true;
-
-        if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
-            if (file.isEmpty()) {
-                model.addAttribute("mensajefoto", "Debe subir una imagen");
-                validarFoto = false;
-            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
-                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
-                validarFoto = false;
-            }
-            fileName = file.getOriginalFilename();
-            if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
-                return "AdminRestaurante/registroResturante";
-            }
-        }
-
-
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto) {
-
-            if (dist_u_val) {
-                model.addAttribute("msg3", "Seleccione una de las opciones");
-                model.addAttribute("msg5", "Complete sus datos");
-            }
-            model.addAttribute("listaDistritos", distritosRepository.findAll());
-            model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-            if (listaCategorias.size() != 4) {
-                model.addAttribute("msg", "Se deben seleccionar 4 categorías");
-            }
-            return "AdminRestaurante/registroResturante";
-        } else if (validarFoto) {
-            try {
-                restaurante.setFoto(file.getBytes());
-                restaurante.setFotonombre(fileName);
-                restaurante.setFotocontenttype(file.getContentType());
-                restauranteRepository.save(restaurante);
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("mensajeFoto", "Ocurrió un error al subir el archivo");
-                model.addAttribute("listaDistritos", distritosRepository.findAll());
-                model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-                session.invalidate();
-                return "AdminRestaurante/registroResturante";
-            }
-            return "redirect:/restaurante/paginabienvenida";
-        } else {
-            return "AdminRestaurante/registroResturante";
-        }
-    }
-
-    @GetMapping("/registroRest")
-    public String registrarRestaurante(@ModelAttribute("restaurante") Restaurante restaurante, Model model) {
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-        return "AdminRestaurante/registroResturante";
-    }
-
-    @GetMapping("/paginabienvenida")
-    public String paginaBienvenida(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        System.out.println(usuario.getNombres());
-        int id = usuario.getIdusuario();
-        Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        int estado = -1;
-        try {
-            estado = restaurante.getEstado();
-        } catch (NullPointerException e) {
-
-        }
-
-        model.addAttribute("estadoRestaurante", estado);
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-        model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
-        return "AdminRestaurante/adminCreado";
-    }
-
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id) {
         Optional<Usuario> optionalUsuario = adminRestRepository.findById(id);
@@ -382,24 +180,31 @@ public class AdminRestController {
         Date fechafin2;
         String fechafin3;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
-            System.out.println("entre");
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechafin2 = simpleDateFormat.parse("3000-05-21");
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechafin3 = simpleDateFormat2.format(fechafin2);
-            System.out.println(fechafin3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse("3000-05-21");
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechafin3 = simpleDateFormat2.format(fechafin2);
+                System.out.println(fechafin3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
+
         } else {
-            System.out.println("entre a");
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechafin2 = simpleDateFormat.parse(fechafin);
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechafin3 = simpleDateFormat2.format(fechafin2);
-            System.out.println(fechafin3);
-            model.addAttribute("fechafin", fechafin3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechafin3 = simpleDateFormat2.format(fechafin2);
+                System.out.println(fechafin3);
+                model.addAttribute("fechafin", fechafin3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
 
         }
 
@@ -411,20 +216,29 @@ public class AdminRestController {
         Date fechainicio2;
         String fechainicio3;
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
-            fechainicio2 = date;
-            String pattern = "yyyy-MM-dd 00:00:00";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechainicio3 = simpleDateFormat.format(fechainicio2);
-            System.out.println(fechainicio3);
+            try {
+                fechainicio2 = date;
+                String pattern = "yyyy-MM-dd 00:00:00";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio3 = simpleDateFormat.format(fechainicio2);
+                System.out.println(fechainicio3);
+            } catch (IllegalFormatException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
+
         } else {
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            fechainicio2 = simpleDateFormat.parse(fechainicio);
-            String pattern2 = "yyyy-MM-dd HH:mm:ss";
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
-            fechainicio3 = simpleDateFormat2.format(fechainicio2);
-            System.out.println(fechainicio3);
-            model.addAttribute("fechainicio", fechainicio3);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                String pattern2 = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
+                fechainicio3 = simpleDateFormat2.format(fechainicio2);
+                System.out.println(fechainicio3);
+                model.addAttribute("fechainicio", fechainicio3);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/listaPedidos";
+            }
         }
 
         System.out.println("#################");
@@ -443,7 +257,7 @@ public class AdminRestController {
         model.addAttribute("textoE", inputEstado);
         model.addAttribute("textoP", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + page.getTotalElements() + "\n" + textBuscador + "\n" + inputEstado + "\n" + inputPrecio + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
 
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
@@ -520,7 +334,7 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v=" + v + "&codigoPedido=" + id;
     }
 
     @GetMapping("/pedidoListo")
@@ -541,7 +355,7 @@ public class AdminRestController {
                 pedidoRepository.save(pedido);
             }
         }
-        return "redirect:/restaurante/detallePedido?v="+v+"&codigoPedido=" + id;
+        return "redirect:/restaurante/detallePedido?v=" + v + "&codigoPedido=" + id;
     }
 
 
@@ -588,7 +402,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", 0, 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", "0", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVen")
@@ -596,7 +410,7 @@ public class AdminRestController {
                                               textCodigo,
                                       @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                       @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                      @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
+                                      @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
@@ -615,33 +429,61 @@ public class AdminRestController {
             textCodigo = "";
         }
         System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
+        int inputPrecioInt;
         int inputPrecioMax;
         int inputPrecioMin;
-        if (inputPrecio == 0) {
-            inputPrecioMin = 0;
-            inputPrecioMax = 1000;
-        } else if (inputPrecio == 4) {
-            inputPrecioMin = inputPrecio;
-            inputPrecioMax = 1000;
-        } else {
-            inputPrecioMin = inputPrecio;
-            inputPrecioMax = inputPrecio;
+
+        if (inputPrecio == null) {
+            inputPrecioInt = 0;
         }
 
+        try {
+            inputPrecioInt = Integer.parseInt(inputPrecio);
+            if (inputPrecioInt == 0) {
+                inputPrecioMin = 0;
+                inputPrecioMax = 1000;
+            } else if (inputPrecioInt == 4) {
+                inputPrecioMin = inputPrecioInt;
+                inputPrecioMax = 1000;
+            } else if (inputPrecioInt > 4) {
+                return "redirect:/restaurante/reporteVentas";
+            } else {
+                inputPrecioMin = inputPrecioInt;
+                inputPrecioMax = inputPrecioInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/reporteVentas";
+        }
+
+
+        Date fechafin2;
+        Date fechainicio2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
-            model.addAttribute("fechafin", fechafin);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                model.addAttribute("fechafin", fechafin);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteVentas";
+            }
+
 
         }
 
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
-            model.addAttribute("fechainicio", fechainicio);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                model.addAttribute("fechainicio", fechainicio);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteVentas";
+            }
         }
 
 
@@ -662,9 +504,9 @@ public class AdminRestController {
 
         //Enviar atributos a la vista
         model.addAttribute("textCodigo", textCodigo);
-        model.addAttribute("inputPrecio", inputPrecio);
+        model.addAttribute("inputPrecio", inputPrecioInt);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecio + "\n" + fechainicio + "\n" + fechafin);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecioInt + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);
@@ -682,12 +524,12 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVal(6, "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVal("6", "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVal")
     public String findPaginatedRepVal
-            (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) Integer inputValoracion,
+            (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) String inputValoracion,
              @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
              @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
              @RequestParam(value = "pageNo", required = false) Integer pageNo,
@@ -704,26 +546,48 @@ public class AdminRestController {
 
         //Manipular input de buscadores
         System.out.println(inputValoracion);
-        String inputValoracion2;
-        if (inputValoracion == null || inputValoracion == 6) {
-            inputValoracion2 = "";
+        int inputValoracion2;
+        if (inputValoracion == null) {
+            inputValoracion = "";
         } else {
-            System.out.println("###entre###");
-            inputValoracion2 = String.valueOf(inputValoracion);
-            System.out.println(inputValoracion2);
+            try {
+                inputValoracion2 = Integer.parseInt(inputValoracion);
+                if (inputValoracion2 >= 6) {
+                    return "redirect:/restaurante/reporteValoracion";
+                }
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
+
         }
 
+        Date fechafin2;
+        Date fechainicio2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin = "3000-05-21";
         } else {
-            model.addAttribute("fechafin", fechafin);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechafin2 = simpleDateFormat.parse(fechafin);
+                model.addAttribute("fechafin", fechafin);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
 
         }
 
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
-            model.addAttribute("fechainicio", fechainicio);
+            try {
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                fechainicio2 = simpleDateFormat.parse(fechainicio);
+                model.addAttribute("fechainicio", fechainicio);
+            } catch (ParseException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
         }
 
 
@@ -739,13 +603,13 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion2, fechainicio, fechafin);
+        page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion, fechainicio, fechafin);
         listaValoracionReporte = page.getContent();
 
         //Enviar atributos a la vista
-        model.addAttribute("inputValoracion", inputValoracion2);
+        model.addAttribute("inputValoracion", inputValoracion);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion2 + "\n" + fechainicio + "\n" + fechafin);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);
@@ -763,17 +627,17 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginated2("", 0, 0, 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepPla("", "0", "0", 1, restaurante.getIdrestaurante(), model, session);
     }
 
-    @GetMapping("/page2")
-    public String findPaginated2(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String
-                                         textBuscador,
-                                 @ModelAttribute @RequestParam(value = "inputCantidad", required = false) Integer inputCantidad,
-                                 @ModelAttribute @RequestParam(value = "inputCategoria", required = false) Integer inputCategoria,
-                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
-                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
-                                         session) {
+    @GetMapping("/pagePla")
+    public String findPaginatedRepPla(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String
+                                              textBuscador,
+                                      @ModelAttribute @RequestParam(value = "inputCantidad", required = false) String inputCantidad,
+                                      @ModelAttribute @RequestParam(value = "inputCategoria", required = false) String inputCategoria,
+                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                      @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
+                                              session) {
 
         if (pageNo == null || pageNo == 0) {
             pageNo = 1;
@@ -789,27 +653,46 @@ public class AdminRestController {
             textBuscador = "";
         }
         System.out.println(inputCategoria);
-        String inputCategoria2;
-        if (inputCategoria == null || inputCategoria == 0) {
-            inputCategoria2 = "";
+        int inputCategoria2;
+        if (inputCategoria == null) {
+            inputCategoria = "";
         } else {
-            inputCategoria2 = String.valueOf(inputCategoria);
+            try {
+                inputCategoria2 = Integer.parseInt(inputCategoria);
+                if (inputCategoria2 >= 5) {
+                    return "redirect:/restaurante/reporteValoracion";
+                } else if (inputCategoria2 == 0) {
+                    inputCategoria = "";
+                }
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reporteValoracion";
+            }
+
         }
+
         System.out.println(inputCantidad);
-        if (inputCantidad == null) {
-            inputCantidad = 0;
-        }
+        int inputCantidadInt;
         int inputCantidadMax;
         int inputCantidadMin;
-        if (inputCantidad == 0) {
-            inputCantidadMin = 0;
-            inputCantidadMax = 1000;
-        } else if (inputCantidad == 4) {
-            inputCantidadMin = inputCantidad;
-            inputCantidadMax = 1000;
-        } else {
-            inputCantidadMin = inputCantidad;
-            inputCantidadMax = inputCantidad;
+        if (inputCantidad == null) {
+            inputCantidadInt = 0;
+        }
+        try {
+            inputCantidadInt = Integer.parseInt(inputCantidad);
+            if (inputCantidadInt == 0) {
+                inputCantidadMin = 0;
+                inputCantidadMax = 1000;
+            } else if (inputCantidadInt == 4) {
+                inputCantidadMin = inputCantidadInt;
+                inputCantidadMax = 1000;
+            } else if (inputCantidadInt > 4) {
+                return "redirect:/restaurante/reportePlatos";
+            } else {
+                inputCantidadMin = inputCantidadInt;
+                inputCantidadMax = inputCantidadInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/reportePlatos";
         }
 
         System.out.println("#################");
@@ -821,7 +704,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria2, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
+        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
         listaPlatoReporte = page.getContent();
 
         //Enviar atributos a la vista
@@ -833,7 +716,7 @@ public class AdminRestController {
         model.addAttribute("listaCategorias", listaCategorias);
 
         System.out.println(listaCategorias.get(2).getIdcategoria());
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria2 + "\n" + inputCantidad);
+        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
         System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);

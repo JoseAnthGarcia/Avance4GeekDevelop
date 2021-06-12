@@ -88,8 +88,8 @@
                             <h6 class="notificacion">
                                 Pedido actual
                             </h6>
-                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
-                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                            <p th:if="${notificaciones.size()!=0}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item d-flex align-items-center"
                                th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                             </a>
-                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center" href="#">
+                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="mr-3">
                                     <img class="icon-circle" src="img/rosaNautica.jpg">
                                 </div>
@@ -108,7 +108,7 @@
                                     <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
                                 Mostrar todos mis pedidos</a>
                         </div>
                     </li>

@@ -72,7 +72,7 @@ public class LoginController {
     UsuarioRepository adminRestRepository;
 
 
-    @GetMapping(value = {"/login",""})
+    @GetMapping("/login")
     public String loginForm() {
         return "Cliente/login";
     }

@@ -1254,11 +1254,13 @@ public class ClienteController {
                 precioTotalPlatos = precioTotalPlatos.add(subtotal);
             }
 
-            BigDecimal precioTotalExtras = new BigDecimal(0);
-            for (int i = 0; i < listaExtra.size(); i++) {
-                BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
-                precioTotalExtras = precioTotalExtras.add(subTotal1);
-            }
+            BigDecimal precioTotalExtras = BigDecimal.ZERO;
+            /**if(!listaExtra.isEmpty()||listaExtra!=null){
+                for (int i = 0; i < listaExtra.size(); i++) {
+                    BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
+                    precioTotalExtras = precioTotalExtras.add(subTotal1);
+                }
+            }**/
 
             BigDecimal desc = new BigDecimal(cupon.getDescuento());
             BigDecimal precioTotal = precioTotalPlatos.add(precioTotalExtras);
@@ -1305,21 +1307,25 @@ public class ClienteController {
 
             pedido = pedidoRepository.save(pedido);
 
-            for (Plato_has_pedido plato_has_pedido : listaPlatos) {
+            /*for (Plato_has_pedido plato_has_pedido : listaPlatos) {
                 Plato_has_pedidoKey plato_has_pedidoKey = new Plato_has_pedidoKey();
                 plato_has_pedidoKey.setCodigo(pedido.getCodigo());
                 plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
                 plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
+                plato_has_pedido.setCantidad(2);
+                plato_has_pedido.setObservacionplatillo("ola");
+                plato_has_pedido.setPreciounitario(new BigDecimal(12));
+                System.out.println(pedido.getCodigo());
                 platoHasPedidoRepository.save(plato_has_pedido);
-            }
+            }*/
 
-            for (Extra_has_pedido extra_has_pedido : listaExtra) {
+            /*for (Extra_has_pedido extra_has_pedido : listaExtra) {
                 Extra_has_pedidoKey extra_has_pedidoKey = new Extra_has_pedidoKey();
                 extra_has_pedidoKey.setCodigo(pedido.getCodigo());
                 extra_has_pedidoKey.setIdextra(extra_has_pedido.getExtra().getIdextra());
                 extra_has_pedido.setIdextra(extra_has_pedidoKey);
                 extraHasPedidoRepository.save(extra_has_pedido);
-            }
+            }*/
 
             return "redirect:/cliente/pedidoActual";
         }

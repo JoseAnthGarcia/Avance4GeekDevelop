@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,6 +143,16 @@ public class RepartidorController {
             return null;
         }
     }
+    @GetMapping("/editarPerfil")
+    public String editarPerfil(HttpSession httpSession, Model model) {
+
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+
+        return "Cliente/editarPerfil";
+
+    }
+
 
     @GetMapping("/estadisticas")
     public String estadisticas(Model model,HttpSession session,

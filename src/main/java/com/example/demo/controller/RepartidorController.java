@@ -19,10 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -309,6 +311,7 @@ public class RepartidorController {
     @PostMapping("/guardarRepartidor")
     public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
                                     BindingResult bindingResult,
+                                    @RequestParam("photo") MultipartFile file,
                                     Movilidad movilidad, Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
@@ -321,7 +324,8 @@ public class RepartidorController {
         Boolean errorMov = false;
         Boolean errorDist=false;
         Boolean errorSexo= false;
-
+        Boolean validarFoto = true;
+        String fileName = "";
         if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
             errorMov= true;
         }
@@ -354,8 +358,25 @@ public class RepartidorController {
         if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
             errorSexo=true;
         }
+        if (file != null) {
+
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "/AdminRestaurante/registroAR";
+            }
+        }
         if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
-                errorDist || errorFecha || errorSexo){
+                errorDist || errorFecha || errorSexo || !validarFoto){
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -390,7 +411,16 @@ public class RepartidorController {
             return "/Repartidor/registro";
         }else {
 
-
+            try {
+                usuario.setFoto(file.getBytes());
+                usuario.setFotonombre(fileName);
+                usuario.setFotocontenttype(file.getContentType());
+                usuarioRepository.save(usuario);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "/AdminRestaurante/registroAR";
+            }
             //se agrega rol:
             usuario.setRol(rolRepository.findById(4).get());
             //

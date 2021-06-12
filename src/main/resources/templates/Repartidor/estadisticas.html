@@ -167,16 +167,16 @@
                             <div class="container-fluid">
                                 <div class="row" style="color: black">
                                     <div class="col-sm-6">
-                                        <div class="row">
+                                        <div class="row" th:each="pedido, i : ${listaPedidos}">
                                             <div class="col-sm-6">
-                                                <p>Buen repartidor muy amable</p>
+                                                <p th:text="${pedido.comentariorepartidor}">Buen repartidor muy amable</p>
                                             </div>
 
                                             <div class="col-sm-6">
-                                                <p>4.5/5</p>
+                                                <p th:text="${pedido.valoracionrepartidor}">4.5/5</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <!--<div class="row">
                                             <div class="col-sm-6">
                                                 <p>Cumple con los protocolos de salubridad</p>
                                             </div>
@@ -211,26 +211,27 @@
                                             <div class="col-sm-6">
                                                 <p> 3.5/5</p>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%;top: 30%">
-                                        <h1 style="font-size:7em">4.2</h1>
+                                        <h1 style="font-size:7em" th:text="${valoracion}">4.2</h1>
                                     </div>
                                 </div>
 
 
                             </div>
                             <!--Pagination -->
-                            <div class="pagination"
-                                 style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
+                            <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/repartidor/estadisticas?numPag=' + ${i}}"
+                                       th:utext="${i}"
+                                       class="active mt-2 no "></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+
+                                </div>
                             </div>
                             <!-- End of pagination -->
 

@@ -4,10 +4,7 @@ import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.dtos.ReporteIngresosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
-import com.example.demo.service.PedidoRepartidorService;
-import com.example.demo.service.PedidoRepartidorServiceImpl;
-import com.example.demo.service.PedidoService;
-import com.example.demo.service.PedidoServiceImpl;
+import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -64,6 +61,11 @@ public class RepartidorController {
 
     @Autowired
     RestauranteRepository restauranteRepository;
+
+    @Autowired
+    ComentarioRepartidorService comentarioRepartidorService;
+
+
     @GetMapping("/tipoReporte")
     public String tipoReporte(){
         return "Repartidor/reportes";
@@ -151,14 +153,16 @@ public class RepartidorController {
         }
 
         int tamPag = 5;
-        pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
+        pagina = comentarioRepartidorService.comentariosRepartidor(numPag, tamPag, repartidor.getIdusuario());
         List<Pedido> pedidos =pagina.getContent();
         model.addAttribute("tamPag",tamPag);
         model.addAttribute("currentPage",numPag);
         model.addAttribute("totalPages", pagina.getTotalPages());
         model.addAttribute("totalItems", pagina.getTotalElements());
 
-
+        int valoracion = usuarioRepository.valoracionRepartidor(repartidor.getIdusuario());
+        model.addAttribute("listaPedidos", pedidos);
+        model.addAttribute("valoracion", valoracion);
 
         return "/Repartidor/estadisticas";
     }

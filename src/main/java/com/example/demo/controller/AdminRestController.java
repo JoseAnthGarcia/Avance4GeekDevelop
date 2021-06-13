@@ -504,7 +504,7 @@ public class AdminRestController {
 
         //Enviar atributos a la vista
         model.addAttribute("textCodigo", textCodigo);
-        model.addAttribute("inputPrecio", inputPrecioInt);
+        model.addAttribute("inputPrecio", inputPrecio);
 
         System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecioInt + "\n" + fechainicio + "\n" + fechafin);
 

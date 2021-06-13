@@ -235,7 +235,7 @@ public class RepartidorController {
         model.addAttribute("totalPages", pagina.getTotalPages());
         model.addAttribute("totalItems", pagina.getTotalElements());
 
-        int valoracion = usuarioRepository.valoracionRepartidor(repartidor.getIdusuario());
+        Integer valoracion = usuarioRepository.promedioValoracionRpartidor(repartidor.getIdusuario());
         model.addAttribute("listaPedidos", pedidos);
         model.addAttribute("valoracion", valoracion);
 

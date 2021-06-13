@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Estadísticas')"></head>
 
 <body id="page-top">
 
@@ -11,7 +11,7 @@
 
     <!-- Sidebar -->
 
-    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -46,7 +46,7 @@
                                             <tr>
                                                 <th scope="col"></th>
                                                 <th scope="col">
-                                                    <h2>Ganancias por mes</h2>
+                                                    <h3>Ganancias por mes</h3>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -99,7 +99,7 @@
                                             <tr>
                                                 <th scope="col"></th>
                                                 <th scope="col">
-                                                    <h2>Ganancias por día</h2>
+                                                    <h3>Ganancias por día</h3>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -176,43 +176,9 @@
                                                 <p th:text="${pedido.valoracionrepartidor}">4.5/5</p>
                                             </div>
                                         </div>
-                                        <!--<div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Cumple con los protocolos de salubridad</p>
-                                            </div>
 
-                                            <div class="col-sm-6">
-                                                <p>5/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Muy rápido y amable</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p>4/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Muy bueno</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p>4/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Amable</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p> 3.5/5</p>
-                                            </div>
-                                        </div> -->
                                     </div>
+
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%;top: 30%">
                                         <h1 style="font-size:7em" th:text="${valoracion}">4.2</h1>
                                     </div>

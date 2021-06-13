@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -252,7 +253,7 @@
                         <nav aria-label="Pagination">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" th:each="page : ${pages}">
-                                    <a th:unless="${texto == null && descuento == null }"
+                                    <a th:unless="${texto == null && descuento == null }" style="background-color: #701111"
                                        class="page-link active" th:text="${page}"
                                        th:href="@{'/cliente/listaCupones?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
                                 </li>

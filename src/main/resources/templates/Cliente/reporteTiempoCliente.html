@@ -76,7 +76,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -224,7 +225,7 @@
 						<br>
 						<div class="text-center">
 							<h3 style="color:black" th:if="${totalsuma1}>0"th:text="|Promedio tiempo delivery: ${totalsuma1} minutos|"></h3>
-                            <h3 th:if="${totalsuma1==0}" th:text="|No se encontraron reultados|"></h3>
+                            <h5 th:if="${totalsuma1==0}" th:text="|No se encontraron reultados|"></h5>
 						</div>
                         <div class="card-body" th:if="${totalsuma1}>0">
                             <div class="table-responsive">
@@ -279,7 +280,7 @@
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
                                         <a th:unless="${texto == null && numpedidos == null && mes==null  }" class="page-link active" th:text="${page}"
-                                           th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
+                                           style="background-color: #701111"  th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
                                     </li>
                                 </ul>
                             </nav>

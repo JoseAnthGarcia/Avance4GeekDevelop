@@ -2,12 +2,10 @@ package com.example.demo.controller;
 
 import ch.qos.logback.core.util.CachingDateFormatter;
 import com.example.demo.dtos.NotifiRestDTO;
-import com.example.demo.entities.Cupon;
-import com.example.demo.entities.Extra;
-import com.example.demo.entities.Restaurante;
-import com.example.demo.entities.Usuario;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.CuponRepository;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -192,29 +190,30 @@ public class CuponController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        cupon.setIdrestaurante(restaurante.getIdrestaurante());
         if (bindingResult.hasErrors()) {
             return "AdminRestaurante/nuevoCupon";
+        }else {
+            if (cupon.getIdcupon() == 0) {
+                System.out.println("SOYYYYYYYYYYYYYYYYYYYYYY UNUNUUNU");
+
+                cupon.setFechainicio(LocalDate.now());
+                cupon.setEstado(1);
+                attributes.addFlashAttribute("creado", "Cupón creado exitosamente");
+            } else {
+                Optional<Cupon> optionalCupon = cuponRepository.findById(cupon.getIdcupon());
+                System.out.println("SOYYYYYYYYYYYYYYYYYYYYYY ");
+                if (optionalCupon.isPresent()) {
+                    Cupon cupon2 = optionalCupon.get();
+                    attributes.addFlashAttribute("editado", "Cupón editado exitosamente");
+                } else {
+                    return "redirect:/cupon/lista";
+                }
+
+            }
+
+            cuponRepository.save(cupon);
         }
-
-
-        System.out.println("################################");
-        System.out.println(cupon.getFechafin());
-        System.out.println(cupon.getFechainicio());
-        if (cupon.getIdcupon() == 0) {
-            cupon.setIdrestaurante(restaurante.getIdrestaurante());
-            cupon.setFechainicio(LocalDate.now());
-            cupon.setEstado(1);
-            attributes.addFlashAttribute("creado", "Cupón creado exitosamente");
-        } else {
-            cupon.setIdrestaurante(restaurante.getIdrestaurante());
-            attributes.addFlashAttribute("editado", "Cupón editado exitosamente");
-        }
-
-            /*if(cupon.getFechainicio().isEqual(cupon .getFechafin())){
-                cupon.setDisponible(false);
-            }*/
-
-        cuponRepository.save(cupon);
         return "redirect:/cupon/lista";
     }
 
@@ -234,7 +233,6 @@ public class CuponController {
             cupon = optionalCupon.get();
             cupon.setFechainicio(LocalDate.parse(fechainicio));
             cupon.setFechafin(LocalDate.parse(fechafin));
-            System.out.println("********" + cupon.getFechainicio());
             model.addAttribute("cupon", cupon);
             return "AdminRestaurante/nuevoCupon";
         } else {

@@ -11784,7 +11784,6 @@ a:focus {
 }
 
 .image2 {
-    display: block;
     object-fit: cover;
     border-radius: 0.35rem;
 }

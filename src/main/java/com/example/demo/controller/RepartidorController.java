@@ -419,17 +419,6 @@ public class RepartidorController {
             nombreRestVal = false;
         }
 
-        boolean idDistVal = true;
-        Distrito distrito = null;
-        try{
-            distrito = distritosRepository.findByIddistrito(Integer.parseInt(idDistrito));
-            if(distrito==null){
-                idDistVal = false;
-            }
-        }catch (NumberFormatException e){
-            idDistVal = false;
-        }
-
         //TODO: validar fechas:
         boolean fechaMinVal = true;
         boolean fechaMaxVal = true;
@@ -492,6 +481,17 @@ public class RepartidorController {
             }catch (NumberFormatException e){
                 valoracionVal = false;
             }
+        }
+
+        boolean idDistVal = true;
+        Distrito distrito = null;
+        try{
+            distrito = distritosRepository.findByIddistrito(Integer.parseInt(idDistrito));
+            if(distrito==null){
+                idDistVal = false;
+            }
+        }catch (NumberFormatException e){
+            idDistVal = false;
         }
 
         Usuario repartidor = (Usuario) session.getAttribute("usuario");

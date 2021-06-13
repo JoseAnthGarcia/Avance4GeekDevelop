@@ -11,6 +11,7 @@
 
         var cantPedidos = document.getElementsByTagName("tr").length-1;
         var tampag = 3;
+        var pagAct = 1;
         generarPaginacion();
         generarPagina1();
         function generarPaginacion(){
@@ -20,10 +21,15 @@
             }
             $(".pagination").append("<a class='butPag'>»</a>");
         }
+
         $(".pagination").on("click", ".butPag", function(){
             var pag = parseInt(this.innerHTML,10);
 
-            $("#pag1").removeClass("active");
+            if(pag!=pagAct){
+                $("#pag"+pagAct).removeClass("active");
+                $("#pag"+pag).addClass("active");
+                pagAct= pag;
+            }
 
             for(i=1; i<=cantPedidos;i++){
                 console.log("i:"+ i);
@@ -35,6 +41,7 @@
                     $("#"+i).hide();
                 }
             }
+
         });
 
         function generarPagina1(){

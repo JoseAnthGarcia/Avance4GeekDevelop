@@ -130,7 +130,7 @@ public class ClienteController {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/editarPerfil";
+        return "/Cliente/editarPerfil";
 
     }
 
@@ -176,7 +176,7 @@ public class ClienteController {
                 model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
             }
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-            return "Cliente/editarPerfil";
+            return "/Cliente/editarPerfil";
 
 
         } else {
@@ -313,7 +313,7 @@ public class ClienteController {
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/listaRestaurantes";
+        return "/Cliente/listaRestaurantes";
     }
 
     @GetMapping("/listaDirecciones")
@@ -333,7 +333,7 @@ public class ClienteController {
         model.addAttribute("listaDistritos", distritosRepository.findAll());
         model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/listaDirecciones";
+        return "/Cliente/listaDirecciones";
     }
 
 
@@ -438,7 +438,7 @@ public class ClienteController {
             model.addAttribute("direccionesSinActual", listaUbicacionesSinActual);
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-            return "Cliente/listaDirecciones";
+            return "/Cliente/listaDirecciones";
 
         } else {
             Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -691,7 +691,7 @@ public class ClienteController {
             model.addAttribute("texto", texto);
             model.addAttribute("nombreRest", restaurante.getNombre());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-            return "Cliente/detallePlato";
+            return "/Cliente/detallePlato";
         } else {
             //model.addAttribute("idRest",idRest);
             //model.addAttribute("idPlato",idPlato);
@@ -722,7 +722,7 @@ public class ClienteController {
         model.addAttribute("idPage", idPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         model.addAttribute("idRest", idRest);
-        return "Cliente/carritoCompras";
+        return "/Cliente/carritoCompras";
     }
 
     @PostMapping("/aniadirCarrito")
@@ -936,7 +936,7 @@ public class ClienteController {
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         // model.addAttribute("idRest",idRest);
-        return "Cliente/carritoExtras";
+        return "/Cliente/carritoExtras";
     }
 
     @PostMapping("/aniadirExtras")
@@ -1185,7 +1185,7 @@ public class ClienteController {
         //   model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        return "Cliente/terminarCompra";
+        return "/Cliente/terminarCompra";
     }
 
     @PostMapping("/generarPedido")
@@ -1371,7 +1371,7 @@ public class ClienteController {
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/listaReportes";
+        return "/Cliente/listaReportes";
     }
 
     //PEDIDO ACTUAL
@@ -1439,7 +1439,7 @@ public class ClienteController {
         model.addAttribute("estado", estado);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/listaPedidoActual";
+        return "/Cliente/listaPedidoActual";
     }
 
     @GetMapping("/cancelarPedido")
@@ -1460,7 +1460,8 @@ public class ClienteController {
     }
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam Map<String, Object> params, @RequestParam("codigo") String codigo, Model model, HttpSession session) {
+    public String detallePedidoActual(@RequestParam Map<String, Object> params,
+                                      @RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
         List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
         if (pedido1DTOS.isEmpty()) {
@@ -1477,18 +1478,18 @@ public class ClienteController {
         if (codigo == null) {
             codigo = "";
         }
+
         Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+
         model.addAttribute("listapedido2", listaPedidos);
         model.addAttribute("codigo", codigo);
-
-
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/detallePedidoActual";
+        return "/Cliente/detallePedidoActual";
     }
 
     //HISTORIAL PEDIDOS
@@ -1540,7 +1541,7 @@ public class ClienteController {
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
 
-        return "Cliente/listaHistorialPedidos";
+        return "/Cliente/listaHistorialPedidos";
     }
 
     @PostMapping("/valorarRest")
@@ -1656,7 +1657,7 @@ public class ClienteController {
         model.addAttribute("mes", mes);
         model.addAttribute("nombrec", nombrec);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/reporteDineroCliente";
+        return "/Cliente/reporteDineroCliente";
     }
 
 
@@ -1789,11 +1790,13 @@ public class ClienteController {
             model.addAttribute("pages", pages);
         }
         int totalsuma1 = 0;
+        int i=0;
         for (ReportePedidoCDTO rep : listapedidos) {
             // System.out.println(rep.getTiempoEntrega());
             totalsuma1 = totalsuma1 + rep.getTiempoentrega();
+            i=i+1;
         }
-        totalsuma1 = totalsuma1 / listapedidos.getSize();
+        totalsuma1 = totalsuma1 / i;
 
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos", listapedidos);
@@ -1802,7 +1805,7 @@ public class ClienteController {
         model.addAttribute("mes", mes);
         model.addAttribute("numpedidos", numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/reporteTiempoCliente";
+        return "/Cliente/reporteTiempoCliente";
     }
 
     @GetMapping("/listaCupones")
@@ -1865,7 +1868,7 @@ public class ClienteController {
         model.addAttribute("texto", texto);
         model.addAttribute("descuento", descuento);
 
-        return "Cliente/listaCupones";
+        return "/Cliente/listaCupones";
     }
 
     public String generarCodigAleatorio() {

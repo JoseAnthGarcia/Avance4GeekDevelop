@@ -16,4 +16,6 @@ public interface Pedido1DTO {
     String getNombrecupon();
     int getDescuento();
     int getIdcliente();
+    String getObsrest();
+
 }

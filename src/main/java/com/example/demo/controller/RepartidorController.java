@@ -175,8 +175,16 @@ public class RepartidorController {
         if (valContra || usuario2!=null ) {
 
             if (usuario2!=null) {
-                model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+                int idusuario = usuario2.getIdusuario();
+                int sesion =usuario.getIdusuario();
+                if(idusuario==sesion){
+                    model.addAttribute("msg1", "El telefono nuevo debe ser distinto al actual");
+                }else{
+                    model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+                }
+                System.out.println("sesion "+ usuario.getIdusuario() +" user "+ usuario2.getIdusuario());
             }
+
             if (valContra) {
                 model.addAttribute("msg", "Contraseña incorrecta");
             }
@@ -193,6 +201,23 @@ public class RepartidorController {
         }
 
 
+    }
+    @GetMapping("/fotoPerfil")
+    public ResponseEntity<byte[]> mostrarPerfil(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario= usuarioOptional.get();
+            byte[] image = usuario.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
     }
 
 

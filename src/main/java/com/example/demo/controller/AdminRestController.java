@@ -80,6 +80,7 @@ public class AdminRestController {
             return null;
         }
     }
+
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id) {
         Optional<Usuario> optionalUsuario = adminRestRepository.findById(id);
@@ -121,13 +122,13 @@ public class AdminRestController {
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", 0, 0, today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
-                                @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
+                                @ModelAttribute @RequestParam(value = "textEstado", required = false) String inputEstado,
+                                @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                 @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
@@ -146,34 +147,54 @@ public class AdminRestController {
         }
 
         System.out.println(inputEstado);
-        if (inputEstado == null) {
-            inputEstado = 0;
-        }
+        int inputEstado2;
         int inputEstadoMin;
         int inputEstadoMax;
-        if (inputEstado == 0) {
-            inputEstadoMin = 0;
-            inputEstadoMax = 8;
-        } else {
-            inputEstadoMin = inputEstado - 1;
-            inputEstadoMax = inputEstado - 1;
+
+        if (inputEstado == null) {
+            inputEstado2 = 0;
+        }
+
+        try {
+            inputEstado2 = Integer.parseInt(inputEstado);
+            if (inputEstado2 == 0) {
+                inputEstadoMin = 0;
+                inputEstadoMax = 8;
+            } else if (inputEstado2 > 7) {
+                return "redirect:/restaurante/listaPedidos";
+            } else {
+                inputEstadoMin = inputEstado2 - 1;
+                inputEstadoMax = inputEstado2 - 1;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/listaPedidos";
         }
 
         System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
+        int inputPrecioInt;
         int inputPMax;
         int inputPMin;
-        if (inputPrecio == 0) {
-            inputPMin = 0;
-            inputPMax = 1000;
-        } else if (inputPrecio == 4) {
-            inputPMin = inputPrecio;
-            inputPMax = 1000;
-        } else {
-            inputPMax = inputPrecio;
-            inputPMin = inputPrecio;
+
+        if (inputPrecio == null) {
+            inputPrecioInt = 0;
+        }
+
+        try {
+            inputPrecioInt = Integer.parseInt(inputPrecio);
+            if (inputPrecioInt == 0) {
+                inputPMin = 0;
+                inputPMax = 1000;
+            } else if (inputPrecioInt == 4) {
+                inputPMin = inputPrecioInt;
+                inputPMax = 1000;
+            } else if (inputPrecioInt > 4) {
+                return "redirect:/restaurante/listaPedidos";
+            } else {
+                inputPMin = inputPrecioInt;
+                inputPMax = inputPrecioInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/listaPedidos";
         }
 
         System.out.println(fechafin + "############");
@@ -552,8 +573,10 @@ public class AdminRestController {
         } else {
             try {
                 inputValoracion2 = Integer.parseInt(inputValoracion);
-                if (inputValoracion2 >= 6) {
+                if (inputValoracion2 > 6) {
                     return "redirect:/restaurante/reporteValoracion";
+                } else if (inputValoracion2 == 6){
+                    inputValoracion="";
                 }
             } catch (NumberFormatException e) {
                 return "redirect:/restaurante/reporteValoracion";
@@ -638,93 +661,112 @@ public class AdminRestController {
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
-
-        if (pageNo == null || pageNo == 0) {
-            pageNo = 1;
-        }
-        int inputID = 1;
-        int pageSize = 5;
-        Page<PlatoReporteDTO> page;
-        List<PlatoReporteDTO> listaPlatoReporte;
-
-        //Manipular input de buscadores
-        System.out.println(textBuscador);
-        if (textBuscador == null) {
-            textBuscador = "";
-        }
-        System.out.println(inputCategoria);
-        int inputCategoria2;
-        if (inputCategoria == null) {
-            inputCategoria = "";
-        } else {
-            try {
-                inputCategoria2 = Integer.parseInt(inputCategoria);
-                if (inputCategoria2 >= 5) {
-                    return "redirect:/restaurante/reporteValoracion";
-                } else if (inputCategoria2 == 0) {
-                    inputCategoria = "";
-                }
-            } catch (NumberFormatException e) {
-                return "redirect:/restaurante/reporteValoracion";
-            }
-
-        }
-
-        System.out.println(inputCantidad);
-        int inputCantidadInt;
-        int inputCantidadMax;
-        int inputCantidadMin;
-        if (inputCantidad == null) {
-            inputCantidadInt = 0;
-        }
-        try {
-            inputCantidadInt = Integer.parseInt(inputCantidad);
-            if (inputCantidadInt == 0) {
-                inputCantidadMin = 0;
-                inputCantidadMax = 1000;
-            } else if (inputCantidadInt == 4) {
-                inputCantidadMin = inputCantidadInt;
-                inputCantidadMax = 1000;
-            } else if (inputCantidadInt > 4) {
-                return "redirect:/restaurante/reportePlatos";
-            } else {
-                inputCantidadMin = inputCantidadInt;
-                inputCantidadMax = inputCantidadInt;
-            }
-        } catch (NumberFormatException e) {
-            return "redirect:/restaurante/reportePlatos";
-        }
-
-        System.out.println("#################");
-        System.out.println("#################");
-
-        //Obtener lista de reportes
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
-        model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
-        listaPlatoReporte = page.getContent();
-
-        //Enviar atributos a la vista
-        model.addAttribute("texto", textBuscador);
-        model.addAttribute("textoC", inputCategoria);
-        model.addAttribute("textoCant", inputCantidad);
-
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        model.addAttribute("listaCategorias", listaCategorias);
-
+        int inputCategoria2;
+        System.out.println(inputCategoria);
+        System.out.println(listaCategorias.get(0).getIdcategoria());
+        System.out.println(listaCategorias.get(1).getIdcategoria());
         System.out.println(listaCategorias.get(2).getIdcategoria());
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
-        System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
-        //Enviar lista y valores para paginación
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listaPlatoReportes", listaPlatoReporte);
-        return "AdminRestaurante/reportePlatos";
+        System.out.println(listaCategorias.get(3).getIdcategoria());
+        if (inputCategoria == null) {
+            return "redirect:/restaurante/reportePlatos";
+        } else {
+            try {
+                inputCategoria2 = Integer.parseInt(inputCategoria);
+                int i = 1;
+                for (Categorias categoria : listaCategorias) {
+                    if (categoria.getIdcategoria() == inputCategoria2) {
+                        System.out.println("entre1");
+                        inputCategoria = String.valueOf(inputCategoria2);
+                        break;
+                    } else if (inputCategoria2 == 0) {
+                        System.out.println("entre2");
+                        inputCategoria = "";
+                        break;
+                    } else {
+                        if (i == 4) {
+                            System.out.println("entre3");
+                            return "redirect:/restaurante/reportePlatos";
+                        }
+                    }
+                    i ++;
+                }
+                if (pageNo == null || pageNo == 0) {
+                    pageNo = 1;
+                }
+                int inputID = 1;
+                int pageSize = 5;
+                Page<PlatoReporteDTO> page;
+                List<PlatoReporteDTO> listaPlatoReporte;
+
+                //Manipular input de buscadores
+
+                if (textBuscador == null) {
+                    textBuscador = "";
+                }
+
+
+                System.out.println(inputCantidad);
+                int inputCantidadInt;
+                int inputCantidadMax;
+                int inputCantidadMin;
+                if (inputCantidad == null) {
+                    inputCantidadInt = 0;
+                }
+                try {
+                    inputCantidadInt = Integer.parseInt(inputCantidad);
+                    if (inputCantidadInt == 0) {
+                        inputCantidadMin = 0;
+                        inputCantidadMax = 1000;
+                    } else if (inputCantidadInt == 4) {
+                        inputCantidadMin = inputCantidadInt;
+                        inputCantidadMax = 1000;
+                    } else if (inputCantidadInt > 4) {
+                        return "redirect:/restaurante/reportePlatos";
+                    } else {
+                        inputCantidadMin = inputCantidadInt;
+                        inputCantidadMax = inputCantidadInt;
+                    }
+                } catch (NumberFormatException e) {
+                    return "redirect:/restaurante/reportePlatos";
+                }
+
+                System.out.println("#################");
+                System.out.println("#################");
+
+                //Obtener lista de reportes
+
+                List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+                model.addAttribute("listaNotiRest", listaNotificacion);
+                page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
+                listaPlatoReporte = page.getContent();
+
+                //Enviar atributos a la vista
+                model.addAttribute("texto", textBuscador);
+                model.addAttribute("textoC", inputCategoria);
+                model.addAttribute("textoCant", inputCantidad);
+
+
+                model.addAttribute("listaCategorias", listaCategorias);
+
+
+                System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
+
+                //Enviar lista y valores para paginación
+                model.addAttribute("pageSize", pageSize);
+                model.addAttribute("currentPage", pageNo);
+                model.addAttribute("totalPages", page.getTotalPages());
+                model.addAttribute("totalItems", page.getTotalElements());
+                model.addAttribute("listaPlatoReportes", listaPlatoReporte);
+                return "AdminRestaurante/reportePlatos";
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reportePlatos";
+            }
+        }
+
     }
 
     @GetMapping("/elegirReporte")

@@ -91,7 +91,7 @@
                                 <div class="col-7">
                                     <div class="card">
                                         <div class="card-body ml-xl-5">
-                                            <form method="POST" th:action="@{/cupon/guardar}"
+                                            <form method="POST" id="nuevo"  th:action="@{/cupon/guardar}"
                                                   class="justify-content-left"
                                                   enctype="multipart/form-data" th:object="${cupon}">
                                                 <div class="form-row">
@@ -99,6 +99,7 @@
                                                         <div th:if="${cupon.getIdcupon() != 0}">
                                                             <input type="hidden" th:field="*{idcupon}">
                                                             <input type="hidden" th:field="*{estado}">
+                                                            <input type="hidden"  th:field="*{fechainicio}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="small mb-1" for="nombre">Nombre:</label>
@@ -143,14 +144,17 @@
                                                         </div>
                                                         <div class="form-group mt-4">
                                                             <button type="submit" class="btn btn-primary mb-4 mr-2 "
-                                                                    th:text="${cupon.getIdcupon() == 0 ? 'Registrar Cupón' : 'Editar Cupón'}"></button> <!--
-                                                                   data-toggle="modal"
-                                                                   data-target="#RegistroExitoso" -->
+                                                                    th:text="${cupon.getIdcupon() == 0 ? 'Registrar Cupón' : 'Editar Cupón'}"
+                                                                    data-toggle="modal"
+                                                                    data-target="#RegistroExitoso"
+                                                                    href="#RegistroExitoso" ></button>
 
                                                             <a th:if="${cupon.getIdcupon() != 0 && cupon.getEstado() != 0}"
                                                                style="color: #dce3f9"
                                                                class="btn btn-danger mb-4"
-                                                               th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon} + '&estado=0'}">
+                                                               data-toggle="modal"
+                                                               href="#modalEliminar" data-target="#modalEliminar"
+                                                               >
                                                                 Bloquear
                                                             </a>
                                                             <a th:if="${cupon.getIdcupon() != 0 && cupon.getEstado() == 0}"
@@ -186,148 +190,59 @@
                 </div>
             </div>
         </div>
-        <!-- End of Main Content -->
-        <!-- End of Content Wrapper -->
-        <!-- End of Page Wrapper -->
 
 
-        <!--<div class="card-body">
-            <div class="text-xl-left">
-
-                <div class="container-fluid">
-                    <div class="tabel-responsive">
-                        <table class="table">
-                            <form method="POST" th:action="@{'/cupon/guardar'}" class="justify-content-left"
-                                  enctype="multipart/form-data" th:object="${cupon}">
-                                <div th:if="${cupon.getIdcupon() != 0}"><input type="hidden" th:field="*{idcupon}"></div>
-                                <tr>
-                                    <td><label for="nombre">Nombre:</label></td>
-                                    <td colspan="2"><br><input type="text" class="form-control mb-1"  style="border-color: lightgray"
-                                                               th:field="*{nombre}">
-                                        <h1 style="color: red; font-size: small; text-align: left"
-                                            th:if="${#fields.hasErrors('nombre')}"
-                                            th:errors="*{nombre}"></h1></td>
-                                    <td rowspan="4" colspan="3"><img id="image_preview"
-                                                                     src="https://image.flaticon.com/icons/png/512/39/39887.png"
-                                                                     width="300"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="politica">Politica:</label></td>
-                                    <td colspan="2"><textarea class="form-control mb-1" th:field="*{politica}"  style="border-color: lightgray"
-                                                              type="text"></textarea>
-                                        <h1 style="color: red; font-size: small; text-align: left"
-                                            th:if="${#fields.hasErrors('politica')}"
-                                            th:errors="*{politica}"></h1></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="fechafin">Caducidad:</label></td>
-                                    <td colspan="2">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <input type="date" class="form-control mb-1"  style="border-color: lightgray"
-                                                       th:field="*{fechafin}" th:novalidate="novalidate">
-                                            </div>
-                                        </div>
-                                        <h1 style="color: red; font-size: small; text-align: left"
-                                            th:if="${#fields.hasErrors('fechafin')}"
-                                            th:errors="*{fechafin}"></h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="descuento">Descuento:</label></td>
-                                    <td colspan="2">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">S/.</span>
-                                                <input th:field="*{descuento}" type="text"  style="border-color: lightgray"
-                                                       class="form-control mb-1">
-                                            </div>
-                                        </div>
-                                        <h1 style="color: red; font-size: small; text-align: left"
-                                            th:if="${#fields.hasErrors('descuento')}"
-                                            th:errors="*{descuento}"></h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <button type="submit" class="btn btn-primary mb-4 mr-2 "
-                                                th:text="${cupon.getIdcupon() == 0 ? 'Registrar Cupon' : 'Editar Cupon'}"> <!--
-                                                                           data-toggle="modal"
-                                                                           data-target="#RegistroExitoso"
-
-                                        <a class="btn btn-danger mb-4"
-                                           th:href="@{/cupon/lista}"
-                                           role="button"
-                                           data-toggle="modal"
-                                           data-target="#CancelarRegistro">Cancelar</a></td>
-
-                                    <div class="modal fade" id="CancelarRegistro" tabindex="-1"
-                                         role="dialog"
-                                         aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-center"
-                                                        id="exampleModalCancelarRegistro"
-                                                        data-dismiss="modal">¿Desea cancelar el
-                                                        registro?</h5>
-                                                    <button class="close" type="button"
-                                                            data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a class="btn btn-primary"
-                                                       th:href="@{/cupon/lista}">Sí</a>
-                                                    <a class="btn" type="button"
-                                                       data-dismiss="modal">
-                                                        No
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   <div class="modal fade" id="RegistroExitoso" tabindex="-1"
-                                         role="dialog"
-                                         aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-center"
-                                                        id="exampleModalRegistro">
-                                                        ¿Está seguro que desea
-                                                        registrar este producto?</h5>
-                                                    <button class="close" type="button"
-                                                            data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a type="submit" class="btn btn-primary"
-                                                       href="listaCupones.html">
-                                                        Sí
-                                                    </a>
-                                                    <a class="btn" type="button"
-                                                       data-dismiss="modal">
-                                                        No
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </tr>
-                            </form>
-                        </table>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="RegistroExitoso" tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center"
+                            id="exampleModalRegistro"
+                            th:text="${cupon.idcupon==0? '¿Está seguro de registrar este cupón?':'¿Está seguro de editar este cupón?'}">
+                        </h5>
+                        <button class="close" type="button"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="nuevo" class="btn btn-primary">Sí</button>
+                        <a class="btn" type="button"
+                           data-dismiss="modal">
+                            No
+                        </a>
                     </div>
                 </div>
             </div>
-        </div> -->
-
-        <!-- Logout Modal-->
+        </div>
+        <!-- Modal1-->
+        <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">¿Está seguro que desea bloquear el
+                            cupón?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <a th:href="@{'/cupon/actualizar' + '?id=' + ${cupon.idcupon} + '&estado=0'}"
+                           class="btn btn-primary">Sí</a>
+                        <a class="btn" type="button"
+                           data-dismiss="modal">
+                            No
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Alerta cierre sesion-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">

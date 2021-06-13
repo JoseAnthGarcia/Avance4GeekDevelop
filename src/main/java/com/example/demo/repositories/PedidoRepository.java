@@ -33,11 +33,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente=?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
+            "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 || p.estado=0) ")
+            "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 ) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
@@ -70,7 +70,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente, concat(ubi.direccion,'-',dis.nombre) as direccion, pe.fechapedido, cu.nombre as cupon,\n" +
             "cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
-            " pe.preciototal FROM pedido pe\n" +
+            " pe.preciototal , pe.mismodistrito FROM pedido pe\n" +
             "inner join usuario u on pe.idcliente = u.idusuario \n" +
             "left join cupon cu on pe.idcupon=cu.idcupon \n" +
             "inner join metodopago pago on pe.idmetodopago=pago.idmetodopago\n" +

@@ -70,7 +70,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente, concat(ubi.direccion,'-',dis.nombre) as direccion, pe.fechapedido, cu.nombre as cupon,\n" +
             "cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
-            " pe.preciototal FROM pedido pe\n" +
+            " pe.preciototal , pe.mismodistrito FROM pedido pe\n" +
             "inner join usuario u on pe.idcliente = u.idusuario \n" +
             "left join cupon cu on pe.idcupon=cu.idcupon \n" +
             "inner join metodopago pago on pe.idmetodopago=pago.idmetodopago\n" +

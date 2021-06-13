@@ -60,6 +60,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
+    List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
+
 
    // Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin, Pageable pageable);
 

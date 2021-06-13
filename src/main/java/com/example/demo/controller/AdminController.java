@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import sun.plugin.dom.core.Element;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -296,7 +297,7 @@ public class AdminController  {
         if (restauranteOpt.isPresent()) {
             Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("restaurante", restaurante);
-            return "/AdminGen/detalleRest";
+            return "AdminGen/detalleRest";
 
         }else {
             return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -372,17 +373,20 @@ public class AdminController  {
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
-            return "/AdminGen/detalleAdminR";
+            return "AdminGen/detalleAdminR";
 
         }else {
             return "redirect:/admin/solicitudes?tipo=adminRest";
         }
     }
 
-    @GetMapping("/usuarios")
-    public String listaDeUsuarios(Model model) {
+    @GetMapping("/usuarios") ///Pagina principal
+    public String listaDeUsuarios(Model model,HttpSession session) {
+        //Integer numerop=1;//(10*pag)-10))
         model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
-        return "/AdminGen/lista";
+        //session.setAttribute("pag", numerop);
+        session.setAttribute("total",usuarioRepository.listaUsuarios().size());
+        return "AdminGen/lista";
     }
 
     @GetMapping("/buscador")
@@ -412,7 +416,7 @@ public class AdminController  {
             model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
         }
 
-        return "/AdminGen/lista";
+        return "AdminGen/lista";
     }
 
     @GetMapping("/buscadorCliente")
@@ -436,7 +440,7 @@ public class AdminController  {
         }
 
         model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,-1*fechaPedido,valoracion));
-        return "/AdminGen/visualizarCliente";
+        return "AdminGen/visualizarCliente";
     }
 
     @GetMapping("/detalle")
@@ -457,23 +461,23 @@ public class AdminController  {
             switch (usuario.getRol().getTipo()) {
                 case "administrador":
                     model.addAttribute("administrador",usuario);
-                    return "/AdminGen/visualizarAdministrador";
+                    return "AdminGen/visualizarAdministrador";
                 case "repartidor":
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
                     model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
-                    return "/AdminGen/visualizarRepartidor";
+                    return "AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
                     model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
-                    return "/AdminGen/visualizarCliente";
+                    return "AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);
-                   return "/AdminGen/visualizarAdministradorRestaurante";
+                   return "AdminGen/visualizarAdministradorRestaurante";
                 default:
                     //TODO ver si enviar con mensaje de alerta
                     return "redirect:/admin/usuarios";
@@ -561,10 +565,10 @@ public class AdminController  {
 
         if (usuario2.getRol().getIdrol()!=2){
             model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
-            return "/AdminGen/lista";
+            return "AdminGen/lista";
 
         }else{
-            return "/AdminGen/crearAdmin";
+            return "AdminGen/crearAdmin";
 
         }
 
@@ -579,7 +583,7 @@ public class AdminController  {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
 
-        return "/AdminGen/crearAdmin";
+        return "AdminGen/crearAdmin";
     }
 
 
@@ -667,7 +671,7 @@ public class AdminController  {
                 model.addAttribute("msg7", "Solo pueden registrarse m   ayores de edad");
             }
 
-            return "/AdminGen" +
+            return "AdminGen" +
                     "/crearAdmin";
         } else {
             usuario.setEstado(1);
@@ -726,7 +730,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

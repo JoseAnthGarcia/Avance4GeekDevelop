@@ -18,6 +18,14 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
+    // TODO: 12/06/2021
+
+   /* @Query(value = "SELECT * FROM geekdevelop.usuario\n" +
+            " where 1 = 1\n" +
+            " LIMIT ?1,10;", nativeQuery = true)
+    Page<Usuario> usuarioslistapage(Integer numero);*/
+
+
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
     @Query(value = "select ub.* from ubicacion ub\n" +

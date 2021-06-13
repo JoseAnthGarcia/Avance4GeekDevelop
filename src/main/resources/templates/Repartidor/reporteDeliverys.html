@@ -10,7 +10,7 @@
         //$("#mytable").DataTable();
 
         var cantPedidos = document.getElementsByTagName("tr").length-1;
-        var tampag = 3;
+        var tampag = 2;
         var pagAct = 1;
         generarPaginacion();
         generarPagina1();
@@ -58,35 +58,6 @@
                 }
             }
         }
-        /*pagina1();
-        function pagina1(){
-            for(i=1; i<=cantPedidos;i++){
-                if(i/tampag>1){
-                    $("#"+i).hide();
-                }
-            }
-        }
-
-        $("#pag2").click(function(){
-            for(i=1; i<=cantPedidos;i++){
-                if(i/tampag>2 || i/tampag<=1){
-                    $("#"+i).hide();
-                }else{
-                    $("#"+i).show();
-                }
-            }
-        });
-
-        $("#pag1").click(function(){
-
-            for(i=1; i<=cantPedidos;i++){
-                if(i/tampag>1){
-                    $("#"+i).hide();
-                }else{
-                    $("#"+i).show();
-                }
-            }
-        });*/
 
     });
 
@@ -115,63 +86,50 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <form th:action="@{/reporteDelivery}">
+                <form th:action="@{/busqReportDelivery}" method="post">
 
                     <div class="row">
                         <div class="col-sm-3  mb-2">
                             <input type="busquedaRestaurante" class="form-control"
-                                   id="exampleRestaurante"
+                                   id="exampleRestaurante" name="nombreRest"
                                    placeholder="Búsqueda por restaurante">
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control  ">
-                                <option value="" disabled selected>Buscar por distrito</option>
-                                <option value="Cercado de Lima">Cercado de Lima</option>
-                                <option value="Bellavista">Bellavista</option>
-                                <option value="Carmen de la Legua">Carmen de la Legua</option>
-                                <option value="La Perla">La Perla</option>
-                                <option value="La Punta">La Punta</option>
-                                <option value="Ventanilla"> Ventanilla</option>
-                                <option value="Barranco">Barranco</option>
-                                <option value="Breña">Breña</option>
-                                <option value="Comas">Comas</option>
-                                <option value="Chorrillos">Chorrillos</option>
-                                <option value="El Agustino">El Agustino</option>
-                                <option value="Jesús María">Jesús María</option>
+                            <select class="form-control" name="idDistrito">
+                                <option value="-1"selected>Buscar por distrito</option>
+                                <option th:each="distrito : ${listaDistritos}"
+                                        th:value="${distrito.iddistrito}" th:text="${distrito.nombre}">Cercado de Lima</option>
                             </select>
                         </div>
                         <div class="col-sm-3 m-b-2">
-                            <input placeholder="Desde" class="form-control" type="text"
+                            <input placeholder="Desde" class="form-control" type="text" name="fechaMin"
                                    onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <input placeholder="Hasta" class="form-control" type="text"
+                            <input placeholder="Hasta" class="form-control" type="text" name="fechaMax"
                                    onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control  ">
+                            <select class="form-control" name="monto">
                                 <option value="" disabled selected>Monto</option>
-                                <option value="monto1">S/. 0.0 - S/. 20.0</option>
-                                <option value="monto2">S/. 20. - S/. 40.0</option>
-                                <option value="monto3">S/. 40.0 - S/. 60.0</option>
-                                <option value="monto4">S/. 60.0 - S/. 80.0</option>
+                                <option value="1">S/. 0.0 - S/. 20.0</option>
+                                <option value="2">S/. 20. - S/. 40.0</option>
+                                <option value="3">S/. 40.0 - S/. 60.0</option>
+                                <option value="4">S/. 60.0 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control  ">
+                            <select class="form-control" name="valoracion">
                                 <option value="" disabled selected>Valoracion</option>
-                                <option value="val1">0 - 1</option>
-                                <option value="val2">1 - 2</option>
-                                <option value="val3">2 - 3</option>
-                                <option value="val4">3 - 4</option>
-                                <option value="val4">4 - 5</option>
+                                <option value="1">0 - 2</option>
+                                <option value="2">2 - 5</option>
                             </select>
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>

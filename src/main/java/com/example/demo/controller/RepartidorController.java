@@ -396,41 +396,110 @@ public class RepartidorController {
     public String repoteDelivery(HttpSession session, Model model) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         List<Pedido> listaPedidoReporte = pedidoRepository.findByEstadoAndRepartidor(6, repartidor);
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+
+        List<Distrito> listaDistritos = distritosRepository.findAll();
+
+
+        model.addAttribute("notificaciones", notificaciones);
         model.addAttribute("listaPedidoReporte", listaPedidoReporte);
+        model.addAttribute("distritos", listaDistritos);
         return "Repartidor/reporteDeliverys";
-        /*
-        HttpSession session,
-        @RequestParam(value = "pagAct", required = false) String pagAct,
-        @RequestParam(value = "fechaMin", required = false) String fechaMin,
-        @RequestParam(value = "fechaMax", required = false) String fechaMax,
-        @RequestParam(value = "precioMin", required = false) String precioMin,
-        @RequestParam(value = "precioMax", required = false) String precioMax,
-        @RequestParam(value = "valoracion", required = false) String valoracion,
-        @RequestParam(value = "nombreRest", required = false) String nombreRest
+    }
 
-        int tamPag = 5;
-        boolean pagActVal = false;
-        boolean fechaMinVal = false;
-        boolean fechaMaxVal = false;
-        boolean precioMinVal = false;
-        boolean precioMaxVal = false;
-        boolean valoracionVal = false;
-        boolean nombreRestVal = false;
+    @PostMapping("/busqReportDelivery")
+    public String busqReportDelivery(HttpSession session, Model model,
+                                 @RequestParam(value = "nombreRest", required = false) String nombreRest,
+                                 @RequestParam(value = "idDistrito", required = false) String idDistrito,
+                                 @RequestParam(value = "fechaMin", required = false) String fechaMin,
+                                 @RequestParam(value = "fechaMax", required = false) String fechaMax,
+                                 @RequestParam(value = "monto", required = false) String monto,
+                                 @RequestParam(value = "valoracion", required = false) String valoracion) {
 
-        int pagActInt = -1;
-        try{
-            pagActInt = Integer.parseInt(pagAct);
-        }catch(NumberFormatException e){
-            pagActInt = 1;
+        boolean nombreRestVal = true;
+        if(nombreRest==null){
+            nombreRestVal = false;
         }
 
-        if(valoracion==null){}
+        boolean idDistVal = true;
+        Distrito distrito = null;
+        try{
+            distrito = distritosRepository.findByIddistrito(Integer.parseInt(idDistrito));
+            if(distrito==null){
+                idDistVal = false;
+            }
+        }catch (NumberFormatException e){
+            idDistVal = false;
+        }
 
+        //TODO: validar fechas:
+        boolean fechaMinVal = true;
+        boolean fechaMaxVal = true;
+        if(fechaMin==null || fechaMax==null){
+            fechaMinVal = false;
+            fechaMaxVal = false;
+        }
 
+        boolean montoVal = true;
+        double precioMin = -1.0;
+        double precioMax = -1.0;
+        if(monto==null){
+            montoVal = false;
+        }else{
+            try{
+                int montoInt = Integer.parseInt(monto);
+                switch (montoInt){
+                    case 1:
+                        precioMin = 0.0;
+                        precioMax = 20.0;
+                        break;
+                    case 2:
+                        precioMin = 20.0;
+                        precioMax = 40.0;
+                        break;
+                    case 3:
+                        precioMin = 40.0;
+                        precioMax = 60.0;
+                        break;
+                    case 4:
+                        precioMin = 60.0;
+                        precioMax = 999999.0;
+                        break;
+                }
+            }catch (NumberFormatException e){
+                montoVal = false;
+            }
+        }
+
+        boolean valoracionVal = true;
+        int valoracionMin = -1;
+        int valoracionMax = -1;
+        if(valoracion==null){
+            valoracionVal = false;
+        }else{
+            try{
+                int valoracionInt = Integer.parseInt(valoracion);
+                switch (valoracionInt){
+                    case 1:
+                        valoracionMin = 0;
+                        valoracionMax = 2;
+                        break;
+                    case 2:
+                        valoracionMin = 2;
+                        valoracionMax = 5;
+                        break;
+                }
+            }catch (NumberFormatException e){
+                valoracionVal = false;
+            }
+        }
 
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Page<Pedido> pedidoReportePage = pedidoRepartidorServiceImp.listaPedidosReporte(pagAct, tamPag, 6, repartidor, fechaMin, fechaMax, precioMin, precioMax, )
-        */
+
+        List<Pedido> pedidoReporteDelivery = pedidoRepository.findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+                (6, repartidor, fechaMin, fechaMax, precioMin, precioMax, valoracionMin, valoracionMax, nombreRest, distrito);
+        return "";
     }
 
 

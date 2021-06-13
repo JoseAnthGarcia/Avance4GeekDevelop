@@ -247,7 +247,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<CuponClienteDTO> listaCupones1(int idCliente);
 
     //reporte delivery
-    Page<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
-    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Pageable pageable);
+    List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Distrito distrito);
 
 }

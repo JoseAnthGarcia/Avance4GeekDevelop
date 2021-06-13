@@ -144,7 +144,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                <!--<img class="img-profile rounded-circle" th:src="@{'/repartidor/fotoPerfil?id='+${session.usuario.idusuario}}">-->
+                <img class="img-profile rounded-circle" th:src="@{'/repartidor/fotoPerfil?id='+${session.usuario.idusuario}}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

@@ -398,10 +398,7 @@ public class RepartidorController {
         List<Pedido> listaPedidoReporte = pedidoRepository.findByEstadoAndRepartidor(6, repartidor);
         Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
         List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
-
         List<Distrito> listaDistritos = distritosRepository.findAll();
-
-
         model.addAttribute("notificaciones", notificaciones);
         model.addAttribute("listaPedidoReporte", listaPedidoReporte);
         model.addAttribute("distritos", listaDistritos);
@@ -445,7 +442,8 @@ public class RepartidorController {
         double precioMin = -1.0;
         double precioMax = -1.0;
         if(monto==null){
-            montoVal = false;
+            precioMin = -0.0;
+            precioMax = 999999.0;
         }else{
             try{
                 int montoInt = Integer.parseInt(monto);
@@ -476,7 +474,8 @@ public class RepartidorController {
         int valoracionMin = -1;
         int valoracionMax = -1;
         if(valoracion==null){
-            valoracionVal = false;
+            valoracionMin = 0;
+            valoracionMax = 5;
         }else{
             try{
                 int valoracionInt = Integer.parseInt(valoracion);

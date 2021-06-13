@@ -2,12 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reporte de deliverys')"></head>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script>
     $(document).ready(function(){
-        //$("#mytable").DataTable();
 
         var cantPedidos = document.getElementsByTagName("tr").length-1;
         var tampag = 2;
@@ -86,7 +85,7 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <form th:action="@{/busqReportDelivery}" method="post">
+                <form th:action="@{/repartidor/busqReportDelivery}" method="post">
 
                     <div class="row">
                         <div class="col-sm-3  mb-2">
@@ -96,9 +95,10 @@
                         </div>
                         <div class="col-sm-3 mb-2">
                             <select class="form-control" name="idDistrito">
-                                <option value="-1"selected>Buscar por distrito</option>
-                                <option th:each="distrito : ${listaDistritos}"
-                                        th:value="${distrito.iddistrito}" th:text="${distrito.nombre}">Cercado de Lima</option>
+                                <option value="" disabled selected>Buscar por distrito</option>
+                                <option th:each="distrito : ${distritos}"
+                                        th:value="${distrito.iddistrito}"
+                                        th:text="${distrito.nombre}">Cercado de Lima</option>
                             </select>
                         </div>
                         <div class="col-sm-3 m-b-2">
@@ -129,7 +129,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button" type="submit">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
@@ -189,6 +189,15 @@
                                     <td style="width: 160px" th:text="${pedido.fechapedido}">04/02/2021</td>
                                     <td style="width: 160px" th:text="${pedido.preciototal}">S/. 32.0</td>
                                     <td style="width: 160px" th:text="${pedido.valoracionrepartidor}">4.5</td>
+                                </tr>
+                                <tr >
+                                    <td style="width: 300px" >1</td>
+                                    <td style="width: 160px" >123455</td>
+                                    <td style="width: 250px" >La Leña</td>
+                                    <td style="width: 160px" >La Molina</td>
+                                    <td style="width: 160px">04/02/2021</td>
+                                    <td style="width: 160px" >S/. 32.0</td>
+                                    <td style="width: 160px">4.5</td>
                                 </tr>
                                 </tbody>
 

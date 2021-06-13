@@ -121,9 +121,9 @@ public class LoginController {
                 List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
-                Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+                List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
-                if(pedidoAct==null){
+                if(pedidoAct.size()==0){
                     return "redirect:/repartidor/listaPedidos";
                 }else{
                     return "redirect:/repartidor/pedidoActual";

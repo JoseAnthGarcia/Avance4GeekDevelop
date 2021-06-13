@@ -3,6 +3,87 @@
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
 <head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function(){
+        //$("#mytable").DataTable();
+
+        var cantPedidos = document.getElementsByTagName("tr").length-1;
+        var tampag = 3;
+        generarPaginacion();
+        generarPagina1();
+        function generarPaginacion(){
+            $(".pagination").append("<a class='butPag'>«</a>");
+            for(i=1; i<=Math.ceil(cantPedidos/tampag);i++){
+                $(".pagination").append("<a id='pag"+i+"' class='butPag'>"+i+"</a>");
+            }
+            $(".pagination").append("<a class='butPag'>»</a>");
+        }
+        $(".pagination").on("click", ".butPag", function(){
+            var pag = parseInt(this.innerHTML,10);
+
+            $("#pag1").removeClass("active");
+
+            for(i=1; i<=cantPedidos;i++){
+                console.log("i:"+ i);
+                if(i>tampag*(pag-1) && i<=tampag*(pag)){
+                    console.log("if true");
+                    $("#"+i).show();
+                }else{
+                    console.log("if false");
+                    $("#"+i).hide();
+                }
+            }
+        });
+
+        function generarPagina1(){
+            $("#pag1").addClass("active");
+            var pag = 1;
+            for(i=1; i<=cantPedidos;i++){
+                console.log("i:"+ i);
+                if(i>tampag*(pag-1) && i<=tampag*(pag)){
+                    console.log("if true");
+                    $("#"+i).show();
+                }else{
+                    console.log("if false");
+                    $("#"+i).hide();
+                }
+            }
+        }
+        /*pagina1();
+        function pagina1(){
+            for(i=1; i<=cantPedidos;i++){
+                if(i/tampag>1){
+                    $("#"+i).hide();
+                }
+            }
+        }
+
+        $("#pag2").click(function(){
+            for(i=1; i<=cantPedidos;i++){
+                if(i/tampag>2 || i/tampag<=1){
+                    $("#"+i).hide();
+                }else{
+                    $("#"+i).show();
+                }
+            }
+        });
+
+        $("#pag1").click(function(){
+
+            for(i=1; i<=cantPedidos;i++){
+                if(i/tampag>1){
+                    $("#"+i).hide();
+                }else{
+                    $("#"+i).show();
+                }
+            }
+        });*/
+
+    });
+
+</script>
 
 <body id="page-top">
 
@@ -27,7 +108,7 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <form>
+                <form th:action="@{/reporteDelivery}">
 
                     <div class="row">
                         <div class="col-sm-3  mb-2">
@@ -107,7 +188,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table id="mytable" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -135,87 +216,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td style="width: 300px">1</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
+                                <tr th:each="pedido, i : ${listaPedidoReporte}" th:id="${i.index +1}">
+                                    <td style="width: 300px" th:text="${i.index +1}">1</td>
+                                    <td style="width: 160px" th:text="${pedido.codigo}">123455</td>
+                                    <td style="width: 250px" th:text="${pedido.restaurante.nombre}">La Leña</td>
+                                    <td style="width: 160px" th:text="${pedido.ubicacion.distrito.nombre}">La Molina</td>
+                                    <td style="width: 160px" th:text="${pedido.fechapedido}">04/02/2021</td>
+                                    <td style="width: 160px" th:text="${pedido.preciototal}">S/. 32.0</td>
+                                    <td style="width: 160px" th:text="${pedido.valoracionrepartidor}">4.5</td>
                                 </tr>
-                                <tr>
-                                    <td style="width: 300px">2</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">3</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">4</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">5</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">6</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">7</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-                                <tr>
-                                    <td style="width: 300px">8</td>
-                                    <td style="width: 160px">123455</td>
-                                    <td style="width: 250px">La Leña</td>
-                                    <td style="width: 160px">La Molina</td>
-                                    <td style="width: 160px">04/02/2021</td>
-                                    <td style="width: 160px">S/. 32.0</td>
-                                    <td style="width: 160px">4.5</td>
-
-                                </tr>
-
                                 </tbody>
 
                             </table>
@@ -223,14 +232,6 @@
                         </div>
                         <!--Pagination -->
                         <div class="pagination" style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
-                            <a  href="#">&laquo;</a>
-                            <a  href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
                         </div>
                         <!-- End of pagination -->
                     </div>

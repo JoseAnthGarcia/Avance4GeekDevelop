@@ -1395,8 +1395,8 @@ public class ClienteController {
         if (estado == null) {
             estado = "7";
         }
-        int limitSup = 6;
-        int limitInf = 0;
+        int limitSup ;
+        int limitInf ;
         switch (estado) {
             case "0":
                 limitSup = 0;
@@ -1423,7 +1423,7 @@ public class ClienteController {
 
             default:
                 limitSup = 6;
-                limitInf = 0;
+                limitInf = -1;
         }
 
         Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);

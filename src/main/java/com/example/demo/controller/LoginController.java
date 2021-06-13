@@ -74,7 +74,7 @@ public class LoginController {
     UsuarioRepository adminRestRepository;
 
 
-    @GetMapping(value = {"/login",""})
+    @GetMapping("/login")
     public String loginForm() {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null || authentication instanceof AnonymousAuthenticationToken){

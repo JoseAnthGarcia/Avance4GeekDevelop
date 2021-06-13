@@ -71,7 +71,11 @@ public class RepartidorController {
 
 
     @GetMapping("/tipoReporte")
-    public String tipoReporte(){
+    public String tipoReporte(Model model,HttpSession httpSession){
+        Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
+
         return "Repartidor/reportes";
     }
 
@@ -115,6 +119,9 @@ public class RepartidorController {
                     }
                 }
             }
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
             model.addAttribute("tamPag",tamPag);
             model.addAttribute("currentPage",numPag);
             model.addAttribute("totalPages", pagina.getTotalPages());
@@ -148,7 +155,9 @@ public class RepartidorController {
     }
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
-
+        Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
 
@@ -238,9 +247,13 @@ public class RepartidorController {
         model.addAttribute("totalPages", pagina.getTotalPages());
         model.addAttribute("totalItems", pagina.getTotalElements());
 
-        int valoracion = usuarioRepository.valoracionRepartidor(repartidor.getIdusuario());
+        Integer valoracion = usuarioRepository.promedioValoracionRpartidor(repartidor.getIdusuario());
         model.addAttribute("listaPedidos", pedidos);
         model.addAttribute("valoracion", valoracion);
+
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
 
         return "/Repartidor/estadisticas";
     }
@@ -272,6 +285,10 @@ public class RepartidorController {
             model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
             model.addAttribute("direcciones", direcciones);
+
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
             return "Repartidor/pedidoActual";
         }else{
             attr.addFlashAttribute("msg", "No tienes ningún pedido actual.");
@@ -367,6 +384,10 @@ public class RepartidorController {
         model.addAttribute("reporte", reporteIngresosDTOS);
         model.addAttribute("anioSelect", anioInt);
         model.addAttribute("anios", anios);
+
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4,ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
 
         return "Repartidor/reporteIngresos";
     }

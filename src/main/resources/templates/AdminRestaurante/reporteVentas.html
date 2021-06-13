@@ -134,14 +134,14 @@
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
                                         VENTAS</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
-                                            onclick="exportTableToExcel('tabla3', 'reporteVentas')">Exportar
+                                            id="btnExportar" >Exportar
                                     </button>
                                 </div>
 
                             </div>
                             <div class="card-body">
                                 <div th:if="${totalItems!=0}" class="table-responsive">
-                                    <table id="tabla3" class="table table-bordered">
+                                    <table id="tabla" class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>

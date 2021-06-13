@@ -124,14 +124,14 @@
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
                                         VALORACIONES</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
-                                            onclick="exportTableToExcel('tabla2', 'reporteValoraciones')">Exportar
+                                            id="btnExportar">Exportar
                                     </button>
                                 </div>
 
                             </div>
                             <div class="card-body">
                                 <div th:if="${totalItems!=0}" class="table-responsive">
-                                    <table id="tabla2" class="table table-bordered">
+                                    <table id="tabla" class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>

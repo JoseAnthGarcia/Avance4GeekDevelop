@@ -520,10 +520,10 @@ public class LoginController {
         Boolean errorSexo= false;
         Boolean validarFoto = true;
         String fileName = "";
-        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
+        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
             errorMov= true;
         }
-        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
+        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
             errorMov= true;
         }
         if(distritos!=null){

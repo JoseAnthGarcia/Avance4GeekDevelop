@@ -66,6 +66,9 @@ public class RepartidorController {
     @Autowired
     ComentarioRepartidorService comentarioRepartidorService;
 
+    @Autowired
+    PedidoRepartidorServiceImpl pedidoRepartidorServiceImp;
+
 
     @GetMapping("/tipoReporte")
     public String tipoReporte(){
@@ -78,14 +81,14 @@ public class RepartidorController {
                                   @RequestParam(value = "numPag", required = false) Integer numPag,
                                   RedirectAttributes attr){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         Page<Pedido> pagina;
         if(numPag==null){
             numPag= 1;
         }
 
         int tamPag = 2;
-        if(pedidoAct==null){
+        if(pedidoAct.size()==0){
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
@@ -235,12 +238,12 @@ public class RepartidorController {
     @GetMapping("/pedidoActual")
     public String verPedidoActual(Model model,HttpSession session, RedirectAttributes attr){
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
-        if(pedidoAct!=null){
+        List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if(pedidoAct.size()!=0){
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
             model.addAttribute("pedidoAct", pedidoAct);
-            List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.getRestaurante().getIdrestaurante(), pedidoAct.getCodigo());
+            List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.get(0).getRestaurante().getIdrestaurante(), pedidoAct.get(0).getCodigo());
             model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
             model.addAttribute("direcciones", direcciones);
@@ -274,7 +277,7 @@ public class RepartidorController {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
             if(pedidoOpt.isPresent() &&
-                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).getCodigo().equals(pedidoOpt.get().getCodigo())){
+                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())){
                 Pedido pedido = pedidoOpt.get();
                 pedido.setEstado(6);
                 pedidoRepository.save(pedido);
@@ -290,11 +293,6 @@ public class RepartidorController {
         return "redirect:/repartidor/listaPedido";
     }
 
-
-    @GetMapping("/reporteDeliverys")
-    public String reporteDeliverys(){
-        return "/Repartidor/reporteDeliverys";
-    }
 
     @GetMapping("/reporteIngresos")
     public String reporteIngresos(@RequestParam(value = "anio", required = false) String anio,
@@ -349,8 +347,44 @@ public class RepartidorController {
     }
 
     @GetMapping("/reporteDelivery")
-    public String repoteDelivery(){
+    public String repoteDelivery(HttpSession session, Model model) {
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        List<Pedido> listaPedidoReporte = pedidoRepository.findByEstadoAndRepartidor(6, repartidor);
+        model.addAttribute("listaPedidoReporte", listaPedidoReporte);
         return "Repartidor/reporteDeliverys";
+        /*
+        HttpSession session,
+        @RequestParam(value = "pagAct", required = false) String pagAct,
+        @RequestParam(value = "fechaMin", required = false) String fechaMin,
+        @RequestParam(value = "fechaMax", required = false) String fechaMax,
+        @RequestParam(value = "precioMin", required = false) String precioMin,
+        @RequestParam(value = "precioMax", required = false) String precioMax,
+        @RequestParam(value = "valoracion", required = false) String valoracion,
+        @RequestParam(value = "nombreRest", required = false) String nombreRest
+
+        int tamPag = 5;
+        boolean pagActVal = false;
+        boolean fechaMinVal = false;
+        boolean fechaMaxVal = false;
+        boolean precioMinVal = false;
+        boolean precioMaxVal = false;
+        boolean valoracionVal = false;
+        boolean nombreRestVal = false;
+
+        int pagActInt = -1;
+        try{
+            pagActInt = Integer.parseInt(pagAct);
+        }catch(NumberFormatException e){
+            pagActInt = 1;
+        }
+
+        if(valoracion==null){}
+
+
+
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        Page<Pedido> pedidoReportePage = pedidoRepartidorServiceImp.listaPedidosReporte(pagAct, tamPag, 6, repartidor, fechaMin, fechaMax, precioMin, precioMax, )
+        */
     }
 
 

@@ -55,10 +55,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
-
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
 
-    Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
+    List<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
 
    // Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin, Pageable pageable);
@@ -244,5 +243,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where c.estado=2 and (chp.utilizado is null  || chp.utilizado = 0) \n" +
             "and (cl.idusuario is null || cl.idusuario = ?1)",nativeQuery = true)
     List<CuponClienteDTO> listaCupones1(int idCliente);
+
+    //reporte delivery
+    Page<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Pageable pageable);
 
 }

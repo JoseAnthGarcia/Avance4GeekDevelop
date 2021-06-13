@@ -14,4 +14,5 @@ public interface DetallePedidoDTO {
     int getMetodopago();
     String getComentario();
     BigDecimal getPreciototal();
+    int getMismodistrito();
 }

@@ -307,10 +307,14 @@
                                     <div class="card-group col-6">
                                         <div class="card text-dark" style="max-width: 22rem;">
                                             <div class="card-header" style="color: white;background-color:#701111;">
-                                                <b>Comentarios:</b></div>
-                                            <div class="card-body" style="background-color: #ffe8d8;color: black">
-                                                <p class="card-text" style="text-align:justify"
-                                                   th:text="${(detalles.get(0).getComentario()!=null && !detalles.get(0).getComentario().isEmpty())? detalles.get(0).getComentario():'No hay comentarios...'}"></p>
+                                                <b>Delivery:</b></div>
+                                            <div th:if="${(detalles.get(0)).getMismodistrito()==0}" class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                   th:text="${'S/. 8.00'}"></h4>
+                                            </div>
+                                            <div th:if="${(detalles.get(0)).getMismodistrito()==1}" class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                   th:text="${'S/. 5.00'}"></h4>
                                             </div>
                                         </div>
                                         <div class="card text-dark  ml-3" style="max-width: 12rem;">

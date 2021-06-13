@@ -257,7 +257,7 @@ public class RepartidorController {
         List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
         model.addAttribute("notificaciones", notificaciones);
 
-        return "/Repartidor/estadisticas";
+        return "Repartidor/estadisticas";
     }
 
     @PostMapping("/cambiarDistrito")

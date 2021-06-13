@@ -225,7 +225,7 @@
 						<br>
 						<div class="text-center">
 							<h3 style="color:black" th:if="${totalsuma1}>0"th:text="|Promedio tiempo delivery: ${totalsuma1} minutos|"></h3>
-                            <h3 th:if="${totalsuma1==0}" th:text="|No se encontraron reultados|"></h3>
+                            <h5 th:if="${totalsuma1==0}" th:text="|No se encontraron reultados|"></h5>
 						</div>
                         <div class="card-body" th:if="${totalsuma1}>0">
                             <div class="table-responsive">

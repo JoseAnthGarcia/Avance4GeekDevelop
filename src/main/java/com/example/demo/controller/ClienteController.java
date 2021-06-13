@@ -1546,9 +1546,17 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest) {
+                              @RequestParam(value = "val", required = false) Integer valoraRest, @RequestParam("comentRest") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Pedido pedido = pedidoRepository.encontrarporId(id);
+
+        if(valoraRest==null ){
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+            return "redirect:/cliente/historialPedidos";
+        }
+
+
+
         if (pedido != null) {
             Pedido pedido1 = pedido;
             pedido1.setValoracionrestaurante(valoraRest);
@@ -1561,12 +1569,16 @@ public class ClienteController {
 
     @PostMapping("/valorarRep")
     public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                             @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRep") String comentRest) {
+                             @RequestParam(value = "val",required = false) Integer valoraRest, @RequestParam("comentRep") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         System.out.println(valoraRest);
         System.out.println(comentRest);
         System.out.println(id);
         Pedido pedido = pedidoRepository.encontrarporId(id);
+        if(valoraRest==null ){
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+            return "redirect:/cliente/historialPedidos";
+        }
         if (pedido != null) {
             Pedido pedido1 = pedido;
             pedido1.setValoracionrepartidor(valoraRest);

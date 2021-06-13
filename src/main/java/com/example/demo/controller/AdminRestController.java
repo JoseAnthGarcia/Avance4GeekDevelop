@@ -121,13 +121,13 @@ public class AdminRestController {
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", 0, 0, today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                @ModelAttribute @RequestParam(value = "textEstado", required = false) Integer inputEstado,
-                                @ModelAttribute @RequestParam(value = "inputPrecio", required = false) Integer inputPrecio,
+                                @ModelAttribute @RequestParam(value = "textEstado", required = false) String inputEstado,
+                                @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                 @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                 @RequestParam(value = "pageNo", required = false) Integer pageNo,
@@ -146,34 +146,54 @@ public class AdminRestController {
         }
 
         System.out.println(inputEstado);
-        if (inputEstado == null) {
-            inputEstado = 0;
-        }
+        int inputEstado2;
         int inputEstadoMin;
         int inputEstadoMax;
-        if (inputEstado == 0) {
-            inputEstadoMin = 0;
-            inputEstadoMax = 8;
-        } else {
-            inputEstadoMin = inputEstado - 1;
-            inputEstadoMax = inputEstado - 1;
+
+        if (inputEstado == null) {
+            inputEstado2 = 0;
+        }
+
+        try{
+            inputEstado2 = Integer.parseInt(inputEstado);
+            if (inputEstado2 == 0) {
+                inputEstadoMin = 0;
+                inputEstadoMax = 8;
+            } else if (inputEstado2 > 7) {
+                return "redirect:/restaurante/listaPedidos";
+            } else {
+                inputEstadoMin = inputEstado2 - 1;
+                inputEstadoMax = inputEstado2 - 1;
+            }
+        } catch (NumberFormatException e){
+            return "redirect:/restaurante/listaPedidos";
         }
 
         System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
+        int inputPrecioInt;
         int inputPMax;
         int inputPMin;
-        if (inputPrecio == 0) {
-            inputPMin = 0;
-            inputPMax = 1000;
-        } else if (inputPrecio == 4) {
-            inputPMin = inputPrecio;
-            inputPMax = 1000;
-        } else {
-            inputPMax = inputPrecio;
-            inputPMin = inputPrecio;
+
+        if (inputPrecio == null) {
+            inputPrecioInt = 0;
+        }
+
+        try {
+            inputPrecioInt = Integer.parseInt(inputPrecio);
+            if (inputPrecioInt == 0) {
+                inputPMin = 0;
+                inputPMax = 1000;
+            } else if (inputPrecioInt == 4) {
+                inputPMin = inputPrecioInt;
+                inputPMax = 1000;
+            } else if (inputPrecioInt > 4) {
+                return "redirect:/restaurante/listaPedidos";
+            } else {
+                inputPMin = inputPrecioInt;
+                inputPMax = inputPrecioInt;
+            }
+        } catch (NumberFormatException e) {
+            return "redirect:/restaurante/listaPedidos";
         }
 
         System.out.println(fechafin + "############");

@@ -55,10 +55,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
-
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
 
-    Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
+    List<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor);
+
+    List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
 
 
    // Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin, Pageable pageable);
@@ -67,6 +68,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     @Query(value = "select *from pedido where idrestaurante=?1 and codigo=?2 ", nativeQuery = true)
     Pedido pedidosXrestauranteXcodigo (int idrestaurante, String codigo);
+
+    @Query(value = "select * from pedido where idrepartidor=?1 and comentariorepartidor is not null", nativeQuery = true)
+    Page <Pedido> comentariosRepartidor (int idrepartidor, Pageable pageable);
 
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente, concat(ubi.direccion,'-',dis.nombre) as direccion, pe.fechapedido, cu.nombre as cupon,\n" +
             "cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
@@ -243,5 +247,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (cl.idusuario is null || cl.idusuario = ?1)",nativeQuery = true)
     List<CuponClienteDTO> listaCupones1(int idCliente);
 
+    //reporte delivery
+    List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Distrito distrito);
 
+    List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+            (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest);
+
+    /*@Query(value = "", nativeQuery = true)
+    List<Pedido> buscarReporteBusq();*/
 }

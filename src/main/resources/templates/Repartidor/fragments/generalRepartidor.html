@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head_page(page_name)">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <title th:text="${page_name}">Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -83,27 +86,8 @@
 
 
 
-<nav th:fragment="navbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <!--
-    <form th:action="@{'/repartidor/cambiarDistrito'}" method="post">
-    <div class=" row"style="position: relative; left: 55%">
-        <div class="col-lg-6" >
-            <span style="position: relative; top: 13% ; left: 11%">Distrito actual:</span>
+<nav th:fragment="navbar(notificaciones)" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-        </div>
-        <div class="col-lg-6" >
-
-                <select class="form-control" style="border-color:lightgray" name="idubicacion">
-                    <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
-                            th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
-                </select>
-            <button type="submit">Seleccionar distrito</button>
-
-        </div>
-
-    </div>
-     </form> -->
-    <!-- Sidebar Toggle (Topbar) -->
     <form class="form-inline">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
@@ -129,7 +113,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">2+</span>
+                <span class="badge badge-danger badge-counter" th:text="${notificaciones.size()==0?'':notificaciones.size()}">2+</span>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
@@ -137,40 +121,20 @@
                 <h6 class="notificacion">
                     Nuevos Pedidos
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
+                <a class="dropdown-item d-flex align-items-center" th:href="@{/repartidor/listaPedidos}" th:each="pedido, i : ${notificaciones}">
+                    <div class="mr-3" >
                         <div class="icon-circle notificacion">
                             <i class="fas fa-file-alt text-white"></i>
                         </div>
                     </div>
                     <div>
-                        <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                        <span class="font-weight-bold">Arroz con pollo</span>
+                        <div class="small text-gray-500" th:text="${pedido.restaurante.direccion}">Los Olivos - 12:45 pm</div>
+                        <span class="font-weight-bold" th:text="${pedido.restaurante.nombre}">Arroz con pollo</span>
                     </div>
                 </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                        <div class="icon-circle notificacion">
-                            <i class="fas fa-file-alt text-white"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                        <span class="font-weight-bold">Arroz con pollo</span>
-                    </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                        <div class="icon-circle notificacion">
-                            <i class="fas fa-file-alt text-white"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                        <span class="font-weight-bold">Arroz con pollo</span>
-                    </div>
-                </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
+
+
+                <a class="dropdown-item text-center small text-gray-500" th:href="@{/repartidor/listaPedidos}">Ver todos los
                     pedidos</a>
             </div>
         </li>
@@ -183,7 +147,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                <img class="img-profile rounded-circle" src="http://cdn.onlinewebfonts.com/svg/img_568656.png">
+                <img class="img-profile rounded-circle" th:src="@{'/repartidor/fotoPerfil?id='+${session.usuario.idusuario}}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

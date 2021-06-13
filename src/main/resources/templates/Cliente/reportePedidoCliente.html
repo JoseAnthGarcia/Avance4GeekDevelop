@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -228,9 +229,9 @@
                     <br>
 
                 <div class="text-center"  >
-                    <h3 class="justify-content-center"
+                    <h5 class="justify-content-center"
                         th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
-                        th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
+                        th:text="|No se encontraron resultados|"></h5>
 
                 </div>
 
@@ -263,7 +264,8 @@
                 <div class="text-center" >
                     <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
                         th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                    <h3 th:if="${total==0}" th:text="|No se encontraron resultados|"></h3>
+                    <h3 th:if="${total==0 && listarestTop.size()==0 }" th:text="||"></h3>
+                    <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
 
                 </div>
 
@@ -317,7 +319,7 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:each="page : ${pages}">
                                 <a th:unless="${texto == null && numpedidos == null && mes==null  }"
-                                   class="page-link active" th:text="${page}"
+                                   class="page-link active" style="background-color: #701111"  th:text="${page}"
                                    th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
                             </li>
                         </ul>
@@ -330,7 +332,7 @@
 
 
             <div style="text-align:center">
-                <a class="btn btn-primary" th:href="@{cliente/listaReportes}" type="submit">Regresar</a>
+                <a class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
             </div>
 
             <!-- /.container-fluid-->

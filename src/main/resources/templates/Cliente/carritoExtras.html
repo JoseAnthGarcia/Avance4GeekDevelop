@@ -82,7 +82,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -414,6 +415,7 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
+<!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -422,6 +424,14 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+
 
 </body>
 <script>

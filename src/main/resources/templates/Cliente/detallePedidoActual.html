@@ -71,7 +71,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -80,7 +80,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -176,9 +177,12 @@
 							<h5 class="font-weight-bold text-lg-left mx-auto" style="color:#701111">DETALLE DE PEDIDO</h5>
                         </div>
 						<div class="row justify-content-center" th:each="p1:${listapedido1}">
-							<h6 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"  ></h6>
+							<h6 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h6>
+
 							<h6 class="col-3 offset-md-3" style="color:black" th:text="|Restaurante : ${p1.getNombrerest()}|"></h6>
+
 						</div>
+
                     </div>
                         <div class="card-body">
                                 <div class="table-responsive">
@@ -201,8 +205,9 @@
                                                     Precio
                                                 </th>
 												<th style="color:white">
-                                                    Observación
+                                                    Observación Cliente
                                                 </th>
+
                                             </tr>
                                         </thead>
                                         <tbody class="justify-content-center" >
@@ -250,7 +255,8 @@
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${codigo == null   }" class="page-link active" th:text="${page}"
+                                        <a th:unless="${codigo == null   }" class="page-link active" style="background-color: #701111"
+                                           th:text="${page}"
                                            th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
                                     </li>
                                 </ul>
@@ -281,23 +287,34 @@
                             <h6 class="col-3" style="color:black"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+5}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==0 || p3.getUtilizado()==null}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+5}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+8}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Estado</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==0}" >|Pendiente|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==1}" >|Aceptado|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" >|Cancelado|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==3}" >|Preparando|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==4}" >|Pedido Listo|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==5}" >|En camino|</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==6}" >|Entregado|</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==0}" >Pendiente</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==1}" >Aceptado</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" >Cancelado</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==3}" >Preparando</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==4}" >Pedido Listo</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==5}" >En camino</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==6}" >Entregado</h6>
                         </div>
+                        <div class="row justify-content-center"  th:if="${p3.getEstado==2}">
+                            <h6 class="col-3" style="color:black" th:if="${p3.getEstado==2}">Motivo</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" th:text="${p3.getObsrest()}"></h6>
+
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Método de Pago</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|">Online</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
+
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()!=1}" th:text="|-|"></h6>
                         </div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Fecha de entrega</h6>

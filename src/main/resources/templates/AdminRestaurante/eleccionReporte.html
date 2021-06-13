@@ -22,23 +22,12 @@
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                         <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
 
                         <!-- Topbar Search -->
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                            </li>
 
                             <!-- Nav Item - Alerts campanita Notificaciones -->
                             <li class="nav-item dropdown no-arrow mx-1">
@@ -56,7 +45,8 @@
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}" class="mt-3 ml-4"> No
+                                        tiene pedidos
                                         pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
                                        class="dropdown-item d-flex align-items-center"
@@ -98,107 +88,106 @@
                             <div class="card-header py-3" style="background-color: #701111;">
                                 <h5 class="font-weight-bold text-white text-center mb-0">REPORTES</h5>
                             </div>
-                            <div class="row">
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4"
-                                             style="margin-left: 270px; margin-top: 30px">
-                                            <div class="container2">
-                                                <img th:src="@{/imagenesAR/reportePlatos.jpg}" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px"
-                                                   th:href="@{/restaurante/reportePlatos}">
-                                                    <H1 class="text2 font-weight-bolder">PLATOS</H1>
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="col-sm-6">
-                                        <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
-                                            <div class="container2">
-                                                <img th:src="@{/imagenesAR/reporteVentas.jpg}" alt="Avatar"
-                                                     class="image2 shadow"
-                                                     style="height: 300px; width: 400px">
-                                                <a class="overlay2" style="height: 300px; width: 400px"
-                                                   th:href="@{/restaurante/reporteVentas}">
-                                                    <H1 class="text2 font-weight-bolder">VENTAS</H1>
-                                                </a>
-                                            </div>
-                                        </div>
+                            <div class="row" style="justify-content: center; height: 100%; width: 100%">
+                                <div class="col-4 mb-2 mt-3">
+                                    <div class="container2 shadow" style="height: 100%;width: 100%">
+                                        <img th:src="@{/imagenesAR/reportePlatos.jpg}" alt="Avatar"
+                                             class="image2 shadow"
+                                             style="width: 100%; height: 100%">
+                                        <a class="overlay2" style="height: 100%; width: 100%"
+                                           th:href="@{/restaurante/reportePlatos}">
+                                            <h1 style="font-weight: bolder;">
+                                                <div style="text-transform: uppercase;font-size: 3vw;"
+                                                     class="text2 font-weight-bolder">Platos
+                                                </div>
+                                            </h1>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                            <div style="height: 370px">
-                                <div class="col-sm-6">
-                                    <div class="col-sm-6 mb-4"
-                                         style="margin-left: 610px; margin-top: 10px; margin-bottom: 200px">
-                                        <div class="container2">
-                                            <img th:src="@{/imagenesAR/reporteComentario.jpg}" alt="Avatar"
-                                                 class="image2 shadow"
-                                                 style="height: 300px; width: 400px">
-                                            <a class="overlay2" style="height: 300px; width: 400px"
-                                               th:href="@{/restaurante/reporteValoracion}">
-                                                <H1 class="text2 font-weight-bolder">VALORACIÓN</H1>
-                                            </a>
-                                        </div>
-
+                            <div class="row" style="justify-content: center; height: 100%; width: 100%">
+                                <div class="col-4 mb-2 mt-3">
+                                    <div class="container2 shadow" style="height: 100%;width: 100%">
+                                        <img th:src="@{/imagenesAR/reporteVentas.jpg}" alt="Avatar"
+                                             class="image2 shadow"
+                                             style="width: 100%; height: 100%">
+                                        <a class="overlay2" style="height: 100%; width: 100%"
+                                           th:href="@{/restaurante/reporteVentas}">
+                                            <h1 style="font-weight: bolder;">
+                                                <div style="text-transform: uppercase;font-size: 3vw;"
+                                                     class="text2 font-weight-bolder">Ventas
+                                                </div>
+                                            </h1>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="justify-content: center; height: 100%; width: 100%">
+                                <div class="col-4 mb-5 mt-3">
+                                    <div class="container2 shadow" style="height: 100%;width: 100%">
+                                        <img th:src="@{/imagenesAR/reporteComentario.jpg}" alt="Avatar"
+                                             class="image2 shadow"
+                                             style="width: 100%; height: 100%">
+                                        <a class="overlay2" style="height: 100%; width: 100%"
+                                           th:href="@{/restaurante/reporteValoracion}">
+                                            <h1 style="font-weight: bolder;">
+                                                <div style="text-transform: uppercase;font-size: 3vw;"
+                                                     class="text2 font-weight-bolder">Valoración
+                                                </div>
+                                            </h1>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- /.container-fluid -->
                     </div>
-                    <!-- /.container-fluid -->
-                </div>
-                <!-- End of Main Content -->
+                    <!-- End of Main Content -->
 
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Geek Developers &copy; 2021-1</span>
+                    <!-- Footer -->
+                    <footer class="sticky-footer bg-white">
+                        <div class="container my-auto">
+                            <div class="copyright text-center my-auto">
+                                <span>Geek Developers &copy; 2021-1</span>
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- End of Footer -->
+
+                </div>
+                <!-- End of Content Wrapper -->
+
+            </div>
+            <!-- End of Page Wrapper -->
+
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                         </div>
                     </div>
-                </footer>
-                <!-- End of Footer -->
-
-            </div>
-            <!-- End of Content Wrapper -->
-
-        </div>
-        <!-- End of Page Wrapper -->
-
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
-
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
-                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Begin Scripts -->
-        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
-        <!-- End Scripts -->
+            <!-- Begin Scripts -->
+            <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+            <!-- End Scripts -->
 
     </body>
 

@@ -552,7 +552,7 @@ public class AdminRestController {
         } else {
             try {
                 inputValoracion2 = Integer.parseInt(inputValoracion);
-                if (inputValoracion2 >= 6) {
+                if (inputValoracion2 > 6) {
                     return "redirect:/restaurante/reporteValoracion";
                 }
             } catch (NumberFormatException e) {

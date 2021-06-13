@@ -21,6 +21,9 @@
         <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
         <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
+        <script th:src="@{/js/xlsx.full.min.js}"></script>
+        <script th:src="@{/js/FileSaver.min.js}"></script>
+        <script th:src="@{/js/tableexport.min.js}"></script>
 
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this page -->
@@ -176,6 +179,9 @@
 
             <!-- Page level custom scripts -->
             <script th:src="@{/js/demo/datatables-demo.js}"></script>
+            <script th:src="@{/js/exportar.js}"></script>
+            <script th:src="@{/js/exportar2.js}"></script>
+            <script th:src="@{/js/exportar3.js}"></script>
         </div>
     </body>
 </html>

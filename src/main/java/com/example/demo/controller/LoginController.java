@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -74,13 +76,69 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm() {
-        return "Cliente/login";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication==null || authentication instanceof AnonymousAuthenticationToken){
+            System.out.println(authentication);
+            return "Cliente/login";
+
+        }else {
+            String rol="";
+            for (GrantedAuthority role : authentication.getAuthorities()) {
+                 rol = role.getAuthority();
+                break;
+            }
+            switch (rol) {
+                case "cliente":
+
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+
+                        return "redirect:/paginabienvenida";
+                case "repartidor":
+
+                        return "redirect:/repartidor/listaPedidos";
+
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
+        }
+
     }
 
 
     @GetMapping("/accessDenied")
     public String acces() {
-        return "/accessDenied";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String rol="";
+        for (GrantedAuthority role : authentication.getAuthorities()) {
+            rol = role.getAuthority();
+            break;
+        }
+        switch (rol) {
+            case "cliente":
+
+                return "redirect:/cliente/listaRestaurantes";
+            case "administradorG":
+                return "redirect:/admin/usuarios";
+            case "administrador":
+                return "redirect:/admin/usuarios";
+            case "administradorR":
+
+                return "redirect:/paginabienvenida";
+
+            case "repartidor":
+
+                return "redirect:/repartidor/listaPedidos";
+
+            default:
+                return "somewhere"; //no tener en cuenta
+        }
+
+
     }
     
     //Redirect HttpServletRequest req

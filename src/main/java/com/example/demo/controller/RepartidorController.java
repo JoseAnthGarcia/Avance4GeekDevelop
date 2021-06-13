@@ -172,11 +172,16 @@ public class RepartidorController {
         if (valContra || usuario2!=null ) {
 
             if (usuario2!=null) {
-                model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+                int idusuario = usuario2.getIdusuario();
+                int sesion =usuario.getIdusuario();
+                if(idusuario==sesion){
+                    model.addAttribute("msg1", "El telefono nuevo debe ser distinto al actual");
+                }else{
+                    model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+                }
+                System.out.println("sesion "+ usuario.getIdusuario() +" user "+ usuario2.getIdusuario());
             }
-            if(usuario.getTelefono()==telefonoNuevo){
-                model.addAttribute("msg1", "El telefono nuevo debe ser distinto al actual");
-            }
+
             if (valContra) {
                 model.addAttribute("msg", "Contraseña incorrecta");
             }

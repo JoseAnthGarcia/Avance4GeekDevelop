@@ -80,6 +80,7 @@ public class AdminRestController {
             return null;
         }
     }
+
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> mostrarImagenAdminR(@PathVariable("id") int id) {
         Optional<Usuario> optionalUsuario = adminRestRepository.findById(id);
@@ -154,7 +155,7 @@ public class AdminRestController {
             inputEstado2 = 0;
         }
 
-        try{
+        try {
             inputEstado2 = Integer.parseInt(inputEstado);
             if (inputEstado2 == 0) {
                 inputEstadoMin = 0;
@@ -165,7 +166,7 @@ public class AdminRestController {
                 inputEstadoMin = inputEstado2 - 1;
                 inputEstadoMax = inputEstado2 - 1;
             }
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return "redirect:/restaurante/listaPedidos";
         }
 
@@ -658,93 +659,112 @@ public class AdminRestController {
                                       @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
-
-        if (pageNo == null || pageNo == 0) {
-            pageNo = 1;
-        }
-        int inputID = 1;
-        int pageSize = 5;
-        Page<PlatoReporteDTO> page;
-        List<PlatoReporteDTO> listaPlatoReporte;
-
-        //Manipular input de buscadores
-        System.out.println(textBuscador);
-        if (textBuscador == null) {
-            textBuscador = "";
-        }
-        System.out.println(inputCategoria);
-        int inputCategoria2;
-        if (inputCategoria == null) {
-            inputCategoria = "";
-        } else {
-            try {
-                inputCategoria2 = Integer.parseInt(inputCategoria);
-                if (inputCategoria2 >= 5) {
-                    return "redirect:/restaurante/reporteValoracion";
-                } else if (inputCategoria2 == 0) {
-                    inputCategoria = "";
-                }
-            } catch (NumberFormatException e) {
-                return "redirect:/restaurante/reporteValoracion";
-            }
-
-        }
-
-        System.out.println(inputCantidad);
-        int inputCantidadInt;
-        int inputCantidadMax;
-        int inputCantidadMin;
-        if (inputCantidad == null) {
-            inputCantidadInt = 0;
-        }
-        try {
-            inputCantidadInt = Integer.parseInt(inputCantidad);
-            if (inputCantidadInt == 0) {
-                inputCantidadMin = 0;
-                inputCantidadMax = 1000;
-            } else if (inputCantidadInt == 4) {
-                inputCantidadMin = inputCantidadInt;
-                inputCantidadMax = 1000;
-            } else if (inputCantidadInt > 4) {
-                return "redirect:/restaurante/reportePlatos";
-            } else {
-                inputCantidadMin = inputCantidadInt;
-                inputCantidadMax = inputCantidadInt;
-            }
-        } catch (NumberFormatException e) {
-            return "redirect:/restaurante/reportePlatos";
-        }
-
-        System.out.println("#################");
-        System.out.println("#################");
-
-        //Obtener lista de reportes
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
-        model.addAttribute("listaNotiRest", listaNotificacion);
-        page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
-        listaPlatoReporte = page.getContent();
-
-        //Enviar atributos a la vista
-        model.addAttribute("texto", textBuscador);
-        model.addAttribute("textoC", inputCategoria);
-        model.addAttribute("textoCant", inputCantidad);
-
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
-        model.addAttribute("listaCategorias", listaCategorias);
-
+        int inputCategoria2;
+        System.out.println(inputCategoria);
+        System.out.println(listaCategorias.get(0).getIdcategoria());
+        System.out.println(listaCategorias.get(1).getIdcategoria());
         System.out.println(listaCategorias.get(2).getIdcategoria());
-        System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
-        System.out.println(page.getTotalElements() + "hola" + page.getTotalPages() + " ok");
-        //Enviar lista y valores para paginación
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listaPlatoReportes", listaPlatoReporte);
-        return "AdminRestaurante/reportePlatos";
+        System.out.println(listaCategorias.get(3).getIdcategoria());
+        if (inputCategoria == null) {
+            return "redirect:/restaurante/reportePlatos";
+        } else {
+            try {
+                inputCategoria2 = Integer.parseInt(inputCategoria);
+                int i = 1;
+                for (Categorias categoria : listaCategorias) {
+                    if (categoria.getIdcategoria() == inputCategoria2) {
+                        System.out.println("entre1");
+                        inputCategoria = String.valueOf(inputCategoria2);
+                        break;
+                    } else if (inputCategoria2 == 0) {
+                        System.out.println("entre2");
+                        inputCategoria = "";
+                        break;
+                    } else {
+                        if (i == 4) {
+                            System.out.println("entre3");
+                            return "redirect:/restaurante/reportePlatos";
+                        }
+                    }
+                    i ++;
+                }
+                if (pageNo == null || pageNo == 0) {
+                    pageNo = 1;
+                }
+                int inputID = 1;
+                int pageSize = 5;
+                Page<PlatoReporteDTO> page;
+                List<PlatoReporteDTO> listaPlatoReporte;
+
+                //Manipular input de buscadores
+
+                if (textBuscador == null) {
+                    textBuscador = "";
+                }
+
+
+                System.out.println(inputCantidad);
+                int inputCantidadInt;
+                int inputCantidadMax;
+                int inputCantidadMin;
+                if (inputCantidad == null) {
+                    inputCantidadInt = 0;
+                }
+                try {
+                    inputCantidadInt = Integer.parseInt(inputCantidad);
+                    if (inputCantidadInt == 0) {
+                        inputCantidadMin = 0;
+                        inputCantidadMax = 1000;
+                    } else if (inputCantidadInt == 4) {
+                        inputCantidadMin = inputCantidadInt;
+                        inputCantidadMax = 1000;
+                    } else if (inputCantidadInt > 4) {
+                        return "redirect:/restaurante/reportePlatos";
+                    } else {
+                        inputCantidadMin = inputCantidadInt;
+                        inputCantidadMax = inputCantidadInt;
+                    }
+                } catch (NumberFormatException e) {
+                    return "redirect:/restaurante/reportePlatos";
+                }
+
+                System.out.println("#################");
+                System.out.println("#################");
+
+                //Obtener lista de reportes
+
+                List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+                model.addAttribute("listaNotiRest", listaNotificacion);
+                page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
+                listaPlatoReporte = page.getContent();
+
+                //Enviar atributos a la vista
+                model.addAttribute("texto", textBuscador);
+                model.addAttribute("textoC", inputCategoria);
+                model.addAttribute("textoCant", inputCantidad);
+
+
+                model.addAttribute("listaCategorias", listaCategorias);
+
+
+                System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
+
+                //Enviar lista y valores para paginación
+                model.addAttribute("pageSize", pageSize);
+                model.addAttribute("currentPage", pageNo);
+                model.addAttribute("totalPages", page.getTotalPages());
+                model.addAttribute("totalItems", page.getTotalElements());
+                model.addAttribute("listaPlatoReportes", listaPlatoReporte);
+                return "AdminRestaurante/reportePlatos";
+            } catch (NumberFormatException e) {
+                return "redirect:/restaurante/reportePlatos";
+            }
+        }
+
     }
 
     @GetMapping("/elegirReporte")

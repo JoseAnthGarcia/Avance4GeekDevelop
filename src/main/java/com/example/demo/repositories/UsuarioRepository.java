@@ -164,4 +164,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "and idrepartidor=?1 ", nativeQuery = true)
     Integer promedioValoracionRpartidor(int idrepartidor);
 
+
 }

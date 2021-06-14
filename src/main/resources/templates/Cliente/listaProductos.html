@@ -176,7 +176,9 @@
                 <form method="get" th:action="@{'/cliente/listaPlatos'}">
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
+<!--
                             <input id="idRest" name="idRest" type="hidden" th:value="${idRest}">
+-->
                             <input id="texto" name="texto"  type="text" class="form-control bg-light small"
                                    th:placeholder="${texto.equals('') ? 'Búsqueda por plato...' : texto}"
                                    th:value="${texto.equals('') ? '' : texto}"

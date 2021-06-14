@@ -516,16 +516,24 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam Map<String, Object> params,
-                              @RequestParam(value = "idRest",required = false) Integer idRest, //solo es necesario recibirla de restaurante a platos
+                              @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
                               @RequestParam(value = "texto",required = false) String texto,
                               @RequestParam(value = "idPrecio",required = false) String idPrecio,
                               Model model, HttpSession session) {
+
         Integer limitInf = 0;
         Integer limitSup = 5000;
+        Integer idRest;
 
-        if (idRest == null) {
+
+        if (idRestS == null) {
             idRest = (Integer) session.getAttribute("idRest");
         } else {
+            try {
+                idRest = Integer.parseInt(idRestS);
+            }catch (NumberFormatException e){
+                return "redirect:/cliente/listaRestaurantes";
+            }
             //PROBAR
             if(session.getAttribute("idRest") != null){
                 session.removeAttribute("idRest");
@@ -600,10 +608,17 @@ public class ClienteController {
                                 @RequestParam(value = "texto",required = false) String texto,
                                 @RequestParam(value = "idPrecio",required = false) String idPrecio,
                                 @RequestParam(value = "idCategoria",required = false) String idCategoria,
-                                @RequestParam(value = "idPlato",required = false) Integer idPlato, HttpSession session,
+                                @RequestParam(value = "idPlato",required = false) String idPlatoS, HttpSession session,
                                 Model model) {
         Integer idRest = (Integer) session.getAttribute("idRest");
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        Integer idPlato;
+        // <--
+        try{
+            idPlato = Integer.parseInt(idPlatoS);
+        }catch (NumberFormatException e){
+            return "redirect:/cliente/listaPlatos";
+        }
 
         if(idPlato == null){
             idPlato = (Integer) session.getAttribute("idPlato");
@@ -615,6 +630,14 @@ public class ClienteController {
         }
 
 
+
+        Plato platoObs = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
+        if (platoObs == null){
+            return "redirect:/cliente/listaPlatos";
+        }
+
+
+        // validar que el plato pertenezaca alretaurantes
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
         Optional<Plato> platoOpt = platoRepository.findById(idPlato);
 
@@ -759,7 +782,16 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         Plato_has_pedido php = new Plato_has_pedido();
+        //TODO validar plato
+        Plato platoOther = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
+        if(platoOther == null){
+            return "redirect:/cliente/listaPlatos/";
+        }
+
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
+
+
+
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
@@ -971,6 +1003,11 @@ public class ClienteController {
         }
 
         Integer idRest = (Integer) session.getAttribute("idRest");
+
+        Extra extraOther = extraRepository.findByIdextraAndIdrestaurante(idExtra,idRest);
+        if(extraOther == null){
+            return "redirect:/cliente/listaPlatos";
+        }
 
         if(session.getAttribute("extrasCarrito")==null){
             extrasCarrito = new ArrayList<>();
@@ -1453,7 +1490,7 @@ public class ClienteController {
             }
 
             if(!numTarjetaVal){
-                model.addAttribute("msgNumTarjetaVal","El númerot de tarjeta tiene que ser entero y de 16 dígitos. ");
+                model.addAttribute("msgNumTarjetaVal","El número de la tarjeta tiene que ser entero y de 16 dígitos. ");
                 model.addAttribute("numTarjeta",numeroTarjeta);
             }
             if(!anioVal || !mesVal){

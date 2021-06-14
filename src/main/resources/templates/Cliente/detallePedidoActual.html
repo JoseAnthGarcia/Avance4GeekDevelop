@@ -216,7 +216,7 @@
                                                 <td th:text="${p2.getNombreplato()}"></td>
                                                 <td th:text="${p2.getCantidad()}"></td>
                                                 <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
-                                                <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
+                                                <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
 												<td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
                                                        th:href="${'#comentario'+p2.getIdplato()}">
                                                     <i class="fas fa-comments" style="color:gray" ></i>

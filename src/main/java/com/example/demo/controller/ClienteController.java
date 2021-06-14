@@ -1774,6 +1774,40 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedidoActual";
     }
+    @GetMapping("/detallePedidoActual1")
+    public String detallePedidoActual1(@RequestParam Map<String, Object> params,
+                                      @RequestParam("codigo") String codigo, Model model, HttpSession session) {
+
+        List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
+        if (pedido1DTOS.isEmpty()) {
+            return "redirect:/cliente/historialPedidos";
+        }
+
+        model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        if (codigo == null) {
+            codigo = "";
+        }
+
+        Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+        model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("codigo", codigo);
+
+
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/detallePedido";
+    }
 
     //HISTORIAL PEDIDOS
     @GetMapping("/historialPedidos")

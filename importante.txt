@@ -3,6 +3,9 @@ Correo:
 usuario: a20181459@pucp.edu.pe
 clave: 123456789
 
+adminGeneral: admin@gmail.com
+password: adminGeneral
+
 Pedido:
 0 - Pendiente
 1 - Aceptado

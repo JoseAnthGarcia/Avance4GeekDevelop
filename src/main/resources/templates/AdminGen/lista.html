@@ -30,14 +30,14 @@
                 <form th:action="@{/admin/usuarios}" method="get">
 
                     <div class="form-group row">
-                        <div class="col-sm-3 mb-1 ">
+                        <div class="col-sm-3 mb-1" >
                             <input type="text" class="form-control bg-light border-0 small" name="texto"
                                    th:value="${texto.equals('')?'':texto}"
                                    th:placeholder="${texto.equals('')?'Búsqueda por usuario...':texto}">
                         </div>
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="idrol">
-                                <option value="6" disabled selected>Rol</option>
+                                <option value="6"  selected>Rol</option>
                                 <option value="1"  th:selected="${idrol.equals('1')}">Cliente</option>
                                 <option value="3" th:selected="${idrol.equals('3')}">Administrador Restaurante</option>
                                 <option value="4" th:selected="${idrol.equals('4')}">Repartidor</option>
@@ -68,7 +68,7 @@
                         <div class="col-sm-2 mb-1">
 
                             <select class="form-control" name="estado">
-                                <option value="3" disabled selected>Estado</option>
+                                <option value="3" selected>Estado</option>
                                 <option value="0" th:selected="${estado.equals('0')}">Bloqueado</option>
                                 <option value="1" th:selected="${estado.equals('1')}">Activo</option>
 
@@ -80,7 +80,7 @@
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a th:href="@{/admin/usuarios}" class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{/admin/usuariosL}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
@@ -126,7 +126,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
-                                    <td th:text="${v.index + 1}" class="text-center" style="width: 150px"></td>
+                                    <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 150px"></td>
                                     <td th:text="${usuario.nombres} +' '+${usuario.apellidos}" class="text-center" style="width: 450px"></td>
                                     <td th:switch="${usuario.rol.tipo}" class="text-center" style="width: 450px">
                                         <div th:case="cliente" th:text="|Cliente|"></div>

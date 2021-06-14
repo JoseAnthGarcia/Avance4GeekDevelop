@@ -335,7 +335,7 @@
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}+'&idPlato='+${plato.getIdplato()}}"></a>
+                                        <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}}"></a> <!-- +'&idPlato='+${plato.getIdplato()} -->
                                     </li>
                                 </ul>
                             </nav>

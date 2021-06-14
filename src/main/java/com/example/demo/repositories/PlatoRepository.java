@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface PlatoRepository extends JpaRepository<Plato, Integer> {
 
+    Plato findByIdplatoAndIdrestaurante(int idPlato, int idRestaurante);
 
     Page<Plato> findByIdrestauranteAndDisponible(int id,boolean disponible, Pageable pageable);
 

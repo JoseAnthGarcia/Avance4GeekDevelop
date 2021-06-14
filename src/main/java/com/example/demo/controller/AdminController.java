@@ -337,7 +337,7 @@ public class AdminController  {
                 usuarioRepository.save(usuario);
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
                 //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
                 sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
@@ -366,7 +366,7 @@ public class AdminController  {
                 usuarioRepository.save(usuario);
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
                 //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
                 sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
 
@@ -1000,7 +1000,7 @@ public class AdminController  {
 
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
                 //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
                 sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -1081,16 +1081,18 @@ public class AdminController  {
             String hashedPassword = passwordEncoder.encode(usuario.getDni());
             System.out.println(hashedPassword);
             usuario.setContrasenia(hashedPassword);
+            usuarioRepository.save(usuario);
 
             /////----------------Envio Correo--------------------/////
 
-            String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+            //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
             //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+
             sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
             /////-----------------------------------------  ------/////
 
-            usuarioRepository.save(usuario);
+
 
             return "redirect:/admin/usuarios";
         }
@@ -1116,7 +1118,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
+        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -1129,7 +1131,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -1142,7 +1144,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("Correo/Aceptado", context);
+        String emailContent = templateEngine.process("/Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -1154,7 +1156,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("Correo/Rechazado", context);
+        String emailContent = templateEngine.process("/Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

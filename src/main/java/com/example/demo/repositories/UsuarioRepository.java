@@ -160,4 +160,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "            ;" ,nativeQuery = true)
     List<NotiDTO> notificacionCliente(int id);
 
+    @Query(value = "select ceil(avg(valoracionrepartidor)) as `valoracion` from pedido where  valoracionrepartidor is not null \n" +
+            "and idrepartidor=?1 ", nativeQuery = true)
+    Integer promedioValoracionRpartidor(int idrepartidor);
+
 }

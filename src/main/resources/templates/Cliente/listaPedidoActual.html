@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -222,7 +223,7 @@
                             Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
-                    <div class="table-responsive">
+                    <div>
                         <table class="table" id="dataTable" width="100%" style="background-color:gray">
                             <tbody>
 
@@ -278,8 +279,8 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="topbar-divider d-none d-sm-block"></div>
 
+                            <div class="topbar-divider d-none d-sm-block"></div>
 
                             </tbody>
                         </table>
@@ -288,7 +289,7 @@
                     <nav aria-label="Pagination">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && estado == null}" class="page-link active"
+                                <a th:unless="${texto == null && estado == null}" class="page-link active" style="background-color: #701111"
                                    th:text="${page}"
                                    th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
                             </li>
@@ -349,8 +350,7 @@
 </div>
 
 </body>
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
 
 <!-- Core plugin JavaScript-->
 <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>

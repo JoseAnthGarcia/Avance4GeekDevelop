@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -72,7 +74,13 @@ public class LoginController {
     UsuarioRepository adminRestRepository;
 
 
-    @GetMapping(value = {"/login",""})
+    @Autowired
+    TipoMovilidadRepository tipoMovilidadRepository;
+
+    @Autowired
+    MovilidadRepository movilidadRepository;
+
+    @GetMapping("/login")
     public String loginForm() {
         return "Cliente/login";
     }
@@ -80,7 +88,33 @@ public class LoginController {
 
     @GetMapping("/accessDenied")
     public String acces() {
-        return "/accessDenied";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String rol="";
+        for (GrantedAuthority role : authentication.getAuthorities()) {
+            rol = role.getAuthority();
+            break;
+        }
+        switch (rol) {
+            case "cliente":
+
+                return "redirect:/cliente/listaRestaurantes";
+            case "administradorG":
+                return "redirect:/admin/usuarios";
+            case "administrador":
+                return "redirect:/admin/usuarios";
+            case "administradorR":
+
+                return "redirect:/paginabienvenida";
+
+            case "repartidor":
+
+                return "redirect:/repartidor/listaPedidos";
+
+            default:
+                return "somewhere"; //no tener en cuenta
+        }
+
+
     }
     
     //Redirect HttpServletRequest req
@@ -104,6 +138,7 @@ public class LoginController {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
+
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
                 return "redirect:/admin/usuarios";
@@ -118,6 +153,8 @@ public class LoginController {
                 }
                 if (restaurante == null|| restaurante.getEstado()==2) {
                     return "redirect:/paginabienvenida";
+                    //TODO: ojo ver restaurante
+                    //return "redirect:/restaurante/paginabienvenida";
                 } else if(restaurante.getEstado()==1){
                     return "redirect:/plato/";
                 }
@@ -125,9 +162,9 @@ public class LoginController {
                 List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones1);
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
-                Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+                List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
-                if(pedidoAct==null){
+                if(pedidoAct.size()==0){
                     return "redirect:/repartidor/listaPedidos";
                 }else{
                     return "redirect:/repartidor/pedidoActual";
@@ -757,5 +794,166 @@ public class LoginController {
         } else {
             return null;
         }
+    }
+
+    ///REPARTIDOR REGISTRO
+
+    @GetMapping("/registroRepartidor")
+    public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
+        model.addAttribute("usuario", new Usuario());
+        model.addAttribute("movilidad", new Movilidad());
+        model.addAttribute("distritosSeleccionados", new ArrayList<>());
+        model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+        model.addAttribute("listaDistritos", distritosRepository.findAll());
+        return "Repartidor/registro";
+    }
+
+    @PostMapping("/guardarRepartidor")
+    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
+                                    BindingResult bindingResult,
+                                    @RequestParam("photo") MultipartFile file,
+                                    Movilidad movilidad, Model model,
+                                    @RequestParam("contrasenia2") String contrasenia2,
+                                    @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
+        String dni = usuario.getDni();
+        String telefono = usuario.getTelefono();
+        String correo =  usuario.getCorreo();
+        Usuario usuario1 =usuarioRepository.findByDni(dni);
+        Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
+        Usuario usuario3 =usuarioRepository.findByCorreo(correo);
+        Boolean errorMov = false;
+        Boolean errorDist=false;
+        Boolean errorSexo= false;
+        Boolean validarFoto = true;
+        String fileName = "";
+        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
+            errorMov= true;
+        }
+        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
+            errorMov= true;
+        }
+        if(distritos!=null){
+            if(distritos.size()>5 || distritos.isEmpty()){
+                errorDist=true;
+            }
+        }
+        if(distritos==null){
+            errorDist=true;
+        }
+
+
+        Boolean errorFecha = true;
+        try {
+            String[] parts = usuario.getFechanacimiento().split("-");
+            System.out.println(parts[0]+"Año");
+            int naci = Integer.parseInt(parts[0]);
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            if (anio - naci >18) {
+                errorFecha = false;
+            }
+        } catch (NumberFormatException n) {
+            errorFecha = true;
+        }
+        if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
+            errorSexo=true;
+        }
+        if (file != null) {
+
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "Repartidor/registro";
+            }
+        }
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
+                errorDist || errorFecha || errorSexo || !validarFoto){
+            if(!contrasenia2.equals(usuario.getContrasenia())){
+                model.addAttribute("msg", "Las contraseñas no coinciden");
+            }
+            if(usuario1!=null){
+                model.addAttribute("msg2", "El DNI ingresado ya se encuentra en la base de datos");
+            }
+            if(usuario2!=null){
+                model.addAttribute("msg3", "El telefono ingresado ya se encuentra en la base de datos");
+            }
+            if(usuario3!=null){
+                model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
+            }
+            if(errorDist){
+                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
+            }
+            if(errorMov){
+                model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
+            }
+            if(errorFecha){
+                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse");
+            }
+            if(errorSexo){
+                model.addAttribute("msg8", "Seleccione una opción");
+            }
+
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("movilidad", movilidad);
+            model.addAttribute("distritosSeleccionados", distritos);
+
+            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
+            model.addAttribute("listaDistritos", distritosRepository.findAll());
+            return "Repartidor/registro";
+        }else {
+
+            try {
+                usuario.setFoto(file.getBytes());
+                usuario.setFotonombre(fileName);
+                usuario.setFotocontenttype(file.getContentType());
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "Repartidor/registro";
+            }
+            //se agrega rol:
+            usuario.setRol(rolRepository.findById(4).get());
+            //
+            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) {
+                movilidad.setLicencia(null);
+                movilidad.setPlaca(null);
+            }
+            movilidad = movilidadRepository.save(movilidad);
+            usuario.setMovilidad(movilidad);
+
+            //OBS: ------
+            usuario.setEstado(2);
+
+            //Fecha de registro:
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            usuario.setFecharegistro(hourdateFormat.format(date));
+            //
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(usuario.getContrasenia());
+            System.out.println(hashedPassword);
+            usuario.setContrasenia(hashedPassword);
+            //--------
+            usuario = usuarioRepository.save(usuario);
+
+            for (Distrito distrito : distritos) {
+                Ubicacion ubicacion = new Ubicacion();
+                ubicacion.setUsuario(usuario);
+                ubicacion.setDistrito(distrito);
+                ubicacionRepository.save(ubicacion);
+            }
+            return "redirect:/registroRepartidor";
+        }
+
+
     }
 }

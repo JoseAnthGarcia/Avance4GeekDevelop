@@ -77,6 +77,7 @@ public class Usuario implements Serializable {
     //@NotBlank(message = "ingrese su dirección")
     //TODO: (melanie) una mejor validacion pls
     //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Column(name = "direccionactual")
     private String direccionactual;
 
     @ManyToOne

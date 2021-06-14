@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reporte de platos')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reporte de platos')">
+
+    </head>
 
     <body id="page-top">
 
@@ -22,23 +24,14 @@
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                         <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
+
 
                         <!-- Topbar Search -->
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                            </li>
+
 
                             <!-- Nav Item - Alerts campanita Notificaciones -->
                             <li class="nav-item dropdown no-arrow mx-1">
@@ -56,7 +49,7 @@
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}" class="mt-3 ml-4"> No tiene pedidos
                                         pendientes</p>
                                     <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
                                        class="dropdown-item d-flex align-items-center"
@@ -149,14 +142,14 @@
                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
                                         PLATOS</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
-                                            onclick="exportTableToExcel('tabla1', 'reportePlatos')">Exportar
+                                            id="btnExportar">Exportar
                                     </button>
                                 </div>
 
                             </div>
                             <div class="card-body">
                                 <div th:if="${totalItems!=0}" class="table-responsive">
-                                    <table id="tabla1" class="table table-bordered">
+                                    <table id="tabla" class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -189,10 +182,10 @@
 
                                     </table>
                                 </div>
-                                <div th:if="${totalItems==0 && (!texto.isEmpty() || textoC!=0 || textoCant!=0)}">
+                                <div th:if="${totalItems==0 && (!texto.isEmpty() || !textoC.equalsIgnoreCase('0') || !textoCant.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
                                 </div>
-                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoC==0 && textoCant==0)}">
+                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoC.equalsIgnoreCase('0') && textoCant.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay reportes de platos disponibles.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">
@@ -260,38 +253,7 @@
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
 
-        <script>
-            function exportTableToExcel(tableID, filename = '') {
-                var downloadLink;
-                var dataType = 'application/vnd.ms-excel';
-                var tableSelect = document.getElementById(tableID);
-                var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
 
-                // Specify file name
-                filename = filename ? filename + '.xls' : 'excel_data.xls';
-
-                // Create download link element
-                downloadLink = document.createElement("a");
-
-                document.body.appendChild(downloadLink);
-
-                if (navigator.msSaveOrOpenBlob) {
-                    var blob = new Blob(['ufeff', tableHTML], {
-                        type: dataType
-                    });
-                    navigator.msSaveOrOpenBlob(blob, filename);
-                } else {
-                    // Create a link to the file
-                    downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-                    // Setting the file name
-                    downloadLink.download = filename;
-
-                    //triggering the function
-                    downloadLink.click();
-                }
-            }
-        </script>
 
 
     </body>

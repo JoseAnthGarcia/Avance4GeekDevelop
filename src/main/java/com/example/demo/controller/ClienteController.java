@@ -106,6 +106,8 @@ public class ClienteController {
     @Autowired
     ReportePedidoCService reportePedidoCService;
 
+    @Autowired
+    ClienteHasCuponRepository clienteHasCuponRepository;
 
     @Autowired
     ReporteTiempoService reporteTiempoService;
@@ -514,6 +516,10 @@ public class ClienteController {
         if (idRest == null) {
             idRest = (Integer) session.getAttribute("idRest");
         } else {
+            //PROBAR
+            if(session.getAttribute("idRest") != null){
+                session.removeAttribute("idRest");
+            }
             session.setAttribute("idRest", idRest);
         }
 
@@ -699,7 +705,7 @@ public class ClienteController {
     @GetMapping("/mostrarCarrito")
     public String mostrarCarrito(@RequestParam(value = "idPlato",required = false) Integer idPlato,
                                  @RequestParam(value = "idPage", required = false) String idPage,
-                                 HttpSession session,
+                                 HttpSession session, RedirectAttributes attr,
                                  Model model){
         //ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         //List<Plato_has_pedido> carritoL = (List<Plato_has_pedido>) session.getAttribute("carrito");
@@ -708,6 +714,7 @@ public class ClienteController {
 
         //en caso le cambie el html el disbled lo redireccionará al mismo sitio si no hay sesión de carrito
         if(session.getAttribute("carrito") == null){
+            attr.addFlashAttribute("msgCarritoNull","Añada un plato al carrito para continuar.");
             return "redirect:/cliente/listaPlatos?idRest="+idRest;
         }
 
@@ -746,8 +753,8 @@ public class ClienteController {
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
-
-            if(cantint <= 0 && cantint <= 20){
+            //TODO creo q se puede elimnar - evaluarlo después de la presentación
+            if(cantint <= 0 || cantint > 20){
                 if(idPage.equals("1")){
                     url = "detallePlato";
                     params = "?idRest="+idRest+"&idPlato="+idPlato;
@@ -965,18 +972,18 @@ public class ClienteController {
         try {
             cantint = Integer.parseInt(cantidadExtra);
 
-            if(cantint <= 0 && cantint <= 20){
+            if(cantint <= 0 || cantint > 20){
                 urlDetalle = "detallePlato";
                 params = "?idRest="+idRest+"&idPlato="+idPlato;
 
-                attr.addFlashAttribute("msgVal","Ingrese un número mayor a 0 y menor a 20");
+                attr.addFlashAttribute("msgValExt","Ingrese un número mayor a 0 y menor a 20");
                 return "redirect:/cliente/"+urlDetalle+params;
             }
         }catch (NumberFormatException e){
             urlDetalle = "detallePlato";
             params = "?idRest="+idRest+"&idPlato="+idPlato;
 
-            attr.addFlashAttribute("msgValCant","Ingrese un número");
+            attr.addFlashAttribute("msgValCantExt","Ingrese un número");
             return "redirect:/cliente/"+urlDetalle+params;
         }
 
@@ -1048,19 +1055,19 @@ public class ClienteController {
         // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
        if (cantidad.size() != extraGuardar.size() ||
                 extraGuardar.size() != carritoExtra.size()){
-            return "redirect:/cliente/mostrarCarrito"; //TODO redireccionar al mismo sitio
+            return "redirect:/cliente/mostrarExtrasCarrito"; //TODO redireccionar al mismo sitio
         }
 
         for (int i = 0; i < cantidad.size(); i++) {
             try{
                 cantVal = Integer.parseInt(cantidad.get(i));
-                if(cantVal <= 0 && cantVal > 20){
-                    attr.addFlashAttribute("msgInt","Ingrese una cantidad entre 0 y 20");
-                    return "redirect:/cliente/mostrarCarrito";
+                if(cantVal <= 0 || cantVal > 20){
+                    attr.addFlashAttribute("msgIntMayExtg","Ingrese una cantidad entre 0 y 20");
+                    return "redirect:/cliente/mostrarExtrasCarrito";
                 }
             }catch (NumberFormatException e){
-                attr.addFlashAttribute("msgInt","Ingrese un número");
-                return "redirect:/cliente/mostrarCarrito";
+                attr.addFlashAttribute("msgIntExt","Ingrese un número");
+                return "redirect:/cliente/mostrarExtrasCarrito";
             }
         }
 
@@ -1070,20 +1077,21 @@ public class ClienteController {
         }
         session.setAttribute("extrasCarrito",carritoExtra);
         attr.addFlashAttribute("msgExtra", "Se actualizaron los datos correctamente");
-        return "redirect:/cliente/mostrarCarrito";
+        return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
 
     @PostMapping("/terminarCompra")
-    public String terminarCompra(@RequestParam("cantidad") List<String> cantidad,
-                                 @RequestParam("platoGuardar") List<Integer> platoGuardar,
-                                 @RequestParam("observacion") List<String> observacion,
+    public String terminarCompra(@RequestParam(value = "cantidad",required = false) List<String> cantidad,
+                                 @RequestParam(value = "platoGuardar",required = false) List<Integer> platoGuardar,
+                                 @RequestParam(value = "observacion",required = false) List<String> observacion,
                                  RedirectAttributes attr, Model model,
                                  HttpSession session){
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
+        //TODO ver validacion en caso ca
         //CUPONES
-            List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
+        List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
         //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
@@ -1098,85 +1106,116 @@ public class ClienteController {
         double delivery = 0.00;
         Ubicacion distritoActual = null;
         int cantVal = 0;
-
+        boolean obsVal = false;
         System.out.println(observacion);
         System.out.println(platoGuardar);
         System.out.println(cantidad);
         System.out.println(carrito);
 
-        if(carrito == null){
-            System.out.println("No hay nada en el carrito");
-            return "redirect:/cliente/mostrarCarrito?idPage=0";
+        if(observacion.size() != 0){
+            obsVal = true;
         }
 
-        // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
-        if (cantidad.size() != observacion.size() ||
-                observacion.size() != platoGuardar.size() ||
-                platoGuardar.size() != carrito.size()){
-            System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
-            return "redirect:/cliente/mostrarCarrito?idPage=0";
-        }
-
-        for (int i = 0; i < cantidad.size(); i++) {
-            try{
-                 cantVal = Integer.parseInt(cantidad.get(i));
-                 if(cantVal <= 0 && cantVal > 20){
-                     System.out.println("LAS CANTIDADES NO SON LAS MISMAS");
-                     attr.addFlashAttribute("msgInt","Ingrese una cantidad entre 0 y 20");
-                     return "redirect:/cliente/mostrarCarrito?idPage=0";
-                 }
-            }catch (NumberFormatException e){
-                System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
-                attr.addFlashAttribute("msgInt","Ingrese un número");
-                return "redirect:/cliente/mostrarCarrito?idPage=0";
+        if(cantidad.size() != 0 && platoGuardar.size() != 0) {
+            System.out.println("ENTRO DESDE MODIFICAR CARRITO A TERMINAR COMPRA");
+            if(carrito.size() == 0){
+                return "redirect:/cliente/listaPlatos";
             }
-        }
-
-        for(int i = 0; i < observacion.size(); i++){
-            if(observacion.get(i).length() > 256){
-                attr.addFlashAttribute("msgLen","Ingrese un comentario menor a 256 carácteres");
-                return "redirect:/cliente/mostrarCarrito?idPage=0";
+            if(obsVal) {
+                if (cantidad.size() != observacion.size() ||
+                        observacion.size() != platoGuardar.size() ||
+                        platoGuardar.size() != carrito.size()) {
+                    System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
+                    return "redirect:/cliente/mostrarCarrito?idPage=0";
+                }
+            }else{
+                if (cantidad.size() != platoGuardar.size() ||
+                        platoGuardar.size() != carrito.size()) {
+                    System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
+                    return "redirect:/cliente/mostrarCarrito?idPage=0";
+                }
             }
-        }
 
-        for(int i = 0; i < carrito.size(); i++){
-            carrito.get(i).setObservacionplatillo(observacion.get(i));
-            carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
-            carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
-            subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
-        }
+            for (int i = 0; i < cantidad.size(); i++) {
+                try{
+                     cantVal = Integer.parseInt(cantidad.get(i));
+                     if(cantVal <= 0 || cantVal > 20){
+                         System.out.println("LAS CANTIDADES NO SON LAS MISMAS");
+                         attr.addFlashAttribute("msgIntMay","Ingrese una cantidad entre 0 y 20");
+                         return "redirect:/cliente/mostrarCarrito?idPage=0";
+                     }
+                }catch (NumberFormatException e){
+                    System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
+                    attr.addFlashAttribute("msgInt","Ingrese un número");
+                    return "redirect:/cliente/mostrarCarrito?idPage=0";
+                }
+            }
 
-        if(carritoExtra != null) {
+            if(obsVal){
+                for(int i = 0; i < observacion.size(); i++){
+                    if(observacion.get(i).length() > 256){
+                        attr.addFlashAttribute("msgLen","Ingrese un comentario menor a 256 carácteres");
+                        return "redirect:/cliente/mostrarCarrito?idPage=0";
+                    }
+                }
+            }
+
+            for(int i = 0; i < carrito.size(); i++){
+
+                if (obsVal) {
+                    carrito.get(i).setObservacionplatillo(observacion.get(i));
+                } else {
+                    carrito.get(i).setObservacionplatillo(null);
+                }
+                carrito.get(i).getIdplatohaspedido().setIdplato(platoGuardar.get(i));
+                carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
+                subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+            }
+            if(carritoExtra != null) {
+                for (int i = 0; i < carritoExtra.size(); i++) {
+                    subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
+                }
+            }else{
+                subTotalExtras = 0.00;
+            }
+            for (Ubicacion u : listaDirecciones) {
+                if(u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())){
+                    distritoActual = u;
+                    if(u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()){
+                        delivery = 5.00;
+                        break;
+                    }
+                }
+            }
+            if(delivery == 0.00){ delivery = 8.00; }
+
+            //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
+            System.out.println(carrito);
+            session.setAttribute("carrito",carrito);
+            session.setAttribute("delivery",delivery);
+        }else{
+            System.out.println("SOY LA REDIRECCICIÓN POR VALIDACIÓN");
+
+            // SI ENTRO EN ESTA CONDICIONAL QUIERE DECIR QUE VIENE DE LA SEGUNDA VISTA
+            // SI GENERA ERROR AL MOMENTO DE MODIFICAR EL CARRITO
+            // ENVIAR DESDE EL CONTROLLER ANTERIOR UN IDENTIFICADOR DE LA PAGINA
+            for (int i = 0; i < carrito.size(); i++) {
+                subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
+            }
             for (int i = 0; i < carritoExtra.size(); i++) {
                 subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
             }
-        }else{
-            subTotalExtras = 0.00;
         }
 
-        for (Ubicacion u : listaDirecciones) {
-            if(u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())){
-                distritoActual = u;
-                if(u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()){
-                    delivery = 5.00;
-                    break;
-                }
-            }
-        }
-        if(delivery == 0.00){ delivery = 8.00; }
 
-        //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
-        System.out.println(carrito);
-        session.setAttribute("carrito",carrito);
-        session.setAttribute("delivery",delivery);
         model.addAttribute("montoCarrito",subTotalCarrito);
         model.addAttribute("listaCupones",listaCupones1);
         model.addAttribute("montoExtras",subTotalExtras);
-        model.addAttribute("delivery",delivery);
+//        model.addAttribute("delivery",delivery);
 
         model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
         model.addAttribute("listaDirecciones",listaDirecciones);
-     //   model.addAttribute("distritoActual",distritoActual);
+     // model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/terminarCompra";
@@ -1185,24 +1224,52 @@ public class ClienteController {
     @PostMapping("/generarPedido")
     public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
                                 @RequestParam(value = "ubicacion", required = false) String idUbicacion,
-                                @RequestParam(value = "delivery", required = false) String precioDelivery,
+                               // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
+                                @RequestParam(value = "tarjeta", required = false) String tarjeta,
+                                @RequestParam(value = "newTarjeta", required = false) String tipoTarjeta,
+                               @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
+                               @RequestParam(value = "mes", required = false) String mes,
+                               @RequestParam(value = "year", required = false) String year,
+                               @RequestParam(value = "cvv", required = false) String cvv,
+                               // @RequestParam(value = "delivery", required = false) String precioDelivery,
                                 @RequestParam(value = "efectivoPagar",required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
+                                Model model, RedirectAttributes attr,
                                 HttpSession session){
-
-        //TODO: llenar cupon
+        /*
+        * THINGS TODO:
+        * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
+        * Validar que solo se reciba un idMetodo de pago
+        * Probar modificar un extra
+        * Probar validaciones de carrito y carritoExtra
+        * Mostrar Carrito de Extras y Platos
+        * Verificar que el monto que se grabe en la BD sea el correcto
+        * */
+        Usuario cliente = (Usuario) session.getAttribute("usuario");
+        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
 
         //Obteniendo el cupon
         Cupon cupon = null;
         boolean idCuponVal = false;
-        try{
-            int idCuponInt = Integer.parseInt(idCupon);
-            Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
-            if(cuponOpt.isPresent()){
-                cupon = cuponOpt.get();
-                idCuponVal = true;
+        if(idCupon == null){
+            idCupon = "";
+            idCuponVal = true;
+        }
+
+        if(efectivoPagar == null){
+            efectivoPagar = "";
+        }
+
+        if(!idCupon.equals("")) {
+            try {
+                int idCuponInt = Integer.parseInt(idCupon);
+                Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
+                if (cuponOpt.isPresent()) {
+                    cupon = cuponOpt.get();
+                    idCuponVal = true;
+                }
+            } catch (NumberFormatException e) {
             }
-        }catch (NumberFormatException e){
         }
 
         //Obteniendo Ubicacion
@@ -1218,54 +1285,240 @@ public class ClienteController {
         }catch (NumberFormatException e){
         }
 
-        //TODO: llenar metodoPago
         MetodoDePago metodoDePago = null;
-
         boolean idMetPaVal= false;
+        boolean idTarjetaVal = false;
+        boolean cvvVal = false;
+        boolean numTarjetaVal = false;
+        boolean mesVal = false;
+        boolean anioVal = false;
+        boolean tipoVal = false;
+        boolean cvvValNull = false;
+        boolean numTarjetaValNull = false;
+        boolean mesValNull = false;
+        boolean anioValNull = false;
         try{
             int idMePaInt= Integer.parseInt(idmp);
             Optional<MetodoDePago> metPagOpt = metodoPagoRepository.findById(idMePaInt);
             if(metPagOpt.isPresent()){
                 metodoDePago = metPagOpt.get();
                 idMetPaVal = true;
+
+                if(metodoDePago.getIdmetodopago() == 2) {
+                    //en caso seleccione una
+                    if(tarjeta != null){
+                        try {
+                            int idTarjeta = Integer.parseInt(tarjeta);
+                            Optional<Tarjeta> tarjetaOpt = tarjetaRepository.findById(String.valueOf(idTarjeta));
+                            if (tarjetaOpt.isPresent()) {
+                                idTarjetaVal = true;
+                                //para que no me haga las validaciones al guardar
+                                //TODO agregar un JavaScript para cuando seleccione un tarjeta,
+                                //desabilite el formulario
+                                cvvVal = true;
+                                numTarjetaVal = true;
+                                mesVal = true;
+                                anioVal = true;
+                                tipoVal = true;
+
+                                cvvValNull = true;
+                                numTarjetaValNull = true;
+                                mesValNull = true;
+                                anioValNull = true;
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+                    //caso contrario estará registrando una negistrando una nueva - pero no guardandola
+                    }else{
+                        //VALIDANDO EL CVV
+                            if(cvv != null){
+                                cvvValNull = true;
+                            }
+                            if(cvvValNull){
+                                if (cvv.length() == 3) {
+                                    int cvvInt = Integer.parseInt(cvv);
+                                    cvvVal = true;
+                                }
+                            }
+                        //validando el mes
+                            if(mes != null){
+                                mesValNull = true;
+                            }
+                            if(mesValNull){
+                                int mesInt = Integer.parseInt(mes);
+                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves?
+                                    mesVal = true;
+                                }
+                            }
+                        //validando el año
+                        //validando el mes
+                            if(year != null){
+                                anioValNull = true;
+                            }
+                            if(anioValNull){
+                                if(year.length() == 4) {
+                                    int anioInt = Integer.parseInt(year);
+                                    anioVal = true;
+                                }
+                            }
+                        //validando el numero de tarjeta
+                            if(numeroTarjeta != null){
+                                numTarjetaValNull = true;
+                            }
+                            if(numTarjetaValNull){
+                                if(numeroTarjeta.length() == 16) {
+                                    numTarjetaVal = true;
+                                }
+                            }
+                        //validacion del tipo de tarjeta
+                        // 1 - visa
+                        // 2 - mastercard
+                            int tipoInt = Integer.parseInt(tipoTarjeta);
+                            if(tipoInt == 1 || tipoInt == 2){
+                                tipoVal = true;
+                            }
+                    }
+                }
+                else if(metodoDePago.getIdmetodopago() == 1 || metodoDePago.getIdmetodopago() == 3){
+                    cvvVal = true;
+                    numTarjetaVal = true;
+                    mesVal = true;
+                    anioVal = true;
+                    tipoVal = true;
+                    cvvValNull = true;
+                    numTarjetaValNull = true;
+                    mesValNull = true;
+                    anioValNull = true;
+                }
             }
         }catch (NumberFormatException e){
         }
-
+        Double delivery = (Double) session.getAttribute("delivery");
+        BigDecimal deliveryBig = new BigDecimal(delivery);
+        /*
         Double precioDel = null;
         boolean precioDelVal = false;
         try{
             precioDel = Double.parseDouble(precioDelivery);
             precioDelVal = true;
         }catch (NumberFormatException e){
+        }*/
+
+        // se calcula los montos antes de entrar a guardar el pedido
+        List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
+        List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
+
+        BigDecimal precioTotalPlatos = new BigDecimal(0);
+        for (int i = 0; i < listaPlatos.size(); i++) {
+            BigDecimal subtotal = listaPlatos.get(i).getPreciounitario().multiply(new BigDecimal(listaPlatos.get(i).getCantidad()));
+            precioTotalPlatos = precioTotalPlatos.add(subtotal);
         }
-
-        if(!precioDelVal || !idCuponVal || !idUbicVal || !idMetPaVal){
-            // si algunos de estos datos esta mal debería redireccionarte a la misma vista
-            return "redirect:/cliente/listaPlatos";
-        }else {
-
-            List<Plato_has_pedido> listaPlatos = (List<Plato_has_pedido>) session.getAttribute("carrito");
-            List<Extra_has_pedido> listaExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
-
-            BigDecimal precioTotalPlatos = new BigDecimal(0);
-            for (int i = 0; i < listaPlatos.size(); i++) {
-                BigDecimal subtotal = listaPlatos.get(i).getPreciounitario().multiply(new BigDecimal(listaPlatos.get(i).getCantidad()));
-                precioTotalPlatos = precioTotalPlatos.add(subtotal);
-            }
-
-            BigDecimal precioTotalExtras = new BigDecimal(0);
+        System.out.println(listaExtra);
+        BigDecimal precioTotalExtras = new BigDecimal(0);
+        if(listaExtra != null) {
             for (int i = 0; i < listaExtra.size(); i++) {
                 BigDecimal subTotal1 = listaExtra.get(i).getPreciounitario().multiply(new BigDecimal(listaExtra.get(i).getCantidad()));
                 precioTotalExtras = precioTotalExtras.add(subTotal1);
             }
+        }
 
-            BigDecimal desc = new BigDecimal(cupon.getDescuento());
-            BigDecimal precioTotal = precioTotalPlatos.add(precioTotalExtras);
-            precioTotal = precioTotal.subtract(desc);
+        //!precioDelVal ||
+        if(!idCuponVal || !idUbicVal || !idMetPaVal ||
+           !numTarjetaVal || !mesVal || !anioVal || !cvvVal || !tipoVal ||
+            !cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull || !idTarjetaVal){
+            // si algunos de estos datos esta mal debería redireccionarte a la misma vista
+            if(!idCuponVal){
+                model.addAttribute("msgCuponVal","Cupón ingresado inválido.");
+            }
+            if(!idUbicVal){
+                model.addAttribute("msgUbicVal","Ubicación ingresada inválido.");
+            }
+            if(!idMetPaVal){
+                model.addAttribute("msgMetPagoVal","Metodo de Pago ingresado inválido.");
+            }
+
+            if(!cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull){
+               model.addAttribute("msgNullMdp","Ingrese un dato válido.");
+            }
+
+            if(!numTarjetaVal){
+                model.addAttribute("msgNumTarjetaVal","El númerot de tarjeta tiene que ser entero y de 16 dígitos. ");
+                model.addAttribute("numTarjeta",numeroTarjeta);
+            }
+            if(!anioVal || !mesVal){
+                model.addAttribute("msgFechaVal","Fecha ingresada inválido.");
+               if(!anioVal){
+                   model.addAttribute("anio",year);
+               }
+               if(!mesVal){
+                   model.addAttribute("mes",mes);
+               }
+            }
+            if(!cvvVal){
+                model.addAttribute("msgCvvVal","El CVV tiene que ser entero y de 3 dígitos.");
+                model.addAttribute("cvv",cvv);
+            }
+            if(!tipoVal){
+                model.addAttribute("msgTipoVal","Tipo de tarjeta ingresado inválido.");
+                model.addAttribute("tipo",tipoTarjeta);
+            }
+
+
+
+            model.addAttribute("montoCarrito",precioTotalPlatos);
+            model.addAttribute("listaCupones",pedidoRepository.listaCupones1(cliente.getIdusuario()));
+            model.addAttribute("montoExtras",precioTotalExtras);
+            model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(cliente));
+            model.addAttribute("listaDirecciones",listaDirecciones);
+            return "Cliente/terminarCompra";
+        }else {
+
+
+            BigDecimal desc = new BigDecimal(0);
+            if(!idCupon.equals("")){
+                desc = BigDecimal.valueOf(cupon.getDescuento());
+            }
+
+            BigDecimal precioTotal = new BigDecimal(0);
+            precioTotal = precioTotal.add(precioTotalPlatos);
+            if(listaExtra != null){
+                precioTotal = precioTotal.add(precioTotalExtras);
+            }
+            if(!idCupon.equals("")){
+                precioTotal = precioTotal.subtract(desc);
+            }
+
+            precioTotal = precioTotal.add(deliveryBig);
+
+            BigDecimal efectivoPagarF = BigDecimal.ZERO;
+            if(!efectivoPagar.equals("")){
+                try {
+                    efectivoPagarF = new BigDecimal(efectivoPagar);
+                    if(precioTotal.compareTo(efectivoPagarF) == 1){
+                        model.addAttribute("msgEfect","La cantidad a pagar debe ser mayor al precio total");
+                        model.addAttribute("efectivo",efectivoPagar);
+
+                        model.addAttribute("montoCarrito",precioTotalPlatos);
+                        model.addAttribute("listaCupones",pedidoRepository.listaCupones1(cliente.getIdusuario()));
+                        model.addAttribute("montoExtras",precioTotalExtras);
+                        model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(cliente));
+                        model.addAttribute("listaDirecciones",listaDirecciones);
+                        return "Cliente/terminarCompra";
+                    }
+                }catch (NumberFormatException e){
+                    model.addAttribute("msgNotString","Ingrese un número válido.");
+
+                    model.addAttribute("montoCarrito",precioTotalPlatos);
+                    model.addAttribute("listaCupones",pedidoRepository.listaCupones1(cliente.getIdusuario()));
+                    model.addAttribute("montoExtras",precioTotalExtras);
+                    model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(cliente));
+                    model.addAttribute("listaDirecciones",listaDirecciones);
+                    return "Cliente/terminarCompra";
+                }
+            }
+
 
             Pedido pedido = new Pedido();
-
             pedido.setPreciototal(precioTotal.floatValue());
 
             String codigoAleatorio = "";
@@ -1278,7 +1531,9 @@ public class ClienteController {
             }
 
             pedido.setCodigo(codigoAleatorio);
-
+            if(!efectivoPagar.equals("")){
+                pedido.setCantidadapagar(Float.valueOf(efectivoPagar));
+            }
             pedido.setEstado(0);
 
             //seteo fecha
@@ -1287,7 +1542,7 @@ public class ClienteController {
             pedido.setFechapedido(hourdateFormat.format(date));
             //seteo mismoDistrito
 
-            if (precioDel.equals(Double.parseDouble("5"))) {
+            if (delivery.equals(Double.parseDouble("5"))) {
                 pedido.setTiempoentrega(45);
                 pedido.setMismodistrito(true);
             } else {
@@ -1295,32 +1550,49 @@ public class ClienteController {
                 pedido.setMismodistrito(false);
             }
             pedido.setRestaurante(restauranteRepository.findById(listaPlatos.get(0).getPlato().getIdrestaurante()).get());
-
-            pedido.setCupon(cupon);
-
-            Usuario cliente = (Usuario) session.getAttribute("usuario");
+            if(!idCupon.equals("")) {
+              pedido.setCupon(cupon);
+            }
             pedido.setCliente(cliente);
             pedido.setMetodopago(metodoDePago);
             pedido.setUbicacion(ubicacion);
 
             pedido = pedidoRepository.save(pedido);
 
+            if(!idCupon.equals("")) {
+                Cliente_has_cuponKey cliente_has_cuponKey = new Cliente_has_cuponKey();
+                Cliente_has_cupon cliente_has_cupon = new Cliente_has_cupon();
+                cliente_has_cuponKey.setIdcliente(cliente.getIdusuario());
+                cliente_has_cuponKey.setIdcupon(cupon.getIdcupon());
+                cliente_has_cupon.setCliente_has_cuponKey(cliente_has_cuponKey);
+                cliente_has_cupon.setUtilizado(true);
+
+                clienteHasCuponRepository.save(cliente_has_cupon);
+            }
             for (Plato_has_pedido plato_has_pedido : listaPlatos) {
                 Plato_has_pedidoKey plato_has_pedidoKey = new Plato_has_pedidoKey();
                 plato_has_pedidoKey.setCodigo(pedido.getCodigo());
                 plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
                 plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
+                plato_has_pedido.setPedido(pedido);
                 platoHasPedidoRepository.save(plato_has_pedido);
             }
-
-            for (Extra_has_pedido extra_has_pedido : listaExtra) {
-                Extra_has_pedidoKey extra_has_pedidoKey = new Extra_has_pedidoKey();
-                extra_has_pedidoKey.setCodigo(pedido.getCodigo());
-                extra_has_pedidoKey.setIdextra(extra_has_pedido.getExtra().getIdextra());
-                extra_has_pedido.setIdextra(extra_has_pedidoKey);
-                extraHasPedidoRepository.save(extra_has_pedido);
+            if(listaExtra != null) {
+                for (Extra_has_pedido extra_has_pedido : listaExtra) {
+                    Extra_has_pedidoKey extra_has_pedidoKey = new Extra_has_pedidoKey();
+                    extra_has_pedidoKey.setCodigo(pedido.getCodigo());
+                    extra_has_pedidoKey.setIdextra(extra_has_pedido.getExtra().getIdextra());
+                    extra_has_pedido.setIdextra(extra_has_pedidoKey);
+                    extra_has_pedido.setPedido(pedido);
+                    extraHasPedidoRepository.save(extra_has_pedido);
+                }
             }
-
+            session.removeAttribute("delivery");
+            session.removeAttribute("idRest");
+            session.removeAttribute("idPlato");
+            session.removeAttribute("carrito");
+            session.removeAttribute("extrasCarrito");
+            session.removeAttribute("delivery");
             return "redirect:/cliente/pedidoActual";
         }
 
@@ -1355,8 +1627,8 @@ public class ClienteController {
         if (estado == null) {
             estado = "7";
         }
-        int limitSup = 6;
-        int limitInf = 0;
+        int limitSup ;
+        int limitInf ;
         switch (estado) {
             case "0":
                 limitSup = 0;
@@ -1383,7 +1655,7 @@ public class ClienteController {
 
             default:
                 limitSup = 6;
-                limitInf = 0;
+                limitInf = -1;
         }
 
         Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
@@ -1420,7 +1692,8 @@ public class ClienteController {
     }
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam Map<String, Object> params, @RequestParam("codigo") String codigo, Model model, HttpSession session) {
+    public String detallePedidoActual(@RequestParam Map<String, Object> params,
+                                      @RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
         List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
         if (pedido1DTOS.isEmpty()) {
@@ -1437,12 +1710,14 @@ public class ClienteController {
         if (codigo == null) {
             codigo = "";
         }
+
         Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+
         model.addAttribute("listapedido2", listaPedidos);
         model.addAttribute("codigo", codigo);
 
@@ -1505,9 +1780,17 @@ public class ClienteController {
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRest") String comentRest) {
+                              @RequestParam(value = "val", required = false) Integer valoraRest, @RequestParam("comentRest") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Pedido pedido = pedidoRepository.encontrarporId(id);
+
+        if(valoraRest==null ){
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+            return "redirect:/cliente/historialPedidos";
+        }
+
+
+
         if (pedido != null) {
             Pedido pedido1 = pedido;
             pedido1.setValoracionrestaurante(valoraRest);
@@ -1520,12 +1803,16 @@ public class ClienteController {
 
     @PostMapping("/valorarRep")
     public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                             @RequestParam(value = "val") Integer valoraRest, @RequestParam("comentRep") String comentRest) {
+                             @RequestParam(value = "val",required = false) Integer valoraRest, @RequestParam("comentRep") String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         System.out.println(valoraRest);
         System.out.println(comentRest);
         System.out.println(id);
         Pedido pedido = pedidoRepository.encontrarporId(id);
+        if(valoraRest==null ){
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+            return "redirect:/cliente/historialPedidos";
+        }
         if (pedido != null) {
             Pedido pedido1 = pedido;
             pedido1.setValoracionrepartidor(valoraRest);
@@ -1542,35 +1829,35 @@ public class ClienteController {
 
     @GetMapping("/reporteDinero")
     public String reporteDinero(
-            @RequestParam Map<String, Object> params,Model model, HttpSession httpSession,
-            @RequestParam(value = "texto",required = false) String texto,
-            @RequestParam(value = "nombrec",required = false) String nombrec,
-            @RequestParam(value = "mes",required = false) String mes){
+            @RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+            @RequestParam(value = "texto", required = false) String texto,
+            @RequestParam(value = "nombrec", required = false) String nombrec,
+            @RequestParam(value = "mes", required = false) String mes) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
         int limitSup;
         int limitInf;
 
         Calendar c1 = GregorianCalendar.getInstance();
-        int m=c1.get(Calendar.MONTH) +1;
-        if(texto==null&& mes==null && nombrec==null){
-            mes=Integer.toString(m);
-            limitSup=m;
-            limitInf=m-1;
+        int m = c1.get(Calendar.MONTH) + 1;
+        if (texto == null && mes == null && nombrec == null) {
+            mes = Integer.toString(m);
+            limitSup = m;
+            limitInf = m - 1;
             texto = "";
 
-            nombrec="";
-        }else {
+            nombrec = "";
+        } else {
 
             if (texto == null) {
                 texto = "";
             }
 
-            if(nombrec==null){
-                nombrec="";
+            if (nombrec == null) {
+                nombrec = "";
             }
 
             try {
@@ -1587,16 +1874,16 @@ public class ClienteController {
             }
         }
 
-        Page<ReporteDineroDTO> listapedidos= reporteDineroService.findpage(usuario1.getIdusuario(),limitInf,limitSup,texto,nombrec,pageRequest);
+        Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup, texto, nombrec, pageRequest);
         int totalPage = listapedidos.getTotalPages();
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
         }
-        BigDecimal totalsuma1= new BigDecimal(0);
-        for(ReporteDineroDTO rep:listapedidos){
+        BigDecimal totalsuma1 = new BigDecimal(0);
+        for (ReporteDineroDTO rep : listapedidos) {
             System.out.println(rep.getDescuento());
-            totalsuma1=totalsuma1.add(rep.getDescuento());
+            totalsuma1 = totalsuma1.add(rep.getDescuento());
         }
         //Division
         /*
@@ -1611,41 +1898,41 @@ public class ClienteController {
          */
 
 
-        model.addAttribute("total",totalPage);
+        model.addAttribute("total", totalPage);
         System.out.println(totalsuma1);
-        model.addAttribute("listapedidos",listapedidos);
-        model.addAttribute("totalsuma",totalsuma1);
-        model.addAttribute("texto",texto);
-        model.addAttribute("mes",mes);
-        model.addAttribute("nombrec",nombrec);
+        model.addAttribute("listapedidos", listapedidos);
+        model.addAttribute("totalsuma", totalsuma1);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("nombrec", nombrec);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteDineroCliente";
     }
 
 
     @GetMapping("/reportePedido")
-    public String reportePedido(@RequestParam Map<String, Object> params ,Model model, HttpSession httpSession,
-                                @RequestParam(value = "texto",required = false) String texto,
-                                @RequestParam(value = "numpedidos",required = false) String numpedidos,
-                                @RequestParam(value = "mes",required = false) String mes
-                                ){
+    public String reportePedido(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "numpedidos", required = false) String numpedidos,
+                                @RequestParam(value = "mes", required = false) String mes
+    ) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Calendar c1 = GregorianCalendar.getInstance();
-        int m=c1.get(Calendar.MONTH) +1;
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int m = c1.get(Calendar.MONTH) + 1;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
         int limitSup;
         int limitInf;
 
-        if(texto==null&& numpedidos==null&& mes==null){
-            mes=Integer.toString(m);
-            limitSup=6;
-            limitInf=5;
+        if (texto == null && numpedidos == null && mes == null) {
+            mes = Integer.toString(m);
+            limitSup = 6;
+            limitInf = 5;
             texto = "";
             numpedidos = "";
-        }else {
+        } else {
 
             if (texto == null) {
                 texto = "";
@@ -1669,60 +1956,60 @@ public class ClienteController {
             }
         }
 
-        Page<ReportePedido> listapedidos= reportePedidoCService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
+        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
 
-        List<ReporteTop3> listarestTop=pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitSup);
-        List<ReporteTop3P> listaPl=pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(),limitSup);
+        List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(), limitSup);
+        List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitSup);
         int totalPage = listapedidos.getTotalPages();
 
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
 
         }
 
-        BigDecimal totalsuma= new BigDecimal(0);
-        for(ReportePedido rep:listapedidos){
+        BigDecimal totalsuma = new BigDecimal(0);
+        for (ReportePedido rep : listapedidos) {
             System.out.println(rep.getTotal());
-            totalsuma=totalsuma.add(rep.getTotal());
+            totalsuma = totalsuma.add(rep.getTotal());
         }
 
         System.out.println(totalsuma);
-        model.addAttribute("totalsuma",totalsuma);
-        model.addAttribute("listapedidos",listapedidos);
+        model.addAttribute("totalsuma", totalsuma);
+        model.addAttribute("listapedidos", listapedidos);
         model.addAttribute("listarestTop", listarestTop);
-       model.addAttribute("listarestPl", listaPl);
-       model.addAttribute("texto",texto);
-       model.addAttribute("mes",mes);
-       model.addAttribute("total",totalPage);
-       model.addAttribute("numpedidos",numpedidos);
+        model.addAttribute("listarestPl", listaPl);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("total", totalPage);
+        model.addAttribute("numpedidos", numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
     }
 
     @GetMapping("/reporteTiempo")
-    public String reporteTiempo(@RequestParam Map<String, Object> params,Model model, HttpSession httpSession,
-                                @RequestParam(value = "texto",required = false) String texto,
-                                @RequestParam(value = "numpedidos",required = false) String numpedidos,
-                                @RequestParam(value = "mes",required = false) String mes){
+    public String reporteTiempo(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "numpedidos", required = false) String numpedidos,
+                                @RequestParam(value = "mes", required = false) String mes) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
         Calendar c1 = GregorianCalendar.getInstance();
-        int m=c1.get(Calendar.MONTH) +1;
+        int m = c1.get(Calendar.MONTH) + 1;
 
 
 
         int limitSup;
         int limitInf;
 
-        if(texto==null&& numpedidos==null&& mes==null){
-            mes=Integer.toString(m);
-            limitSup=m;
-            limitInf=m-1;
+        if (texto == null && numpedidos == null && mes == null) {
+            mes = Integer.toString(m);
+            limitSup = m;
+            limitInf = m - 1;
             texto = "";
             numpedidos = "";
-        }else {
+        } else {
 
             if (texto == null) {
                 texto = "";
@@ -1746,80 +2033,82 @@ public class ClienteController {
             }
         }
 
-        Page<ReportePedidoCDTO> listapedidos= reporteTiempoService.findPaginated3(usuario1.getIdusuario(),limitInf,limitSup,texto,numpedidos,pageRequest);
+        Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
         int totalPage = listapedidos.getTotalPages();
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
         }
-        int totalsuma1= 0;
-        for(ReportePedidoCDTO rep:listapedidos){
-           // System.out.println(rep.getTiempoEntrega());
-            totalsuma1=totalsuma1+ rep.getTiempoentrega();
+        int totalsuma1 = 0;
+        int i=0;
+        for (ReportePedidoCDTO rep : listapedidos) {
+            // System.out.println(rep.getTiempoEntrega());
+            totalsuma1 = totalsuma1 + rep.getTiempoentrega();
+            i=i+1;
         }
-        totalsuma1=totalsuma1/listapedidos.getSize();
+        totalsuma1 = totalsuma1 / i;
 
         System.out.println(totalsuma1);
-        model.addAttribute("listapedidos",listapedidos);
-        model.addAttribute("totalsuma1",totalsuma1);
-        model.addAttribute("texto",texto);
-        model.addAttribute("mes",mes);
-        model.addAttribute("numpedidos",numpedidos);
+        model.addAttribute("listapedidos", listapedidos);
+        model.addAttribute("totalsuma1", totalsuma1);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("numpedidos", numpedidos);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";
     }
 
     @GetMapping("/listaCupones")
-    public String listaCupones(@RequestParam Map<String, Object> params ,@RequestParam(value = "texto",required = false) String texto,
-                               @RequestParam(value = "descuento",required = false) String descuento,Model model, HttpSession httpSession) {
+    public String listaCupones(@RequestParam Map<String, Object> params, @RequestParam(value = "texto", required = false) String texto,
+                               @RequestParam(value = "descuento", required = false) String descuento, Model model, HttpSession httpSession) {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
         int limitSup;
         int limitInf;
 
 
-        if(texto==null ){
-            texto= "";
+        if (texto == null) {
+            texto = "";
         }
-        if(descuento==null){
-            descuento="7";
+        if (descuento == null) {
+            descuento = "7";
         }
 
-        switch (descuento){
+        switch (descuento) {
             case "1":
-                limitSup=10;
-                limitInf=0;
+                limitSup = 10;
+                limitInf = 0;
                 break;
 
             case "2":
-                limitSup=20;
-                limitInf=10;
+                limitSup = 20;
+                limitInf = 10;
                 break;
 
             case "3":
-                limitSup=30;
-                limitInf=20;
+                limitSup = 30;
+                limitInf = 20;
                 break;
 
             case "4":
-                limitSup=40;
-                limitInf=30;
+                limitSup = 40;
+                limitInf = 30;
                 break;
 
             default:
-                limitSup=100;
-                limitInf=0;
+                limitSup = 100;
+                limitInf = 0;
         }
 
         //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(),texto, limitInf,limitSup,pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(), texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
         }
         model.addAttribute("total", totalPage);
 
@@ -1827,8 +2116,8 @@ public class ClienteController {
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
-        model.addAttribute("texto",texto);
-        model.addAttribute("descuento",descuento);
+        model.addAttribute("texto", texto);
+        model.addAttribute("descuento", descuento);
 
         return "Cliente/listaCupones";
     }

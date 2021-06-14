@@ -33,11 +33,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente=?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
+            "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 || p.estado=0) ")
+            "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 ) ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
@@ -55,10 +55,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
-
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
 
-    Pedido findByEstadoAndRepartidor(int estado, Usuario repartidor);
+    List<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor);
+
+    List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
 
 
    // Page<Pedido> findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin, Pageable pageable);
@@ -68,9 +69,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value = "select *from pedido where idrestaurante=?1 and codigo=?2 ", nativeQuery = true)
     Pedido pedidosXrestauranteXcodigo (int idrestaurante, String codigo);
 
+    @Query(value = "select * from pedido where idrepartidor=?1 and comentariorepartidor is not null", nativeQuery = true)
+    Page <Pedido> comentariosRepartidor (int idrepartidor, Pageable pageable);
+
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente, concat(ubi.direccion,'-',dis.nombre) as direccion, pe.fechapedido, cu.nombre as cupon,\n" +
             "cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
-            " pe.preciototal FROM pedido pe\n" +
+            " pe.preciototal , pe.mismodistrito FROM pedido pe\n" +
             "inner join usuario u on pe.idcliente = u.idusuario \n" +
             "left join cupon cu on pe.idcupon=cu.idcupon \n" +
             "inner join metodopago pago on pe.idmetodopago=pago.idmetodopago\n" +
@@ -103,7 +107,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     @Query(value ="select DISTINCT(ped.codigo), r.nombre as 'nombrerest',\n" +
             "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
-            "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento \n" +
+            "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento,ped.comentrechazorest as 'obsrest' \n" +
             "from pedido ped \n" +
             "left join restaurante r on ped.idrestaurante=r.idrestaurante\n" +
             "left join cliente_has_cupon clhp on ped.idcupon = clhp.idcupon\n" +
@@ -192,14 +196,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value="select r.nombre as 'nombrerest' , count(p.idrestaurante) as `numpedidos` ,\n" +
             "EXTRACT(MONTH from p.fechapedido) as `mes` from pedido p \n" +
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
-            "where p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) = ?2  group by p.idrestaurante limit 1,3",nativeQuery = true)
+            "where p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) = ?2  group by p.idrestaurante limit 0,2",nativeQuery = true)
     List<ReporteTop3> reporteTop3Rest(int idcliente, int mes);
 
     @Query(value="select  pl.nombre ,sum(cantidad) as 'totalplato' from pedido p \n" +
             "inner join plato_has_pedido php on p.codigo=php.codigo\n" +
             "inner join plato pl on php.idplato=pl.idplato\n" +
             "where  p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) = ?2  \n" +
-            "group by pl.idplato order by sum(cantidad) desc  limit 0,3 ", nativeQuery = true)
+            "group by pl.idplato order by sum(cantidad) desc  limit 0,2 ", nativeQuery = true)
 
     List<ReporteTop3P> reporteTop3Pl(int idcliente, int mes);
 
@@ -243,5 +247,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (cl.idusuario is null || cl.idusuario = ?1)",nativeQuery = true)
     List<CuponClienteDTO> listaCupones1(int idCliente);
 
+    //reporte delivery
+    List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Distrito distrito);
 
+    List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+            (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest);
+
+    /*@Query(value = "", nativeQuery = true)
+    List<Pedido> buscarReporteBusq();*/
 }

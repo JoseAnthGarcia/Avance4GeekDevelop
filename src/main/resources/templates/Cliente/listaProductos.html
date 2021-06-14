@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Tarjetas')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Lista de Platos')"></head>
 
 
 <body id="page-top">
@@ -80,8 +80,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <!-- TODO ALERTA CON ESTA NOTI Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -249,7 +250,7 @@
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaRestaurantes'}"><i
                                             class="fas fa-arrow-left"></i> Regresar
                                     </a>
-                                  <a class="btn btn-info mr-3" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
+                                  <a th:if="${session.carrito != null}" class="btn btn-info mr-3" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
                                             class="fas fa-cart-plus"></i> Ir al carrito
                                     </a>
                                 </div>

@@ -4,6 +4,7 @@ import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.*;
 import com.example.demo.service.RepartidorService;
+import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -141,7 +142,7 @@ public class AdminController  {
 
                 model.addAttribute("listaRestaurantes", listaRestaurantes);
 
-                return "/AdminGen/solicitudRestaurante";
+                return "AdminGen/solicitudRestaurante";
             case "adminRest":
 
                 Page<Usuario> pagina1 ;
@@ -171,7 +172,7 @@ public class AdminController  {
                 model.addAttribute("listaAdminRestSolicitudes", listaAdminRest);
 
 
-                return "/AdminGen/solicitudAR";
+                return "AdminGen/solicitudAR";
             case "repartidor":
 
                 Page<Usuario> pagina;
@@ -206,7 +207,7 @@ public class AdminController  {
                 model.addAttribute("listaRepartidorSolicitudes", listaRepartidores);
                 //model.addAttribute("listaRepartidorSolicitudes",
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
-                return "/AdminGen/solicitudRepartidor";
+                return "AdminGen/solicitudRepartidor";
             default:
                 return "";
                 //mandar a la vista principal
@@ -743,8 +744,7 @@ public class AdminController  {
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
 
         if(bindingResult.hasErrors()){
-            return "AdminGen" +
-                    "/crearAdmin";
+            return "AdminGen/crearAdmin";
         }else {
 
             if (usuario.getIdusuario() == 0) {
@@ -819,8 +819,7 @@ public class AdminController  {
                 model.addAttribute("msg7", "Solo pueden registrarse m   ayores de edad");
             }
 
-            return "AdminGen" +
-                    "/crearAdmin";
+            return "AdminGen/crearAdmin";
         } else {
             usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());
@@ -862,6 +861,7 @@ public class AdminController  {
     public void sendEmail(String to, String subject, String content) {
 
         SimpleMailMessage email = new SimpleMailMessage();
+
         email.setTo(to);
         email.setSubject(subject);
         email.setText(content);

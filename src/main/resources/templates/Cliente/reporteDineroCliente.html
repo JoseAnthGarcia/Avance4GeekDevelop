@@ -67,7 +67,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
@@ -76,7 +76,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -226,7 +227,7 @@
 						
 						<div class="text-center" >
 							<h3  style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
-                            <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS DE LA BUSQUEDA|"></h3>
+                            <h5 th:if="${total==0}" th:text="|No se encontraron resultados|"></h5>
 						</div>
                         <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
@@ -269,8 +270,8 @@
 
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}" style="color:#701111;">
-                                        <a style="color:#701111;" th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
+                                    <li class="page-item" th:each="page : ${pages}" >
+                                        <a style="background-color: #701111"  th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
                                            th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
                                     </li>
                                 </ul>

@@ -2,12 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
-import com.example.demo.service.AdminRestService;
+import com.example.demo.service.*;
 import com.example.demo.service.RepartidorService;
-import com.example.demo.service.RepartidorService;
-import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +35,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/admin")
@@ -76,6 +77,9 @@ public class AdminController  {
 
     @Autowired
     RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private UsuarioServiceAPI usuarioServiceAPI;
 
     @GetMapping("tipoSolicitud")
     public String tipoSolicitud(){
@@ -380,17 +384,161 @@ public class AdminController  {
         }
     }
 
-    @GetMapping("/usuarios") ///Pagina principal
-    public String listaDeUsuarios(Model model,HttpSession session) {
+    //@GetMapping("/usuarios1") ///Pagina principal
+    //public String listaDeUsuarios(Model model,HttpSession session) {
         //Integer numerop=1;//(10*pag)-10))
-        model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
+        //model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
         //session.setAttribute("pag", numerop);
-        session.setAttribute("total",usuarioRepository.listaUsuarios().size());
+        //session.setAttribute("total",usuarioRepository.listaUsuarios(1).size());
+      //  return "AdminGen/lista";
+    //}
+
+    /*@GetMapping(value ="/usuarios2")//funciona
+    public String findAll(@RequestParam Map<String, Object> params, Model model) {
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(pageRequest);
+
+        int totalPage = pagePersona.getTotalPages();
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/lista";
+    }*/
+
+    @GetMapping(value ="/usuarios")
+    public String listaUsuarios(@RequestParam Map<String, Object> params, Model model,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "estado", required = false) String estado,
+                                @RequestParam(value = "idrol", required = false) String idrol
+                                ) {
+
+        if(texto==null){
+            texto="";
+        }
+        if(estado==null){
+            estado="3";
+        }
+        if(idrol==null){
+            idrol="6";
+        }
+
+        Integer inFrol ;
+        Integer maXrol ;
+        Integer miFestado ;
+        Integer maXestado ;
+        switch (estado){
+            case "3":
+                miFestado=0;
+                maXestado=2;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            default:
+                miFestado=0;
+                maXestado=2;
+
+
+        }
+
+
+        switch (idrol){
+            case "1":
+                inFrol = 0;
+                maXrol = 1;
+                break;
+            case "3":
+                inFrol = 2;
+                maXrol = 3;
+                break;
+            case "4":
+                inFrol = 3;
+                maXrol = 4;
+                break;
+
+            case "5":
+                inFrol = 4;
+                maXrol = 5;
+                break;
+            default:
+                inFrol = 0;
+                maXrol = 5;
+
+
+        }
+
+
+
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",idrol);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
         return "AdminGen/lista";
     }
 
-    @GetMapping("/buscador")
-    public String buscadorUsuario(@RequestParam(value = "texto",required = false) String texto,
+    @GetMapping("/buscador2")
+    public String buscadorUsuario2(@RequestParam Map<String, Object> params, Model model){
+
+        String texto = (String) params.get("texto");
+        Integer fechaRegsitro = (Integer) params.get("fechaRegsitro");
+        Integer idRol = (Integer) params.get("idRol");
+        Integer estado = (Integer) params.get("estado");
+        //busca por nombre y apellido - no hay problema si es nulo
+        model.addAttribute("textoBuscador", texto);
+        model.addAttribute("fechaBuscador", fechaRegsitro);
+        model.addAttribute("rolBuscador", idRol);
+        model.addAttribute("estadoBuscador", estado);
+
+        //si es nulo se manda la fecha minima de la lista de USUARIOS
+        if(fechaRegsitro==null){
+            fechaRegsitro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+        }
+        if(estado==null && idRol == null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstadoNiRol(texto,-1*fechaRegsitro));
+        }else if(idRol==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinRol(texto,-1*fechaRegsitro,estado));
+        }else if(estado==null){
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuarioSinEstado(texto,-1*fechaRegsitro,idRol));
+        }else{
+            model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
+        }
+        return "AdminGen/lista";
+    }
+
+    @GetMapping("/buscador1")
+    public String buscadorUsuario1(@RequestParam(value = "texto",required = false) String texto,
                                   @RequestParam(value = "fechaRegsitro",required = false) Integer fechaRegsitro,
                                   @RequestParam(value = "idRol",required = false) Integer idRol,
                                   @RequestParam(value = "estado",required = false) Integer estado,
@@ -564,7 +712,7 @@ public class AdminController  {
         Usuario usuario2 = (Usuario) httpSession.getAttribute("usuario");
 
         if (usuario2.getRol().getIdrol()!=2){
-            model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
+        //    model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
             return "AdminGen/lista";
 
         }else{
@@ -714,7 +862,6 @@ public class AdminController  {
     public void sendEmail(String to, String subject, String content) {
 
         SimpleMailMessage email = new SimpleMailMessage();
-
         email.setTo(to);
         email.setSubject(subject);
         email.setText(content);

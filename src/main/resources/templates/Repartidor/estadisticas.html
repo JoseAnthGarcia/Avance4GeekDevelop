@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Estadísticas')"></head>
 
 <body id="page-top">
 
@@ -11,7 +11,7 @@
 
     <!-- Sidebar -->
 
-    <ul th:replace="Repartidodr/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -21,7 +21,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar"></nav>
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(notificaciones=${notificaciones})"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -46,7 +46,7 @@
                                             <tr>
                                                 <th scope="col"></th>
                                                 <th scope="col">
-                                                    <h2>Ganancias por mes</h2>
+                                                    <h3>Ganancias por mes</h3>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -99,7 +99,7 @@
                                             <tr>
                                                 <th scope="col"></th>
                                                 <th scope="col">
-                                                    <h2>Ganancias por día</h2>
+                                                    <h3>Ganancias por día</h3>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -167,70 +167,37 @@
                             <div class="container-fluid">
                                 <div class="row" style="color: black">
                                     <div class="col-sm-6">
-                                        <div class="row">
+                                        <div class="row" th:each="pedido, i : ${listaPedidos}">
                                             <div class="col-sm-6">
-                                                <p>Buen repartidor muy amable</p>
+                                                <p th:text="${pedido.comentariorepartidor}">Buen repartidor muy amable</p>
                                             </div>
 
                                             <div class="col-sm-6">
-                                                <p>4.5/5</p>
+                                                <p th:text="${pedido.valoracionrepartidor}">4.5/5</p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Cumple con los protocolos de salubridad</p>
-                                            </div>
 
-                                            <div class="col-sm-6">
-                                                <p>5/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Muy rápido y amable</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p>4/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Muy bueno</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p>4/5</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p>Amable</p>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <p> 3.5/5</p>
-                                            </div>
-                                        </div>
                                     </div>
+
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%;top: 30%">
-                                        <h1 style="font-size:7em">4.2</h1>
+                                        <h1 style="font-size:7em" th:text="${valoracion}">4.2</h1>
                                     </div>
                                 </div>
 
 
                             </div>
                             <!--Pagination -->
-                            <div class="pagination"
-                                 style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
-                                <a href="#">&laquo;</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
+                            <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                    <a th:if="${currentPage != i}"
+                                       th:href="@{'/repartidor/estadisticas?numPag=' + ${i}}"
+                                       th:utext="${i}"
+                                       class="active mt-2 no "></a>
+                                    <a th:unless="${currentPage != i}"
+                                       th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+
+                                </div>
                             </div>
                             <!-- End of pagination -->
 

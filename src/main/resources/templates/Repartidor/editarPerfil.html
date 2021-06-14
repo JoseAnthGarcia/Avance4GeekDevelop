@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reportes')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Editar perfil')"></head>
+
+
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -23,46 +25,75 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-                </div>
-        <div class="container-fluid">
-
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3" style="background-color: #701111;">
-                    <h5 class="font-weight-bold text-white text-center mb-0">REPORTES</h5>
-                </div>
+                <!-- DataTales Example -->
                 <div class="row">
-                    <div class="column">
-                        <div class="col-sm-6">
-                            <div class="col-sm-6 mb-4"
-                                 style="margin-left: 270px; margin-top: 30px">
-                                <div class="container2">
-                                    <img src="https://cdn.iconscout.com/icon/free/png-512/home-delivery-1901776-1607975.png" alt="Avatar"
-                                         class="image2 shadow"
-                                         style="height: 300px; width: 400px">
-                                    <a class="overlay2" style="height: 300px; width: 400px"th:href="@{'/repartidor/reporteDelivery'}">
-                                        <H1 class="text2 font-weight-bolder">DELIVERYS</H1>
-                                    </a>
-                                </div>
 
+                    <div class="col-xl-12 col-lg-7">
+
+                        <!-- Area Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 " style="background-color: #701111;">
+                                <h6 class="m-0 font-weight-bold text-gray-400 text-center">EDITAR PERFIL</h6>
                             </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="col-sm-6">
-                            <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
-                                <div class="container2">
-                                    <img src="https://economipedia.com/wp-content/uploads/Ingreso-1.png" alt="Avatar"
-                                         class="image2 shadow"
-                                         style="height: 300px; width: 400px">
-                                    <a class="overlay2" style="height: 300px; width: 400px"th:href="@{'/repartidor/reporteIngresos'}">
-                                        <H1 class="text2 font-weight-bolder">INGRESOS</H1>
-                                    </a>
-                                </div>
+                            <div class="card-header py-3">
+
+                                <form method="POST" th:action="@{/repartidor/guardarEditar}">
+                                    <div class="form-row">
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Nombres </label>
+                                            <input type="text" class="form-control"th:value="${session.usuario.nombres}" disabled>
+
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>Apellido </label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.apellidos}" disabled>
+
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Correo </label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.correo}" disabled>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Fecha de Nacimiento</label>
+                                            <input type="text" class="form-control"
+                                                   th:value="${session.usuario.fechanacimiento}" disabled>
+
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>N° de celular</label>
+                                            <input type="text" class="form-control" th:value="${session.usuario.telefono}" name="telefonoNuevo" >
+                                            <div th:if="${msg1 != null}" th:text="${msg1}" style="color: red; font-size: small; text-align: left" ></div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Contraseña (Confirmación)</label>
+                                            <input type="password" class="form-control " name="contraseniaConf" >
+                                            <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
+
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <div style=text-align:center>
+                                                <button  class="btn btn-primary"  type="submit">Guardar</button>
+                                                <a  class="btn btn-danger" th:href="@{/repartidor/listaPedidos}" >Cancelar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
+
+
                     </div>
+
+                    <!-- IMAGEN -->
                 </div>
 
             </div>
@@ -76,9 +107,6 @@
             </footer>
             <!-- End of Footer -->
         </div>
-            </div>
-
-        </div>
 
 
     </div>
@@ -86,8 +114,11 @@
 
     <!-- /.container-fluid -->
 
+
 </div>
 <!-- End of Main Content -->
+
+
 
 
 </div>

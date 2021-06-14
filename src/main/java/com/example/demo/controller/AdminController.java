@@ -136,7 +136,7 @@ public class AdminController  {
 
                 model.addAttribute("listaRestaurantes", listaRestaurantes);
 
-                return "/AdminGen/solicitudRestaurante";
+                return "AdminGen/solicitudRestaurante";
             case "adminRest":
 
                 Page<Usuario> pagina1 ;
@@ -166,7 +166,7 @@ public class AdminController  {
                 model.addAttribute("listaAdminRestSolicitudes", listaAdminRest);
 
 
-                return "/AdminGen/solicitudAR";
+                return "AdminGen/solicitudAR";
             case "repartidor":
 
                 Page<Usuario> pagina;
@@ -201,7 +201,7 @@ public class AdminController  {
                 model.addAttribute("listaRepartidorSolicitudes", listaRepartidores);
                 //model.addAttribute("listaRepartidorSolicitudes",
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
-                return "/AdminGen/solicitudRepartidor";
+                return "AdminGen/solicitudRepartidor";
             default:
                 return "";
                 //mandar a la vista principal
@@ -296,7 +296,7 @@ public class AdminController  {
         if (restauranteOpt.isPresent()) {
             Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("restaurante", restaurante);
-            return "/AdminGen/detalleRest";
+            return "AdminGen/detalleRest";
 
         }else {
             return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -372,7 +372,7 @@ public class AdminController  {
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
-            return "/AdminGen/detalleAdminR";
+            return "AdminGen/detalleAdminR";
 
         }else {
             return "redirect:/admin/solicitudes?tipo=adminRest";
@@ -382,7 +382,7 @@ public class AdminController  {
     @GetMapping("/usuarios")
     public String listaDeUsuarios(Model model) {
         model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
-        return "/AdminGen/lista";
+        return "AdminGen/lista";
     }
 
     @GetMapping("/buscador")
@@ -412,7 +412,7 @@ public class AdminController  {
             model.addAttribute("listaUsuarios",usuarioRepository.buscadorUsuario(texto,-1*fechaRegsitro,idRol,estado));
         }
 
-        return "/AdminGen/lista";
+        return "AdminGen/lista";
     }
 
     @GetMapping("/buscadorCliente")
@@ -436,7 +436,7 @@ public class AdminController  {
         }
 
         model.addAttribute("listaPedidos",pedidoRepository.pedidosPorCliente(idUsuario,texto,-1*fechaPedido,valoracion));
-        return "/AdminGen/visualizarCliente";
+        return "AdminGen/visualizarCliente";
     }
 
     @GetMapping("/detalle")
@@ -457,23 +457,23 @@ public class AdminController  {
             switch (usuario.getRol().getTipo()) {
                 case "administrador":
                     model.addAttribute("administrador",usuario);
-                    return "/AdminGen/visualizarAdministrador";
+                    return "AdminGen/visualizarAdministrador";
                 case "repartidor":
                     model.addAttribute("repartidor",usuario);
                     model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
                     model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
                     model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                //     model.addAttribute("totalIngresos", totalIngresos);
-                    return "/AdminGen/visualizarRepartidor";
+                    return "AdminGen/visualizarRepartidor";
                 case "cliente":
                     //TODO ver que solo sean los pedidos entregados
                     model.addAttribute("cliente",usuario);
                     model.addAttribute("totalIngresos", totalIngresos);
                     model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
-                    return "/AdminGen/visualizarCliente";
+                    return "AdminGen/visualizarCliente";
                 case "administradorR":
                     model.addAttribute("administradorRestaurante",usuario);
-                   return "/AdminGen/visualizarAdministradorRestaurante";
+                   return "AdminGen/visualizarAdministradorRestaurante";
                 default:
                     //TODO ver si enviar con mensaje de alerta
                     return "redirect:/admin/usuarios";
@@ -561,10 +561,10 @@ public class AdminController  {
 
         if (usuario2.getRol().getIdrol()!=2){
             model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
-            return "/AdminGen/lista";
+            return "AdminGen/lista";
 
         }else{
-            return "/AdminGen/crearAdmin";
+            return "AdminGen/crearAdmin";
 
         }
 
@@ -579,7 +579,7 @@ public class AdminController  {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
 
-        return "/AdminGen/crearAdmin";
+        return "AdminGen/crearAdmin";
     }
 
 
@@ -591,8 +591,7 @@ public class AdminController  {
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
 
         if(bindingResult.hasErrors()){
-            return "AdminGen" +
-                    "/crearAdmin";
+            return "AdminGen/crearAdmin";
         }else {
 
             if (usuario.getIdusuario() == 0) {
@@ -667,8 +666,7 @@ public class AdminController  {
                 model.addAttribute("msg7", "Solo pueden registrarse m   ayores de edad");
             }
 
-            return "/AdminGen" +
-                    "/crearAdmin";
+            return "AdminGen/crearAdmin";
         } else {
             usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());

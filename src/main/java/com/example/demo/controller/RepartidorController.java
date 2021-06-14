@@ -4,25 +4,25 @@ import com.example.demo.dtos.PlatoPorPedidoDTO;
 import com.example.demo.dtos.ReporteIngresosDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
-import com.example.demo.service.PedidoRepartidorService;
-import com.example.demo.service.PedidoRepartidorServiceImpl;
-import com.example.demo.service.PedidoService;
-import com.example.demo.service.PedidoServiceImpl;
+import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -62,43 +62,54 @@ public class RepartidorController {
 
     @Autowired
     RestauranteRepository restauranteRepository;
+
+    @Autowired
+    ComentarioRepartidorService comentarioRepartidorService;
+
+    @Autowired
+    PedidoRepartidorServiceImpl pedidoRepartidorServiceImp;
+
+
     @GetMapping("/tipoReporte")
-    public String tipoReporte(){
+    public String tipoReporte(Model model, HttpSession httpSession) {
+        Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
+
         return "Repartidor/reportes";
     }
 
     @GetMapping("/listaPedidos")
-    public String verListaPedidos(Model model,HttpSession session,
+    public String verListaPedidos(Model model, HttpSession session,
                                   @RequestParam(value = "idPedido", required = false) String codigoPedido,
                                   @RequestParam(value = "numPag", required = false) Integer numPag,
-                                  RedirectAttributes attr){
+                                  RedirectAttributes attr) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         Page<Pedido> pagina;
-        if(numPag==null){
-            numPag= 1;
+        if (numPag == null) {
+            numPag = 1;
         }
 
         int tamPag = 2;
-        if(pedidoAct==null){
+        if (pedidoAct.size() == 0) {
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
 
             pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
-            List<Pedido> pedidos =pagina.getContent();
+            List<Pedido> pedidos = pagina.getContent();
 
 
-
-            if(pedidos.size()!=0){
-                if(codigoPedido==null){
+            if (pedidos.size() != 0) {
+                if (codigoPedido == null) {
                     Pedido pedido = pedidos.get(0);
                     model.addAttribute("pedidoDetalle", pedido);
                     List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedido.getRestaurante().getIdrestaurante(), pedido.getCodigo());
                     model.addAttribute("platosPorPedido", platosPorPedido);
-                }else{
-                    Optional pedidoOptional =pedidoRepository.findById(codigoPedido);
-                    if(pedidoOptional.isPresent()){
+                } else {
+                    Optional pedidoOptional = pedidoRepository.findById(codigoPedido);
+                    if (pedidoOptional.isPresent()) {
                         Pedido pedido = (Pedido) pedidoOptional.get();
                         model.addAttribute("pedidoDetalle", pedido);
                         List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedido.getRestaurante().getIdrestaurante(), pedido.getCodigo());
@@ -107,8 +118,11 @@ public class RepartidorController {
                     }
                 }
             }
-            model.addAttribute("tamPag",tamPag);
-            model.addAttribute("currentPage",numPag);
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
+            model.addAttribute("tamPag", tamPag);
+            model.addAttribute("currentPage", numPag);
             model.addAttribute("totalPages", pagina.getTotalPages());
             model.addAttribute("totalItems", pagina.getTotalElements());
 
@@ -116,11 +130,12 @@ public class RepartidorController {
             model.addAttribute("listaPedidos", pedidos);
             model.addAttribute("listaDistritos", listaDistritos);
             return "Repartidor/solicitudPedidos";
-        }else{
+        } else {
             attr.addFlashAttribute("msg", "Debes culminar tu entrega para poder visualizar otras solicitudes de reparto.");
             return "redirect:/repartidor/pedidoActual";
         }
     }
+
     @GetMapping("/images")
     public ResponseEntity<byte[]> mostrarRestaurante(@RequestParam("id") int id) {
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(id);
@@ -139,36 +154,120 @@ public class RepartidorController {
         }
     }
 
+    @GetMapping("/editarPerfil")
+    public String editarPerfil(HttpSession httpSession, Model model) {
+        Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+
+        return "Repartidor/editarPerfil";
+
+    }
+
+    @PostMapping("/guardarEditar")
+    public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
+                                 @RequestParam("telefonoNuevo") String telefonoNuevo,
+                                 HttpSession httpSession,
+                                 Model model) {
+
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        boolean valContra = true;
+
+
+        Usuario usuario2 = usuarioRepository.findByTelefono(telefonoNuevo);
+
+        if (BCrypt.checkpw(contraseniaConf, usuario.getContrasenia())) {
+            valContra = false;
+        }
+
+        if (valContra || usuario2 != null) {
+
+            if (usuario2 != null) {
+                int idusuario = usuario2.getIdusuario();
+                int sesion = usuario.getIdusuario();
+                if (idusuario == sesion) {
+                    model.addAttribute("msg1", "El telefono nuevo debe ser distinto al actual");
+                } else {
+                    model.addAttribute("msg1", "El telefono ingresado ya está registrado");
+                }
+                System.out.println("sesion " + usuario.getIdusuario() + " user " + usuario2.getIdusuario());
+            }
+
+            if (valContra) {
+                model.addAttribute("msg", "Contraseña incorrecta");
+            }
+
+            model.addAttribute("usuario", usuario);
+            return "Repartidor/editarPerfil";
+
+
+        } else {
+            usuario.setTelefono(telefonoNuevo); //usar save para actualizar
+            httpSession.setAttribute("usuario", usuario); //TODO: preguntar profe
+            usuarioRepository.save(usuario);
+            return "redirect:/repartidor/listaPedidos";
+        }
+
+
+    }
+
+    @GetMapping("/fotoPerfil")
+    public ResponseEntity<byte[]> mostrarPerfil(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] image = usuario.getFoto();
+
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
+
+
     @GetMapping("/estadisticas")
-    public String estadisticas(Model model,HttpSession session,
-                               @RequestParam(value = "numPag", required = false) Integer numPag){
+    public String estadisticas(Model model, HttpSession session,
+                               @RequestParam(value = "numPag", required = false) Integer numPag) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Page<Pedido> pagina;
-        if(numPag==null){
-            numPag= 1;
+        if (numPag == null) {
+            numPag = 1;
         }
 
         int tamPag = 5;
-        pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
-        List<Pedido> pedidos =pagina.getContent();
-        model.addAttribute("tamPag",tamPag);
-        model.addAttribute("currentPage",numPag);
+        pagina = comentarioRepartidorService.comentariosRepartidor(numPag, tamPag, repartidor.getIdusuario());
+        List<Pedido> pedidos = pagina.getContent();
+        model.addAttribute("tamPag", tamPag);
+        model.addAttribute("currentPage", numPag);
         model.addAttribute("totalPages", pagina.getTotalPages());
         model.addAttribute("totalItems", pagina.getTotalElements());
 
+        Integer valoracion = usuarioRepository.promedioValoracionRpartidor(repartidor.getIdusuario());
+        model.addAttribute("listaPedidos", pedidos);
+        model.addAttribute("valoracion", valoracion);
 
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
 
-        return "/Repartidor/estadisticas";
+        return "Repartidor/estadisticas";
     }
 
     @PostMapping("/cambiarDistrito")
-    public String cambiarDistritoActual(@RequestParam("idubicacion") int idubicacion,HttpSession session){
+    public String cambiarDistritoActual(@RequestParam("idubicacion") int idubicacion, HttpSession session) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Optional<Ubicacion> ubicacionOpt =  ubicacionRepository.findById(idubicacion);
+        Optional<Ubicacion> ubicacionOpt = ubicacionRepository.findById(idubicacion);
 
-        if(ubicacionOpt.isPresent()){
+        if (ubicacionOpt.isPresent()) {
             Ubicacion ubicacion = ubicacionOpt.get();
-            if(ubicacion.getUsuario().getIdusuario().intValue() == repartidor.getIdusuario().intValue()){
+            if (ubicacion.getUsuario().getIdusuario().intValue() == repartidor.getIdusuario().intValue()) {
                 session.setAttribute("ubicacionActual", ubicacion);
             }
         }
@@ -177,19 +276,23 @@ public class RepartidorController {
     }
 
     @GetMapping("/pedidoActual")
-    public String verPedidoActual(Model model,HttpSession session, RedirectAttributes attr){
+    public String verPedidoActual(Model model, HttpSession session, RedirectAttributes attr) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Pedido pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
-        if(pedidoAct!=null){
+        List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
+        if (pedidoAct.size() != 0) {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
             model.addAttribute("pedidoAct", pedidoAct);
-            List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.getRestaurante().getIdrestaurante(), pedidoAct.getCodigo());
+            List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.get(0).getRestaurante().getIdrestaurante(), pedidoAct.get(0).getCodigo());
             model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);
             model.addAttribute("direcciones", direcciones);
+
+            Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
             return "Repartidor/pedidoActual";
-        }else{
+        } else {
             attr.addFlashAttribute("msg", "No tienes ningún pedido actual.");
             return "redirect:/repartidor/listaPedidos";
         }
@@ -197,10 +300,10 @@ public class RepartidorController {
 
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
-                                HttpSession session){
-        if(codigo!=null){
+                                HttpSession session) {
+        if (codigo != null) {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
-            if(pedidoOpt.isPresent()){
+            if (pedidoOpt.isPresent()) {
                 Pedido pedido = pedidoOpt.get();
                 pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
                 pedido.setEstado(5);
@@ -213,12 +316,12 @@ public class RepartidorController {
 
     @GetMapping("/pedidoEntregado")
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
-                                  HttpSession session){
-        if(codigo!=null){
+                                  HttpSession session) {
+        if (codigo != null) {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
-            if(pedidoOpt.isPresent() &&
-                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).getCodigo().equals(pedidoOpt.get().getCodigo())){
+            if (pedidoOpt.isPresent() &&
+                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())) {
                 Pedido pedido = pedidoOpt.get();
                 pedido.setEstado(6);
                 pedidoRepository.save(pedido);
@@ -229,33 +332,16 @@ public class RepartidorController {
     }
 
     @PostMapping("/seleccionarDistrito")
-    public  String distritoActual(HttpSession session){
+    public String distritoActual(HttpSession session) {
         session.setAttribute("ubicacionActual", new Ubicacion());
         return "redirect:/repartidor/listaPedido";
     }
 
-    @GetMapping("/registroRepartidor")
-    public String registroRepartidor(Model model, @ModelAttribute("usuario") Usuario usuario) {
-        model.addAttribute("usuario", new Usuario());
-        model.addAttribute("movilidad", new Movilidad());
-        model.addAttribute("distritosSeleccionados", new ArrayList<>());
-
-        model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-
-
-        return "/Repartidor/registro";
-    }
-
-    @GetMapping("/reporteDeliverys")
-    public String reporteDeliverys(){
-        return "/Repartidor/reporteDeliverys";
-    }
 
     @GetMapping("/reporteIngresos")
     public String reporteIngresos(@RequestParam(value = "anio", required = false) String anio,
                                   HttpSession session,
-                                  Model model){
+                                  Model model) {
         int anioInt = 0;
 
         Date date = new Date();
@@ -264,18 +350,18 @@ public class RepartidorController {
         LocalDate getLocalDate = date.toInstant().atZone(timeZone).toLocalDate();
         System.out.println(getLocalDate.getYear());
 
-        if(anio==null){
+        if (anio == null) {
             anioInt = getLocalDate.getYear();
-        }else{
-            try{
+        } else {
+            try {
                 //TODO: ver si pone otros numeros
                 anioInt = Integer.parseInt(anio);
                 int anioMax = pedidoRepository.hallarMaxAnioPedido();
                 int anioMin = pedidoRepository.hallarMinAnioPedido();
-                if(anioInt>anioMax || anioInt<anioMin){
+                if (anioInt > anioMax || anioInt < anioMin) {
                     anioInt = getLocalDate.getYear();
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 anioInt = getLocalDate.getYear();
             }
         }
@@ -285,14 +371,14 @@ public class RepartidorController {
         List<ReporteIngresosDTO> reporteIngresosDTOS = pedidoRepository.reporteIngresos(anioInt, repartidor.getIdusuario());
 
         BigDecimal precioTotal = new BigDecimal(0);
-        for(ReporteIngresosDTO reporte: reporteIngresosDTOS){
-            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantmd()==null?0:reporte.getCantmd())*4));
-            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantdd()==null?0:reporte.getCantdd())*6));
+        for (ReporteIngresosDTO reporte : reporteIngresosDTOS) {
+            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantmd() == null ? 0 : reporte.getCantmd()) * 4));
+            precioTotal = precioTotal.add(new BigDecimal((reporte.getCantdd() == null ? 0 : reporte.getCantdd()) * 6));
         }
 
         List<Integer> anios = new ArrayList<>();
 
-        for(int i = pedidoRepository.hallarMinAnioPedido(); i<=pedidoRepository.hallarMaxAnioPedido(); i++){
+        for (int i = pedidoRepository.hallarMinAnioPedido(); i <= pedidoRepository.hallarMaxAnioPedido(); i++) {
             anios.add(i);
         }
 
@@ -301,158 +387,139 @@ public class RepartidorController {
         model.addAttribute("anioSelect", anioInt);
         model.addAttribute("anios", anios);
 
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
+
         return "Repartidor/reporteIngresos";
     }
 
-
-
-    @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
-                                    BindingResult bindingResult,
-                                    Movilidad movilidad, Model model,
-                                    @RequestParam("contrasenia2") String contrasenia2,
-                                    @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
-        String dni = usuario.getDni();
-        String telefono = usuario.getTelefono();
-        String correo =  usuario.getCorreo();
-        Usuario usuario1 =usuarioRepository.findByDni(dni);
-        Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
-        Usuario usuario3 =usuarioRepository.findByCorreo(correo);
-        Boolean errorMov = false;
-        Boolean errorDist=false;
-        Boolean errorSexo= false;
-
-        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 3 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
-            errorMov= true;
+    @GetMapping("/reporteDelivery")
+    public String repoteDelivery(HttpSession session, Model model) {
+        List<Distrito> listaDistritos = distritosRepository.findAll();
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        List<Pedido> listaPedidoReporte = null;
+        if(session.getAttribute("listaBusq")!=null){
+            listaPedidoReporte = (List<Pedido>) session.getAttribute("listaBusq");
+            session.removeAttribute("listaBusq");
+        }else{
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            listaPedidoReporte = pedidoRepository.findByEstadoAndRepartidor(6, repartidor);
         }
-        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 3 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
-            errorMov= true;
-        }
-        if(distritos!=null){
-            if(distritos.size()>5 || distritos.isEmpty()){
-                errorDist=true;
-            }
-        }
-        if(distritos==null){
-            errorDist=true;
-        }
-
-
-        Boolean errorFecha = true;
-        try {
-            String[] parts = usuario.getFechanacimiento().split("-");
-            System.out.println(parts[0]+"Año");
-            int naci = Integer.parseInt(parts[0]);
-            Calendar fecha = new GregorianCalendar();
-            int anio = fecha.get(Calendar.YEAR);
-            if (anio - naci >18) {
-                errorFecha = false;
-            }
-        } catch (NumberFormatException n) {
-            errorFecha = true;
-        }
-        if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
-            errorSexo=true;
-        }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
-                errorDist || errorFecha || errorSexo){
-            if(!contrasenia2.equals(usuario.getContrasenia())){
-                model.addAttribute("msg", "Las contraseñas no coinciden");
-            }
-            if(usuario1!=null){
-                model.addAttribute("msg2", "El DNI ingresado ya se encuentra en la base de datos");
-            }
-            if(usuario2!=null){
-                model.addAttribute("msg3", "El telefono ingresado ya se encuentra en la base de datos");
-            }
-            if(usuario3!=null){
-                model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
-            }
-            if(errorDist){
-                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
-            }
-            if(errorMov){
-                model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
-            }
-            if(errorFecha){
-                model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse");
-            }
-            if(errorSexo){
-                model.addAttribute("msg8", "Seleccione una opción");
-            }
-
-            model.addAttribute("usuario", usuario);
-            model.addAttribute("movilidad", movilidad);
-            model.addAttribute("distritosSeleccionados", distritos);
-
-            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
-            model.addAttribute("listaDistritos", distritosRepository.findAll());
-            return "/Repartidor/registro";
-        }else {
-
-
-            //se agrega rol:
-            usuario.setRol(rolRepository.findById(4).get());
-            //
-            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) {
-                movilidad.setLicencia(null);
-                movilidad.setPlaca(null);
-            }
-            movilidad = movilidadRepository.save(movilidad);
-            usuario.setMovilidad(movilidad);
-
-            //OBS: ------
-            usuario.setEstado(2);
-
-            //Fecha de registro:
-            Date date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            usuario.setFecharegistro(hourdateFormat.format(date));
-            //
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(usuario.getContrasenia());
-            System.out.println(hashedPassword);
-            usuario.setContrasenia(hashedPassword);
-            //--------
-            usuario = usuarioRepository.save(usuario);
-
-            for (Distrito distrito : distritos) {
-                Ubicacion ubicacion = new Ubicacion();
-                ubicacion.setUsuario(usuario);
-                ubicacion.setDistrito(distrito);
-                ubicacionRepository.save(ubicacion);
-            }
-            return "redirect:/repartidor/registroRepartidor";
-        }
-
-
+        model.addAttribute("listaPedidoReporte", listaPedidoReporte);
+        model.addAttribute("notificaciones", notificaciones);
+        model.addAttribute("distritos", listaDistritos);
+        return "Repartidor/reporteDeliverys";
     }
 
-    /*
-    @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult,
-                                    RedirectAttributes attr, Model model,
-                                    @RequestAttribute("contrasenia1") String contrasenia1, @RequestAttribute("contrasenia2") String contrasenia2) {
+    @PostMapping("/busqReportDelivery")
+    public String busqReportDelivery(HttpSession session, Model model,
+                                     @RequestParam(value = "nombreRest", required = false) String nombreRest,
+                                     @RequestParam(value = "idDistrito", required = false) String idDistrito,
+                                     @RequestParam(value = "fechaMin", required = false) String fechaMin,
+                                     @RequestParam(value = "fechaMax", required = false) String fechaMax,
+                                     @RequestParam(value = "monto", required = false) String monto,
+                                     @RequestParam(value = "valoracion", required = false) String valoracion) {
 
-        if (bindingResult.hasErrors()) {
+        if(session.getAttribute("listaBusq")!=null){
+            session.removeAttribute("listaBusq");
+        }
 
+        boolean nombreRestVal = true;
+        if (nombreRest == null) {
+            nombreRestVal = false;
+        }
 
-            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
-            model.addAttribute("listaDistritos", distritosRepository.findAll());
+        //TODO: validar fechas:
+        boolean fechaMinVal = true;
+        boolean fechaMaxVal = true;
+        fechaMin = "1900-01-01";
+        fechaMax = "3000-01-01";
 
-            return "Repartidor/registro";
-        }else if (contrasenia1!=contrasenia2){
-            attr.addFlashAttribute("msg", "Las contraseñas no coinciden");
-            model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
-            model.addAttribute("listaDistritos", distritosRepository.findAll());
+        boolean montoVal = true;
+        double precioMin = -1.0;
+        double precioMax = -1.0;
+        if (monto == null) {
+            precioMin = 0.0;
+            precioMax = 9999.0;
+        } else {
+            try {
+                int montoInt = Integer.parseInt(monto);
+                switch (montoInt) {
+                    case 1:
+                        precioMin = 0.0;
+                        precioMax = 20.0;
+                        break;
+                    case 2:
+                        precioMin = 20.0;
+                        precioMax = 40.0;
+                        break;
+                    case 3:
+                        precioMin = 40.0;
+                        precioMax = 60.0;
+                        break;
+                    case 4:
+                        precioMin = 60.0;
+                        precioMax = 9999.0;
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                montoVal = false;
+            }
+        }
 
-            return "Repartidor/registro";
+        boolean valoracionVal = true;
+        int valoracionMin = -1;
+        int valoracionMax = -1;
+        if (valoracion == null) {
+            valoracionMin = 0;
+            valoracionMax = 5;
+        } else {
+            try {
+                int valoracionInt = Integer.parseInt(valoracion);
+                switch (valoracionInt) {
+                    case 1:
+                        valoracionMin = 0;
+                        valoracionMax = 2;
+                        break;
+                    case 2:
+                        valoracionMin = 2;
+                        valoracionMax = 5;
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                valoracionVal = false;
+            }
+        }
 
-        }else {
-
-            usuarioRepository.save(usuario);
-            return "redirect:/x";
-        }*/
+        if (nombreRestVal && montoVal && valoracionVal) {
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            if (idDistrito == null) {
+                List<Pedido> pedidoBusqReporteDelivery = pedidoRepository.findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+                        (6, repartidor, fechaMin, fechaMax, precioMin, precioMax, valoracionMin, valoracionMax, nombreRest);
+                session.setAttribute("listaBusq", pedidoBusqReporteDelivery);
+            } else {
+                try {
+                    int idDis = Integer.parseInt(idDistrito);
+                    Optional<Distrito> distritoOpt = distritosRepository.findById(idDis);
+                    if (distritoOpt.isPresent()) {
+                        Distrito distrito = distritoOpt.get();
+                        List<Pedido> pedidoBusqReporteDelivery = pedidoRepository.findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+                                (6, repartidor, fechaMin, fechaMax, precioMin, precioMax, valoracionMin, valoracionMax, nombreRest, distrito);
+                        session.setAttribute("listaBusq", pedidoBusqReporteDelivery);
+                    }
+                } catch (NumberFormatException e) {
+                    return "redirect:/repartidor/reporteDelivery";
+                }
+            }
+        }
+        return "redirect:/repartidor/reporteDelivery";
+        /*Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        List<Pedido> pedidoBusqReporteDelivery = pedidoRepository.findByEstadoAndRepartidor(6,repartidor);
+        session.setAttribute("listaBusq", pedidoBusqReporteDelivery);
+        return "redirect:/repartidor/reporteDelivery";*/
+    }
 
 
 }

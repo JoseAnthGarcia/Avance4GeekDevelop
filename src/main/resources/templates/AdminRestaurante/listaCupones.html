@@ -188,13 +188,13 @@
                                                     <div th:case="${2}" th:text="|Publicado|"></div>
                                                 </td>
                                                 <td th:text="${cupon.politica}"></td>
-                                                <td th:text="${cupon.fechafin.plusDays(1)}"></td>
+                                                <td th:text="${cupon.fechafin}"></td>
                                                 <td th:text="'S/.'+${cupon.descuento}"></td>
 
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
                                                                             th:href="@{'/cupon/editar' + '?id=' + ${cupon.idcupon} +
-                                                                            '&fechainicio=' + ${cupon.fechainicio.plusDays(1)} + '&fechafin=' + ${cupon.fechafin.plusDays(1)}}">
+                                                                            '&fechainicio=' + ${cupon.fechainicio} + '&fechafin=' + ${cupon.fechafin}}">
                                                     <i class="fas fa-pen"></i>
                                                 </a></td>
                                                 <td th:if="${cupon.estado == 1}" style="width: 160px"><a

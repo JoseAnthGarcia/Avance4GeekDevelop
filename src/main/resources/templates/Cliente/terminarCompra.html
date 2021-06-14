@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Pago Pedido')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Terminar Compra')"></head>
 
 
 <body id="page-top">
@@ -75,22 +75,22 @@
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
+                    <!--
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
-                                  th:text="${notificaciones.size()}"></span>
+                            Counter - Alerts
+                            <span class="badge badge-danger badge-counter">3+</span>
                         </a>
-                        <!-- Dropdown - Alerts -->
+                         Dropdown - Alerts
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
                             <h6 class="notificacion">
                                 Pedido actual
                             </h6>
-                            <p th:if="${notificaciones.size()!=0}"> No tiene pedidos pendientes</p>
-                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item d-flex align-items-center"
+                            <p th:if="${notificaciones.size()==0}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0}" class="dropdown-item d-flex align-items-center"
                                th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
@@ -98,7 +98,7 @@
                                     </div>
                                 </div>
                             </a>
-                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item d-flex align-items-center" href="#">
+                            <a th:if="${notificaciones.size()>0}" class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="mr-3">
                                     <img class="icon-circle" src="img/rosaNautica.jpg">
                                 </div>
@@ -109,10 +109,10 @@
                                     <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a th:if="${notificaciones.size()<=0}" class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                            <a th:if="${notificaciones.size()>0}" class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
                                 Mostrar todos mis pedidos</a>
                         </div>
-                    </li>
+                    </li> -->
 
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
@@ -239,44 +239,79 @@
                                                     <br>
                                                 </div>
                                                 <div class="col-6">
-                                                    <select class="form-control form-control-sm mb-4" name="tarjeta" form="generarPedido">
+                                                    <div th:if="${listaTarjetas.size() == 0}" class="mt-2 mb-4"><h6><strong>No tiene una tarjeta registrada</strong></h6></div>
+                                                    <select th:if="${listaTarjetas.size() != 0}" class="form-control form-control-sm mb-4" name="tarjeta" form="generarPedido">
+                                                        <option value="" disabled selected>Seleccione una tarjeta</option>
                                                         <option th:each="tarjeta : ${listaTarjetas}"
                                                                 th:text="|${tarjeta.getNumerotarjeta()}|"
                                                                 th:value="${tarjeta.getIdtarjeta()}"></option>
                                                     </select>
-                                                    <br>
-                                                    <select class="form-control form-control-sm mb-4" name="newTarjeta" form="generarPedido">
-                                                        <option value="1">Visa</option>
-                                                        <option value="2">Mastercad</option>
-                                                    </select>
-                                                    <br>
-                                                    <div class="input-group input-group-sm mb-3">
-                                                        <input type="text" class="form-control text-center" name="numeroTarjeta" form="generarPedido">
-                                                    </div>
-                                                    <br>
-                                                    <div class="form-check-inline">
-                                                        <select class="form-control" id="mes" name="mes" form="generarPedido">
-                                                            <option value="0" selected>mes</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                            <option value="6">6</option>
-                                                            <option value="7">7</option>
-                                                            <option value="8">8</option>
-                                                            <option value="9">9</option>
-                                                            <option value="10">10</option>
-                                                            <option value="11">11</option>
-                                                            <option value="12">12</option>
+
+                                                    <div class="container">
+                                                        <select th:if="${tipo != null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
+                                                            <option value="" disabled>Seleccione el tipo de su tarjeta</option>
+                                                            <option value="1" th:selected="${tipo.equals('1')}">Visa</option>
+                                                            <option value="2" th:selected="${tipo.equals('2')}">Mastercad</option>
                                                         </select>
-                                                        <input type="text" class="form-control" id="year" name="year" form="generarPedido"
-                                                               placeholder="año">
+                                                        <select th:if="${tipo == null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
+                                                            <option value="" disabled selected>Seleccione el tipo de su tarjeta</option>
+                                                            <option value="1">Visa</option>
+                                                            <option value="2">Mastercad</option>
+                                                        </select>
+                                                        <h6 th:if="${msgTipoVal != null}" style="color: red; font-size: 15px" th:text="${msgTipoVal}"></h6>
                                                     </div>
                                                     <br>
-                                                    <div class="input-group input-group-sm mb-3">
-                                                        <input type="text" class="form-control" placeholder="3 dígitos" form="generarPedido"
-                                                               id="idcvv" name="cvv">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control text-center"
+                                                               name="numeroTarjeta" form="generarPedido"
+                                                                th:placeholder="${numTarjeta == null ? '' : numTarjeta }">
+                                                        <h6 th:if="${msgNumTarjetaVal != null}" style="color: red; font-size: 15px" th:text="${msgNumTarjetaVal}"></h6>
+                                                    </div>
+                                                    <br>
+                                                    <div class="container">
+                                                        <div class="form-check-inline">
+                                                            <select th:if="${mes != null}" class="form-control form-control-sm mr-2" id="mes" name="mes" form="generarPedido">
+                                                                <option value="" disabled>mes</option>
+                                                                <option value="1" th:selected="${mes.equals('1')}">1</option>
+                                                                <option value="2" th:selected="${mes.equals('2')}">2</option>
+                                                                <option value="3" th:selected="${mes.equals('3')}">3</option>
+                                                                <option value="4" th:selected="${mes.equals('4')}">4</option>
+                                                                <option value="5" th:selected="${mes.equals('5')}">5</option>
+                                                                <option value="6" th:selected="${mes.equals('6')}">6</option>
+                                                                <option value="7" th:selected="${mes.equals('7')}">7</option>
+                                                                <option value="8" th:selected="${mes.equals('8')}">8</option>
+                                                                <option value="9" th:selected="${mes.equals('9')}">9</option>
+                                                                <option value="10" th:selected="${mes.equals('10')}">10</option>
+                                                                <option value="11" th:selected="${mes.equals('11')}">11</option>
+                                                                <option value="12" th:selected="${mes.equals('12')}">12</option>
+                                                            </select>
+                                                            <select th:if="${mes == null}" class="form-control form-control-sm mr-2" id="mes" name="mes" form="generarPedido">
+                                                                <option value="" disabled selected>mes</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                                <option value="6">6</option>
+                                                                <option value="7">7</option>
+                                                                <option value="8">8</option>
+                                                                <option value="9">9</option>
+                                                                <option value="10">10</option>
+                                                                <option value="11">11</option>
+                                                                <option value="12">12</option>
+                                                            </select>
+                                                            <input type="text" class="form-control  form-control-sm" id="year" name="year" form="generarPedido"
+                                                                   th:placeholder="${anio == null ? '' : anio}"
+                                                                   placeholder="año">
+                                                        </div>
+                                                        <h6 th:if="${msgFechaVal != null}" style="color: red; font-size: 15px" th:text="${msgFechaVal}"></h6>
+                                                    </div>
+                                                    <br>
+                                                    <div class="input-group input-group-sm mb-3 mt-3">
+                                                        <input type="text" class="form-control " placeholder="3 dígitos" form="generarPedido"
+                                                               th:placeholder="${cvv== null ? '' : cvv}"  id="idcvv" name="cvv">
+                                                        <h6 th:if="${msgCvvVal != null}" style="color: red; font-size: 15px" th:text="${msgCvvVal}"></h6>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,7 +328,7 @@
                                                 class="ml-3">
 
                                             <div class="row justify-content-between mt-2 mb-2">
-                                                <h6 class="ml-4" style="color: black"><strong>El repartidor aceptará cualquier tarjeta de crédito (Visa/Mastercard)</strong></h6>
+                                                <h6 class="ml-4 mb-4" style="color: black"><strong>El repartidor aceptará cualquier tarjeta de crédito (Visa/Mastercard)</strong></h6>
                                                 <!--
                                                 <div class="col-6 mt-1">
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Ingrese
@@ -322,13 +357,15 @@
 
                                             <div class="row justify-content-between mt-2 mb-2">
                                                 <div class="col-6 mt-2">
-                                                    <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Ingrese
+                                                    <h6 style="color:#000000;" class="ml-3 mt-1 mb-4 text-left"><strong>Ingrese
                                                         con cuánto cancelará: </strong></h6>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="input-group input-group-sm mb-3 mt-2">
                                                         <h6>S/. </h6>
                                                         <input type="text" class="form-control text-center ml-2" name="efectivoPagar" form="generarPedido">
+                                                        <h6 th:if="${msgEfect != null}" style="color: red; font-size: 15px" th:text="${msgEfect}"></h6>
+                                                        <h6 th:if="${msgNotString != null}" style="color: red; font-size: 15px" th:text="${msgNotString}"></h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -373,16 +410,18 @@
                                         <div class="form-check-inline mt-sm-1">
                                             <h6 style="color:#000000; size: auto" class="ml-3 mt-2 mr-3"><strong>Extras</strong>
                                             </h6>
-                                            <button class="btn" data-toggle="modal"
+                                            <button th:if="${session.extrasCarrito != null}" class="btn" data-toggle="modal"
                                                     data-target="#carritoExtraModal"><i class="fas fa-eye"></i></button>
                                         </div>
                                         <h6 style="color:#000000;" class="ml-3 mt-3"><strong>Delivery</strong></h6>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-3"><strong th:text="|S/. ${montoCarrito}|"></strong></h6>
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${montoExtras}|"></strong></h6>
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${delivery}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-3"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito,1,2)}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${#numbers.formatDecimal(montoExtras,1,2)}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${session.delivery}|"></strong></h6>
+<!--
                                         <input name="delivery" form="generarPedido" th:value="${delivery}" hidden>
+-->
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
@@ -393,48 +432,46 @@
                                         <h7 class="ml-3"><strong>¿Tiene algún cupón? </strong></h7>
                                         <h7 class="ml-3" th:if="${listaCupones.size() == 0}"> No </h7>
                                         <select th:if="${listaCupones.size() != 0}" class="form-control form-control-sm ml-3 mt-2" name="cupon" form="generarPedido">
+                                            <option value="" selected>Seleccione un cupón</option>
                                             <option th:each="cupon : ${listaCupones}"
                                                     th:value="${cupon.getIdcupon()}"
                                             th:text="|- S/. ${cupon.getDescuento()} por ${cupon.getPolitica()}|"></option>
                                         </select>
+                                        <div th:if="${msgCuponVal != null}" class="container mt-2 mr-1">
+                                            <h6 style="color: red" th:text="${msgCuponVal}"></h6>
+                                        </div>
                                     </div>
                                     <div class="col-4">
-                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
+                                        <h6 style="color:#000000;" class="mr-3 mt-sm-1"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras + session.delivery,0,2)}|"></strong></h6>
                                         <br>
                                         <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|- S/. ${descuento}|"></strong></h6>
                                     </div>
                                 </div>
                                 <div class="form-check-inline">
-                                    <div class="container mt-4">
+                                    <div class="container mt-4" style="width: 300px">
                                         <!-- ONLINE -->
-                                        <input class="form-check-input" name="metodoPago" form="generarPedido" type="checkbox" value="3" id="online" onclick="escogerMetodoPago()">
+                                        <input class="form-check-input" name="metodoPago" form="generarPedido" type="checkbox" value="2" id="online" onclick="escogerMetodoPago()"
+                                            th:checked="${msgNumTarjetaVal != null || msgFechaVal != null
+                                                            || msgCvvVal != null || msgTipoVal  != null
+                                                            || msgNullMdp != null}">
                                         <i class="fab fa-cc-visa" style="color: darkblue"></i>
                                         <i class="fab fa-cc-mastercard" style="color: darkred"></i>
                                     </div>
                                     <div class="container mt-4">
                                         <!-- POS -->
-                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="2" id="pos" onclick="escogerMetodoPago()">
+                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="3" id="pos" onclick="escogerMetodoPago()">
                                         <i class="fab fa-paypal" style="color: darkred;"></i>
                                     </div>
                                     <div class="container mt-4">
                                         <!-- EFECTIVO -->
-                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="1" id="efectivo" onclick="escogerMetodoPago()">
+                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="1" id="efectivo" onclick="escogerMetodoPago()"
+                                               th:checked="${msgEfect != null || msgNotString != null}">
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
                                     </div>
                                 </div>
-                               <!-- <div class="container mt-sm-2">
-                                    <div class="row justify-content-between">
-                                        <div class="col-sm-7">
-                                            <label>Seleccione una tarjeta</label>
-                                            <select class="form-control form-control-sm mb-4" form="terminarCompra">
-                                            <option th:each="tarjeta : ${listaTarjetas}"
-                                                    th:text="|${tarjeta.getNumerotarjeta()}|"
-                                                    th:value="${tarjeta.getIdtarjeta()}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>-->
-
+                                <div th:if="${msgMetPagoVal != null}" class="container mt-2 mr-1">
+                                    <h6 style="color: red" th:text="${msgMetPagoVal}"></h6>
+                                </div>
                                 <div class="row">
                                     <div class="col">
                                         <label for="direcc" class="ml-4"><strong>Dirección Actual</strong></label>
@@ -454,6 +491,9 @@
                                             <button class="btn btn-cielito ml-2" type="submit">Seleccionar</button>
 -->
                                         </div>
+                                        <div th:if="${msgUbicVal != null}" class="container mt-2 mr-1">
+                                            <h6 style="color: red" th:text="${msgUbicVal}"></h6>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -463,8 +503,8 @@
                                         <h4 style="color: #701111" class="ml-3" ><strong>Monto Total: </strong></h4>
                                     </div>
                                     <div class="col-4">
-                                        <h6 th:if="${descuento == null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito + montoExtras}|"></strong></h6>
-                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${montoCarrito + montoExtras - descuento}|"></strong></h6>
+                                        <h6 th:if="${descuento == null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras + session.delivery,1,2)}|"></strong></h6>
+                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras - descuento + session.deliviery,1,2)}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">
@@ -525,38 +565,15 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                  <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
-                            </div>
+                    <div class="row" th:each="plato : ${session.carrito}">
+                        <div class="col-3">
+                            <img class="img-profile rounded-circle" alt="list-style-image"
+                                 style="width: 35px; height: 35px"
+                                 th:src="@{'/cliente/imagesPlato?id='+${plato.getPlato().getIdplato()}}">
                         </div>
-                        <div class="col text-center">S/. 5.00</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/pizza.jpg">
-                                <div class="ml-1"> Americana</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/pizza.jpg">
-                                <div class="ml-1"> Pizza Americana</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
+                        <div class="col-3" th:text="${plato.getPlato().getNombre()}"></div>
+                        <div class="col-3" th:text="|${plato.getCantidad()} uni.|"></div>
+                        <div class="col-3" th:text="|S/. ${plato.getPreciounitario()}|"></div>
                     </div>
                 </div>
             </div>
@@ -578,39 +595,16 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                  <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
+                      <div class="row" th:if="${session.extrasCarrito != null}" th:each="extras : ${session.extrasCarrito}">
+                            <div class="col-3">
                                 <img class="img-profile rounded-circle" alt="list-style-image"
                                      style="width: 35px; height: 35px"
-                                     src="img/gaseosa.jpg">
-                                <div class="ml-1"> Inca Kola</div>
+                                     th:src="@{'/cliente/imagenExtra?id='+${extras.getExtra().getIdextra()}}">
                             </div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/pizza.jpg">
-                                <div class="ml-1"> Americana</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4 text-left">
-                            <div class="form-check-inline">
-                                <img class="img-profile rounded-circle" alt="list-style-image"
-                                     style="width: 35px; height: 35px"
-                                     src="img/pizza.jpg">
-                                <div class="ml-1"> Pizza Americana</div>
-                            </div>
-                        </div>
-                        <div class="col text-center">S/. 5.00</div>
-                    </div>
+                          <div class="col-3" th:text="${extras.getExtra().getNombre()}"></div>
+                          <div class="col-3" th:text="|${extras.getCantidad()} uni.|"></div>
+                          <div class="col-3 text-center" th:text="|S/. ${extras.getPreciounitario()}|"></div>
+                      </div>
                 </div>
             </div>
 

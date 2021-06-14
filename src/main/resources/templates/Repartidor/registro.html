@@ -71,7 +71,7 @@
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de
                     repartidor.</p>
-                <form method="post" th:action="@{'/repartidor/guardarRepartidor'}" th:object="${usuario}">
+                <form method="post" th:action="@{/guardarRepartidor}" th:object="${usuario}" enctype="multipart/form-data">
                     <input th:field="*{idusuario}" type="hidden"/>
                     <input th:field="*{rol}" th:value="repartidor" type="hidden"/>
                     <div class="form-group row">
@@ -230,8 +230,11 @@
                             <p>Adjunte una foto de perfil para su cuenta(.jpg). Esta debe ser una fotografía en la que
                                 se visualice claramente su rostro. Este campo es obligatorio.</p>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
+                                <input type="file" name="photo"
+                                       accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                    style="color: red; font-size: small; text-align: left"></h1>
                             </div>
                         </div>
 

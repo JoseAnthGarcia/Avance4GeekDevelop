@@ -1681,7 +1681,7 @@ public class ClienteController {
         switch (estado) {
             case "0":
                 limitSup = 0;
-                limitInf = 0;
+                limitInf = -1;
                 break;
             case "1":
                 limitSup = 1;

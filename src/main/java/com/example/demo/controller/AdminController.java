@@ -423,7 +423,7 @@ public class AdminController  {
         return "AdminGen/lista";
     }*/
 
-    @GetMapping(value ="/usuarios")
+    @GetMapping(value ="/usuarios")//lista de usuarios principal
     public String listaUsuarios(@RequestParam Map<String, Object> params, Model model,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "estado", required = false) String estado,
@@ -534,7 +534,7 @@ public class AdminController  {
         model.addAttribute("last", totalPage);
         return "AdminGen/lista";
     }
-    @GetMapping(value ="/usuariosR")
+    @GetMapping(value ="/usuariosR")//Reporte de usuarios
     public String listaUsuariosR(@RequestParam Map<String, Object> params, Model model,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "estado", required = false) String estado,
@@ -645,7 +645,7 @@ public class AdminController  {
         return "AdminGen/reporteUsuarios";
     }
 
-    @GetMapping(value ="/usuariosL")
+    @GetMapping(value ="/usuariosL")///limpiador de filtros
     public String listaUsuariosLimpiar(@RequestParam Map<String, Object> params, Model model,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "estado", required = false) String estado,

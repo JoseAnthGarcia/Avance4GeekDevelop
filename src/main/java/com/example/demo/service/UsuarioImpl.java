@@ -12,11 +12,6 @@ import com.example.demo.entities.Usuario;
         @Autowired
         private UsuarioRepository usuarioRepository;
 
-        /*@Override
-        public Page<Usuario> listaUsuarios(Pageable pageable) {
-            return this.usuarioRepository.listaUsuarios(pageable);
-        }*/
-
 
         @Override
         public Page<Usuario> listaUsuarios(String texto, Integer inFol, Integer maXrol, Integer miFestado, Integer maXestado, Pageable pageable) {

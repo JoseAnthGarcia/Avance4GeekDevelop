@@ -33,11 +33,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5))\n" +
+            "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 ) ORDER BY UNIX_TIMESTAMP(fechapedido) ASC ")
+            "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 )" +
+            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
@@ -49,10 +50,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
             " as pedidosT\n" +
-            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4)  ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
-
+            "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) " +
+            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -401,6 +403,20 @@ public class PlatoController {
         }
 
         return "redirect:/plato/lista?idcategoria=" + idcategoria;
+    }
+
+    @InitBinder("plato")
+    public void validatorDataBinding(WebDataBinder binder) {
+        PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
+            public void setAsDouble(String precio) throws IllegalArgumentException {
+                try {
+                    this.setValue(Double.parseDouble(precio));
+                } catch (NumberFormatException e) {
+                    this.setValue(0);
+                }
+            }
+        };
+        binder.registerCustomEditor(Double.class, "precio", integerValidator);
     }
 
 }

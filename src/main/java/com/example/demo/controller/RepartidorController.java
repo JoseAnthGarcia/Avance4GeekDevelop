@@ -198,6 +198,9 @@ public class RepartidorController {
             if (valContra) {
                 model.addAttribute("msg", "Contraseña incorrecta");
             }
+            Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
 
             model.addAttribute("usuario", usuario);
             return "Repartidor/editarPerfil";

@@ -1,7 +1,18 @@
 Correo:
 
-usuario: a20181459@pucp.edu.pe
-clave: 123456789
+----- CREDENCIALES ----
+-ADMINISTRADOR GENERAL:
+    adminGeneral: admin@gmail.com
+    password: adminGeneral
+-USUARIO:
+    usuario: a20181459@pucp.edu.pe
+    clave: 123456789
+-RESTAURANTE:
+    usuario: hector.ventura@pucp.edu.pe
+    clave: hector123
+-REPARTIDOR:
+    usuario: garcia.josea@gmail.com
+    clave: Garcia916182017
 
 Pedido:
 0 - Pendiente
@@ -9,8 +20,8 @@ Pedido:
 2 - Cancelado
 3 - 
 4 - 
-5 - 
-6 - 
+5 -
+6 -
 
 Método de pago:
 

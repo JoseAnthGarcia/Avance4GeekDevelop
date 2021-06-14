@@ -5,6 +5,7 @@ import com.example.demo.dtos.NotiDTO;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
+import com.sun.xml.bind.v2.TODO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,14 @@ import java.util.List;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+
+    // TODO: 12/06/2021
+
+   /* @Query(value = "SELECT * FROM geekdevelop.usuario\n" +
+            " where 1 = 1\n" +
+            " LIMIT ?1,10;", nativeQuery = true)
+    Page<Usuario> usuarioslistapage(Integer numero);*/
+
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
@@ -36,9 +45,27 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select * from usuario where telefono = ?1", nativeQuery = true)
     Usuario findByTelefono (String telefono);
 
+    // TODO: 13/06/2021
+    /*@Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' " , nativeQuery = true,
+            countQuery = "select count(*) from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' ")
+    Page<Usuario> listaUsuarios(Pageable pageable);*/
 
-    @Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and (u.estado = 0 or u.estado = 1) and r.tipo != 'administradorG' " , nativeQuery = true)
-    List<Usuario> listaUsuarios();
+    /*@Query(value =" select * from usuario u, rol r where u.idrol = r.idrol and u.estado = ?1  and r.tipo != 'administradorG' " ,
+            countQuery = "select count(*) from usuario u, rol r where u.idrol = r.idrol and u.estado = ?1 and r.tipo != 'administradorG'",nativeQuery = true)
+    Page<Usuario> listaUsuarios(Integer estado, Pageable pageable);*/
+
+    @Query(value =" SELECT * FROM geekdevelop.usuario u \n" +
+            "where  concat(lower(nombres),lower(apellidos)) like %?1% \n" +
+            "and idrol != 2 \n" +
+            "and ( `idrol` > ?2 and `idrol` <= ?3 ) \n" +
+            "and ( `estado` > ?4 and `estado` <= ?5 ) " ,nativeQuery = true ,
+            countQuery = "SELECT count(*) FROM geekdevelop.usuario u \n" +
+                    "where  concat(lower(nombres),lower(apellidos)) like %?1% \n" +
+                    "and idrol != 2 \n" +
+                    "and ( `idrol` > ?2 and `idrol` <= ?3 ) \n" +
+                    "and ( `estado` > ?4 and `estado` <= ?5 ) ")
+    Page<Usuario> listaUsuarios(String texto, Integer inFrol, Integer maXrol, Integer miFestado, Integer maXestado, Pageable pageable);
+
 
     @Query(value = "select datediff(now(),min(fechaRegistro)) from usuario", nativeQuery = true)
     int buscarFechaMinimaRepartidor();
@@ -67,6 +94,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "u.estado = 2 and\n" +
             "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
             "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true)
+
     Page<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad, Pageable pageable);
 
     Usuario findByCorreo(String correo);

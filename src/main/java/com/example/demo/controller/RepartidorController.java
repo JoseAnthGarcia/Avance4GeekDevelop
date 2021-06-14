@@ -174,15 +174,25 @@ public class RepartidorController {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         boolean valContra = true;
-
+        boolean telfValid = false;
 
         Usuario usuario2 = usuarioRepository.findByTelefono(telefonoNuevo);
+        int telfInt;
+        try {
+            telfInt = Integer.parseInt(telefonoNuevo);
+        } catch (NumberFormatException e) {
+            telfInt = -1;
+        }
+
+        if (telfInt == -1 || telefonoNuevo.trim().equals("") || telefonoNuevo.length() != 9) {
+            telfValid = true;
+        }
 
         if (BCrypt.checkpw(contraseniaConf, usuario.getContrasenia())) {
             valContra = false;
         }
 
-        if (valContra || usuario2 != null) {
+        if (valContra || usuario2 != null || telfValid) {
 
             if (usuario2 != null) {
                 int idusuario = usuario2.getIdusuario();
@@ -198,6 +208,12 @@ public class RepartidorController {
             if (valContra) {
                 model.addAttribute("msg", "Contraseña incorrecta");
             }
+            if (telfValid) {
+                model.addAttribute("msg2", "Coloque 9 dígitos si desea actualizar");
+            }
+            Ubicacion ubicacionActual = (Ubicacion) httpSession.getAttribute("ubicacionActual");
+            List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+            model.addAttribute("notificaciones", notificaciones);
 
             model.addAttribute("usuario", usuario);
             return "Repartidor/editarPerfil";
@@ -282,7 +298,7 @@ public class RepartidorController {
         if (pedidoAct.size() != 0) {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
-            model.addAttribute("pedidoAct", pedidoAct);
+            model.addAttribute("pedidoAct", pedidoAct.get(0));
             List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.get(0).getRestaurante().getIdrestaurante(), pedidoAct.get(0).getCodigo());
             model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);

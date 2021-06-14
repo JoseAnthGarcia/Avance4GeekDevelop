@@ -240,9 +240,19 @@ public class ClienteController {
         if(idCategoria == null){
             idCategoria="0-28";
         }else {
-            String[] chain = idCategoria.split("-");
-            limitInfCat = Integer.parseInt(chain[0]);
-            limitSupCat = Integer.parseInt(chain[1]);
+            if(idCategoria.contains("-")) {
+                String[] chain = idCategoria.split("-");
+                try {
+                    limitInfCat = Integer.parseInt(chain[0]);
+                    limitSupCat = Integer.parseInt(chain[1]);
+                }catch (NumberFormatException e){
+                    idCategoria="0-28";
+                }
+
+            }else{
+                idCategoria="0-28";
+            }
+
         }
 
         switch (idPrecio){
@@ -2043,12 +2053,14 @@ public class ClienteController {
         }
         int totalsuma1 = 0;
         int i=0;
+        if(totalPage>0){
         for (ReportePedidoCDTO rep : listapedidos) {
             // System.out.println(rep.getTiempoEntrega());
             totalsuma1 = totalsuma1 + rep.getTiempoentrega();
             i=i+1;
         }
         totalsuma1 = totalsuma1 / i;
+        }
 
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos", listapedidos);

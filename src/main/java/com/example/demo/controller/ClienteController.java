@@ -863,7 +863,7 @@ public class ClienteController {
     @GetMapping("/vaciarExtras")
     public String vaciarExtras(RedirectAttributes attr, HttpSession session){
         session.removeAttribute("extrasCarrito");
-        return "redirect:/cliente/mostrarCarrito";
+        return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
     @PostMapping("/eliminar")

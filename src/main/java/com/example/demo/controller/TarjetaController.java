@@ -167,6 +167,7 @@ public class TarjetaController {
             model.addAttribute("year", year);
             model.addAttribute("mes", mes);
             model.addAttribute("listaTarjetas", listaTarjetas);
+            model.addAttribute("notificaciones", usuarioRepository.notificacionCliente(usuario.getIdusuario()));
             return "Cliente/tarjetas";
         } else {
             Tarjeta tarjeta = new Tarjeta();

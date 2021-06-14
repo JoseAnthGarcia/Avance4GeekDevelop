@@ -334,7 +334,7 @@ public class ExtraController {
         model.addAttribute("idcategoria", idc);
         return "redirect:/extra/lista?idcategoria=" + idc;
     }
-
+/*
     @InitBinder("extra")
     public void validatorDataBinding(WebDataBinder binder) {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
@@ -348,5 +348,5 @@ public class ExtraController {
         };
         binder.registerCustomEditor(Double.class, "preciounitario", integerValidator);
     }
-
+ */
 }

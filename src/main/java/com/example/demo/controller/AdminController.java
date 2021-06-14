@@ -317,7 +317,7 @@ public class AdminController  {
         }
     }
 // HOLA
-    @GetMapping("/aceptarSolicitud")
+    @GetMapping("/aceptarSolicitud")////error al direccionar - administrador rest
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
                                  @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
@@ -351,7 +351,7 @@ public class AdminController  {
 
     }
 
-    @GetMapping("/rechazarSolicitud")
+    @GetMapping("/rechazarSolicitud")////Error al redireccionar - administrador rest
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
                                     @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
 
@@ -1020,7 +1020,7 @@ public class AdminController  {
 
 
 
-    @PostMapping("/guardarAdmin")
+    @PostMapping("/guardarAdmin")//error para guardar
     public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
                                  BindingResult bindingResult2, Model model, RedirectAttributes attr) throws MessagingException {
 
@@ -1088,17 +1088,12 @@ public class AdminController  {
             //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
             sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
-
             /////-----------------------------------------  ------/////
-
-
 
             usuarioRepository.save(usuario);
 
             return "redirect:/admin/usuarios";
-
         }
-
     }
 
     //Pasamos por parametro: destinatario, asunto y el mensaje
@@ -1134,7 +1129,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -1147,7 +1142,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -1159,7 +1154,7 @@ public class AdminController  {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Rechazado", context);
+        String emailContent = templateEngine.process("Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

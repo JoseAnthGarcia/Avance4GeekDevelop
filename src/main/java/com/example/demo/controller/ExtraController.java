@@ -19,12 +19,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,6 +49,7 @@ public class ExtraController {
     CategoriaExtraRepository categoriaExtraRepository;
     @Autowired
     PedidoRepository pedidoRepository;
+
 
     @GetMapping(value = {"/categoria", ""})
     public String listaCategorias(Model model, @RequestParam(value = "idcategoria", required = false) Integer id, HttpSession session) {
@@ -204,7 +207,6 @@ public class ExtraController {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
@@ -332,4 +334,19 @@ public class ExtraController {
         model.addAttribute("idcategoria", idc);
         return "redirect:/extra/lista?idcategoria=" + idc;
     }
+
+    @InitBinder("extra")
+    public void validatorDataBinding(WebDataBinder binder) {
+        PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
+            public void setAsDouble(String preciounitario) throws IllegalArgumentException {
+                try {
+                    this.setValue(Double.parseDouble(preciounitario));
+                } catch (NumberFormatException e) {
+                    this.setValue(0);
+                }
+            }
+        };
+        binder.registerCustomEditor(Double.class, "preciounitario", integerValidator);
+    }
+
 }

@@ -289,8 +289,8 @@
                     <nav aria-label="Pagination">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && estado == null}" class="page-link active" style="background-color: #701111"
-                                   th:text="${page}"
+                                <a th:unless="${texto == null && estado == null}" class="page-link active"
+                                   style="background-color: #FFFFFF" th:text="${page}"
                                    th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
                             </li>
                         </ul>

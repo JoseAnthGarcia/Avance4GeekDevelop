@@ -1584,7 +1584,9 @@ public class ClienteController {
                 plato_has_pedidoKey.setCodigo(pedido.getCodigo());
                 plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
                 plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
-                plato_has_pedido.setPedido(pedido);
+                plato_has_pedido.
+
+                        setPedido(pedido);
                 platoHasPedidoRepository.save(plato_has_pedido);
             }
             if(listaExtra != null) {

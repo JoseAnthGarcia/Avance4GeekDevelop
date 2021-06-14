@@ -1072,11 +1072,11 @@ public class ClienteController {
             try{
                 cantVal = Integer.parseInt(cantidad.get(i));
                 if(cantVal <= 0 || cantVal > 20){
-                    attr.addFlashAttribute("msgIntMayExtg","Ingrese una cantidad entre 0 y 20");
+                    attr.addFlashAttribute("msgIntMayExt","Ingrese una cantidad entre 0 y 20");
                     return "redirect:/cliente/mostrarExtrasCarrito";
                 }
             }catch (NumberFormatException e){
-                attr.addFlashAttribute("msgIntExt","Ingrese un número");
+                attr.addFlashAttribute("msgIntExt","Ingrese un número entero");
                 return "redirect:/cliente/mostrarExtrasCarrito";
             }
         }
@@ -1156,7 +1156,7 @@ public class ClienteController {
                      }
                 }catch (NumberFormatException e){
                     System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
-                    attr.addFlashAttribute("msgInt","Ingrese un número");
+                    attr.addFlashAttribute("msgInt","Ingrese un número entero");
                     return "redirect:/cliente/mostrarCarrito?idPage=0";
                 }
             }
@@ -1399,6 +1399,7 @@ public class ClienteController {
                     numTarjetaValNull = true;
                     mesValNull = true;
                     anioValNull = true;
+                    idTarjetaVal = true;
                 }
             }
         }catch (NumberFormatException e){
@@ -1584,9 +1585,7 @@ public class ClienteController {
                 plato_has_pedidoKey.setCodigo(pedido.getCodigo());
                 plato_has_pedidoKey.setIdplato(plato_has_pedido.getPlato().getIdplato());
                 plato_has_pedido.setIdplatohaspedido(plato_has_pedidoKey);
-                plato_has_pedido.
-
-                        setPedido(pedido);
+                plato_has_pedido.setPedido(pedido);
                 platoHasPedidoRepository.save(plato_has_pedido);
             }
             if(listaExtra != null) {
@@ -1605,6 +1604,7 @@ public class ClienteController {
             session.removeAttribute("carrito");
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
+            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido");
             return "redirect:/cliente/pedidoActual";
         }
 

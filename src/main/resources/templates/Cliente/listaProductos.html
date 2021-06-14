@@ -192,10 +192,12 @@
                                 <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 mb-1 mt-md-auto">
+                        <div class="col-sm-3 mb-1 mt-md-auto">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
+                        </div>
+                        <div class="col-sm-3 mb-1 mt-md-auto">
                             <a th:href="@{'/cliente/listaPlatos'}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
@@ -227,10 +229,10 @@
                                         <a class="overlay2" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
                                             <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
                                         </a>
-                                    </div>
-                                <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
-                                <div class="form-check-inline">
-                                        <div class="form-check-inline">
+
+                                        <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
+                                            <div class="form-check-inline">
+                                                <div class="form-check-inline">
                                                     <input type="hidden" name="idPlato" th:value="${plato.getIdplato()}">
                                                     <input type="hidden" name="idPage" value="0">
                                                     <input id="cantidadPlato" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
@@ -238,9 +240,12 @@
                                                     <button class="btn btn-cielito mr-3" style="color: #ffffff; background-color: #701111" type="submit"><i
                                                             class="fas fa-plus"></i></button>
 
+                                                </div>
                                             </div>
+                                        </form>
+
                                     </div>
-                                </form>
+
                             </div>
 
                         </div>

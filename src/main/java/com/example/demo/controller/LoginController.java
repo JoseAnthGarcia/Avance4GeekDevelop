@@ -548,7 +548,7 @@ public class LoginController {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         javaMailSender.send(message);
     }

@@ -241,6 +241,9 @@ public class AdminController  {
                 //
                 restauranteRepository.save(restaurante);
 
+                String contenido = "Hola "+ restaurante.getNombre()+" tu cuenta fue creada exitosamente";
+                sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }else{
                 return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
@@ -294,7 +297,8 @@ public class AdminController  {
                 Restaurante restaurante = restauranteOpt.get();
                 restaurante.setEstado(3);
                 restauranteRepository.save(restaurante);
-
+                String contenido = "Hola "+ restaurante.getAdministrador().getNombres()+" administrador esta es tu cuenta creada";
+                sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
 
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }else{
@@ -337,9 +341,9 @@ public class AdminController  {
                 usuarioRepository.save(usuario);
                 /////----------------Envio Correo--------------------/////
 
-                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+                String contenido = "Hola "+ usuario.getNombres()+" tu solicitud fue aceptada exitosamente";
+                sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
                 /////-----------------------------------------  ------/////
@@ -366,9 +370,9 @@ public class AdminController  {
                 usuarioRepository.save(usuario);
                 /////----------------Envio Correo--------------------/////
 
-                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+                String contenido = "Hola "+ usuario.getNombres()+" solicitud fue rechazada";
+                sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
 
 
                 /////-----------------------------------------  ------/////
@@ -893,6 +897,8 @@ public class AdminController  {
             usuario.setEstado(1);
             usuario.setFechaadmitido(String.valueOf(new Date()));
             usuarioRepository.save(usuario);
+            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
+            sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
 
         }
         return "redirect:/admin/solicitudes";
@@ -957,8 +963,8 @@ public class AdminController  {
         Usuario usuario2 = (Usuario) httpSession.getAttribute("usuario");
 
         if (usuario2.getRol().getIdrol()!=2){
-        //    model.addAttribute("listaUsuarios", usuarioRepository.listaUsuarios());
-            return "AdminGen/lista";
+           model.addAttribute("listaUsuarios", usuarioRepository.findAll());
+            return "redirect:/admin/usuarios";
 
         }else{
             return "AdminGen/crearAdmin";
@@ -1000,9 +1006,9 @@ public class AdminController  {
 
                 /////----------------Envio Correo--------------------/////
 
-                //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
                 /////-----------------------------------------------/////
 
@@ -1085,10 +1091,10 @@ public class AdminController  {
 
             /////----------------Envio Correo--------------------/////
 
-            //String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-            //sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente";
+            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
 
-            sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
+            //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
             /////-----------------------------------------  ------/////
 

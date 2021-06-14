@@ -404,7 +404,7 @@ public class PlatoController {
 
         return "redirect:/plato/lista?idcategoria=" + idcategoria;
     }
-
+    /*
     @InitBinder("plato")
     public void validatorDataBinding(WebDataBinder binder) {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
@@ -418,5 +418,5 @@ public class PlatoController {
         };
         binder.registerCustomEditor(Double.class, "precio", integerValidator);
     }
-
+*/
 }

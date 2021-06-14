@@ -4970,8 +4970,8 @@ input[type="button"].btn-block {
     padding: 0.5rem 0.75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #4e73df;
-    background-color: #fff;
+    color: white;
+    background-color: #701111;
     border: 1px solid #dddfeb;
 }
 

@@ -252,6 +252,27 @@
                                     </table>
 
                                 </div>
+
+
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination justify-content-center">
+
+                                            <li class="page-item" th:each="page : ${pages}">
+                                                <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
+                                                   th:text="${page}"
+                                                   th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                            <!--
+
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
                                     <li class="page-item" th:each="page : ${pages}">
@@ -261,6 +282,7 @@
                                     </li>
                                 </ul>
                             </nav>
+                            -->
 
 
 

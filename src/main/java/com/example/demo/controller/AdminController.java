@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import sun.plugin.dom.core.Element;
+
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

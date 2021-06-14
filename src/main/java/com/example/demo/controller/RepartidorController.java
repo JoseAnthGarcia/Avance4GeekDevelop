@@ -285,7 +285,7 @@ public class RepartidorController {
         if (pedidoAct.size() != 0) {
             List<Distrito> listaDistritos = distritosRepository.findAll();
             model.addAttribute("listaDistritos", listaDistritos);
-            model.addAttribute("pedidoAct", pedidoAct);
+            model.addAttribute("pedidoAct", pedidoAct.get(0));
             List<PlatoPorPedidoDTO> platosPorPedido = pedidoRepository.platosPorPedido(pedidoAct.get(0).getRestaurante().getIdrestaurante(), pedidoAct.get(0).getCodigo());
             model.addAttribute("platosPorPedido", platosPorPedido);
             List<Ubicacion> direcciones = ubicacionRepository.findByUsuarioVal(repartidor);

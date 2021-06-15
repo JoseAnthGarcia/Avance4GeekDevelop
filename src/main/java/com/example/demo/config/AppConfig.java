@@ -13,13 +13,13 @@ public class AppConfig {
     @Autowired
     RestauranteRepository restauranteRepository;
 
+
     @Bean
     public FilterRegistrationBean<CustomFilter> filterRegistrationBean(){
         FilterRegistrationBean<CustomFilter> registrationBean = new FilterRegistrationBean();
         CustomFilter customFilter = new CustomFilter(restauranteRepository);
-
         registrationBean.setFilter(customFilter);
-        registrationBean.addUrlPatterns("/plato","/extra","/restaurante","/cupon");
+        registrationBean.addUrlPatterns("/plato/*","/extra/*","/restaurante/*","/cupon/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }

@@ -982,6 +982,7 @@ public class LoginController {
             return "redirect:/registroRepartidor";
         }
 
-
     }
+
+
 }

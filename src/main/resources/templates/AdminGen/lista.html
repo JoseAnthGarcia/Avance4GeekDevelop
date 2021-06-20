@@ -31,7 +31,7 @@
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1" >
-                            <input type="text" class="form-control bg-light border-0 small" name="texto"
+                            <input type="text" class="form-control" name="texto"
                                    th:value="${texto.equals('')?'':texto}"
                                    th:placeholder="${texto.equals('')?'Búsqueda por usuario...':texto}">
                         </div>
@@ -115,7 +115,7 @@
                                     <th class="text-center">
                                         Estado
                                     </th>
-                                    <th class="text-center"  th:if="${usuario.rol==2}">
+                                    <th class="text-center"  th:if="${session.usuario.rol.idrol==2}">
                                         Des/Bloquear
                                     </th>
                                     <th class="text-center">
@@ -136,9 +136,9 @@
                                     </td>
                                     <td th:text="${usuario.fecharegistro}" class="text-center" style="width: 250px"></td>
                                     <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
-                                    <td>
-                                        <a th:if="${usuario.estado != 0 && usuario.rol==2}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
-                                        <a th:unless="${usuario.estado != 0 || usuario.rol==2}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
+                                    <td th:if="${session.usuario.rol.idrol==2}">
+                                        <a th:if="${usuario.estado != 0}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
+                                        <a th:unless="${usuario.estado != 0 }" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
                                     </td>
                                     <td><a th:href="@{'/admin/detalle?idUsuario='+${usuario.idusuario}}" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>
                                 </tr>

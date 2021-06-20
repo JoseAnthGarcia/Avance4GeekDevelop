@@ -1132,7 +1132,7 @@ public class AdminController  {
             /////-----------------------------------------  ------/////
 
 
-
+            attr.addFlashAttribute("msg", "Administrador creado exitosamente.");
             return "redirect:/admin/usuarios";
         }
     }

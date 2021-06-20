@@ -1754,7 +1754,7 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 3);
 
         if (codigo == null) {
             codigo = "";
@@ -1768,6 +1768,8 @@ public class ClienteController {
         }
 
         model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
         model.addAttribute("codigo", codigo);
 
 
@@ -1788,7 +1790,7 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 3);
 
         if (codigo == null) {
             codigo = "";
@@ -1802,9 +1804,9 @@ public class ClienteController {
         }
 
         model.addAttribute("listapedido2", listaPedidos);
-        model.addAttribute("codigo", codigo);
-
-
+        model.addAttribute("codigo",codigo);
+        model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedido";
     }

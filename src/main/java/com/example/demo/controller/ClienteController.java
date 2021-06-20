@@ -240,9 +240,19 @@ public class ClienteController {
         if(idCategoria == null){
             idCategoria="0-28";
         }else {
-            String[] chain = idCategoria.split("-");
-            limitInfCat = Integer.parseInt(chain[0]);
-            limitSupCat = Integer.parseInt(chain[1]);
+            if(idCategoria.contains("-")) {
+                String[] chain = idCategoria.split("-");
+                try {
+                    limitInfCat = Integer.parseInt(chain[0]);
+                    limitSupCat = Integer.parseInt(chain[1]);
+                }catch (NumberFormatException e){
+                    idCategoria="0-28";
+                }
+
+            }else{
+                idCategoria="0-28";
+            }
+
         }
 
         switch (idPrecio){
@@ -506,16 +516,24 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam Map<String, Object> params,
-                              @RequestParam(value = "idRest",required = false) Integer idRest, //solo es necesario recibirla de restaurante a platos
+                              @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
                               @RequestParam(value = "texto",required = false) String texto,
                               @RequestParam(value = "idPrecio",required = false) String idPrecio,
                               Model model, HttpSession session) {
+
         Integer limitInf = 0;
         Integer limitSup = 5000;
+        Integer idRest;
 
-        if (idRest == null) {
+
+        if (idRestS == null) {
             idRest = (Integer) session.getAttribute("idRest");
         } else {
+            try {
+                idRest = Integer.parseInt(idRestS);
+            }catch (NumberFormatException e){
+                return "redirect:/cliente/listaRestaurantes";
+            }
             //PROBAR
             if(session.getAttribute("idRest") != null){
                 session.removeAttribute("idRest");
@@ -582,7 +600,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-         return "/Cliente/listaProductos";
+         return "Cliente/listaProductos";
     }
 
     @GetMapping("/detallePlato")
@@ -590,10 +608,17 @@ public class ClienteController {
                                 @RequestParam(value = "texto",required = false) String texto,
                                 @RequestParam(value = "idPrecio",required = false) String idPrecio,
                                 @RequestParam(value = "idCategoria",required = false) String idCategoria,
-                                @RequestParam(value = "idPlato",required = false) Integer idPlato, HttpSession session,
+                                @RequestParam(value = "idPlato",required = false) String idPlatoS, HttpSession session,
                                 Model model) {
         Integer idRest = (Integer) session.getAttribute("idRest");
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        Integer idPlato;
+        // <--
+        try{
+            idPlato = Integer.parseInt(idPlatoS);
+        }catch (NumberFormatException e){
+            return "redirect:/cliente/listaPlatos";
+        }
 
         if(idPlato == null){
             idPlato = (Integer) session.getAttribute("idPlato");
@@ -605,6 +630,14 @@ public class ClienteController {
         }
 
 
+
+        Plato platoObs = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
+        if (platoObs == null){
+            return "redirect:/cliente/listaPlatos";
+        }
+
+
+        // validar que el plato pertenezaca alretaurantes
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
         Optional<Plato> platoOpt = platoRepository.findById(idPlato);
 
@@ -749,7 +782,16 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         Plato_has_pedido php = new Plato_has_pedido();
+        //TODO validar plato
+        Plato platoOther = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
+        if(platoOther == null){
+            return "redirect:/cliente/listaPlatos/";
+        }
+
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
+
+
+
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
@@ -853,7 +895,7 @@ public class ClienteController {
     @GetMapping("/vaciarExtras")
     public String vaciarExtras(RedirectAttributes attr, HttpSession session){
         session.removeAttribute("extrasCarrito");
-        return "redirect:/cliente/mostrarCarrito";
+        return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
     @PostMapping("/eliminar")
@@ -962,6 +1004,11 @@ public class ClienteController {
 
         Integer idRest = (Integer) session.getAttribute("idRest");
 
+        Extra extraOther = extraRepository.findByIdextraAndIdrestaurante(idExtra,idRest);
+        if(extraOther == null){
+            return "redirect:/cliente/listaPlatos";
+        }
+
         if(session.getAttribute("extrasCarrito")==null){
             extrasCarrito = new ArrayList<>();
         }else{
@@ -1062,11 +1109,11 @@ public class ClienteController {
             try{
                 cantVal = Integer.parseInt(cantidad.get(i));
                 if(cantVal <= 0 || cantVal > 20){
-                    attr.addFlashAttribute("msgIntMayExtg","Ingrese una cantidad entre 0 y 20");
+                    attr.addFlashAttribute("msgIntMayExt","Ingrese una cantidad entre 0 y 20");
                     return "redirect:/cliente/mostrarExtrasCarrito";
                 }
             }catch (NumberFormatException e){
-                attr.addFlashAttribute("msgIntExt","Ingrese un número");
+                attr.addFlashAttribute("msgIntExt","Ingrese un número entero");
                 return "redirect:/cliente/mostrarExtrasCarrito";
             }
         }
@@ -1146,7 +1193,7 @@ public class ClienteController {
                      }
                 }catch (NumberFormatException e){
                     System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
-                    attr.addFlashAttribute("msgInt","Ingrese un número");
+                    attr.addFlashAttribute("msgInt","Ingrese un número entero");
                     return "redirect:/cliente/mostrarCarrito?idPage=0";
                 }
             }
@@ -1389,6 +1436,7 @@ public class ClienteController {
                     numTarjetaValNull = true;
                     mesValNull = true;
                     anioValNull = true;
+                    idTarjetaVal = true;
                 }
             }
         }catch (NumberFormatException e){
@@ -1442,7 +1490,7 @@ public class ClienteController {
             }
 
             if(!numTarjetaVal){
-                model.addAttribute("msgNumTarjetaVal","El númerot de tarjeta tiene que ser entero y de 16 dígitos. ");
+                model.addAttribute("msgNumTarjetaVal","El número de la tarjeta tiene que ser entero y de 16 dígitos. ");
                 model.addAttribute("numTarjeta",numeroTarjeta);
             }
             if(!anioVal || !mesVal){
@@ -1593,6 +1641,7 @@ public class ClienteController {
             session.removeAttribute("carrito");
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
+            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido");
             return "redirect:/cliente/pedidoActual";
         }
 
@@ -1632,7 +1681,7 @@ public class ClienteController {
         switch (estado) {
             case "0":
                 limitSup = 0;
-                limitInf = 0;
+                limitInf = -1;
                 break;
             case "1":
                 limitSup = 1;
@@ -2041,12 +2090,14 @@ public class ClienteController {
         }
         int totalsuma1 = 0;
         int i=0;
+        if(totalPage>0){
         for (ReportePedidoCDTO rep : listapedidos) {
             // System.out.println(rep.getTiempoEntrega());
             totalsuma1 = totalsuma1 + rep.getTiempoentrega();
             i=i+1;
         }
         totalsuma1 = totalsuma1 / i;
+        }
 
         System.out.println(totalsuma1);
         model.addAttribute("listapedidos", listapedidos);

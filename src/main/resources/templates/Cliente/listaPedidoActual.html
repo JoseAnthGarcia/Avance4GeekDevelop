@@ -191,7 +191,7 @@
                                 <option value="7" th:selected="${estado.equals('7')}">Estados</option>
                                 <option value="0" th:selected="${estado.equals('0')}">Pendiente</option>
                                 <option value="1" th:selected="${estado.equals('1')}">Aceptado</option>
-                                <option value="3" th:selected="${estado.equals('0')}">Preparando</option>
+                                <option value="3" th:selected="${estado.equals('3')}">Preparando</option>
                                 <option value="4" th:selected="${estado.equals('4')}">Listo</option>
                                 <option value="5" th:selected="${estado.equals('5')}">En camino</option>
                             </select>
@@ -218,6 +218,7 @@
                 </div>
                 <div class="card-body">
                     <div style=text-align:center>
+                        <h6 th:if="${msgPedGen != null}" th:text="${msgPedGen}"></h6>
                         <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>
                         <h6 th:if="${listaPedidos.size()>0}">Si su pedido ya ha sido entregado o cancelado dirijase al
                             Historial de Pedidos</h6>
@@ -286,15 +287,38 @@
                         </table>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <nav aria-label="pagination">
+                                <ul class="pagination justify-content-center">
+
+
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
+                                           th:text="${page}"
+                                           th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    <!--
                     <nav aria-label="Pagination">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && estado == null}" class="page-link active" style="background-color: #701111"
-                                   th:text="${page}"
+                                <a th:unless="${texto == null && estado == null}" class="page-link active"
+                                   style="background-color: #FFFFFF" th:text="${page}"
                                    th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
                             </li>
                         </ul>
                     </nav>
+                    -->
+
+
                 </div>
 
                 <!-- /.container-fluid -->

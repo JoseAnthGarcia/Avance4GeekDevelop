@@ -82,7 +82,35 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm() {
-        return "Cliente/login";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication==null || authentication instanceof AnonymousAuthenticationToken){
+            return "Cliente/login";
+        }else {
+            String rol = "";
+            for (GrantedAuthority role : authentication.getAuthorities()) {
+                rol = role.getAuthority();
+                break;
+            }
+            switch (rol) {
+                case "cliente":
+
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    return "redirect:/paginabienvenida";
+
+                case "repartidor":
+
+                    return "redirect:/repartidor/listaPedidos";
+
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
+        }
+
     }
 
 
@@ -520,7 +548,7 @@ public class LoginController {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         javaMailSender.send(message);
     }
@@ -954,6 +982,7 @@ public class LoginController {
             return "redirect:/registroRepartidor";
         }
 
-
     }
+
+
 }

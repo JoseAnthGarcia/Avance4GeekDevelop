@@ -100,7 +100,6 @@ public class LoginController {
                 case "administrador":
                     return "redirect:/admin/usuarios";
                 case "administradorR":
-
                     return "redirect:/paginabienvenida";
 
                 case "repartidor":
@@ -983,6 +982,7 @@ public class LoginController {
             return "redirect:/registroRepartidor";
         }
 
-
     }
+
+
 }

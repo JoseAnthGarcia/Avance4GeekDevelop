@@ -25,6 +25,32 @@
     <!-- Custom styles for this page -->
     <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            $("#placaInput").hide();
+            $("#licenciaInput").hide();
+
+        });
+
+        function seleccionarMovilidad(){
+
+            $("#placaInput").hide();
+            $("#licenciaInput").hide();
+
+            var idMovilidad = $("#selectMovilidad").val();
+
+            if(idMovilidad==5 || idMovilidad == 6){
+                $("#placaInput").show();
+                $("#licenciaInput").show();
+            }
+        }
+    </script>
+
 </head>
 
 <body id="page-top">
@@ -151,12 +177,15 @@
 
 
                         <div class="col-sm-6 mb-2 mb-sm-0" th:object="${movilidad}">
-                            <h4 style="color: black">Transporte</h4>
+                            <h4 style="color: black">Movilidad</h4>
                             <p>Seleccione el tipo de transporte con el que realizará las entregas. Si selecciona bicicleta, omita los campos de placa y licencia.</p>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
-                                    <select class="form-control" style="border-color:lightgray" name="tipoMovilidad">
+                                    <select class="form-control" style="border-color:lightgray"
+                                            name="tipoMovilidad" id="selectMovilidad"
+                                            onchange="seleccionarMovilidad()">
+                                        <option value="" selected>Seleccionar movilidad</option>
                                         <option th:each="tipo : ${listatipoMovilidad}"
                                                 th:value="${tipo.getIdtipomovilidad()}"
                                                 th:text="${tipo.getTipo()}"></option>
@@ -168,7 +197,9 @@
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
 
-                                    <input th:field="*{placa}" type="text" class="form-control" placeholder="Placa"/>
+                                    <input th:field="*{placa}" type="text"
+                                           class="form-control" placeholder="Placa"
+                                           id="placaInput"/>
                                     <div class="text-danger" th:if="${#fields.hasErrors('placa')}"
                                          th:errors="*{placa}"></div>
                                 </div>
@@ -177,7 +208,8 @@
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
-                                    <input th:field="*{licencia}" type="text" class="form-control"
+                                    <input th:field="*{licencia}" type="text"
+                                           class="form-control" id="licenciaInput"
                                            placeholder="Licencia de conducir"/>
                                     <div th:if="${msg6 != null}" th:text="${msg6}" class="text-danger" ></div>
                                     <div class="text-danger" th:if="${#fields.hasErrors('licencia')}"

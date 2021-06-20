@@ -214,7 +214,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "on md.`mes`=m.idmes\n" +
             "left join (select month(fechapedido) as `mes`, count(codigo) as `cantdd`\n" +
             "from pedido where year(fechapedido)=?1 and mismodistrito=0 and estado=6 and idrepartidor=?2 group by month(fechapedido)) dd\n" +
-            "on dd.`mes`=m.idmes", nativeQuery = true)
+            "on dd.`mes`=m.idmes order by m.idmes", nativeQuery = true)
     List<ReporteIngresosDTO> reporteIngresos(int anio, int idRepartidor);
 
     @Query(value = "select year(max(fechapedido)) from pedido", nativeQuery = true)

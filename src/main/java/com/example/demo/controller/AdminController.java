@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -30,6 +31,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -1028,7 +1030,9 @@ public class AdminController  {
 
     @PostMapping("/guardarAdmin")//error para guardar
     public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) throws MessagingException {
+                                 BindingResult bindingResult2,
+                                       @RequestParam("photo") MultipartFile file,
+                                       Model model, RedirectAttributes attr) throws MessagingException {
 
         List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());
         if (!usuarioxcorreo.isEmpty()) {
@@ -1046,6 +1050,8 @@ public class AdminController  {
 
 
         Boolean fecha_naci = true;
+        Boolean validarFoto = true;
+        String fileName = "";
         try {
             String[] parts = usuario.getFechanacimiento().split("-");
             int naci = Integer.parseInt(parts[0]);
@@ -1057,9 +1063,25 @@ public class AdminController  {
             }
         } catch (NumberFormatException n) {
         }
+        if (file != null) {
 
-        if (bindingResult2.hasErrors() || fecha_naci
-        ) {
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "Repartidor/registro";
+            }
+        }
+
+        if (bindingResult2.hasErrors() || fecha_naci || !validarFoto) {
             System.out.println("siguen errores");
 
             //----------------------------------------
@@ -1071,6 +1093,17 @@ public class AdminController  {
 
             return "AdminGen/crearAdmin";
         } else {
+
+            try {
+                usuario.setFoto(file.getBytes());
+                usuario.setFotonombre(fileName);
+                usuario.setFotocontenttype(file.getContentType());
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "AdminGen/crearAdmin";
+            }
+
             usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());
             String fechanacimiento = LocalDate.now().toString();

@@ -452,7 +452,6 @@ public class AdminController  {
             page =0;
         }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -527,7 +526,6 @@ public class AdminController  {
                 inFrol = 0;
                 maXrol = 5;
         }
-
 
 
 
@@ -619,8 +617,7 @@ public class AdminController  {
                 maXrol = 5;
         }
 
-
-        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+      Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -656,9 +653,7 @@ public class AdminController  {
         }catch(NumberFormatException nfe){
             page =0;
         }
-
         PageRequest pageRequest = PageRequest.of(page, 10);
-
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -810,7 +805,6 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
         Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -955,8 +949,7 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
-        Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
+       Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
         if(totalPage > 0) {
@@ -1164,7 +1157,7 @@ public class AdminController  {
 
 
 
-        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+       Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -1354,7 +1347,6 @@ public class AdminController  {
 
 
 
-
         Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -1513,12 +1505,10 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
-
         Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
-        if(totalPage > 0 ) {
+        if(totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
@@ -1539,6 +1529,7 @@ public class AdminController  {
         model.addAttribute("last", totalPage);
         return "AdminGen/reportePedidoRepartidor";
     }
+
 
     @GetMapping("/buscador2")
     public String buscadorUsuario2(@RequestParam Map<String, Object> params, Model model){

@@ -9,10 +9,9 @@ $btnExportar.addEventListener("click", function() {
     let date = formatDate();
     console.log(nombreFormat);
     console.log(date);
-    // reporte_platos_2021_06_21
     let xlsx_name = date + "_"+ nombreFormat ;
 
-    console.log(csv_name);
+    console.log(xlsx_name);
 
     let tableExport = new TableExport($tabla, {
         exportButtons: false, // No queremos botones

@@ -181,14 +181,14 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE DELIVERYS REALIZADOS</h5>
-                            <button onclick="exportTableToExcel('reporteDeliverys', 'reporteDeliverys')" class="btn btn-warning mr-1 ">Exportar</button>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE DELIVERYS REALIZADOS</h5>
+                            <button id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="reporteDeliverys" class="table table-bordered">
+                            <table id="tabla" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -344,6 +344,8 @@
 <!-- Page level plugins -->
 <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
 <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<script th:src="@{/js/exportar.js}"></script>
 
 <!-- Page level custom scripts -->
 <script  th:src="@{/js/demo/datatables-demo.js}"></script>

@@ -104,14 +104,14 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE PEDIDOS POR CLIENTE</h2>
-                            <a class="btn btn-warning mr-1">Exportar</a>
+                            <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE PEDIDOS POR CLIENTE</h2>
+                            <button class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-image table-responsive">
+                            <table id="tabla" class="table table-image table-responsive">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -328,6 +328,8 @@
     </div>
 
 </div>
+
+<script th:src="@{/js/exportar.js}"></script>
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>

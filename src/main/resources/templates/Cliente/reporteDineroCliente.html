@@ -216,10 +216,10 @@
                         <div class="card-header py-3 " style="background-color: #701111;">
 						<div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
+                                <h5 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE DINERO</h5>
                             </div>
 							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
-                                <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
+                                <button  id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
                         </div>
@@ -231,7 +231,7 @@
 						</div>
                         <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
-                             <table id="reporteDinero" class="table table-bordered">
+                             <table id="tabla" class="table table-bordered">
                                  <thead>
                                  <tr>
                                      <th>
@@ -356,7 +356,7 @@
 </body>
 
 <!-- Bootstrap core JavaScript-->
-<script>
+<!--<script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
@@ -387,7 +387,9 @@
             downloadLink.click();
         }
     }
-</script>
+</script>-->
+<script th:src="@{/js/exportar.js}"></script>
+
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

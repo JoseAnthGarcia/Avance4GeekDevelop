@@ -101,6 +101,8 @@
                                         th:errors="*{ruc}"></h1>
                                     <h1 th:if="${rucResta!=null}" th:text="${rucResta}"
                                         style="color: red; font-size: small; text-align: left"></h1>
+                                    <h1 th:if="${validarApi!=null}" th:text="${validarApi}"
+                                        style="color: red; font-size: small; text-align: left"></h1>
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <input type="text" class="form-control"

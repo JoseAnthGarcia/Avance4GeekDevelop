@@ -668,23 +668,37 @@ public class LoginController {
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
                                      BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
 
+        boolean v2=true;
         List<Restaurante> restauranteByNombre = restauranteRepository.findRestauranteByNombre(restaurante.getNombre());
         if (!restauranteByNombre.isEmpty()) {
             model.addAttribute("nombreResta", "El nombre ingresado ya se encuentra en la base de datos");
+            v2=false;
         }
         List<Restaurante> restauranteByDireccion = restauranteRepository.findRestauranteByDireccion(restaurante.getDireccion());
         if (!restauranteByDireccion.isEmpty()) {
             model.addAttribute("direccionResta", "La dirección ingresada ya se encuentra en la base de datos");
+            v2=false;
         }
 
         List<Restaurante> restauranteByTelefono = restauranteRepository.findRestauranteByTelefono(restaurante.getTelefono());
         if (!restauranteByTelefono.isEmpty()) {
             model.addAttribute("telefonoResta", "El telefono ingresado ya se encuentra en la base de datos");
+            v2=false;
         }
 
         List<Restaurante> restauranteByRuc = restauranteRepository.findRestauranteByRuc(restaurante.getRuc());
         if (!restauranteByRuc.isEmpty()) {
             model.addAttribute("rucResta", "El RUC ingresado ya se encuentra en la base de datos");
+            v2=false;
+        }
+        RestauranteDao rd= new RestauranteDao();
+        String success= rd.validarRuc(restaurante.getRuc());
+
+        System.out.println("Existe o no existe "+ success);
+        boolean v3=true;
+        if(success.equals("false")){
+            model.addAttribute("validarApi", "El RUC ingresado no es correcto");
+            v3=false;
         }
 
         String fileName = "";
@@ -739,7 +753,7 @@ public class LoginController {
         }
 
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto) {
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto||!v2||!v3) {
 
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");

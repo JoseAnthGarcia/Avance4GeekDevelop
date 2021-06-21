@@ -63,13 +63,13 @@
 
                             <h5 class="font-weight-bold text-white text-lg-center mx-auto "
                                 th:text="|REPORTE DE INGRESOS - ${anioSelect}|">REPORTE DE INGRESOS - 2021</h5>
-                            <a class="btn btn-warning mr-1">Exportar</a>
+                            <button onclick="exportTableToExcel('reporteIngresos', 'reporteIngresos')" class="btn btn-warning mr-1 ">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table id="reporteIngresos" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -157,6 +157,39 @@
         </div>
     </div>
 </div>
+<script>
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        var now = new Date();
+        // Specify file name
+
+        filename = filename?filename+now+'.xls':'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>

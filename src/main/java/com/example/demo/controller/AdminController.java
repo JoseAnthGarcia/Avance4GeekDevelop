@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.ValidarDniDTO;
+import com.example.demo.dtos.ClienteConMasPedidosDto;
+import com.example.demo.dtos.UsuarioDtoCliente;
+import com.example.demo.dtos.UsuarioDtoRepartidor;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.*;
@@ -84,6 +87,11 @@ public class AdminController  {
 
     @Autowired
     private UsuarioServiceAPI usuarioServiceAPI;
+
+    @Autowired
+    private UsuarioServiceAPIDtoCliente usuarioServiceAPIDtoCliente;
+    @Autowired
+    private UsuarioServiceAPIDtoRepartidor usuarioServiceAPIDtoRepartidor;
 
     @GetMapping("/listaReportes")
     public String listaReportes(Model model, HttpSession session) {
@@ -462,9 +470,9 @@ public class AdminController  {
             session.setAttribute("idrol",idrol);
         }
 
-        texto= session.getAttribute("texto") == null ? texto :  (String) session.getAttribute("texto");
-        estado= session.getAttribute("estado") == null ? estado :  (String) session.getAttribute("estado");
-        idrol= session.getAttribute("idrol") == null ? idrol :  (String) session.getAttribute("idrol");
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
+        idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
         Integer inFrol ;
         Integer maXrol ;
         Integer miFestado ;
@@ -516,7 +524,12 @@ public class AdminController  {
 
 
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
@@ -599,11 +612,12 @@ public class AdminController  {
                 maXrol = 5;
         }
 
-
-
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
-
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
@@ -666,10 +680,10 @@ public class AdminController  {
             session.setAttribute("estado",estado);
         }
 
-        texto= session.getAttribute("texto") == null ? texto :  (String) session.getAttribute("texto");
-        estado= session.getAttribute("estado") == null ? estado :  (String) session.getAttribute("estado");
-        monto= session.getAttribute("monto") == null ? monto :  (String) session.getAttribute("monto");
-        valoracion= session.getAttribute("valoracion") == null ? valoracion :  (String) session.getAttribute("valoracion");
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "7" :  (String) session.getAttribute("estado");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
 
         Integer inFmont ;
         Integer maXmont ;
@@ -694,6 +708,23 @@ public class AdminController  {
             case "2":
                 miFestado=1;
                 maXestado=2;
+                break;
+            case "3":
+                miFestado=2;
+                maXestado=3;
+                break;
+            case "4":
+                miFestado=3;
+                maXestado=4;
+                break;
+            case "5":
+                miFestado=4;
+                maXestado=5;
+                break;
+            case "6":
+                miFestado=5;
+                maXestado=6;
+                break;
             default:
                 miFestado=-1;
                 maXestado=7;
@@ -701,50 +732,242 @@ public class AdminController  {
 
         }
 
-
         switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
             case "1":
                 inFmont = 0;
-                maXmont = 1;
+                maXmont = 20;
+                break;
+            case "2":
+                inFmont = 20;
+                maXmont = 40;
                 break;
             case "3":
-                inFmont = 0;
-                maXmont = 1;
+                inFmont = 40;
+                maXmont = 60;
                 break;
             case "4":
-                inFmont = 0;
-                maXmont = 1;
+                inFmont = 60;
+                maXmont = 80;
                 break;
-
             case "5":
-                inFmont = 0;
-                maXmont = 1;
+                inFmont = 80;
+                maXmont = 100;
+                break;
+            case "6":
+                inFmont = 100;
+                maXmont = 10000;
                 break;
             default:
                 inFmont = 0;
-                maXmont = 1;
+                maXmont = 10000;
         }
 
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
 
-
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
+        Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
-
         System.out.println(totalPage+"----------------------------ddd-ddd");
-
         if(totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        System.out.println(listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
 
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoCliente";
+    }
+    @GetMapping(value ="/reporteClientesPedidoPagina")//lista de reporte de cliente pedido Pagina
+    public String listaReporteClientesPedidoPagina(@RequestParam Map<String, Object> params, Model model,
+                                             @RequestParam(value = "texto", required = false) String texto,
+                                             @RequestParam(value = "estado", required = false) String estado,
+                                             @RequestParam(value = "monto", required = false) String monto,
+                                             @RequestParam(value = "valoracion", required = false) String valoracion,
+                                             HttpSession session) {
+
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "7" :  (String) session.getAttribute("estado");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (estado){
+            case "7":
+                miFestado=-1;
+                maXestado=7;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            case "2":
+                miFestado=1;
+                maXestado=2;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=7;
+
+
+        }
+
+        switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
+            case "1":
+                inFmont = 0;
+                maXmont = 20;
+                break;
+            case "2":
+                inFmont = 20;
+                maXmont = 40;
+                break;
+            case "3":
+                inFmont = 40;
+                maXmont = 60;
+                break;
+            case "4":
+                inFmont = 60;
+                maXmont = 80;
+                break;
+            case "5":
+                inFmont = 80;
+                maXmont = 100;
+                break;
+            case "6":
+                inFmont = 100;
+                maXmont = 10000;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 10000;
+        }
+
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
 
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
-        model.addAttribute("idrol",monto);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
         model.addAttribute("listaUsuarios", pagePersona.getContent());
 
         model.addAttribute("current", page + 1);
@@ -772,7 +995,7 @@ public class AdminController  {
 
         if(estado==null){
             estado="3";
-            session.removeAttribute("texto");
+            session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
         }
@@ -785,9 +1008,9 @@ public class AdminController  {
             session.setAttribute("idrol",idrol);
         }
 
-        texto= session.getAttribute("texto") == null ? texto :  (String) session.getAttribute("texto");
-        estado= session.getAttribute("estado") == null ? estado :  (String) session.getAttribute("estado");
-        idrol= session.getAttribute("idrol") == null ? idrol :  (String) session.getAttribute("idrol");
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
+        idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
         Integer inFrol ;
         Integer maXrol ;
         Integer miFestado ;
@@ -839,7 +1062,12 @@ public class AdminController  {
 
 
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
@@ -865,7 +1093,446 @@ public class AdminController  {
         return "AdminGen/reporteUsuarios";
     }
 
+    @GetMapping(value ="/usuariosRPagina")//Reporte de usuarios
+    public String listaUsuariosRPagina(@RequestParam Map<String, Object> params, Model model,
+                                 @RequestParam(value = "texto", required = false) String texto,
+                                 @RequestParam(value = "estado", required = false) String estado,
+                                 @RequestParam(value = "idrol", required = false) String idrol,
+                                 HttpSession session) {
 
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
+        idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
+        Integer inFrol ;
+        Integer maXrol ;
+        Integer miFestado ;
+        Integer maXestado ;
+        switch (estado){
+            case "3":
+                miFestado=-1;
+                maXestado=1;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=1;
+
+
+        }
+
+
+        switch (idrol){
+            case "1":
+                inFrol = 0;
+                maXrol = 1;
+                break;
+            case "3":
+                inFrol = 2;
+                maXrol = 3;
+                break;
+            case "4":
+                inFrol = 3;
+                maXrol = 4;
+                break;
+
+            case "5":
+                inFrol = 4;
+                maXrol = 5;
+                break;
+            default:
+                inFrol = 0;
+                maXrol = 5;
+        }
+
+
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",idrol);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reporteUsuarios";
+    }
+
+    @GetMapping(value ="/reporteRepartidorPedido")//lista de reporte de Repartidor pedido
+    public String listaReporteRepartidorPedido(@RequestParam Map<String, Object> params, Model model,
+                                             @RequestParam(value = "texto", required = false) String texto,
+                                             @RequestParam(value = "cantidad", required = false) String cantidad,
+                                             @RequestParam(value = "monto", required = false) String monto,
+                                             @RequestParam(value = "valoracion", required = false) String valoracion,
+                                             HttpSession session) {
+        if(monto==null){
+            monto="0";
+            session.removeAttribute("monto");
+        }else{
+            session.setAttribute("monto",monto);
+        }
+        if(valoracion==null){
+            valoracion="0";
+            session.removeAttribute("valoracion");
+
+        }else{
+            session.setAttribute("valoracion",valoracion);
+        }
+
+
+        if(texto==null){
+            texto="";
+            session.removeAttribute("texto");
+
+        }else{
+            session.setAttribute("texto",texto);
+        }
+
+
+        if(cantidad==null){
+            cantidad="7";
+            session.removeAttribute("cantidad");
+        }else{
+            session.setAttribute("cantidad",cantidad);
+        }
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (cantidad){
+            case "7":
+                miFestado=-1;
+                maXestado=100000;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=50;
+                break;
+            case "1":
+                miFestado=50;
+                maXestado=100;
+                break;
+            case "2":
+                miFestado=100;
+                maXestado=150;
+                break;
+            case "3":
+                miFestado=150;
+                maXestado=200;
+                break;
+            case "4":
+                miFestado=200;
+                maXestado=250;
+                break;
+            case "5":
+                miFestado=250;
+                maXestado=300;
+                break;
+            case "6":
+                miFestado=300;
+                maXestado=100000;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=100000;
+        }
+
+        switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
+            case "1":
+                inFmont = 0;
+                maXmont = 200;
+                break;
+            case "2":
+                inFmont = 200;
+                maXmont = 400;
+                break;
+            case "3":
+                inFmont = 400;
+                maXmont = 600;
+                break;
+            case "4":
+                inFmont = 600;
+                maXmont = 800;
+                break;
+            case "5":
+                inFmont = 800;
+                maXmont = 1000;
+                break;
+            case "6":
+                inFmont = 1000;
+                maXmont = 100000;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 100000;
+        }
+
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
+
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        System.out.println(listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        model.addAttribute("texto",texto);
+        model.addAttribute("cantidad",cantidad);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoRepartidor";
+    }
+    @GetMapping(value ="/reporteRepartidorPedidoPagina")//lista de reporte de Repartidor pedido
+    public String listaReporteRepartidorPedidoPagina(@RequestParam Map<String, Object> params, Model model,
+                                               @RequestParam(value = "texto", required = false) String texto,
+                                               @RequestParam(value = "cantidad", required = false) String cantidad,
+                                               @RequestParam(value = "monto", required = false) String monto,
+                                               @RequestParam(value = "valoracion", required = false) String valoracion,
+                                               HttpSession session) {
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (cantidad){
+            case "7":
+                miFestado=-1;
+                maXestado=100000;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=50;
+                break;
+            case "1":
+                miFestado=50;
+                maXestado=100;
+                break;
+            case "2":
+                miFestado=100;
+                maXestado=150;
+                break;
+            case "3":
+                miFestado=150;
+                maXestado=200;
+                break;
+            case "4":
+                miFestado=200;
+                maXestado=250;
+                break;
+            case "5":
+                miFestado=250;
+                maXestado=300;
+                break;
+            case "6":
+                miFestado=300;
+                maXestado=100000;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=100000;
+        }
+
+        switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
+            case "1":
+                inFmont = 0;
+                maXmont = 200;
+                break;
+            case "2":
+                inFmont = 200;
+                maXmont = 400;
+                break;
+            case "3":
+                inFmont = 400;
+                maXmont = 600;
+                break;
+            case "4":
+                inFmont = 600;
+                maXmont = 800;
+                break;
+            case "5":
+                inFmont = 800;
+                maXmont = 1000;
+                break;
+            case "6":
+                inFmont = 1000;
+                maXmont = 100000;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 100000;
+        }
+
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        System.out.println(listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        model.addAttribute("texto",texto);
+        model.addAttribute("cantidad",cantidad);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoRepartidor";
+    }
 
 
     @GetMapping("/buscador2")

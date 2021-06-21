@@ -265,15 +265,13 @@
                 <div class="text-center" >
                     <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
                         th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                    <h3 th:if="${total==0 && listarestTop.size()==0 }" th:text="||"></h3>
+                    <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
                     <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
 
                 </div>
 
-                <div class="card-body"  >
-
-                    <div class="table-responsive" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total !=null)}">
-                        <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="| |"></h5>
+                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total!=null)}">
+                    <div class="table-responsive">
                         <table id="reportePedido" class="table table-bordered">
 
                             <tr>
@@ -299,7 +297,7 @@
                                 <td th:text="${(current -1)*5 +info.index+1}"></td>
                                 <td th:text="${ped.getNombrerest()}"></td>
                                 <td th:text="${ped.getNumPedidos()}">10</td>
-                                <td th:text="${ped.getTotal()}"></td>
+                                <td th:text="|S/. ${ped.getTotal()}"|></td>
                                 <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
                                 <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
                                 <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>

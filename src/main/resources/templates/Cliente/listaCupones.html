@@ -217,7 +217,7 @@
                       <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" th:if="${total> 0}">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -253,23 +253,25 @@
                             </td>
                 <!---------------------------------------------------------------------------------------------------------------------------------->
                             <td>
-                            <div class="col-6 text-left">
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" th:value="${cupon.getNombrerestaurante()}" disabled>
+                            <div style=text-align:center>
 
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" th:value="|- S/. ${cupon.getDescuento()}|" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" th:value="${cupon.getFechafin()}" disabled>
-                                        </label>
+                                <div style=text-align:center>
+                                    <h5 class="mb-2" style="color:#701111;" th:text="${cupon.getNombrerestaurante()}"></h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Descuento : - S/. ${cupon.getDescuento()}|"></h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Caducidad: ${cupon.getFechafin()}|"></h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Política : ${cupon.getPolitica()}|"></h5>
+                                        </div>
                                     </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" th:text="${cupon.getPolitica()}" disabled></textarea>
+                                </div>
+
+
 
                             </div>
                             </td>

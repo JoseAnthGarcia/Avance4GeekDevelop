@@ -7,6 +7,9 @@ Correo:
 -USUARIO:
     usuario: a20181459@pucp.edu.pe
     clave: 123456789
+    usuario: clienta1@gmail.com
+    clave: 123456789
+
 -RESTAURANTE:
     usuario: hector.ventura@pucp.edu.pe
     clave: hector123

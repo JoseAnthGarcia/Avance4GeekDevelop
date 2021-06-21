@@ -136,6 +136,8 @@
                                             <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}">Ceviche - Restaurante Marino</h1>
                                             <p class="card-text" th:utext="'Dirección de restaurante: '+${pedidoDetalle.restaurante.direccion}
                                             +'<br>Direción de envio: '+${pedidoDetalle.cliente.direccionactual}
+                                             +'<br>Cliente: '+${pedidoDetalle.cliente.nombres +' '+ pedidoDetalle.cliente.apellidos }
+                                            +'<br>Teléfono de cliente: '+${pedidoDetalle.cliente.telefono}
                                             +'<br>Hora de registro de pedido: '+${pedidoDetalle.fechapedido}
                                             +'<br>Método de pago : '+${pedidoDetalle.metodopago.tipo}+'-S/.'+${pedidoDetalle.preciototal}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>

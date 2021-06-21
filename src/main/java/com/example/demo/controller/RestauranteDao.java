@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class RestauranteDao {
 
-
+        
     public String validarRuc(String ruc){
         RestTemplate restTemplate= new RestTemplate();
 

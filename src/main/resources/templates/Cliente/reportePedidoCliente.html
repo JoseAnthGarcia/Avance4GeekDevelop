@@ -265,12 +265,12 @@
                 <div class="text-center" >
                     <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
                         th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                    <h3 th:if="${total==0 && listarestTop.size()==0 }" th:text="||"></h3>
+                    <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
                     <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
 
                 </div>
 
-                <div class="card-body"     th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
+                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total!=null)}">
                     <div class="table-responsive">
                         <table id="reportePedido" class="table table-bordered">
 
@@ -294,10 +294,10 @@
                             </thead>
                             <tbody>
                             <tr th:each="ped,info:${listapedidos}">
-                                <td th:text="${info.index+1}"></td>
+                                <td th:text="${(current -1)*5 +info.index+1}"></td>
                                 <td th:text="${ped.getNombrerest()}"></td>
                                 <td th:text="${ped.getNumPedidos()}">10</td>
-                                <td th:text="${ped.getTotal()}"></td>
+                                <td th:text="|S/. ${ped.getTotal()}"|></td>
                                 <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
                                 <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
                                 <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
@@ -323,28 +323,17 @@
                             <nav aria-label="pagination">
                                 <ul class="pagination justify-content-center">
 
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && numpedidos == null && mes==null  }"  class="page-link active text-white"  style="background-color: #701111"
+                                    <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                        <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                            th:text="${page}"
-                                           th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
+                                           th:href="@{'/cliente/pedidoActualPagina5?page='+${page}}"></a>
                                     </li>
-
                                 </ul>
                             </nav>
                         </div>
                         <div class="col-md-2"></div>
                     </div>
-                    <!--
-                    <nav aria-label="Pagination">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && numpedidos == null && mes==null  }"
-                                   class="page-link active" style="background-color: #701111"  th:text="${page}"
-                                   th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
-                            </li>
-                        </ul>
-                    </nav>
-                    -->
+
                 </div>
                 </div>
                 <!-- -->

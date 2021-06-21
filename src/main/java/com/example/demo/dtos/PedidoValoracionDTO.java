@@ -6,7 +6,7 @@ public interface PedidoValoracionDTO {
     String getNombre();
     byte[] getFoto();
     int getIdrestaurante();
-    LocalDate getFechapedido();
+    String getFechapedido();
     int getTiempoentrega();
     int getEstado();
     String getCodigo();

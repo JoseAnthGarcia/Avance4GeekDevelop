@@ -31,3 +31,9 @@ Método de pago:
 1 - Efectivo
 2 - Online
 3 - POS
+
+Tipo Movilidad:
+
+5 - moto
+6 - carro
+7 - ticla

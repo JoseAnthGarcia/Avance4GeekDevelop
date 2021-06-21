@@ -251,7 +251,7 @@
                                 </thead>
                             <tbody>
                                 <tr th:each="pedido,info:${listapedidos}">
-                                    <td th:text="${info.index+1}"></td>
+                                    <td th:text="${(current -1)*5 +info.index+1}"></td>
                                     <td th:text="${pedido.getNombre()}"></td>
                                     <td th:text="${pedido.getCantidad()}"></td>
                                     <td th:text="|${pedido.getTiempoentrega()} minutos|"></td>
@@ -277,18 +277,17 @@
                             
                             </div>
 
-                            <div th:if="${totalsuma1>0}"class="row" >
+                            <div class="row">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
 
-                                            <li class="page-item" th:each="page : ${pages}">
-                                                <a th:unless="${texto == null && numpedidos == null && mes==null  }" class="page-link active text-white"  style="background-color: #701111"
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
-                                                   th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
+                                                   th:href="@{'/cliente/pedidoActualPagina4?page='+${page}}"></a>
                                             </li>
-
                                         </ul>
                                     </nav>
                                 </div>

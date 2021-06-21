@@ -226,6 +226,7 @@
                             Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
+                <!---------------------------------------------------------- INICIO TABLA---------------------------------------------------------------------->
                     <div class="table-responsive">
 
                         <table class="table table-bordered">
@@ -236,7 +237,7 @@
                             <th width="50" height="60">
                                 <div style=text-align:center> Restaurante</div>
                             </th>
-                            <th width="520">
+                            <th width="560">
                                 <div style=text-align:center>
                                     Descripción
                                 </div>
@@ -271,38 +272,46 @@
                                 <!------------------------------------DESCRIPCION----------------------------------------------------->
                                 <td>
                                     <div style=text-align:center>
-                                        <h5 class="mb-2" th:text="${pedido.getNombre()}"></h5>
+                                        <h5 class="mb-2"  style="color:#701111;" th:text="${pedido.getNombre()}"></h5>
+                                        <div class="form-group row">
 
-                                    <div class="row mb-2">
-                                        <h6 class="ml-3" th:text="|Fecha de entrega: ${pedido.getFechapedido()}|">  </h6>
+                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
+                                        <div class="ml-2" type="text" th:text="|Fecha de registro: ${pedido.getFechapedido().substring(0,10)}|">  </div>
+                                        </div>
 
-                                        <h6 class=" ml-4" th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|">  </h6>
+                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
+                                        <div class="ml-4" type="text" th:text="|Hora de registro: ${pedido.getFechapedido().substring(11,19)}|">  </div>
+                                        </div>
 
-                                    </div>
+                                        </div>
 
-                                    <div class="row mb-2">
+                                        <div class="form-group row">
 
-
-                                        <input width="" class="form-control col-5 ml-3" type="text"
-                                               th:if="${pedido.getEstado==3}" th:placeholder="|Estado : Preparando |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-3" type="text"
-                                               th:if="${pedido.getEstado==5}" th:placeholder="|Estado : En camino |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-3" type="text"
+                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
+                                        <div  class=" ml-2" type="text" th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|">  </div>
+                                        </div>
+                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
+                                        <div  class=" ml-4" type="text"
+                                               th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
+                                            ></div>
+                                        <div class=" ml-4" type="text"
+                                               th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
+                                              ></div>
+                                        <div class=" ml-4" type="text"
                                                th:if="${pedido.getEstado==1}" th:placeholder="|Estado : Aceptado |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-3" type="text"
+                                              ></div>
+                                        <div class=" ml-4" type="text"
                                                th:if="${pedido.getEstado==4}"
                                                th:placeholder="|Estado : Listo para entregar |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-3" type="text"
+                                               ></div>
+                                        <div class=" ml-4" type="text"
                                                th:if="${pedido.getEstado==0}"
-                                               th:placeholder="|Estado : Pendiente|"
-                                               aria-label="Disabled input example" disabled>
+                                               th:text="|Estado : Pendiente|"
+                                                ></div>
 
+                                        </div>
+                                        </div>
 
-                                    </div>
                                 </div>
                                 </td>
 
@@ -325,14 +334,9 @@
 
                             </tr>
 
-
-
                             </tbody>
                         </table>
                     </div>
-
-
-
 
                     <!------------------------------------------------------------>
 

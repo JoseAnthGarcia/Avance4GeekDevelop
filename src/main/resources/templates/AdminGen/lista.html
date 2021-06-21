@@ -31,7 +31,7 @@
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1" >
-                            <input type="text" class="form-control bg-light border-0 small" name="texto"
+                            <input type="text" class="form-control" name="texto"
                                    th:value="${texto.equals('')?'':texto}"
                                    th:placeholder="${texto.equals('')?'Búsqueda por usuario...':texto}">
                         </div>
@@ -80,12 +80,14 @@
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a th:href="@{/admin/usuariosL}" class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{/admin/usuarios}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
                 </form>
 
-
+                <div class="alert alert-success" role="alert"
+                     th:if="${msg!=null}" th:text="${msg}">
+                </div>
                 <!-- DataTales Example -->
                 <div class="card shadow ">
 
@@ -115,7 +117,7 @@
                                     <th class="text-center">
                                         Estado
                                     </th>
-                                    <th class="text-center">
+                                    <th class="text-center"  th:if="${session.usuario.rol.idrol==2}">
                                         Des/Bloquear
                                     </th>
                                     <th class="text-center">
@@ -136,9 +138,9 @@
                                     </td>
                                     <td th:text="${usuario.fecharegistro}" class="text-center" style="width: 250px"></td>
                                     <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
-                                    <td>
+                                    <td th:if="${session.usuario.rol.idrol==2}">
                                         <a th:if="${usuario.estado != 0}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
-                                        <a th:unless="${usuario.estado != 0}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
+                                        <a th:unless="${usuario.estado != 0 }" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
                                     </td>
                                     <td><a th:href="@{'/admin/detalle?idUsuario='+${usuario.idusuario}}" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>
                                 </tr>
@@ -163,13 +165,13 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuarios/?page=${prev}|}">Anterior</a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}">Anterior</a>
                                             </li>
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuarios/?page=${page}|}" th:text="${page}"></a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${page}|}" th:text="${page}"></a>
                                             </li>
                                             <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuarios/?page=${next}|}">Siguiente</a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}">Siguiente</a>
                                             </li>
                                         </ul>
                                     </nav>

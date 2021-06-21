@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -30,6 +31,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -446,7 +448,7 @@ public class AdminController  {
 
         if(estado==null){
             estado="3";
-            session.removeAttribute("texto");
+            session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
         }
@@ -538,6 +540,219 @@ public class AdminController  {
         model.addAttribute("last", totalPage);
         return "AdminGen/lista";
     }
+    @GetMapping(value ="/pagina")//lista de usuarios principal
+    public String listaUsuariosPagina(@RequestParam Map<String, Object> params, Model model,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "estado", required = false) String estado,
+                                @RequestParam(value = "idrol", required = false) String idrol,
+                                HttpSession session) {
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
+        idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
+        Integer inFrol ;
+        Integer maXrol ;
+        Integer miFestado ;
+        Integer maXestado ;
+        switch (estado){
+            case "3":
+                miFestado=-1;
+                maXestado=1;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=1;
+
+
+        }
+
+
+        switch (idrol){
+            case "1":
+                inFrol = 0;
+                maXrol = 1;
+                break;
+            case "3":
+                inFrol = 2;
+                maXrol = 3;
+                break;
+            case "4":
+                inFrol = 3;
+                maXrol = 4;
+                break;
+
+            case "5":
+                inFrol = 4;
+                maXrol = 5;
+                break;
+            default:
+                inFrol = 0;
+                maXrol = 5;
+        }
+
+
+
+
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",idrol);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/lista";
+    }
+
+    @GetMapping(value ="/reporteClientesPedido")//lista de reporte de cliente pedido
+    public String listaReporteClientesPedido(@RequestParam Map<String, Object> params, Model model,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "estado", required = false) String estado,
+                                @RequestParam(value = "monto", required = false) String monto,
+                                @RequestParam(value = "valoracion", required = false) String valoracion,
+                                             HttpSession session) {
+        if(monto==null){
+            monto="0";
+            session.removeAttribute("monto");
+        }else{
+            session.setAttribute("monto",monto);
+        }
+        if(valoracion==null){
+            valoracion="0";
+            session.removeAttribute("valoracion");
+
+        }else{
+            session.setAttribute("valoracion",valoracion);
+        }
+
+
+        if(texto==null){
+            texto="";
+            session.removeAttribute("texto");
+
+        }else{
+            session.setAttribute("texto",texto);
+        }
+
+
+        if(estado==null){
+            estado="7";
+            session.removeAttribute("estado");
+        }else{
+            session.setAttribute("estado",estado);
+        }
+
+        texto= session.getAttribute("texto") == null ? texto :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? estado :  (String) session.getAttribute("estado");
+        monto= session.getAttribute("monto") == null ? monto :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? valoracion :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (estado){
+            case "7":
+                miFestado=-1;
+                maXestado=7;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            case "2":
+                miFestado=1;
+                maXestado=2;
+            default:
+                miFestado=-1;
+                maXestado=7;
+
+
+        }
+
+
+        switch (monto){
+            case "1":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            case "3":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            case "4":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+
+            case "5":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 1;
+        }
+
+
+
+
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",monto);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoCliente";
+    }
+
     @GetMapping(value ="/usuariosR")//Reporte de usuarios
     public String listaUsuariosR(@RequestParam Map<String, Object> params, Model model,
                                 @RequestParam(value = "texto", required = false) String texto,
@@ -649,112 +864,7 @@ public class AdminController  {
         return "AdminGen/reporteUsuarios";
     }
 
-    @GetMapping(value ="/usuariosL")///limpiador de filtros
-    public String listaUsuariosLimpiar(@RequestParam Map<String, Object> params, Model model,
-                                @RequestParam(value = "texto", required = false) String texto,
-                                @RequestParam(value = "estado", required = false) String estado,
-                                @RequestParam(value = "idrol", required = false) String idrol,
-                                HttpSession session) {
-        session.removeAttribute("texto");
-        session.removeAttribute("estado");
-        session.removeAttribute("idrol");
 
-
-        if(texto==null){
-            texto="";
-        }else{
-            session.setAttribute("texto",texto);
-        }
-
-
-        if(estado==null){
-            estado="3";
-        }else{
-            session.setAttribute("estado",estado);
-        }
-
-        if(idrol==null){
-            idrol="6";
-        }else{
-            session.setAttribute("idrol",idrol);
-        }
-
-        Integer inFrol ;
-        Integer maXrol ;
-        Integer miFestado ;
-        Integer maXestado ;
-        switch (estado){
-            case "3":
-                miFestado=0;
-                maXestado=2;
-                break;
-            case "0":
-                miFestado=-1;
-                maXestado=0;
-                break;
-            case "1":
-                miFestado=0;
-                maXestado=1;
-                break;
-            default:
-                miFestado=0;
-                maXestado=2;
-
-
-        }
-
-
-        switch (idrol){
-            case "1":
-                inFrol = 0;
-                maXrol = 1;
-                break;
-            case "3":
-                inFrol = 2;
-                maXrol = 3;
-                break;
-            case "4":
-                inFrol = 3;
-                maXrol = 4;
-                break;
-
-            case "5":
-                inFrol = 4;
-                maXrol = 5;
-                break;
-            default:
-                inFrol = 0;
-                maXrol = 5;
-        }
-
-
-
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
-
-        PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
-        int totalPage = pagePersona.getTotalPages();
-
-        System.out.println(totalPage+"----------------------------ddd-ddd");
-
-        if(totalPage > 0) {
-            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages", pages);
-        }
-
-
-        model.addAttribute("texto",texto);
-        model.addAttribute("estado",estado);
-        model.addAttribute("idrol",idrol);
-        model.addAttribute("listaUsuarios", pagePersona.getContent());
-
-        model.addAttribute("current", page + 1);
-        model.addAttribute("next", page + 2);
-        model.addAttribute("prev", page);
-        model.addAttribute("last", totalPage);
-        return "AdminGen/lista";
-    }
 
 
     @GetMapping("/buscador2")
@@ -1028,7 +1138,9 @@ public class AdminController  {
 
     @PostMapping("/guardarAdmin")//error para guardar
     public String guardarAdministrador(@ModelAttribute("usuario") @Valid Usuario usuario,
-                                 BindingResult bindingResult2, Model model, RedirectAttributes attr) throws MessagingException {
+                                 BindingResult bindingResult2,
+                                       @RequestParam("photo") MultipartFile file,
+                                       Model model, RedirectAttributes attr) throws MessagingException {
 
         List<Usuario> usuarioxcorreo = usuarioRepository.findUsuarioByCorreo(usuario.getCorreo());
         if (!usuarioxcorreo.isEmpty()) {
@@ -1046,6 +1158,8 @@ public class AdminController  {
 
 
         Boolean fecha_naci = true;
+        Boolean validarFoto = true;
+        String fileName = "";
         try {
             String[] parts = usuario.getFechanacimiento().split("-");
             int naci = Integer.parseInt(parts[0]);
@@ -1057,9 +1171,25 @@ public class AdminController  {
             }
         } catch (NumberFormatException n) {
         }
+        if (file != null) {
 
-        if (bindingResult2.hasErrors() || fecha_naci
-        ) {
+            System.out.println(file);
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "Repartidor/registro";
+            }
+        }
+
+        if (bindingResult2.hasErrors() || fecha_naci || !validarFoto) {
             System.out.println("siguen errores");
 
             //----------------------------------------
@@ -1071,6 +1201,17 @@ public class AdminController  {
 
             return "AdminGen/crearAdmin";
         } else {
+
+            try {
+                usuario.setFoto(file.getBytes());
+                usuario.setFotonombre(fileName);
+                usuario.setFotocontenttype(file.getContentType());
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "AdminGen/crearAdmin";
+            }
+
             usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());
             String fechanacimiento = LocalDate.now().toString();
@@ -1099,7 +1240,7 @@ public class AdminController  {
             /////-----------------------------------------  ------/////
 
 
-
+            attr.addFlashAttribute("msg", "Administrador creado exitosamente.");
             return "redirect:/admin/usuarios";
         }
     }

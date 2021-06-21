@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready(function(){
+    /*$(document).ready(function(){
 
         var cantPedidos = document.getElementsByTagName("tr").length-1;
         var tampag = 2;
@@ -58,7 +58,7 @@
             }
         }
 
-    });
+    });¨*/
 
 </script>
 
@@ -85,48 +85,83 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <form th:action="@{/repartidor/busqReportDelivery}" method="post">
+                <form th:action="@{/repartidor/reporteDelivery}" method="get">
 
                     <div class="row">
                         <div class="col-sm-3  mb-2">
                             <input type="busquedaRestaurante" class="form-control"
-                                   id="exampleRestaurante" name="nombreRest"
-                                   placeholder="Búsqueda por restaurante">
+                                   name="nombreRest"
+                                   placeholder="Búsqueda por restaurante" th:if="${nombreRest.equals('')}">
+                            <input type="busquedaRestaurante" class="form-control"
+                                   name="nombreRest"
+                                   th:value="${nombreRest}" th:unless="${nombreRest.equals('')}">
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control" name="idDistrito">
+                            <select class="form-control" name="idDistrito" th:if="${idDistrito.equals('')}">
                                 <option value="" disabled selected>Buscar por distrito</option>
                                 <option th:each="distrito : ${distritos}"
                                         th:value="${distrito.iddistrito}"
                                         th:text="${distrito.nombre}">Cercado de Lima</option>
                             </select>
+                            <select class="form-control" name="idDistrito" th:unless="${idDistrito.equals('')}">
+                                <option th:each="distrito : ${distritos}"
+                                        th:value="${distrito.iddistrito}"
+                                        th:text="${distrito.nombre}"
+                                        th:selected="${idDistrito==distrito.iddistrito}">Cercado de Lima</option>
+                            </select>
                         </div>
                         <div class="col-sm-3 m-b-2">
-                            <input placeholder="Desde" class="form-control" type="text" name="fechaMin"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMin.equals('1900-01-01')}">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMin}"
+                                   th:unless="${fechaMin.equals('1900-01-01')}">
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <input placeholder="Hasta" class="form-control" type="text" name="fechaMax"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMax.equals('3000-01-01')}">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMax}"
+                                   th:unless="${fechaMax.equals('3000-01-01')}">
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control" name="monto">
+                            <select class="form-control" name="monto" th:if="${monto.equals('')}">
                                 <option value="" disabled selected>Monto</option>
-                                <option value="1">S/. 0.0 - S/. 20.0</option>
-                                <option value="2">S/. 20. - S/. 40.0</option>
-                                <option value="3">S/. 40.0 - S/. 60.0</option>
-                                <option value="4">S/. 60.0 a más</option>
+                                <option value="1" >S/. 0.0 - S/. 20.0</option>
+                                <option value="2" >S/. 20. - S/. 40.0</option>
+                                <option value="3" >S/. 40.0 - S/. 60.0</option>
+                                <option value="4" >S/. 60.0 a más</option>
+                            </select>
+                            <select class="form-control" name="monto" th:unless="${monto.equals('')}">
+                                <option value="1" th:selected="${monto.equals('1')}">S/. 0.0 - S/. 20.0</option>
+                                <option value="2" th:selected="${monto.equals('2')}">S/. 20. - S/. 40.0</option>
+                                <option value="3" th:selected="${monto.equals('3')}">S/. 40.0 - S/. 60.0</option>
+                                <option value="4" th:selected="${monto.equals('4')}">S/. 60.0 a más</option>
                             </select>
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <select class="form-control" name="valoracion">
+                            <select class="form-control" name="valoracion" th:if="${valoracion.equals('')}">
                                 <option value="" disabled selected>Valoracion</option>
-                                <option value="1">0 - 2</option>
-                                <option value="2">2 - 5</option>
+                                <option value="1" >0 - 2</option>
+                                <option value="2" >2 - 5</option>
                             </select>
+                            <select class="form-control" name="valoracion" th:unless="${valoracion.equals('')}">
+                                <option value="" disabled selected>Valoracion</option>
+                                <option value="1" th:selected="${valoracion.equals('1')}">0 - 2</option>
+                                <option value="2" th:selected="${valoracion.equals('2')}">2 - 5</option>
+                            </select>
+
                         </div>
                         <div class="col-sm-3 mb-2">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
@@ -134,7 +169,7 @@
                             </button>
                         </div>
                         <div class="col-sm-3 mb-2" style="text-align: right">
-                            <a class="btn btn-secondary " >Quitar filtros</a>
+                            <a class="btn btn-secondary " th:href="@{/repartidor/reporteDelivery}">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -147,13 +182,13 @@
                         <div class="d-sm-flex align-items-center justify-content-between">
 
                             <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE DELIVERYS REALIZADOS</h5>
-                            <a class="btn btn-warning mr-1">Exportar</a>
+                            <button onclick="exportTableToExcel('reporteDeliverys', 'reporteDeliverys')" class="btn btn-warning mr-1 ">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="mytable" class="table table-bordered">
+                            <table id="reporteDeliverys" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -182,7 +217,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="pedido, i : ${listaPedidoReporte}" th:id="${i.index +1}">
-                                    <td style="width: 300px" th:text="${i.index +1}">1</td>
+                                    <td style="width: 300px" th:text="${tamPag*(pag - 1)+ i.index +1}">1</td>
                                     <td style="width: 160px" th:text="${pedido.codigo}">123455</td>
                                     <td style="width: 250px" th:text="${pedido.restaurante.nombre}">La Leña</td>
                                     <td style="width: 160px" th:text="${pedido.ubicacion.distrito.nombre}">La Molina</td>
@@ -196,7 +231,19 @@
 
                         </div>
                         <!--Pagination -->
-                        <div class="pagination" style=" margin-left: 630px ;align-content: center; position: relative;right: 25%">
+
+                        <div th:if="${totalPages >= 1}" class="pagination text-center">
+                            <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+
+                                <a th:if="${pag != i}"
+                                   th:href="@{'/repartidor/reporteDelivery?nombreRest='+${nombreRest}
+                                    + '&idDistrito='+ ${idDistrito}+ '&fechaMin='+ ${fechaMin}+ '&fechaMax='+ ${fechaMax}
+                                    + '&monto='+ ${monto} + '&valoracion='+ ${valoracion}+'&pag=' + ${i}} "
+                                   th:utext="${i}"
+                                   class="active mt-2 no"></a>
+                                <a th:unless="${pag != i}"
+                                   th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+                            </div>
                         </div>
                         <!-- End of pagination -->
                     </div>
@@ -252,7 +299,39 @@
         </div>
     </div>
 </div>
+<script>
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        var now = new Date();
+        // Specify file name
 
+        filename = filename?filename+now+'.xls':'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 

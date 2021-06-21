@@ -958,6 +958,8 @@ public class LoginController {
                                     @RequestParam("photo") MultipartFile file,
                                     Movilidad movilidad, Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
+                                    @RequestParam("licencia") String licencia,
+                                    @RequestParam("placa") String placa,
                                     @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
@@ -965,6 +967,10 @@ public class LoginController {
         Usuario usuario1 =usuarioRepository.findByDni(dni);
         Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
+        Movilidad movilidad1 = movilidadRepository.findByLicencia(licencia);
+        Movilidad movilidad2 = movilidadRepository.findByPlaca(placa);
+
+
         Boolean errorMov = false;
         Boolean errorDist=false;
         Boolean errorSexo= false;
@@ -1057,7 +1063,7 @@ public class LoginController {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
                 errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
 
             if(dni_val) {
@@ -1098,6 +1104,12 @@ public class LoginController {
             }
             if(errorSexo){
                 model.addAttribute("msg8", "Seleccione una opción");
+            }
+            if(movilidad1!=null){
+                model.addAttribute("msg9", "La licencia ingresada ya se encuentra en la base de datos");
+            }
+            if(movilidad2!=null){
+                model.addAttribute("msg10", "La placa ingresada ya se encuentra en la base de datos");
             }
 
             model.addAttribute("usuario", usuario);

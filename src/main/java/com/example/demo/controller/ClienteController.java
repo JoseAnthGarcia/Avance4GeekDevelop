@@ -1879,6 +1879,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
 
         model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
+        System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
         model.addAttribute("codigo", codigo);
 
 
@@ -1924,6 +1925,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
 
+        System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
 
         model.addAttribute("codigo", codigo);
 

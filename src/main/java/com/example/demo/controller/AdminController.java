@@ -524,7 +524,12 @@ public class AdminController  {
 
 
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
@@ -607,7 +612,12 @@ public class AdminController  {
                 maXrol = 5;
         }
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
@@ -790,8 +800,12 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
@@ -931,8 +945,12 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
@@ -1044,7 +1062,12 @@ public class AdminController  {
 
 
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
@@ -1130,8 +1153,12 @@ public class AdminController  {
 
 
 
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
@@ -1314,7 +1341,12 @@ public class AdminController  {
         }
 
 
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
 
@@ -1468,8 +1500,12 @@ public class AdminController  {
                 maXval = 7;
         }
 
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
 

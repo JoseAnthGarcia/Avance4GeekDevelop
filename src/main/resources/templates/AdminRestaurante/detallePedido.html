@@ -84,7 +84,28 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4 ">
                             <div class="card-header py-3 " style="background-color: #701111;">
-                                <h3 class="h3 font-weight-bold  text-white text-xl-center">DETALLE DE PEDIDO</h3>
+                                <h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==0}"
+                                    th:text="${'DETALLE DE PEDIDO - PENDIENTE'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==1}"
+                                    th:text="${'DETALLE DE PEDIDO - ENTREGADO'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==2}"
+                                    th:text="${'DETALLE DE PEDIDO - CANCELADO'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==3}"
+                                    th:text="${'DETALLE DE PEDIDO - PREPARANDO'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==4}"
+                                    th:text="${'DETALLE DE PEDIDO - PEDIDO LISTO'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==5}"
+                                    th:text="${'DETALLE DE PEDIDO - EN CAMINO'}">
+                                </h3><h3 class="h3 font-weight-bold  text-white text-xl-center"
+                                    th:if="${detalles.get(0).getEstado()==6}"
+                                    th:text="${'DETALLE DE PEDIDO - ENTREGADO'}">
+                                </h3>
                             </div>
 
                             <!-- Detalles del pedido -->
@@ -94,32 +115,15 @@
                                         <ul class="list-group col-10  ml-5">
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:if="${detalles.get(0).getEstado()==0}"
-                                                    th:text="${'Estado: Pendiente'}">
-                                                    <b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==1}"
-                                                    th:text="${'Estado: Aceptado'}">
-                                                    <b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==2}"
-                                                    th:text="${'Estado: Cancelado'}">
-                                                    <b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==3}"
-                                                    th:text="${'Estado: Preparando'}">
-                                                    <b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==4}"
-                                                    th:text="${'Estado: Pedido Listo'}"><b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==5}"
-                                                    th:text="${'Estado: En Camino'}">
-                                                    <b>Estado: </b></h5>
-                                                <h5 th:if="${detalles.get(0).getEstado()==6}"
-                                                    th:text="${'Estado: Entregado'}">
-                                                    <b>Estado: </b></h5>
+                                                <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}">
+                                                    <b>Cliente: </b>Hector
+                                                    Ventura</h5>
                                                 <span class="text-light "><h6></h6></span>
                                             </li>
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}">
-                                                    <b>Cliente: </b>Hector
+                                                <h5 th:text="${'Celular: '+detalles.get(0).getTelc()}">
+                                                    <b>Celular: </b>Hector
                                                     Ventura</h5>
                                                 <span class="text-light"><h6></h6></span>
                                             </li>
@@ -129,15 +133,19 @@
                                         <ul class="list-group col-10  ml-lg-5">
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:text="${'Fecha: '+detalles.get(0).getFechapedido()}">
+                                                <h5 th:text="${'Fecha: '+
+                                                detalles.get(0).getFechapedido().split(' ')[0].split('-')[2]+'/'+
+                                                detalles.get(0).getFechapedido().split(' ')[0].split('-')[1]+'/'+
+                                                detalles.get(0).getFechapedido().split(' ')[0].split('-')[0]+' Hora: '+
+                                                detalles.get(0).getFechapedido().split(' ')[1].split(':')[0]+':'+
+                                                detalles.get(0).getFechapedido().split(' ')[1].split(':')[1]}">
                                                     <b>Fecha: </b>28/04/2021
                                                     - 17:05</h5>
                                                 <span class="text-light"><h6></h6></span>
                                             </li>
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5
-                                                        th:text="${'Código: '+detalles.get(0).getCodigo()}"><b></b>
+                                                <h5 th:text="${'Repartidor: '+(detalles.get(0).getRepartidor()==null? 'Sin repartidor': detalles.get(0).getRepartidor()+'-'+detalles.get(0).getTelr())}"><b></b>
                                                 </h5>
 
                                                 <!--<h5 th:if="${detalles.get(0).getMetodopago()==0}"

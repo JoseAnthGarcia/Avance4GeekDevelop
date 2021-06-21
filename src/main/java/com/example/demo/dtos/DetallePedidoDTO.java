@@ -7,7 +7,7 @@ public interface DetallePedidoDTO {
     String getCodigo();
     String getCliente();
     String getDireccion();
-    LocalDate getFechapedido();
+    String getFechapedido();
     String getCupon();
     BigDecimal getDescuento();
     int getEstado();
@@ -15,4 +15,7 @@ public interface DetallePedidoDTO {
     String getComentario();
     BigDecimal getPreciototal();
     int getMismodistrito();
+    String getTelc();
+    String getTelr();
+    String getRepartidor();
 }

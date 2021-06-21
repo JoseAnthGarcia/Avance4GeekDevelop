@@ -2340,8 +2340,10 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
 
+        System.out.println(page);
+
+        Pageable pageRequest = PageRequest.of(page, 5);
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
 

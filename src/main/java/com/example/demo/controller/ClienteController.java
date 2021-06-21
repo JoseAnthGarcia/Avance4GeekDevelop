@@ -1655,11 +1655,12 @@ public class ClienteController {
         return "Cliente/listaReportes";
     }
 
-    //PEDIDO ACTUAL
+    /********************************PEDIDO ACTUAL*******************************************************************/
     @GetMapping("/pedidoActual")
     public String pedidoActual(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                @RequestParam(value = "texto", required = false) String texto,
-                               @RequestParam(value = "estado", required = false) String estado) {
+                               @RequestParam(value = "estado", required = false) String estado
+                                ) {
         if (httpSession.getAttribute("carrito") != null) {
             httpSession.removeAttribute("carrito");
         }
@@ -1723,6 +1724,22 @@ public class ClienteController {
         return "Cliente/listaPedidoActual";
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*************************************************************************************************************************************************/
     @GetMapping("/cancelarPedido")
     public String cancelarPedido(@RequestParam("id") String id,
                                  Model model, HttpSession session) {
@@ -1754,7 +1771,7 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 3);
+        Pageable pageRequest = PageRequest.of(page, 5);
 
         if (codigo == null) {
             codigo = "";
@@ -1776,6 +1793,7 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedidoActual";
     }
+
     @GetMapping("/detallePedidoActual1")
     public String detallePedidoActual1(@RequestParam Map<String, Object> params,
                                       @RequestParam("codigo") String codigo, Model model, HttpSession session) {
@@ -1790,7 +1808,7 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 3);
+        Pageable pageRequest = PageRequest.of(page, 5);
 
         if (codigo == null) {
             codigo = "";

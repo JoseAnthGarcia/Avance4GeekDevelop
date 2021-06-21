@@ -401,7 +401,9 @@
 
                 <div style="text-align:center">
                     <a  class="btn btn-primary" th:href="@{/cliente/historialPedidos}" type="submit">Regresar</a>
-                    <a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
+                    <!--
+                    <a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}"
+                        th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
                     <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
@@ -420,6 +422,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
                 </div>
                 <!-- /.container-fluid -->
 

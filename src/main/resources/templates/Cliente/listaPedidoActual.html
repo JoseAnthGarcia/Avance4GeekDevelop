@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                   th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
@@ -181,7 +182,7 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto" type="text" class="form-control bg-light small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
                                        style="border-color: lightgray">
@@ -226,31 +227,31 @@
                             Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
-                <!---------------------------------------------------------- INICIO TABLA---------------------------------------------------------------------->
+                    <!---------------------------------------------------------- INICIO TABLA---------------------------------------------------------------------->
                     <div class="table-responsive">
 
                         <table class="table table-bordered">
 
                             <thead>
-                        <tr>
-                            <th width="10"> N° </th>
-                            <th width="50" height="60">
-                                <div style=text-align:center> Restaurante</div>
-                            </th>
-                            <th width="560">
-                                <div style=text-align:center>
-                                    Descripción
-                                </div>
-                            </th>
-                            <td >
-                                <div style=text-align:center>
-                                    Acceder
-                                </div>
-                            </td>
+                            <tr>
+                                <th width="10"> N°</th>
+                                <th width="50" height="60">
+                                    <div style=text-align:center> Restaurante</div>
+                                </th>
+                                <th width="700">
+                                    <div style=text-align:center>
+                                        Descripción
+                                    </div>
+                                </th>
+                                <td>
+                                    <div style=text-align:center>
+                                        Acceder
+                                    </div>
+                                </td>
 
-                            </th>
-                        </tr>
-                        </thead>
+                                </th>
+                            </tr>
+                            </thead>
 
 
                             <tbody>
@@ -261,58 +262,64 @@
 
                                 <!------------------->
                                 <td>
-                                <!----------- Imagen------------------------------->
-                                <div class="col-3">
-                                    <img width="120" height="110" alt="Avatar"
-                                         th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
-                                </div>
+                                    <!----------- Imagen------------------------------->
+                                    <div class="col-3">
+                                        <img width="120" height="110" alt="Avatar"
+                                             th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
+                                    </div>
                                 </td>
                                 <!------------------------------------------------------------------->
 
                                 <!------------------------------------DESCRIPCION----------------------------------------------------->
                                 <td>
                                     <div style=text-align:center>
-                                        <h5 class="mb-2"  style="color:#701111;" th:text="${pedido.getNombre()}"></h5>
-                                        <div class="form-group row">
+                                        <h5 class="mb-2" style="color:#701111;" th:text="${pedido.getNombre()}"></h5>
+                                        <h6></h6>
+                                        <div class="row">
 
-                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
-                                        <div class="ml-2" type="text" th:text="|Fecha de registro: ${pedido.getFechapedido().substring(0,10)}|">  </div>
+                                            <div class="col-6">
+                                                <div class="ml-2" type="text"
+                                                     th:text="|Fecha de registro: ${pedido.getFechapedido().substring(0,10)}|"></div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="ml-4" type="text"
+                                                     th:text="|Hora de registro: ${pedido.getFechapedido().substring(11,19)}|"></div>
+                                            </div>
+
                                         </div>
+                                        <br>
+                                        <div class="row">
 
-                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
-                                        <div class="ml-4" type="text" th:text="|Hora de registro: ${pedido.getFechapedido().substring(11,19)}|">  </div>
-                                        </div>
-
-                                        </div>
-
-                                        <div class="form-group row">
-
-                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
-                                        <div  class=" ml-2" type="text" th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|">  </div>
-                                        </div>
-                                        <div class="col-sm-auto mb-2 mb-sm-0" align="left">
-                                        <div  class=" ml-4" type="text"
-                                               th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
-                                            ></div>
-                                        <div class=" ml-4" type="text"
-                                               th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
-                                              ></div>
-                                        <div class=" ml-4" type="text"
-                                               th:if="${pedido.getEstado==1}" th:placeholder="|Estado : Aceptado |"
-                                              ></div>
-                                        <div class=" ml-4" type="text"
-                                               th:if="${pedido.getEstado==4}"
-                                               th:placeholder="|Estado : Listo para entregar |"
-                                               ></div>
-                                        <div class=" ml-4" type="text"
-                                               th:if="${pedido.getEstado==0}"
-                                               th:text="|Estado : Pendiente|"
+                                            <div class="col-6">
+                                                <div class=" ml-2" type="text"
+                                                     th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|"></div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==0}"
+                                                     th:text="|Estado : Pendiente |"
                                                 ></div>
 
-                                        </div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==1}"
+                                                     th:text="|Estado : Aceptado |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==4}"
+                                                     th:text="|Estado : Listo para entregar |"
+                                                ></div>
+
+                                            </div>
                                         </div>
 
-                                </div>
+                                    </div>
                                 </td>
 
                                 <!----------------------------------------------------------------------------------------->
@@ -320,15 +327,15 @@
                                 <!------------------------------  Visualizar ---------------------------------->
                                 <td>
                                     <div style=text-align:center>
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center"><i style="font-size:6em; color:#2C8287"
-                                                                    class="fas fa-eye"></i>
-                                        </div>
-                                    </a>
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
-                                    </a>
-                                </div>
+                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                            <div class="text-center"><i style="font-size:6em; color:#2C8287"
+                                                                        class="fas fa-eye"></i>
+                                            </div>
+                                        </a>
+                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                            <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
+                                        </a>
+                                    </div>
                                 </td>
                                 <!---------------------------------------------------------------------------------->
 
@@ -347,8 +354,10 @@
                                 <ul class="pagination justify-content-center">
 
 
-                                    <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                        <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
+                                    <li class="page-item" th:each="page : ${pages}"
+                                        th:classappend="${current == page ? 'active': ''}">
+                                        <a th:unless="${texto == null && estado == null}"
+                                           class="page-link active text-white" style="background-color: #701111"
                                            th:text="${page}"
                                            th:href="@{'/cliente/pedidoActualPagina?page='+${page}}"></a>
                                     </li>
@@ -441,7 +450,6 @@
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
-
 
 
 </html>

@@ -445,7 +445,14 @@ public class AdminController  {
                                 @RequestParam(value = "idrol", required = false) String idrol,
                                 HttpSession session) {
 
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
+        PageRequest pageRequest = PageRequest.of(page, 10);
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -524,14 +531,7 @@ public class AdminController  {
 
 
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
@@ -560,7 +560,14 @@ public class AdminController  {
                                 @RequestParam(value = "estado", required = false) String estado,
                                 @RequestParam(value = "idrol", required = false) String idrol,
                                 HttpSession session) {
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
+        PageRequest pageRequest = PageRequest.of(page, 10);
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
         idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
@@ -612,13 +619,7 @@ public class AdminController  {
                 maXrol = 5;
         }
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
-        PageRequest pageRequest = PageRequest.of(page, 10);
+
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
@@ -649,6 +650,15 @@ public class AdminController  {
                                 @RequestParam(value = "monto", required = false) String monto,
                                 @RequestParam(value = "valoracion", required = false) String valoracion,
                                              HttpSession session) {
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -800,14 +810,7 @@ public class AdminController  {
                 maXval = 7;
         }
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
         Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -839,7 +842,14 @@ public class AdminController  {
                                              @RequestParam(value = "monto", required = false) String monto,
                                              @RequestParam(value = "valoracion", required = false) String valoracion,
                                              HttpSession session) {
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
 
+        PageRequest pageRequest = PageRequest.of(page, 10);
 
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         estado= session.getAttribute("estado") == null ? "7" :  (String) session.getAttribute("estado");
@@ -945,14 +955,7 @@ public class AdminController  {
                 maXval = 7;
         }
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
         Page<UsuarioDtoCliente> pagePersona = usuarioServiceAPIDtoCliente.listaUsuariosDtoCliente(texto,miFval,maXval, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
@@ -984,6 +987,14 @@ public class AdminController  {
                                 @RequestParam(value = "idrol", required = false) String idrol,
                                 HttpSession session) {
 
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -1062,14 +1073,6 @@ public class AdminController  {
 
 
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
-
-        PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
@@ -1100,6 +1103,14 @@ public class AdminController  {
                                  @RequestParam(value = "idrol", required = false) String idrol,
                                  HttpSession session) {
 
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
         idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
@@ -1153,14 +1164,6 @@ public class AdminController  {
 
 
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
-
-        PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
 
@@ -1191,6 +1194,15 @@ public class AdminController  {
                                              @RequestParam(value = "monto", required = false) String monto,
                                              @RequestParam(value = "valoracion", required = false) String valoracion,
                                              HttpSession session) {
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -1341,14 +1353,7 @@ public class AdminController  {
         }
 
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
 
         Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
@@ -1382,6 +1387,14 @@ public class AdminController  {
                                                @RequestParam(value = "valoracion", required = false) String valoracion,
                                                HttpSession session) {
 
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
         monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
@@ -1500,19 +1513,12 @@ public class AdminController  {
                 maXval = 7;
         }
 
-        int page;
-        try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        }catch(NumberFormatException nfe){
-            page =0;
-        }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
 
         Page<UsuarioDtoRepartidor> pagePersona = usuarioServiceAPIDtoRepartidor.listaUsuariosDtoRepartidor(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
         int totalPage = pagePersona.getTotalPages();
         System.out.println(totalPage+"----------------------------ddd-ddd");
-        if(totalPage > 0) {
+        if(totalPage > 0 ) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
@@ -1533,7 +1539,6 @@ public class AdminController  {
         model.addAttribute("last", totalPage);
         return "AdminGen/reportePedidoRepartidor";
     }
-
 
     @GetMapping("/buscador2")
     public String buscadorUsuario2(@RequestParam Map<String, Object> params, Model model){

@@ -440,8 +440,8 @@ public class RepartidorController {
 
         //TODO: validar fechas:
         if(fechaMax==null || fechaMin==null){
-            fechaMin = "1900-12-01";
-            fechaMax = "3000-12-01";
+            fechaMin = "1900-01-01";
+            fechaMax = "3000-01-01";
         }
 
 
@@ -454,8 +454,8 @@ public class RepartidorController {
             Date fechaFinal = date.parse(fechaMax);
             if(fechaInicio.after(fechaFinal)){
                 System.out.println("Fecha inicio mayor");
-                fechaMin = "1900-12-01";
-                fechaMax = "3000-12-01";
+                fechaMin = "1900-01-01";
+                fechaMax = "3000-01-01";
             }
         } catch (ParseException e) {
             e.printStackTrace();

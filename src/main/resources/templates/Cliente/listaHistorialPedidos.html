@@ -275,10 +275,10 @@
 
                                         <div class="col-6">
                                             <div  class=" ml-4" type="text"
-                                                  th:if="${pedido.getEstado==2}" th:text="|Estado : Cancelado |"
+                                                  th:if="${pedido.getEstado()==2}" th:text="|Estado : Cancelado |"
                                             ></div>
                                             <div  class=" ml-4" type="text"
-                                                  th:if="${pedido.getEstado==6}" th:text="|Estado : Entregado |"
+                                                  th:if="${pedido.getEstado()==6}" th:text="|Estado : Entregado |"
                                             ></div>
 
                                         </div>

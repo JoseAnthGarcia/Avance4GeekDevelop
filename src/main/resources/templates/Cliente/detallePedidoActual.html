@@ -203,6 +203,7 @@
                     </div>
 
                         <div class="card-body">
+                            <label>Platos :</label>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead  style="background-color:#701111;">
@@ -230,7 +231,7 @@
                                         </thead>
                                         <tbody class="justify-content-center" >
                                             <tr th:each="p2, info:${listapedido2}">
-                                                <td th:text="${info.index +1}">1</td>
+                                                <td th:text="${(current -1)*5 +info.index +1}">1</td>
                                                 <td th:text="${p2.getNombreplato()}"></td>
                                                 <td th:text="${p2.getCantidad()}"></td>
                                                 <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
@@ -278,7 +279,7 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
 
-                                            <li class="page-item" th:each="page : ${pages}">
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
                                                    th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
@@ -289,7 +290,7 @@
                                 </div>
                                 <div class="col-md-2"></div>
                             </div>
-                    <!--------------------------Extras-------------------------------------------------------->
+                <!--------------------------------Extras----------------------------------------------------------------->
                             <div class="card-body">
                                 <label>Extras:</label>
                                 <div class="table-responsive">
@@ -329,7 +330,7 @@
                                     </table>
 
                                 </div>
-
+                            <!--
                                 <div class="row">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8">
@@ -347,6 +348,9 @@
                                     </div>
                                     <div class="col-md-2"></div>
                                 </div>
+
+                                -->
+
                             </div>
 
 

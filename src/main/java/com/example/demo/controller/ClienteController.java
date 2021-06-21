@@ -1851,7 +1851,13 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
         Pageable pageRequest = PageRequest.of(page, 7);
 
         if (codigo == null) {
@@ -1866,14 +1872,13 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         }
 
         model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("current", page + 1);
         model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
 
 
-        //PAGINACIONDE EXTRAS
-        Page<ExtraPorPedidoDTO2> listaExtra= extraDetalleService.findPaginated2( codigo, pageRequest);
 
 
-        model.addAttribute("listaExtra",listaExtra);
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
         model.addAttribute("codigo", codigo);
 
 
@@ -1895,16 +1900,10 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        /******************************************/
-        int page2=params.get("page2") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        /******************************************/
 
 
         Pageable pageRequest = PageRequest.of(page, 5);
 
-        /******************************************/
-        Pageable pageRequest2 = PageRequest.of(page2, 5);
-        /************************************************/
 
         if (codigo == null) {
             codigo = "";
@@ -1920,16 +1919,10 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         model.addAttribute("listapedido2", listaPedidos);
         model.addAttribute("codigo",codigo);
         model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("current", page + 1);
 
-        /*****************************EXTRAS***************************/
-        Page<ExtraPorPedidoDTO2> listaExtra= extraDetalleService.findPaginated2( codigo, pageRequest2);
-        int totalPage2 = listaExtra.getTotalPages();
-        if (totalPage2 > 0) {
-            List<Integer> pages2 = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages2", pages2);
-        }
-        model.addAttribute("listaExtra",listaExtra);
-        /****************************************************/
+
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
 
 
         model.addAttribute("codigo", codigo);
@@ -1937,6 +1930,13 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedido";
     }
+
+
+
+
+
+
+
 
 /********************************* HISTORIAL DE PEDIDO *******************************************************************************************************************++*/
     @GetMapping("/historialPedidos")
@@ -1971,8 +1971,8 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             httpSession.setAttribute("estado",estado);
         }
 
-        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
-        estado= httpSession.getAttribute("estado") == null ? estado :  (String) httpSession.getAttribute("estado");
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
         int limitSup ;
         int limitInf ;
@@ -2001,7 +2001,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         }
 
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
@@ -2032,7 +2032,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
         int limitSup;
-        int limitInf ;
+        int limitInf;
         switch (estado) {
             case "2":
                 limitSup = 2;
@@ -2056,7 +2056,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             model.addAttribute("pages", pages);
         }
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);

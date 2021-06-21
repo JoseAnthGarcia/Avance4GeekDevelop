@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Lista  Usuarios')"></head>
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Reporte Pedidos Cliente')"></head>
 
 
 <body id="page-top">
@@ -42,6 +42,10 @@
                                 <option value="0" th:selected="${estado.equals('0')}">Pendiente</option>
                                 <option value="1" th:selected="${estado.equals('1')}">Aceptado</option>
                                 <option value="2" th:selected="${estado.equals('2')}">Cancelado</option>
+                                <option value="3" th:selected="${estado.equals('3')}">Preparando</option>
+                                <option value="4" th:selected="${estado.equals('4')}">Pedido Listo</option>
+                                <option value="5" th:selected="${estado.equals('5')}">En Camino</option>
+                                <option value="6" th:selected="${estado.equals('6')}">Entregado</option>
                             </select>
                         </div>
 
@@ -141,136 +145,53 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 200px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 240px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021  10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
+                                <tr th:each= "usuario, v : ${listaUsuarios}">
+                                    <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 60px">1</td>
+                                    <td th:text="${usuario.getApellidocliente()+','+usuario.getNombrecliente()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getNombrerest()}" class="text-center" style="width: 260px"></td>
+                                    <td th:text="${usuario.getCodigo()}" class="text-center" style="width: 150px"></td>
+                                    <td th:switch="${usuario.getEstado()}" class="text-center" style="width: 200px">
+                                        <div th:case="0" th:text="|Pendiente|"></div>
+                                        <div th:case="1" th:text="|Aceptado|"></div>
+                                        <div th:case="2" th:text="|Cancelado|"></div>
+                                        <div th:case="3" th:text="|Preparando|"></div>
+                                        <div th:case="4" th:text="|Pedido Listo|"></div>
+                                        <div th:case="5" th:text="|En Camino|"></div>
+                                        <div th:case="6" th:text="|Entregado|"></div>
+                                    </td>
+                                    <td th:text="${usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getFechapedido().substring(0,18)}"  class="text-center" style="width: 160px"></td>
+                                    <td  th:text="|S/ ${usuario.getPrecioTotal()}|" class="text-center" style="width: 110px"></td>
+                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Cancelado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 260px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">Las brasas</td>
-                                    <td  class="text-center" style="width: 160px">0456</td>
-                                    <td  class="text-center" style="width: 200px">Entregado</td>
-
-                                    <td class="text-center" style="width: 260px">Joham Velarde</td>
-                                    <td  class="text-center" style="width: 160px">01/05/2021 10:23:24</td>
-                                    <td  class="text-center" style="width: 60px">15</td>
-                                    <td  class="text-center" style="width: 60px">4</td>
-
-
-                                </tr>
-
-
-
-
-
 
 
                                 </tbody>
                             </table>
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
-                        </div>
 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
+                                            <a class="page-link" th:href="@{|/admin/reporteClientesPedidoPagina/?page=${prev}|}">Anterior</a>
+                                        </li>
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a class="page-link" th:href="@{|/admin/reporteClientesPedidoPagina/?page=${page}|}" th:text="${page}"></a>
+                                        </li>
+                                        <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
+                                            <a class="page-link" th:href="@{|/admin/reporteClientesPedidoPagina/?page=${next}|}">Siguiente</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -310,7 +231,7 @@
                                                 </div>
                                                 <div class="row">
 
-                                                    <p > Alvarez De la Vega Martin Alexis</p>
+                                                    <div th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getApellidos() +','+listaClienteConMasPedidos.getNombres() }"> </div>
 
                                                 </div>
 
@@ -322,7 +243,7 @@
 
                                     </div>
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                        <h4  style="color: black"> 2456215</h4>
+                                        <h4 th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getCantpedidos()}" style="color: black"> </h4>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -335,7 +256,7 @@
                                                     <h4  style="color: black">CLIENTE CON MENOS PEDIDOS</h4>
                                                 </div>
                                                 <div class="row">
-                                                    <p > Martin Casas Viviana Rosa</p>
+                                                    <div th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getApellidos() +','+listaClienteConMenosPedidos.getNombres() }"> </div>
 
                                                 </div>
 
@@ -343,13 +264,13 @@
 
 
 
-                                            </p>
+
                                         </div>
 
 
                                     </div>
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                        <h4  style="color: black"> 32</h4>
+                                        <h4 th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getCantpedidos() }" style="color: black"> </h4>
                                     </div>
                                 </div>
 
@@ -360,7 +281,6 @@
 
                 </div>
             </div>
-            <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
@@ -399,31 +319,32 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+
 </div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
 </body>
 
 </html>
-

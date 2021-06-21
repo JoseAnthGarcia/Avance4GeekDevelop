@@ -1133,7 +1133,7 @@ public class LoginController {
             //se agrega rol:
             usuario.setRol(rolRepository.findById(4).get());
             //
-            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) {
+            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7) {
                 movilidad.setLicencia(null);
                 movilidad.setPlaca(null);
             }

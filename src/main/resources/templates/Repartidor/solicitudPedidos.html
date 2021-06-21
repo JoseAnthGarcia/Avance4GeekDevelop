@@ -86,8 +86,8 @@
                                         </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
                                     <td>
-                                       <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn">
-                                           <i class="fas fa-check text-white"></i> style="color: green"></i>
+                                       <a style="color: #dce3f9" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn btn-success btn-circle align">
+                                           <i class="fas fa-check text-white"></i> </i>
                                        </a>
                                     </td>
                                     <!-- <td>
@@ -152,8 +152,8 @@
 
                                         <div class="row mt-3">
                                             <div class="col-sm-6">
-                                                <a th:href="@{'/repartidor/aceptarPedido?codigo='+${pedidoDetalle.codigo}}" class="btn">
-                                                    <i class="fas fa-check text-white"></i> style="color: green"></i>
+                                                <a style="color: #dce3f9" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedidoDetalle.codigo}}" class="btn btn-success btn-circle align">
+                                                    <i class="fas fa-check text-white"></i></i>
                                                 </a>
                                             </div>
 

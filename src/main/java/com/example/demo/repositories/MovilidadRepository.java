@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MovilidadRepository extends JpaRepository<Movilidad, Integer> {
+
+    Movilidad findByPlaca(String placa);
+
+    Movilidad findByLicencia(String licencia);
 }

@@ -967,19 +967,26 @@ public class LoginController {
         Usuario usuario1 =usuarioRepository.findByDni(dni);
         Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
-        Movilidad movilidad1 = movilidadRepository.findByLicencia(licencia);
-        Movilidad movilidad2 = movilidadRepository.findByPlaca(placa);
 
+        Movilidad movilidad1;
+        Movilidad movilidad2;
+        if(licencia.equals("") || placa.equals("")){
+            movilidad1 = null;
+            movilidad2 = null;
+        }else{
+            movilidad1 = movilidadRepository.findByLicencia(licencia);
+            movilidad2 = movilidadRepository.findByPlaca(placa);
+        }
 
         Boolean errorMov = false;
         Boolean errorDist=false;
         Boolean errorSexo= false;
         Boolean validarFoto = true;
         String fileName = "";
-        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
+        if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
             errorMov= true;
         }
-        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
+        if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
             errorMov= true;
         }
         if(distritos!=null){

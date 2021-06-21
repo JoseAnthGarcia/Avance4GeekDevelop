@@ -1706,8 +1706,8 @@ public class ClienteController {
                 limitSup = 6;
                 limitInf = -1;
         }
-
-        Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        int idCliente=usuario1.getIdusuario();
+        Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(idCliente, texto, limitInf, limitSup, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());

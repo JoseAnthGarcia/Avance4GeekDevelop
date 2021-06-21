@@ -21,13 +21,19 @@ Pedido:
 0 - Pendiente
 1 - Aceptado
 2 - Cancelado
-3 - 
-4 - 
-5 -
-6 -
+3 - Preparando
+4 - Pedido Listo
+5 - En Camino
+6 - Entregado
 
 Método de pago:
 
 1 - Efectivo
 2 - Online
 3 - POS
+
+Tipo Movilidad:
+
+5 - moto
+6 - carro
+7 - ticla

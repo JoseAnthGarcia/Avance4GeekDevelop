@@ -527,7 +527,7 @@ public class AdminRestController {
         model.addAttribute("textCodigo", textCodigo);
         model.addAttribute("inputPrecio", inputPrecio);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputPrecioInt + "\n" + fechainicio + "\n" + fechafin);
+        System.out.println(pageNo + "\n" + page.getTotalElements() + "\n" + page.getTotalPages() + "\n" + inputPrecioInt + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);

@@ -50,6 +50,8 @@
                                             <p class="card-text"
                                                th:utext="'Dirección de restaurante: '+${pedidoAct.restaurante.direccion}
                                             +'<br>Direción de envio: '+${pedidoAct.cliente.direccionactual}
+                                             +'<br>Cliente: '+${pedidoAct.cliente.nombres +' '+ pedidoAct.cliente.apellidos }
+                                            +'<br>Teléfono de cliente: '+${pedidoAct.cliente.telefono}
                                             +'<br>Hora de registro de pedido: '+${pedidoAct.fechapedido}
                                             +'<br>Método de pago : '+${pedidoAct.metodopago.tipo}+'-S/.'+${pedidoAct.preciototal}">Dirección de restaurante: Av. Universitaria 345<br>
                                                 Direción de cliente: Av. Universitaria 987<br>

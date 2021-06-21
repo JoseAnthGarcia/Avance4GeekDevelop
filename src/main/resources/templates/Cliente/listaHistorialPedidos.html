@@ -275,10 +275,10 @@
 
                                         <div class="col-6">
                                             <div  class=" ml-4" type="text"
-                                                  th:if="${pedido.getEstado==2}" th:text="|Estado : Cancelado |"
+                                                  th:if="${pedido.getEstado()==2}" th:text="|Estado : Cancelado |"
                                             ></div>
                                             <div  class=" ml-4" type="text"
-                                                  th:if="${pedido.getEstado==6}" th:text="|Estado : Entregado |"
+                                                  th:if="${pedido.getEstado()==6}" th:text="|Estado : Entregado |"
                                             ></div>
 
                                         </div>
@@ -595,21 +595,7 @@
                     </div>
                     <div class="col-md-2"></div>
                 </div>
-                <!--
-                <nav aria-label="Pagination">
 
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:each="page : ${pages}">
-                            <a th:unless="${texto == null && estado == null}" class="page-link active" style="background-color: #701111"
-                               th:text="${page}"
-                               th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
-                        </li>
-
-                    </ul>
-
-
-                </nav>
-                -->
             </div>
 
             <!-- /.container-fluid -->

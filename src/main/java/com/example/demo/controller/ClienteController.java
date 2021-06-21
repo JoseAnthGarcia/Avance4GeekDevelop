@@ -124,6 +124,11 @@ public class ClienteController {
     @Autowired
     MetodoPagoRepository metodoPagoRepository;
 
+    @Autowired
+    ExtraDetalleService extraDetalleService;
+
+
+
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
 
@@ -1667,7 +1672,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
     Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-    int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+    int page;
+    try{
+        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+    }catch(NumberFormatException nfe){
+        page =0;
+    }
     Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -1750,7 +1760,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
         texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
@@ -1836,7 +1851,13 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
         Pageable pageRequest = PageRequest.of(page, 7);
 
         if (codigo == null) {
@@ -1851,7 +1872,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         }
 
         model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("current", page + 1);
         model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+
+
+
+
         model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
         model.addAttribute("codigo", codigo);
 
@@ -1874,7 +1900,10 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+
+
         Pageable pageRequest = PageRequest.of(page, 5);
+
 
         if (codigo == null) {
             codigo = "";
@@ -1890,10 +1919,24 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         model.addAttribute("listapedido2", listaPedidos);
         model.addAttribute("codigo",codigo);
         model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("current", page + 1);
+
+
         model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
+
+
+        model.addAttribute("codigo", codigo);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/detallePedido";
     }
+
+
+
+
+
+
+
 
 /********************************* HISTORIAL DE PEDIDO *******************************************************************************************************************++*/
     @GetMapping("/historialPedidos")
@@ -1905,7 +1948,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -1923,8 +1971,8 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             httpSession.setAttribute("estado",estado);
         }
 
-        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
-        estado= httpSession.getAttribute("estado") == null ? estado :  (String) httpSession.getAttribute("estado");
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
         int limitSup ;
         int limitInf ;
@@ -1953,7 +2001,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         }
 
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
@@ -1972,14 +2020,19 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
         texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
         estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
         int limitSup;
-        int limitInf ;
+        int limitInf;
         switch (estado) {
             case "2":
                 limitSup = 2;
@@ -2003,7 +2056,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             model.addAttribute("pages", pages);
         }
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
@@ -2072,7 +2125,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2165,7 +2223,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2228,7 +2291,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
 
 
-    /*******************************************REPORTE Pedido**************************************************/
+/****************************************************************REPORTE PEDIDO****************************************************************************/
     @GetMapping("/reportePedido")
     public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
@@ -2239,7 +2302,13 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+        //int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2339,11 +2408,16 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
 
-        System.out.println(page);
 
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
+
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
 
@@ -2426,7 +2500,14 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2523,7 +2604,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2589,68 +2675,6 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
     /************************************************************************************************************************************************************************************************************/
 
-    @GetMapping("/listaCupones2")
-    public String listaCupones(@RequestParam Map<String, Object> params, @RequestParam(value = "texto", required = false) String texto,
-                               @RequestParam(value = "descuento", required = false) String descuento, Model model, HttpSession httpSession) {
-
-        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
-        int limitSup;
-        int limitInf;
-
-
-        if (texto == null) {
-            texto = "";
-        }
-        if (descuento == null) {
-            descuento = "7";
-        }
-
-        switch (descuento) {
-            case "1":
-                limitSup = 10;
-                limitInf = 0;
-                break;
-
-            case "2":
-                limitSup = 20;
-                limitInf = 10;
-                break;
-
-            case "3":
-                limitSup = 30;
-                limitInf = 20;
-                break;
-
-            case "4":
-                limitSup = 40;
-                limitInf = 30;
-                break;
-
-            default:
-                limitSup = 100;
-                limitInf = 0;
-        }
-
-        //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
-
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario.getIdusuario(), texto, limitInf, limitSup, pageRequest);
-        int totalPage = cuponClienteDTOS.getTotalPages();
-        if (totalPage > 0) {
-            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages", pages);
-        }
-        model.addAttribute("total", totalPage);
-        model.addAttribute("current", page + 1);
-
-        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
-        model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
-        model.addAttribute("texto", texto);
-        model.addAttribute("descuento", descuento);
-
-        return "Cliente/listaCupones";
-    }
     /********************************* CUPONES *******************************************************************************************************************++*/
     @GetMapping("/listaCupones")
     public String pedidoActual6(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
@@ -2661,7 +2685,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
@@ -2739,7 +2768,12 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
-        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
         Pageable pageRequest = PageRequest.of(page, 5);
 
         texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");

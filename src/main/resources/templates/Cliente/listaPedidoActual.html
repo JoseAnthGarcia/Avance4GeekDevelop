@@ -297,7 +297,7 @@
                                     <li class="page-item" th:each="page : ${pages}">
                                         <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
                                            th:text="${page}"
-                                           th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
+                                           th:href="@{'/cliente/pedidoActualPagina?page='+${page}}"></a>
                                     </li>
 
                                 </ul>

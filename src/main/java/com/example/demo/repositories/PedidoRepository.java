@@ -101,6 +101,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
             "where ehp.codigo=?1",nativeQuery = true)
     List<ExtraPorPedidoDTO> extrasPorPedido(String codigopedido);
+
+
+
+    @Query(value = "SELECT e.nombre, ehp.preciounitario,ehp.cantidad,ehp.preciounitario*ehp.cantidad as preciototal  FROM extra_has_pedido ehp\n" +
+            "inner join extra e on e.idextra=ehp.idextra\n" +
+            "inner join pedido pe on pe.codigo=ehp.codigo\n" +
+            "where ehp.codigo=?1",nativeQuery = true)
+    Page<ExtraPorPedidoDTO2> extrasPorPedido2(String codigopedido,Pageable pageable);
+
+
+
+
     @Query(value="SELECT php.codigo,pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
             ", php.observacionplatillo\n" +
             "  FROM geekdevelop.plato_has_pedido  php\n" +

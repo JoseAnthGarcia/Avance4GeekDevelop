@@ -240,7 +240,7 @@
                                        th:href="${'#comentario'+p2.getIdplato()}">
                                     <i class="fas fa-comments" style="color:gray" ></i>
                                 </a></td>
-                                <!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
+<!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
 
                                 <div class="modal fade" th:id="${'comentario'+p2.getIdplato()}"
                                      tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -263,7 +263,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
                             </tr>
 
                             </tbody>
@@ -295,7 +295,7 @@
 
             <!------------------------------------------------------------------------------------------------------------------------------------ -->
             <!-- ------------------------------------TABLA 2------------------------------------------------------------------------------>
-            <div class="card-body">
+            <div class="card-body" th:if="${listaExtra.size()!=0}">
                 <label>Extras:</label>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -334,25 +334,7 @@
                     </table>
 
                 </div>
-<!--
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <nav aria-label="pagination">
-                            <ul class="pagination justify-content-center">
 
-                                <li class="page-item" th:each="page2 : ${pages2}">
-                                    <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
-                                       th:text="${page2}"
-                                       th:href="@{'/cliente/detallePedidoActual1?page='+${page2}+'&codigo='+${codigo}}"></a>
-                                </li>
-
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="col-md-2"></div>
-                </div>
-                -->
             </div>
                 <br>
             </div>
@@ -363,12 +345,17 @@
 
 
             <div th:each="p3:${listapedido1}">
-                    <div class="row justify-content-center">
-                        <h6 class="col-3" style="color:black">Costo</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
-                    </div>
+
                     <div class="dropdown-divider" style="border-color:#701111;" ></div>
-                    <div class="row justify-content-center">
+                <div class="row justify-content-center">
+                    <h6 class="col-3" style="color:black" th:text="|Costo|"></h6>
+                    <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-5 +p3.getDescuento()}|"></h6>
+                    <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-8 + p3.getDescuento()}|"></h6>
+                    <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-5}|"></h6>
+                    <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-8}|"></h6>
+                </div>
+                <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                <div class="row justify-content-center">
                         <h6 class="col-3" style="color:black"  >Delivery</h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 5.00|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 8.00|"></h6>
@@ -376,16 +363,16 @@
                     <div class="row justify-content-center">
                         <h6 class="col-3" style="color:black">Cupones</h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. -${p3.getDescuento}|"></h6>
                     </div>
                     <div class="dropdown-divider" style="border-color:#701111;" > </div>
+
+
                     <div class="row justify-content-center">
-                        <h6 class="col-3" style="color:black">Total</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+5}|"></h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                        <h6 class="col-3" style="color:black">Monto a Pagar</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
                     </div>
+
                     <div class="dropdown-divider" style="border-color:#701111;" th:if="${p3.getEstado==2}" ></div>
 
                     <div class="row justify-content-center"  th:if="${p3.getEstado==2}">
@@ -414,7 +401,9 @@
 
                 <div style="text-align:center">
                     <a  class="btn btn-primary" th:href="@{/cliente/historialPedidos}" type="submit">Regresar</a>
-                    <a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
+                    <!--
+                    <a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}"
+                        th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
                     <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
@@ -433,6 +422,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
                 </div>
                 <!-- /.container-fluid -->
 

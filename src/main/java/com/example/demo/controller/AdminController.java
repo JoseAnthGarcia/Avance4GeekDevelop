@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.*;
@@ -1102,7 +1103,6 @@ public class AdminController  {
                                BindingResult bindingResult, RedirectAttributes attr) throws MessagingException {
 
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
-
         if(bindingResult.hasErrors()){
             return "AdminGen/crearAdmin";
         }else {
@@ -1189,11 +1189,64 @@ public class AdminController  {
             }
         }
 
-        if (bindingResult2.hasErrors() || fecha_naci || !validarFoto) {
+
+        UsuarioDao ud = new UsuarioDao();
+        ValidarDniDTO udto = ud.validarDni(usuario.getDni());
+        boolean dni_val = true;
+        boolean usuario_val = true;
+        boolean usuario_null = true;
+
+        boolean apellido_val = true;
+        boolean nombre_val = true;
+
+        if(udto.getSuccess().equals("true")){
+            if(usuario.getDni().equals(udto.getRuc())){
+                dni_val = false;
+                // se uso contains para validar 3 nombres
+                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                    usuario_null = false;
+                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                        usuario_val = false;
+                        nombre_val = false;
+                        apellido_val = false;
+                    }else{
+                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                            usuario_val = false;
+                            nombre_val = false;
+                        }
+                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
+                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                            usuario_val = false;
+                            apellido_val = false;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
+        }
+
+
+        if (bindingResult2.hasErrors() || fecha_naci || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
             System.out.println("siguen errores");
 
             //----------------------------------------
-
+            if(dni_val) {
+                model.addAttribute("msg8","El DNI ingresado no es válido");
+            }
+            if(usuario_null){
+                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            }
+            if(usuario_val){
+                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            }
+            if(nombre_val){
+                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            }
+            if(apellido_val){
+                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            }
 
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse m   ayores de edad");

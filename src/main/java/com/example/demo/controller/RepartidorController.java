@@ -7,6 +7,8 @@ import com.example.demo.repositories.*;
 import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -411,25 +413,153 @@ public class RepartidorController {
     }
 
     @GetMapping("/reporteDelivery")
-    public String repoteDelivery(HttpSession session, Model model) {
+    public String repoteDelivery(HttpSession session, Model model,
+                                 @RequestParam(value = "nombreRest", required = false) String nombreRest,
+                                 @RequestParam(value = "idDistrito", required = false) String idDistrito,
+                                 @RequestParam(value = "fechaMin", required = false) String fechaMin,
+                                 @RequestParam(value = "fechaMax", required = false) String fechaMax,
+                                 @RequestParam(value = "monto", required = false) String monto,
+                                 @RequestParam(value = "valoracion", required = false) String valoracion,
+                                 @RequestParam(value = "pag", required = false) String pag) {
+
+        int numeroPag = -1;
+        if(pag==null){
+            numeroPag = 1;
+        }else{
+            try{
+                numeroPag = Integer.parseInt(pag);
+            }catch (NumberFormatException e){
+                numeroPag = 1;
+            }
+        }
+
+        if (nombreRest == null) {
+            nombreRest = "";
+        }
+
+        //TODO: validar fechas:
+        fechaMin = "1900-01-01";
+        fechaMax = "3000-01-01";
+
+        double precioMin = -1.0;
+        double precioMax = -1.0;
+        if (monto == null) {
+            monto = "";
+            precioMin = 0.0;
+            precioMax = 9999.0;
+        } else {
+            try {
+                int montoInt = Integer.parseInt(monto);
+                switch (montoInt) {
+                    case 1:
+                        precioMin = 0.0;
+                        precioMax = 20.0;
+                        break;
+                    case 2:
+                        precioMin = 20.0;
+                        precioMax = 40.0;
+                        break;
+                    case 3:
+                        precioMin = 40.0;
+                        precioMax = 60.0;
+                        break;
+                    case 4:
+                        precioMin = 60.0;
+                        precioMax = 9999.0;
+                        break;
+                    default:
+                        precioMin = 0.0;
+                        precioMax = 9999.0;
+                }
+            } catch (NumberFormatException e) {
+                monto = "";
+                precioMin = 0.0;
+                precioMax = 9999.0;
+            }
+        }
+
+        int valoracionMin = -1;
+        int valoracionMax = -1;
+        if (valoracion == null) {
+            valoracion = "";
+            valoracionMin = 0;
+            valoracionMax = 5;
+        } else {
+            try {
+                int valoracionInt = Integer.parseInt(valoracion);
+                switch (valoracionInt) {
+                    case 1:
+                        valoracionMin = 0;
+                        valoracionMax = 2;
+                        break;
+                    case 2:
+                        valoracionMin = 2;
+                        valoracionMax = 5;
+                        break;
+                    default:
+                        valoracionMin = 0;
+                        valoracionMax = 5;
+                }
+            } catch (NumberFormatException e) {
+                valoracion = "";
+                valoracionMin = 0;
+                valoracionMax = 5;
+            }
+        }
+
+        Page<Pedido> pagina;
+        int tamPag = 3;
+        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
+
         List<Distrito> listaDistritos = distritosRepository.findAll();
         Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
         List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
-        List<Pedido> listaPedidoReporte = null;
-        if(session.getAttribute("listaBusq")!=null){
-            listaPedidoReporte = (List<Pedido>) session.getAttribute("listaBusq");
-            session.removeAttribute("listaBusq");
-        }else{
-            Usuario repartidor = (Usuario) session.getAttribute("usuario");
-            listaPedidoReporte = pedidoRepository.findByEstadoAndRepartidor(6, repartidor);
-        }
-        model.addAttribute("listaPedidoReporte", listaPedidoReporte);
         model.addAttribute("notificaciones", notificaciones);
         model.addAttribute("distritos", listaDistritos);
+
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        if (idDistrito == null || idDistrito.equals("")) {
+            idDistrito = "";
+            model.addAttribute("idDistrito", idDistrito);
+            pagina = pedidoRepository.findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+                    (6, repartidor, fechaMin, fechaMax, precioMin, precioMax, valoracionMin, valoracionMax, nombreRest, pageable);
+        } else {
+            try {
+                int idDis = Integer.parseInt(idDistrito);
+                Optional<Distrito> distritoOpt = distritosRepository.findById(idDis);
+                if (distritoOpt.isPresent()) {
+                    model.addAttribute("idDistrito", idDis);
+                    Distrito distrito = distritoOpt.get();
+                    pagina = pedidoRepository.findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+                            (6, repartidor, fechaMin, fechaMax, precioMin, precioMax, valoracionMin, valoracionMax, nombreRest, distrito, pageable);
+                }else{
+                    idDistrito = "";
+                    model.addAttribute("idDistrito", idDistrito);
+                    return "redirect:/repartidor/reporteDelivery";
+                }
+            } catch (NumberFormatException e) {
+                return "redirect:/repartidor/reporteDelivery";
+            }
+        }
+
+        model.addAttribute("listaPedidoReporte", pagina.getContent());
+
+        //Busque:
+        model.addAttribute("nombreRest", nombreRest);
+        model.addAttribute("fechaMin", fechaMin);
+        model.addAttribute("fechaMax", fechaMax);
+        model.addAttribute("monto", monto);
+        model.addAttribute("valoracion", valoracion);
+        model.addAttribute("totalPages", pagina.getTotalPages());
+        model.addAttribute("pag", numeroPag);
+        model.addAttribute("tamPag", tamPag);
+
         return "Repartidor/reporteDeliverys";
+
+
     }
 
-    @PostMapping("/busqReportDelivery")
+    /*@PostMapping("/busqReportDelivery")
     public String busqReportDelivery(HttpSession session, Model model,
                                      @RequestParam(value = "nombreRest", required = false) String nombreRest,
                                      @RequestParam(value = "idDistrito", required = false) String idDistrito,
@@ -531,11 +661,11 @@ public class RepartidorController {
             }
         }
         return "redirect:/repartidor/reporteDelivery";
-        /*Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        List<Pedido> pedidoBusqReporteDelivery = pedidoRepository.findByEstadoAndRepartidor(6,repartidor);
-        session.setAttribute("listaBusq", pedidoBusqReporteDelivery);
-        return "redirect:/repartidor/reporteDelivery";*/
-    }
+        //Usuario repartidor = (Usuario) session.getAttribute("usuario");
+        //List<Pedido> pedidoBusqReporteDelivery = pedidoRepository.findByEstadoAndRepartidor(6,repartidor);
+        //session.setAttribute("listaBusq", pedidoBusqReporteDelivery);
+        //return "redirect:/repartidor/reporteDelivery";
+    }*/
 
 
 }

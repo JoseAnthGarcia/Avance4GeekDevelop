@@ -248,13 +248,23 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "and (cl.idusuario is null || cl.idusuario = ?1)",nativeQuery = true)
     List<CuponClienteDTO> listaCupones1(int idCliente);
 
+    /*
     //reporte delivery
+    //con distrito
     List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
     (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Distrito distrito);
 
+    //sin distrito
     List<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
             (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest);
+    */
+    //reporte delivery
+    //con distrito
+    Page<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContainingAndUbicacion_Distrito
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Distrito distrito , Pageable pageable);
 
-    /*@Query(value = "", nativeQuery = true)
-    List<Pedido> buscarReporteBusq();*/
+    //sin distrito
+    Page<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
+    (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Pageable pageable);
+
 }

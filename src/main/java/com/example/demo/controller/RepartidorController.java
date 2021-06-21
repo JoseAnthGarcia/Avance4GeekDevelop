@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -448,10 +449,32 @@ public class RepartidorController {
         }
 
         //TODO: validar fechas:
-        boolean fechaMinVal = true;
-        boolean fechaMaxVal = true;
-        fechaMin = "1900-01-01";
-        fechaMax = "3000-01-01";
+        boolean fechaVal = true;
+
+
+        if(fechaMax==null || fechaMin==null){
+            fechaMin = "1900-01-01";
+            fechaMax = "3000-01-01";
+        }
+
+
+        //String fechaInicio = fechaMin; //fecha de ejemplo
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        try {
+            Date fechaInicio = date.parse(fechaMin);
+            Date fechaFinal = date.parse(fechaMax);
+            if(fechaInicio.after(fechaFinal)){
+                System.out.println("Fecha inicio mayor");
+                fechaVal=false;// si es false no es valido
+            }else{
+                System.out.println("Fecha final mayor");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         boolean montoVal = true;
         double precioMin = -1.0;

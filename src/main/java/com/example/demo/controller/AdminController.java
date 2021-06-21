@@ -448,7 +448,7 @@ public class AdminController  {
 
         if(estado==null){
             estado="3";
-            session.removeAttribute("texto");
+            session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
         }
@@ -547,7 +547,6 @@ public class AdminController  {
                                 @RequestParam(value = "idrol", required = false) String idrol,
                                 HttpSession session) {
 
-
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
         idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
@@ -628,6 +627,131 @@ public class AdminController  {
         return "AdminGen/lista";
     }
 
+    @GetMapping(value ="/reporteClientesPedido")//lista de reporte de cliente pedido
+    public String listaReporteClientesPedido(@RequestParam Map<String, Object> params, Model model,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "estado", required = false) String estado,
+                                @RequestParam(value = "monto", required = false) String monto,
+                                @RequestParam(value = "valoracion", required = false) String valoracion,
+                                             HttpSession session) {
+        if(monto==null){
+            monto="0";
+            session.removeAttribute("monto");
+        }else{
+            session.setAttribute("monto",monto);
+        }
+        if(valoracion==null){
+            valoracion="0";
+            session.removeAttribute("valoracion");
+
+        }else{
+            session.setAttribute("valoracion",valoracion);
+        }
+
+
+        if(texto==null){
+            texto="";
+            session.removeAttribute("texto");
+
+        }else{
+            session.setAttribute("texto",texto);
+        }
+
+
+        if(estado==null){
+            estado="7";
+            session.removeAttribute("estado");
+        }else{
+            session.setAttribute("estado",estado);
+        }
+
+        texto= session.getAttribute("texto") == null ? texto :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? estado :  (String) session.getAttribute("estado");
+        monto= session.getAttribute("monto") == null ? monto :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? valoracion :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (estado){
+            case "7":
+                miFestado=-1;
+                maXestado=7;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            case "2":
+                miFestado=1;
+                maXestado=2;
+            default:
+                miFestado=-1;
+                maXestado=7;
+
+
+        }
+
+
+        switch (monto){
+            case "1":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            case "3":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            case "4":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+
+            case "5":
+                inFmont = 0;
+                maXmont = 1;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 1;
+        }
+
+
+
+
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFmont, maXmont,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",monto);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoCliente";
+    }
 
     @GetMapping(value ="/usuariosR")//Reporte de usuarios
     public String listaUsuariosR(@RequestParam Map<String, Object> params, Model model,

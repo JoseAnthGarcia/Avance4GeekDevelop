@@ -1673,10 +1673,21 @@ public class ClienteController {
 
         if (texto == null) {
             texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
         }
         if (estado == null) {
             estado = "7";
+            httpSession.removeAttribute("estado");
+        }else{
+            httpSession.setAttribute("estado",estado);
         }
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? estado :  (String) httpSession.getAttribute("estado");
+
         int limitSup ;
         int limitInf ;
         switch (estado) {
@@ -1873,6 +1884,70 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaPedidoActual";
     }
+    //PEDIDO ACTUAL
+    @GetMapping("/pedidoActualPagina")
+    public String pedidoActualPagina(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                               @RequestParam(value = "texto", required = false) String texto,
+                               @RequestParam(value = "estado", required = false) String estado) {
+        if (httpSession.getAttribute("carrito") != null) {
+            httpSession.removeAttribute("carrito");
+        }
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
+
+        int limitSup ;
+        int limitInf ;
+        switch (estado) {
+            case "0":
+                limitSup = 0;
+                limitInf = -1;
+                break;
+            case "1":
+                limitSup = 1;
+                limitInf = 0;
+                break;
+
+            case "3":
+                limitSup = 3;
+                limitInf = 2;
+                break;
+
+            case "4":
+                limitSup = 4;
+                limitInf = 3;
+                break;
+            case "5":
+                limitSup = 5;
+                limitInf = 4;
+                break;
+
+            default:
+                limitSup = 6;
+                limitInf = -1;
+        }
+
+        Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        //mandar valores
+        model.addAttribute("texto", texto);
+        model.addAttribute("estado", estado);
+
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/listaPedidoActual";
+    }
+
 
 
 

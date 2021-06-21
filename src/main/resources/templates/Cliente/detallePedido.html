@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido Actual')"></head>
 
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle Pedido')"></head>
 
-
+</head>
 <body id="page-top">
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
-
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -48,8 +48,7 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;"
-                                                type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -87,38 +86,26 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                            <h6 class="notificacion">
+                                Pedido actual
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle notificacion">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
+                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}"
-                            >Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                                Mostrar todos mis pedidos</a>
                         </div>
                     </li>
 
@@ -131,9 +118,9 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold "
-                                style="background-color:white; color:#701111; border:#701111;"
-                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
+                            >
 
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
@@ -154,18 +141,18 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
                             <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -180,125 +167,276 @@
             </nav>
             <!-- End of Topbar -->
 
-            <!-- End of Topbar -->
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <!-- DataTales Example -->
+                <br>
+                <div class="card-header py-3 ">
+                    <div class="d-sm-flex align-items-left"th:each="p1:${listapedido1}">
+                        <h5 class="font-weight-bold text-lg-left mx-auto" style="color:#701111"
+                            th:text="|Detalle de pedido: ${p1.getNombrerest()} |"
+                        ></h5>
 
-                    <!-- DataTales Example -->
-					<br>
-                    <div class="card-header py-3 ">
-						<div class="d-sm-flex align-items-left">
-							<h5 class="font-weight-bold text-lg-left mx-auto" style="color:#701111">DETALLE DE PEDIDO</h5>
-                        </div>
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Código: 0000001</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">Restaurante: La Choza Náutica</h6>
-						</div>
                     </div>
-					<div class="dropdown-divider" style="border-color:#701111;" ></div>
-                        <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead  style="background-color:#701111;">
-                                            <tr>
-                                                <th style="color:white">
-                                                    N°
-                                                </th>
-                                                <th style="color:white">
-                                                    Producto
-                                                </th>
-                                                <th style="color:white">
-                                                    Cantidad
-                                                </th>
-                                                <th style="color:white">
-                                                    Precio Unitario
-                                                </th>
-												<th style="color:white">
-                                                    Precio
-                                                </th>
-												<th style="color:white">
-                                                    Observación
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="justify-content-center">
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>1</td>
-                                                <td>S/. 18.00</td>
-                                                <td>S/. 18.00</td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" data-target="#verComent"></i></td>
+                    <br>
+                    <div class="row justify-content-center" th:each="p1:${listapedido1}">
+                        <h6 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==0}" >Estado : Pendiente</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==1}" >Estado : Aceptado</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==2}" >Estado : Cancelado</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==3}" >Estado : Preparando</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==4}" >Estado : Pedido Listo</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==5}" >Estado : En camino</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==6}" >Estado : Entregado</h6>
 
-                                            </tr><tr>
-                                                <td>1</td>
-                                                <td>Arroz con pollo</td>
-                                                <td>1</td>
-                                                <td>S/. 18.00</td>
-                                                <td>S/. 18.00</td>
-												<td><i class="fas fa-comments" href="#" data-toggle="modal" data-target="#verComent"></i></td>
+                    </div>
+                    <br>
+                        <div class="row justify-content-center" th:each="r1:${listaRepartidor}">
+                            <h6 class="col-3" style="color:black"  th:text="|Repartidor : ${r1.getNombres()} ${r1.getApellidos()}|"> </h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|Telefono (Repartidor) : ${r1.getTelefono()} |" ></h6>
 
-                                            </tr>
+                        </div>
+                </div>
 
-                                        </tbody>
+                </div>
+            <!-- ------------------------------------TABLA 1 ------------------------------------------------------------------------------>
 
-                                    </table>
+                <div class="card-body">
+                    <label>Platos:</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead  style="background-color:#701111;">
+                            <tr>
+                                <th style="color:white">
+                                    N°
+                                </th>
+                                <th style="color:white">
+                                    Producto
+                                </th>
+                                <th style="color:white">
+                                    Cantidad
+                                </th>
+                                <th style="color:white">
+                                    Precio Unitario
+                                </th>
+                                <th style="color:white">
+                                    Precio
+                                </th>
+                                <th style="color:white">
+                                    Observación Cliente
+                                </th>
 
+                            </tr>
+                            </thead>
+                            <tbody class="justify-content-center" >
+                            <tr th:each="p2, info:${listapedido2}">
+                                <td th:text="${info.index +1}">1</td>
+                                <td th:text="${p2.getNombreplato()}"></td>
+                                <td th:text="${p2.getCantidad()}"></td>
+                                <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
+                                <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
+                                <td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
+                                       th:href="${'#comentario'+p2.getIdplato()}">
+                                    <i class="fas fa-comments" style="color:gray" ></i>
+                                </a></td>
+                                <!------------------------------------------------------------------------------------- Ver Comentario---------------------------------------------------------------->
+
+                                <div class="modal fade" th:id="${'comentario'+p2.getIdplato()}"
+                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true" >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Observación:</h5>
+                                                <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()!=null}" >
+                                                <h6  th:text="${p2.getObservacionplatillo()}"></h6></div>
+                                            <div class="modal-body" th:if="${p2.getObservacionplatillo()==null}" >
+                                                <h6 th:text="|No realizó observación a ${p2.getNombreplato()}|"></h6></div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="pagination  justify-content-center" style=" align-items-center">
-                                    <a  href="#">&laquo;</a>
-                                    <a  href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
-                                </div>
-							<br>
-                            <div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Costo</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">S/. 36.00</h6>
-						</div>
-				<div class="dropdown-divider" style="border-color:#701111;" ></div>
-				<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Delivery</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">S/. 6.00</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Cupones</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">No</h6>
-						</div>	
-				<div class="dropdown-divider" style="border-color:#701111;" ></div>
-				<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black"></h6>
-							<h6 class="col-3 offset-md-3" style="color:black">S/. 50</h6>
-						</div>	
-				<div class="dropdown-divider" style="border-color:#701111;" ></div>
-				<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Estado</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">Entregado</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Método de Pago</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">Online</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Fecha de entrega</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">03/04/2021</h6>
-						</div>	
-						<div class="row justify-content-center">
-							<h6 class="col-3" style="color:black">Hora entregada</h6>
-							<h6 class="col-3 offset-md-3" style="color:black">19:15</h6>
-						</div>
+                                <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                            </tr>
 
-				<div style="text-align:center">
-					<a  class="btn btn-primary" href="listaHistorialPedidos.html" type="submit">Regresar</a>
-					</div>			
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!--
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <nav aria-label="pagination">
+                                <ul class="pagination justify-content-center">
+
+                                    <li class="page-item" th:each="page : ${pages}">
+                                        <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
+                                           th:text="${page}"
+                                           th:href="@{'/cliente/detallePedidoActual1?page='+${page}+'&codigo='+${codigo}}"></a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                </div>
+                -->
+
+            <!------------------------------------------------------------------------------------------------------------------------------------ -->
+            <!-- ------------------------------------TABLA 2------------------------------------------------------------------------------>
+            <div class="card-body">
+                <label>Extras:</label>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead  style="background-color:#701111;">
+                        <tr>
+                            <th style="color:white">
+                                N°
+                            </th>
+                            <th style="color:white">
+                                Producto
+                            </th>
+                            <th style="color:white">
+                                Cantidad
+                            </th>
+                            <th style="color:white">
+                                Precio Unitario
+                            </th>
+                            <th style="color:white">
+                                Precio
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody class="justify-content-center" >
+                        <tr th:each="p2, info:${listaExtra}">
+                            <td th:text="${info.index +1}">1</td>
+                            <td th:text="${p2.getNombre()}"></td>
+                            <td th:text="${p2.getCantidad()}"></td>
+                            <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
+                            <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
+                            <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!--
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <nav aria-label="pagination">
+                            <ul class="pagination justify-content-center">
+
+                                <li class="page-item" th:each="page : ${pages}">
+                                    <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
+                                       th:text="${page}"
+                                       th:href="@{'/cliente/detallePedidoActual1?page='+${page}+'&codigo='+${codigo}}"></a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div> -->
+
+                <br>
+            </div>
+
+            <!------------------------------------------------------------------------------------------------------------------------------------ -->
+
+
+
+
+            <div th:each="p3:${listapedido1}">
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Costo</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
+                    </div>
+                    <div class="dropdown-divider" style="border-color:#701111;" ></div>
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black"  >Delivery</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 5.00|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 8.00|"></h6>
+                    </div>
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Cupones</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
+                    </div>
+                    <div class="dropdown-divider" style="border-color:#701111;" > </div>
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Total</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+5}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                    </div>
+                    <div class="dropdown-divider" style="border-color:#701111;" th:if="${p3.getEstado==2}" ></div>
+
+                    <div class="row justify-content-center"  th:if="${p3.getEstado==2}">
+                        <h6 class="col-3" style="color:black" th:if="${p3.getEstado==2}">Motivo de Cancelación</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" th:text="${p3.getObsrest()}"></h6>
+
+                    </div>
+                    <div class="dropdown-divider" style="border-color:#701111;" ></div>
+
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Método de Pago</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
+
+                    </div>
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Fecha de entrega</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>
+                    </div>
+                    <div class="row justify-content-center">
+                        <h6 class="col-3" style="color:black">Tiempo estimado de entrega</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|${p3.getTiempoentrega()} - ${p3.getTiempoentrega()+30} min|"></h6>
+                    </div>
+                </div>
+
+                <div style="text-align:center">
+                    <a  class="btn btn-primary" th:href="@{/cliente/historialPedidos}" type="submit">Regresar</a>
+                    <a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
+                    <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel4">¿Desea cancelar el pedido?</h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                                    <button class="btn btn-primary" th:href="@{'/cliente/cancelarPedido?id='+${listapedido1.get(0).getCodigo()}}" type="submit">Sí</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- /.container-fluid -->
 
-    </div>
+            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -315,59 +453,36 @@
         <!-- End of Content Wrapper -->
 
     </div>
-	
+
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-primary" type="submit">Cerrar Sesión
                         </button>
-                    </div>
-                    <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <form th:action="@{/logout}" method="post">
-                            <button class="btn btn-primary" type="submit">Cerrar Sesión
-                            </button>
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
-
         </div>
-
-	
-
-<!-- Ver Comentario-->
-    <div class="modal fade" id="verComent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Observación:</h5>
-            <button class="close" type="button"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Por favor, añadir harto ají dentro del plato</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Listo</button>
-          </div>
-        </div>
-      </div>
     </div>
-    </div>
+
 </div>
 
 </body>
@@ -380,12 +495,4 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
-
 </html>

@@ -217,8 +217,29 @@
                       <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
                     </div>
 
-                    <div class="container mt-4 mb-4" th:if="${total>0}">
-                        <div class="row mb-5 mr-xl-5" th:each=" cupon :${listaCuponesenviar}">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="10"> N° </th>
+                                    <th width="50" height="60">
+                                        <div style=text-align:center> Cupón</div>
+                                    </th>
+                                    <th >
+                                        <div style=text-align:center>
+                                            Descripción
+                                        </div>
+                                    </th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr  th:each=" cupon,info :${listaCuponesenviar}">
+                                        <td th:text="${(current -1)*5 + info.index +1}"></td>
+                <!--------------------------------------------------------------------------------------------------------------------->
+                            <td>
                             <div class="col-6">
                                 <div class="container2">
                                     <img src="https://kinsta.com/es/wp-content/uploads/sites/8/2018/05/kinsta-cupon-1.png" alt="Avatar"
@@ -229,6 +250,9 @@
                                 </div>
 
                             </div>
+                            </td>
+                <!---------------------------------------------------------------------------------------------------------------------------------->
+                            <td>
                             <div class="col-6 text-left">
                                     <h6>Restaurante: </h6>
                                     <input class="form-control" type="text" style="background: #ededed" th:value="${cupon.getNombrerestaurante()}" disabled>
@@ -248,19 +272,37 @@
                                               style="background: #ededed" th:text="${cupon.getPolitica()}" disabled></textarea>
 
                             </div>
+                            </td>
+
+                            <!---------------------------------------------------------------------------------------------------------------------------------->
+                        </tr>
+                                </tbody>
+
+                        </table>
+                    </div>
+
+
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a th:unless="${texto == null && descuento == null}" class="page-link active text-white"  style="background-color: #701111"
+                                               th:text="${page}"
+                                               th:href="@{'/cliente/pedidoActualPagina6?page='+${page}}"></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-2"></div>
                         </div>
 
-                        <nav aria-label="Pagination">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" th:each="page : ${pages}">
-                                    <a th:unless="${texto == null && descuento == null }" style="background-color: #701111"
-                                       class="page-link active" th:text="${page}"
-                                       th:href="@{'/cliente/listaCupones?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
-                                </li>
-                            </ul>
-                        </nav>
-
                     </div>
+
+
+
 
                 </div>
 

@@ -172,9 +172,10 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
-                                       name="texto" th:value="${texto.equals('')?'':texto}"
-                                       th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
+                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                       th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
+                                       th:value="${texto.equals('') ? '' : texto}"
+                                       style="border-color: lightgray">
                             </div>
                         </div>
                         <div class="col-sm-3 mb-1 ">
@@ -269,7 +270,7 @@
 
                 </div>
 
-                <div class="card-body"     th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
+                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total !=null)}">
                     <div class="table-responsive">
                         <table id="reportePedido" class="table table-bordered">
 
@@ -293,7 +294,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="ped,info:${listapedidos}">
-                                <td th:text="${info.index+1}"></td>
+                                <td th:text="${(current -1)*5 +info.index+1}"></td>
                                 <td th:text="${ped.getNombrerest()}"></td>
                                 <td th:text="${ped.getNumPedidos()}">10</td>
                                 <td th:text="${ped.getTotal()}"></td>
@@ -322,28 +323,17 @@
                             <nav aria-label="pagination">
                                 <ul class="pagination justify-content-center">
 
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && numpedidos == null && mes==null  }"  class="page-link active text-white"  style="background-color: #701111"
+                                    <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                        <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                            th:text="${page}"
-                                           th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
+                                           th:href="@{'/cliente/pedidoActualPagina5?page='+${page}}"></a>
                                     </li>
-
                                 </ul>
                             </nav>
                         </div>
                         <div class="col-md-2"></div>
                     </div>
-                    <!--
-                    <nav aria-label="Pagination">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && numpedidos == null && mes==null  }"
-                                   class="page-link active" style="background-color: #701111"  th:text="${page}"
-                                   th:href="@{'/cliente/reportePedido?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
-                            </li>
-                        </ul>
-                    </nav>
-                    -->
+
                 </div>
                 </div>
                 <!-- -->

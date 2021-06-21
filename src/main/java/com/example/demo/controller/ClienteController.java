@@ -1655,11 +1655,95 @@ public class ClienteController {
         return "Cliente/listaReportes";
     }
 
+
+/*********************************PEDIDO ACTUAL******************************************************************************++*/
+@GetMapping("/pedidoActual")
+public String pedidoActual23(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                           @RequestParam(value = "texto", required = false) String texto,
+                           @RequestParam(value = "estado", required = false) String estado) {
+    if (httpSession.getAttribute("carrito") != null) {
+        httpSession.removeAttribute("carrito");
+    }
+
+    Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+    int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+    Pageable pageRequest = PageRequest.of(page, 5);
+
+
+
+    if (texto == null) {
+        texto = "";
+        httpSession.removeAttribute("texto");
+
+    }else{
+        httpSession.setAttribute("texto",texto);
+    }
+    if (estado == null) {
+        estado = "7";
+        httpSession.removeAttribute("estado");
+    }else{
+        httpSession.setAttribute("estado",estado);
+    }
+
+    texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+    estado= httpSession.getAttribute("estado") == null ? estado :  (String) httpSession.getAttribute("estado");
+
+    int limitSup ;
+    int limitInf ;
+    switch (estado) {
+        case "0":
+            limitSup = 0;
+            limitInf = -1;
+            break;
+        case "1":
+            limitSup = 1;
+            limitInf = 0;
+            break;
+
+        case "3":
+            limitSup = 3;
+            limitInf = 2;
+            break;
+
+        case "4":
+            limitSup = 4;
+            limitInf = 3;
+            break;
+        case "5":
+            limitSup = 5;
+            limitInf = 4;
+            break;
+
+        default:
+            limitSup = 6;
+            limitInf = -1;
+    }
+
+    Page<PedidoDTO> listaPedidos = pedidoActualService.findPaginated(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+    int totalPage = listaPedidos.getTotalPages();
+    if (totalPage > 0) {
+        List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+        model.addAttribute("pages", pages);
+
+    }
+    model.addAttribute("current", page + 1);
+
+    model.addAttribute("listaPedidos", listaPedidos.getContent());
+    //mandar valores
+    model.addAttribute("texto", texto);
+    model.addAttribute("estado", estado);
+
+    model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+    return "Cliente/listaPedidoActual";
+
+    }
+
     //PEDIDO ACTUAL
-    @GetMapping("/pedidoActual")
-    public String pedidoActual(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
-                               @RequestParam(value = "texto", required = false) String texto,
-                               @RequestParam(value = "estado", required = false) String estado) {
+    @GetMapping("/pedidoActualPagina")
+    public String pedidoActualPagina(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                     @RequestParam(value = "texto", required = false) String texto,
+                                     @RequestParam(value = "estado", required = false) String estado) {
         if (httpSession.getAttribute("carrito") != null) {
             httpSession.removeAttribute("carrito");
         }
@@ -1669,13 +1753,9 @@ public class ClienteController {
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
 
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
-        if (texto == null) {
-            texto = "";
-        }
-        if (estado == null) {
-            estado = "7";
-        }
         int limitSup ;
         int limitInf ;
         switch (estado) {
@@ -1713,7 +1793,7 @@ public class ClienteController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-
+        model.addAttribute("current", page + 1);
         model.addAttribute("listaPedidos", listaPedidos.getContent());
         //mandar valores
         model.addAttribute("texto", texto);
@@ -1722,6 +1802,9 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaPedidoActual";
     }
+/*************************************************************************************************************************************************/
+
+
 
     @GetMapping("/cancelarPedido")
     public String cancelarPedido(@RequestParam("id") String id,
@@ -1768,6 +1851,8 @@ public class ClienteController {
         }
 
         model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
         model.addAttribute("codigo", codigo);
 
 
@@ -1775,24 +1860,126 @@ public class ClienteController {
         return "Cliente/detallePedidoActual";
     }
 
-    //HISTORIAL PEDIDOS
-    @GetMapping("/historialPedidos")
-    public String historialPedidos(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
-                                   @RequestParam(value = "texto", required = false) String texto,
-                                   @RequestParam(value = "estado", required = false) String estado) {
+    @GetMapping("/detallePedidoActual1")
+    public String detallePedidoActual1(@RequestParam Map<String, Object> params,
+                                      @RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
-        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+        List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
+        if (pedido1DTOS.isEmpty()) {
+            return "redirect:/cliente/historialPedidos";
+        }
+
+        model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
+
+        Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
 
+        if (codigo == null) {
+            codigo = "";
+        }
+
+        Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+        model.addAttribute("listapedido2", listaPedidos);
+        model.addAttribute("codigo",codigo);
+        model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
+        model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/detallePedido";
+    }
+
+/********************************* HISTORIAL DE PEDIDO *******************************************************************************************************************++*/
+    @GetMapping("/historialPedidos")
+    public String pedidoActual2(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                 @RequestParam(value = "texto", required = false) String texto,
+                                 @RequestParam(value = "estado", required = false) String estado) {
+
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+
         if (texto == null) {
             texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
         }
         if (estado == null) {
             estado = "7";
+            httpSession.removeAttribute("estado");
+        }else{
+            httpSession.setAttribute("estado",estado);
         }
-        int limitSup = 6;
-        int limitInf = 0;
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? estado :  (String) httpSession.getAttribute("estado");
+
+        int limitSup ;
+        int limitInf ;
+
+        switch (estado) {
+                case "2":
+                    limitSup = 2;
+                    limitInf = 1;
+                    break;
+
+                case "6":
+                    limitSup = 6;
+                    limitInf = 5;
+                    break;
+
+                default:
+                    limitSup = 6;
+                    limitInf = 0;
+        }
+
+        Page<PedidoValoracionDTO> listaPedidos = historialPedidoService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        int totalPage = listaPedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        //mandar valores
+        model.addAttribute("texto", texto);
+        model.addAttribute("estado", estado);
+
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/listaHistorialPedidos";
+    }
+
+
+    //HISTORIAL DE PEDIDO
+    @GetMapping("/pedidoActualPagina2")
+    public String pedidoActualPagina2(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                     @RequestParam(value = "texto", required = false) String texto,
+                                     @RequestParam(value = "estado", required = false) String estado) {
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
+
+        int limitSup;
+        int limitInf ;
         switch (estado) {
             case "2":
                 limitSup = 2;
@@ -1809,23 +1996,23 @@ public class ClienteController {
                 limitInf = 0;
         }
 
-
         Page<PedidoValoracionDTO> listaPedidos = historialPedidoService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-
-
-        model.addAttribute("listaPedidos", listaPedidos);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("listaPedidos", listaPedidos.getContent());
+        //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-
         return "Cliente/listaHistorialPedidos";
     }
+
+/************************************************************************************************************************************************************************************************************/
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
@@ -1874,54 +2061,74 @@ public class ClienteController {
 
 
 
-
-
+    /********************************* REPORTEDINERO *******************************************************************************************************************++*/
     @GetMapping("/reporteDinero")
-    public String reporteDinero(
-            @RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
-            @RequestParam(value = "texto", required = false) String texto,
-            @RequestParam(value = "nombrec", required = false) String nombrec,
-            @RequestParam(value = "mes", required = false) String mes) {
+    public String pedidoActual3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "nombrec", required = false) String nombrec
+            ,@RequestParam(value = "mes", required = false) String mes) {
+
+
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
-        int limitSup;
-        int limitInf;
 
+
+        if (texto == null) {
+            texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
+        }
+
+        /******************************/
+        if (nombrec == null) {
+            nombrec= "";
+            httpSession.removeAttribute("nombrec");
+
+        }else{
+            httpSession.setAttribute("nombrec",nombrec);
+        }
+
+        /******************************/
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
-        if (texto == null && mes == null && nombrec == null) {
-            mes = Integer.toString(m);
-            limitSup = m;
-            limitInf = m - 1;
-            texto = "";
+        int limitSup = 0;
+        int limitInf = 12;
 
-            nombrec = "";
-        } else {
-
-            if (texto == null) {
-                texto = "";
-            }
-
-            if (nombrec == null) {
-                nombrec = "";
-            }
-
-            try {
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
                 limitSup = Integer.parseInt(mes);
                 limitInf = limitSup - 1;
-
-            } catch (NumberFormatException e) {
+                httpSession.setAttribute("mes", mes);
+            } else{
                 limitSup = 0;
-                limitInf = 0;
+                limitInf = 12;
             }
-
-            if (mes == null) {
-                mes = "13";
-            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
         }
+
+            /*************************************************************************/
+
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+
+        nombrec= httpSession.getAttribute("nombrec") == null ? nombrec :  (String) httpSession.getAttribute("nombrec");
+
+
+        mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
+
+
 
         Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup, texto, nombrec, pageRequest);
         int totalPage = listapedidos.getTotalPages();
@@ -1934,18 +2141,7 @@ public class ClienteController {
             System.out.println(rep.getDescuento());
             totalsuma1 = totalsuma1.add(rep.getDescuento());
         }
-        //Division
-        /*
-        int denom=listapedidos.getSize();
-        //conversion
-        BigDecimal denomBD= new BigDecimal(denom);
-
-
-        // divide bg1 with bg2 with 3 scale
-        totalsuma1 = totalsuma1.divide(denomBD, 2, RoundingMode.CEILING);
-
-         */
-
+        model.addAttribute("current", page + 1);
 
         model.addAttribute("total", totalPage);
         System.out.println(totalsuma1);
@@ -1959,51 +2155,225 @@ public class ClienteController {
     }
 
 
-    @GetMapping("/reportePedido")
-    public String reportePedido(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
-                                @RequestParam(value = "texto", required = false) String texto,
-                                @RequestParam(value = "numpedidos", required = false) String numpedidos,
-                                @RequestParam(value = "mes", required = false) String mes
-    ) {
+    //Reporte Dinero
+    @GetMapping("/pedidoActualPagina3")
+    public String pedidoActualPagina3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                      @RequestParam(value = "texto", required = false) String texto,
+                                      @RequestParam(value = "nombrec", required = false) String nombrec
+            ,@RequestParam(value = "mes", required = false) String mes) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-        Calendar c1 = GregorianCalendar.getInstance();
-        int m = c1.get(Calendar.MONTH) + 1;
+
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
-        int limitSup;
-        int limitInf;
-
-        if (texto == null && numpedidos == null && mes == null) {
-            mes = Integer.toString(m);
-            limitSup = 6;
-            limitInf = 5;
-            texto = "";
-            numpedidos = "";
-        } else {
-
-            if (texto == null) {
-                texto = "";
-            }
-            if (numpedidos == null) {
-                numpedidos = "";
-            }
 
 
-            try {
+        texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
+
+        nombrec = httpSession.getAttribute("nombrec") == null ? "" : (String) httpSession.getAttribute("nombrec");
+
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m = c1.get(Calendar.MONTH) + 1;
+        mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
+
+
+        int limitSup = 0;
+        int limitInf = 12;
+
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
                 limitSup = Integer.parseInt(mes);
                 limitInf = limitSup - 1;
-
-            } catch (NumberFormatException e) {
+                httpSession.setAttribute("mes", mes);
+            } else{
                 limitSup = 0;
-                limitInf = 0;
+                limitInf = 12;
             }
-
-            if (mes == null) {
-                mes = "13";
-            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
         }
+
+
+        Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup, texto, nombrec, pageRequest);
+        int totalPage = listapedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        BigDecimal totalsuma1 = new BigDecimal(0);
+        for (ReporteDineroDTO rep : listapedidos) {
+            System.out.println(rep.getDescuento());
+            totalsuma1 = totalsuma1.add(rep.getDescuento());
+        }
+        model.addAttribute("current", page + 1);
+
+        model.addAttribute("total", totalPage);
+        System.out.println(totalsuma1);
+        model.addAttribute("listapedidos", listapedidos);
+        model.addAttribute("totalsuma", totalsuma1);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("nombrec", nombrec);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/reporteDineroCliente";
+    }
+
+
+
+
+    /*******************************************REPORTE Pedido**************************************************/
+    @GetMapping("/reportePedido")
+    public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "numpedidos", required = false) String numpedidos
+            ,@RequestParam(value = "mes", required = false) String mes) {
+
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+
+        if (texto == null) {
+            texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
+        }
+
+        if (numpedidos == null) {
+            numpedidos= "";
+            httpSession.removeAttribute("nombrec");
+
+        }else{
+            httpSession.setAttribute("nombrec",numpedidos);
+        }
+
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m = c1.get(Calendar.MONTH) + 1;
+        int limitSup = 0;
+        int limitInf = 12;
+
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+                httpSession.setAttribute("mes", mes);
+            } else{
+                limitSup = 0;
+                limitInf = 12;
+            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
+        }
+
+
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+
+        numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :  (String) httpSession.getAttribute("numpedidos");
+
+
+        mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
+
+
+
+        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
+
+        List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(), limitSup);
+        List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitSup);
+        int totalPage = listapedidos.getTotalPages();
+
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+
+        }
+
+        BigDecimal totalsuma = new BigDecimal(0);
+        for (ReportePedido rep : listapedidos) {
+            System.out.println(rep.getTotal());
+            totalsuma = totalsuma.add(rep.getTotal());
+        }
+
+
+        System.out.println(totalsuma);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("totalsuma", totalsuma);
+        model.addAttribute("listapedidos", listapedidos);
+        model.addAttribute("listarestTop", listarestTop);
+        model.addAttribute("listarestPl", listaPl);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("total", totalPage);
+        model.addAttribute("numpedidos", numpedidos);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/reportePedidoCliente";
+    }
+
+
+
+    //Reporte Pedido
+    @GetMapping("/pedidoActualPagina5")
+    public String pedidoActualPagina5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                      @RequestParam(value = "texto", required = false) String texto,
+                                      @RequestParam(value = "numpedidos", required = false) String numpedidos
+            ,@RequestParam(value = "mes", required = false) String mes) {
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+
+        texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
+
+        numpedidos = httpSession.getAttribute("numpedidos") == null ? "" : (String) httpSession.getAttribute("numpedidos");
+
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m = c1.get(Calendar.MONTH) + 1;
+        mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
+
+
+        int limitSup = 0;
+        int limitInf = 12;
+
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+                httpSession.setAttribute("mes", mes);
+            } else{
+                limitSup = 0;
+                limitInf = 12;
+            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
+        }
+
 
         Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
 
@@ -2024,6 +2394,7 @@ public class ClienteController {
         }
 
         System.out.println(totalsuma);
+        model.addAttribute("current", page + 1);
         model.addAttribute("totalsuma", totalsuma);
         model.addAttribute("listapedidos", listapedidos);
         model.addAttribute("listarestTop", listarestTop);
@@ -2036,51 +2407,80 @@ public class ClienteController {
         return "Cliente/reportePedidoCliente";
     }
 
+
+
+    /************************************************************************************************************************************************************************************************************/
+
+
+
+    /*******************************************REPORTE TIEMPO**************************************************/
     @GetMapping("/reporteTiempo")
-    public String reporteTiempo(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+    public String pedidoActual4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
-                                @RequestParam(value = "numpedidos", required = false) String numpedidos,
-                                @RequestParam(value = "mes", required = false) String mes) {
+                                @RequestParam(value = "numpedidos", required = false) String numpedidos
+                                ,@RequestParam(value = "mes", required = false) String mes) {
+
+
+
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
+
+
+        if (texto == null) {
+            texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
+        }
+
+        /******************************/
+        if (numpedidos == null) {
+            numpedidos= "";
+            httpSession.removeAttribute("nombrec");
+
+        }else{
+            httpSession.setAttribute("nombrec",numpedidos);
+        }
+
+        /******************************/
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
+        int limitSup = 0;
+        int limitInf = 12;
 
-
-
-        int limitSup;
-        int limitInf;
-
-        if (texto == null && numpedidos == null && mes == null) {
-            mes = Integer.toString(m);
-            limitSup = m;
-            limitInf = m - 1;
-            texto = "";
-            numpedidos = "";
-        } else {
-
-            if (texto == null) {
-                texto = "";
-            }
-            if (numpedidos == null) {
-                numpedidos = "";
-            }
-
-
-            try {
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
                 limitSup = Integer.parseInt(mes);
                 limitInf = limitSup - 1;
-
-            } catch (NumberFormatException e) {
+                httpSession.setAttribute("mes", mes);
+            } else{
                 limitSup = 0;
-                limitInf = 0;
+                limitInf = 12;
             }
-
-            if (mes == null) {
-                mes = "13";
-            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
         }
+
+        /*************************************************************************/
+
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+
+        numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :  (String) httpSession.getAttribute("numpedidos");
+
+
+        mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
+
+
 
         Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
         int totalPage = listapedidos.getTotalPages();
@@ -2091,15 +2491,16 @@ public class ClienteController {
         int totalsuma1 = 0;
         int i=0;
         if(totalPage>0){
-        for (ReportePedidoCDTO rep : listapedidos) {
-            // System.out.println(rep.getTiempoEntrega());
-            totalsuma1 = totalsuma1 + rep.getTiempoentrega();
-            i=i+1;
-        }
-        totalsuma1 = totalsuma1 / i;
+            for (ReportePedidoCDTO rep : listapedidos) {
+                // System.out.println(rep.getTiempoEntrega());
+                totalsuma1 = totalsuma1 + rep.getTiempoentrega();
+                i=i+1;
+            }
+            totalsuma1 = totalsuma1 / i;
         }
 
         System.out.println(totalsuma1);
+        model.addAttribute("current", page + 1);
         model.addAttribute("listapedidos", listapedidos);
         model.addAttribute("totalsuma1", totalsuma1);
         model.addAttribute("texto", texto);
@@ -2109,7 +2510,84 @@ public class ClienteController {
         return "Cliente/reporteTiempoCliente";
     }
 
-    @GetMapping("/listaCupones")
+
+    //Reporte Dinero
+    @GetMapping("/pedidoActualPagina4")
+    public String pedidoActualPagina4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                      @RequestParam(value = "texto", required = false) String texto,
+                                      @RequestParam(value = "numpedidos", required = false) String numpedidos
+            ,@RequestParam(value = "mes", required = false) String mes) {
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+
+        texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
+
+        numpedidos = httpSession.getAttribute("numpedidos") == null ? "" : (String) httpSession.getAttribute("numpedidos");
+
+        Calendar c1 = GregorianCalendar.getInstance();
+        int m = c1.get(Calendar.MONTH) + 1;
+        mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
+
+
+        int limitSup = 0;
+        int limitInf = 12;
+
+        try {
+            if (mes == null) {
+                mes = Integer.toString(m);
+                limitSup = m;
+                limitInf = m - 1;
+                httpSession.removeAttribute("mes");
+            } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) < 13){
+                limitSup = Integer.parseInt(mes);
+                limitInf = limitSup - 1;
+                httpSession.setAttribute("mes", mes);
+            } else{
+                limitSup = 0;
+                limitInf = 12;
+            }
+        } catch (NumberFormatException e) {
+            limitSup = 0;
+            limitInf = 12;
+        }
+
+
+        Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, numpedidos, pageRequest);
+        int totalPage = listapedidos.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        int totalsuma1 = 0;
+        int i=0;
+        if(totalPage>0){
+            for (ReportePedidoCDTO rep : listapedidos) {
+                // System.out.println(rep.getTiempoEntrega());
+                totalsuma1 = totalsuma1 + rep.getTiempoentrega();
+                i=i+1;
+            }
+            totalsuma1 = totalsuma1 / i;
+        }
+
+        System.out.println(totalsuma1);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("listapedidos", listapedidos);
+        model.addAttribute("totalsuma1", totalsuma1);
+        model.addAttribute("texto", texto);
+        model.addAttribute("mes", mes);
+        model.addAttribute("numpedidos", numpedidos);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        return "Cliente/reporteTiempoCliente";
+    }
+
+    /************************************************************************************************************************************************************************************************************/
+
+    @GetMapping("/listaCupones2")
     public String listaCupones(@RequestParam Map<String, Object> params, @RequestParam(value = "texto", required = false) String texto,
                                @RequestParam(value = "descuento", required = false) String descuento, Model model, HttpSession httpSession) {
 
@@ -2162,8 +2640,7 @@ public class ClienteController {
             model.addAttribute("pages", pages);
         }
         model.addAttribute("total", totalPage);
-
-
+        model.addAttribute("current", page + 1);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
@@ -2172,6 +2649,173 @@ public class ClienteController {
 
         return "Cliente/listaCupones";
     }
+    /********************************* CUPONES *******************************************************************************************************************++*/
+    @GetMapping("/listaCupones")
+    public String pedidoActual6(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "descuento", required = false) String descuento) {
+
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+
+        if (texto == null) {
+            texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
+        }
+        if (descuento == null) {
+            descuento = "7";
+            httpSession.removeAttribute("descuento");
+        }else{
+            httpSession.setAttribute("descuento",descuento);
+        }
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        descuento= httpSession.getAttribute("descuento") == null ? descuento :  (String) httpSession.getAttribute("descuento");
+
+        int limitSup ;
+        int limitInf ;
+
+        switch (descuento) {
+            case "1":
+                limitSup = 10;
+                limitInf = 0;
+                break;
+
+            case "2":
+                limitSup = 20;
+                limitInf = 10;
+                break;
+
+            case "3":
+                limitSup = 30;
+                limitInf = 20;
+                break;
+
+            case "4":
+                limitSup = 40;
+                limitInf = 30;
+                break;
+
+            default:
+                limitSup = 100;
+                limitInf = 0;
+        }
+
+
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        int totalPage = cuponClienteDTOS.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        model.addAttribute("total", totalPage);
+        model.addAttribute("current", page + 1);
+
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
+        model.addAttribute("texto", texto);
+        model.addAttribute("descuento", descuento);
+
+        return "Cliente/listaCupones";
+    }
+
+
+    //HISTORIAL DE PEDIDO
+    @GetMapping("/pedidoActualPagina6")
+    public String pedidoActualPagina6(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
+                                      @RequestParam(value = "texto", required = false) String texto,
+                                      @RequestParam(value = "descuento", required = false) String descuento) {
+
+
+        Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        Pageable pageRequest = PageRequest.of(page, 5);
+
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        descuento= httpSession.getAttribute("descuento") == null ? "7" :  (String) httpSession.getAttribute("descuento");
+
+        int limitSup;
+        int limitInf ;
+        switch (descuento) {
+            case "1":
+                limitSup = 10;
+                limitInf = 0;
+                break;
+
+            case "2":
+                limitSup = 20;
+                limitInf = 10;
+                break;
+
+            case "3":
+                limitSup = 30;
+                limitInf = 20;
+                break;
+
+            case "4":
+                limitSup = 40;
+                limitInf = 30;
+                break;
+
+            default:
+                limitSup = 100;
+                limitInf = 0;
+        }
+
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        int totalPage = cuponClienteDTOS.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        model.addAttribute("total", totalPage);
+        model.addAttribute("current", page + 1);
+
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+        model.addAttribute("listaCuponesenviar", cuponClienteDTOS);
+        model.addAttribute("texto", texto);
+        model.addAttribute("descuento", descuento);
+
+        return "Cliente/listaCupones";
+    }
+
+    /************************************************************************************************************************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public String generarCodigAleatorio() {
         char[] chars = "1234567890".toCharArray();

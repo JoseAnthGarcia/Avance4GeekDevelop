@@ -452,6 +452,8 @@ public class AdminController  {
             page =0;
         }
 
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
         if(texto==null){
             texto="";
             session.removeAttribute("texto");

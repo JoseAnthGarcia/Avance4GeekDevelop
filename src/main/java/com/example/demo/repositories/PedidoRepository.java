@@ -147,11 +147,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
 
-    @Query(value="select distinct p.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d') as fecha, p.preciototal as preciototal, php.cantidad as cantidadplatos\n" +
+    @Query(value="select distinct p.codigo as 'codigo', date_format(p.fechapedido,'%Y-%m-%d') as 'fecha', p.preciototal as 'preciototal', php.cantidad as 'cantidadplatos'\n" +
             "from pedido p\n" +
             "            inner join plato_has_pedido php on p.codigo=php.codigo\n" +
             "            where p.idrestaurante = ?1 and p.estado = ?2 and (date_format(p.fechapedido,'%Y-%m-%d') between ?3 and ?4)\n" +
-            "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7", countQuery ="select distinct count(*) from pedido p \n" +
+            "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7", countQuery ="select count(distinct p.codigo) from pedido p \n" +
             "            inner join plato_has_pedido php on p.codigo=php.codigo \n" +
             "            where p.idrestaurante = ?1 and p.estado = ?2 and (date_format(p.fechapedido,'%Y-%m-%d') between ?3 and ?4) \n" +
             "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7" ,nativeQuery = true)

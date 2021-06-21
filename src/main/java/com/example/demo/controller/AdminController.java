@@ -540,6 +540,95 @@ public class AdminController  {
         model.addAttribute("last", totalPage);
         return "AdminGen/lista";
     }
+    @GetMapping(value ="/pagina")//lista de usuarios principal
+    public String listaUsuariosPagina(@RequestParam Map<String, Object> params, Model model,
+                                @RequestParam(value = "texto", required = false) String texto,
+                                @RequestParam(value = "estado", required = false) String estado,
+                                @RequestParam(value = "idrol", required = false) String idrol,
+                                HttpSession session) {
+
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
+        idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
+        Integer inFrol ;
+        Integer maXrol ;
+        Integer miFestado ;
+        Integer maXestado ;
+        switch (estado){
+            case "3":
+                miFestado=-1;
+                maXestado=1;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=0;
+                break;
+            case "1":
+                miFestado=0;
+                maXestado=1;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=1;
+
+
+        }
+
+
+        switch (idrol){
+            case "1":
+                inFrol = 0;
+                maXrol = 1;
+                break;
+            case "3":
+                inFrol = 2;
+                maXrol = 3;
+                break;
+            case "4":
+                inFrol = 3;
+                maXrol = 4;
+                break;
+
+            case "5":
+                inFrol = 4;
+                maXrol = 5;
+                break;
+            default:
+                inFrol = 0;
+                maXrol = 5;
+        }
+
+
+
+
+        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+
+        model.addAttribute("texto",texto);
+        model.addAttribute("estado",estado);
+        model.addAttribute("idrol",idrol);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/lista";
+    }
+
+
     @GetMapping(value ="/usuariosR")//Reporte de usuarios
     public String listaUsuariosR(@RequestParam Map<String, Object> params, Model model,
                                 @RequestParam(value = "texto", required = false) String texto,
@@ -651,112 +740,7 @@ public class AdminController  {
         return "AdminGen/reporteUsuarios";
     }
 
-    @GetMapping(value ="/usuariosL")///limpiador de filtros
-    public String listaUsuariosLimpiar(@RequestParam Map<String, Object> params, Model model,
-                                @RequestParam(value = "texto", required = false) String texto,
-                                @RequestParam(value = "estado", required = false) String estado,
-                                @RequestParam(value = "idrol", required = false) String idrol,
-                                HttpSession session) {
-        session.removeAttribute("texto");
-        session.removeAttribute("estado");
-        session.removeAttribute("idrol");
 
-
-        if(texto==null){
-            texto="";
-        }else{
-            session.setAttribute("texto",texto);
-        }
-
-
-        if(estado==null){
-            estado="3";
-        }else{
-            session.setAttribute("estado",estado);
-        }
-
-        if(idrol==null){
-            idrol="6";
-        }else{
-            session.setAttribute("idrol",idrol);
-        }
-
-        Integer inFrol ;
-        Integer maXrol ;
-        Integer miFestado ;
-        Integer maXestado ;
-        switch (estado){
-            case "3":
-                miFestado=0;
-                maXestado=2;
-                break;
-            case "0":
-                miFestado=-1;
-                maXestado=0;
-                break;
-            case "1":
-                miFestado=0;
-                maXestado=1;
-                break;
-            default:
-                miFestado=0;
-                maXestado=2;
-
-
-        }
-
-
-        switch (idrol){
-            case "1":
-                inFrol = 0;
-                maXrol = 1;
-                break;
-            case "3":
-                inFrol = 2;
-                maXrol = 3;
-                break;
-            case "4":
-                inFrol = 3;
-                maXrol = 4;
-                break;
-
-            case "5":
-                inFrol = 4;
-                maXrol = 5;
-                break;
-            default:
-                inFrol = 0;
-                maXrol = 5;
-        }
-
-
-
-
-        int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString()) - 1) : 0;
-
-        PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<Usuario> pagePersona = usuarioServiceAPI.listaUsuarios(texto, inFrol, maXrol,  miFestado,  maXestado,  pageRequest);
-        int totalPage = pagePersona.getTotalPages();
-
-        System.out.println(totalPage+"----------------------------ddd-ddd");
-
-        if(totalPage > 0) {
-            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages", pages);
-        }
-
-
-        model.addAttribute("texto",texto);
-        model.addAttribute("estado",estado);
-        model.addAttribute("idrol",idrol);
-        model.addAttribute("listaUsuarios", pagePersona.getContent());
-
-        model.addAttribute("current", page + 1);
-        model.addAttribute("next", page + 2);
-        model.addAttribute("prev", page);
-        model.addAttribute("last", totalPage);
-        return "AdminGen/lista";
-    }
 
 
     @GetMapping("/buscador2")

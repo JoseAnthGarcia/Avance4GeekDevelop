@@ -166,10 +166,10 @@
                         <div class="form-group row mt-3">
                             <div class="col-sm-2 mb-1 ">
                                 <div class="input-group">
-                                    <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
-                                           name="texto"
-                                           th:value="${texto.equals('')?'':texto}"
-                                           th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
+                                    <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                           th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
+                                           th:value="${texto.equals('') ? '' : texto}"
+                                           style="border-color: lightgray">
                                 </div>
                             </div>
 							<div class="col-sm-2 mb-1 ">
@@ -216,10 +216,10 @@
                         <div class="card-header py-3 " style="background-color: #701111;">
 						<div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h5 class="font-weight-bold text-white">REPORTES DE PEDIDOS</h5>
+                                <h5 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE DINERO</h5>
                             </div>
 							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
-                                <button onclick="exportTableToExcel('reporteDinero', 'reporteDinero')" class="btn btn-warning mr-1 ">Exportar</button>
+                                <button  id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
 							</div>	
 						</div>
                         </div>
@@ -231,7 +231,7 @@
 						</div>
                         <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
-                             <table id="reporteDinero" class="table table-bordered">
+                             <table id="tabla" class="table table-bordered">
                                  <thead>
                                  <tr>
                                      <th>
@@ -253,7 +253,7 @@
                                 </thead>
                             <tbody>
                                 <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${info.index+1} "></td>
+                                    <td th:text="${(current -1)*5 +info.index+1} "></td>
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getFechapedido()}"></td>
@@ -265,33 +265,34 @@
                              </table>
                             
                             </div>
+
                             <div class="row">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
 
-                                            <li class="page-item" th:each="page : ${pages}">
-                                                <a th:unless="${texto == null && nombrec == null && mes==null }"  class="page-link active text-white"  style="background-color: #701111"
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && nombrec == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
-                                                   th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
+                                                   th:href="@{'/cliente/pedidoActualPagina3?page='+${page}}"></a>
                                             </li>
-
                                         </ul>
                                     </nav>
                                 </div>
                                 <div class="col-md-2"></div>
                             </div>
-                            <!--
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}" >
-                                        <a style="background-color: #701111"  th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
-                                           th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
-                                    </li>
-                                </ul>
-                            </nav>
--->
+
+                                        <!--
+                                        <nav aria-label="Pagination">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" th:each="page : ${pages}" >
+                                                    <a style="background-color: #701111"  th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
+                                                       th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+            -->
 
 
                         </div>
@@ -355,7 +356,7 @@
 </body>
 
 <!-- Bootstrap core JavaScript-->
-<script>
+<!--<script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
@@ -386,7 +387,9 @@
             downloadLink.click();
         }
     }
-</script>
+</script>-->
+<script th:src="@{/js/exportar.js}"></script>
+
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

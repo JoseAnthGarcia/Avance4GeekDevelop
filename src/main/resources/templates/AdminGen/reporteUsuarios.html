@@ -105,7 +105,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-image table-responsive">
+                                <table id="tabla" class="table table-image table-responsive">
                                     <thead>
                                     <tr>
                                         <th class="text-center">
@@ -155,13 +155,13 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosR/?page=${prev}|}">Anterior</a>
+                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${prev}|}">Anterior</a>
                                             </li>
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosR/?page=${page}|}" th:text="${page}"></a>
+                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${page}|}" th:text="${page}"></a>
                                             </li>
                                             <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosR/?page=${next}|}">Siguiente</a>
+                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${next}|}">Siguiente</a>
                                             </li>
                                         </ul>
                                     </nav>
@@ -204,7 +204,7 @@
     <!-- End of Content Wrapper -->
 
 </div>
-
+</div>
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -238,6 +238,9 @@
 
 
 </body>
+
+<script th:src="@{/js/exportar.js}"></script>
+
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>

@@ -131,8 +131,7 @@
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
 
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
-                                        VENTAS</h5>
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE VENTAS</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
                                             id="btnExportar" >Exportar
                                     </button>
@@ -157,6 +156,9 @@
                                                     Monto total
                                                 </th>
                                                 <th>
+                                                    Cantidad de platos
+                                                </th>
+                                                <th>
                                                     Visualizar
                                                 </th>
                                             </tr>
@@ -167,6 +169,7 @@
                                                 <td th:text="${lista.getCodigo()}"></td>
                                                 <td th:text="${lista.getFecha()}"></td>
                                                 <td th:text="${'S/. '+lista.getPreciototal()}"></td>
+                                                <td th:text="${lista.getCantidadplatos()}"></td>
                                                 <td><a style="color: #dce3f9"
                                                        class="btn btn-info btn-circle align"
                                                        th:href="@{'/restaurante/detallePedido?v=1&codigoPedido='+${lista.getCodigo()}}"><i
@@ -238,7 +241,7 @@
                     <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
+                        <button type="submit" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>

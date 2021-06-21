@@ -173,18 +173,37 @@
                     <!-- DataTales Example -->
 					<br>
                     <div class="card-header py-3 ">
-						<div class="d-sm-flex align-items-left">
-							<h5 class="font-weight-bold text-lg-left mx-auto" style="color:#701111">DETALLE DE PEDIDO</h5>
-                        </div>
-						<div class="row justify-content-center" th:each="p1:${listapedido1}">
-							<h6 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h6>
+						<div class="d-sm-flex align-items-left"th:each="p1:${listapedido1}">
+							<h4 class="font-weight-bold text-lg-left mx-auto" style="color:#701111"
+                                th:text="|Detalle de pedido: ${p1.getNombrerest()} |"
+                            ></h4>
 
-							<h6 class="col-3 offset-md-3" style="color:black" th:text="|Restaurante : ${p1.getNombrerest()}|"></h6>
+                        </div>
+                        <br>
+						<div class="row justify-content-center" th:each="p1:${listapedido1}">
+							<h5 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==0}" >Estado : Pendiente</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==1}" >Estado : Aceptado</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==2}" >Estado : Cancelado</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==3}" >Estado : Preparando</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==4}" >Estado : Pedido Listo</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==5}" >Estado : En camino</h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==6}" >Estado : Entregado</h5>
 
 						</div>
+                        <br>
+
+                        <div th:if="${listaRepartidor.size()!=0 || listaRepartidor.size()!=null}" class="row justify-content-center" th:each="r1:${listaRepartidor}">
+                            <h5 class="col-3" style="color:black"  th:text="|Repartidor : ${r1.getNombres()} ${r1.getApellidos()}|"> </h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:text="|Telefono (Repartidor) : ${r1.getTelefono()} |" ></h5>
+
+                        </div>
+
 
                     </div>
+
                         <div class="card-body">
+                            <label>Platos :</label>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead  style="background-color:#701111;">
@@ -212,11 +231,11 @@
                                         </thead>
                                         <tbody class="justify-content-center" >
                                             <tr th:each="p2, info:${listapedido2}">
-                                                <td th:text="${info.index +1}">1</td>
+                                                <td th:text="${(current -1)*5 +info.index +1}">1</td>
                                                 <td th:text="${p2.getNombreplato()}"></td>
                                                 <td th:text="${p2.getCantidad()}"></td>
-                                                <td th:text="${p2.getPreciounitario()}"></td>
-                                                <td th:text="${p2.getCantidad()*p2.getPreciounitario()}"></td>
+                                                <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
+                                                <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
 												<td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
                                                        th:href="${'#comentario'+p2.getIdplato()}">
                                                     <i class="fas fa-comments" style="color:gray" ></i>
@@ -260,7 +279,7 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
 
-                                            <li class="page-item" th:each="page : ${pages}">
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
                                                    th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
@@ -271,27 +290,64 @@
                                 </div>
                                 <div class="col-md-2"></div>
                             </div>
-                            <!--
+                <!--------------------------------Extras----------------------------------------------------------------->
+                            <div class="card-body" th:if="${listaExtra.size!=0}">
+                                <label>Extras:</label>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead  style="background-color:#701111;">
+                                        <tr>
+                                            <th style="color:white">
+                                                N°
+                                            </th>
+                                            <th style="color:white">
+                                                Producto
+                                            </th>
+                                            <th style="color:white">
+                                                Cantidad
+                                            </th>
+                                            <th style="color:white">
+                                                Precio Unitario
+                                            </th>
+                                            <th style="color:white">
+                                                Precio
+                                            </th>
 
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${codigo == null   }" class="page-link active" style="background-color: #701111"
-                                           th:text="${page}"
-                                           th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
-                                    </li>
-                                </ul>
-                            </nav>
-                            -->
+                                        </tr>
+                                        </thead>
+                                        <tbody class="justify-content-center" >
+                                        <tr th:each="p2, info:${listaExtra}">
+                                            <td th:text="${info.index +1}">1</td>
+                                            <td th:text="${p2.getNombre()}"></td>
+                                            <td th:text="${p2.getCantidad()}"></td>
+                                            <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
+                                            <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
+                                            <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                                        </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+
+                            </div>
 
 
 
-							<br>
+                            <br>
                         </div>
+
                     <div th:each="p3:${listapedido1}">
+
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black">Costo</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
+                            <h6 class="col-3" style="color:black" th:text="|Costo|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-5 +p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-8 + p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-5}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-8}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
@@ -302,29 +358,27 @@
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Cupones</h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. ${p3.getDescuento}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. -${p3.getDescuento}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 of rfset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+5}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|${p3.getPreciototal()+8}|"></h6>
+                            <h6 class="col-3" style="color:black">Monto a Pagar</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
                         </div>
-                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
+
+                        <!--
                         <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black">Estado</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==0}" >Pendiente</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==1}" >Aceptado</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" >Cancelado</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==3}" >Preparando</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==4}" >Pedido Listo</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==5}" >En camino</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==6}" >Entregado</h6>
-                        </div>
+                            <h6 class="col-3" style="color:black">Monto Total</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()+5}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()+8}|"></h6>
+                        </div>-->
+
+                        <div class="dropdown-divider" style="border-color:#701111;"  th:if="${p3.getEstado==2}"></div>
+
                         <div class="row justify-content-center"  th:if="${p3.getEstado==2}">
-                            <h6 class="col-3" style="color:black" th:if="${p3.getEstado==2}">Motivo</h6>
+                            <h6 class="col-3" style="color:black" th:if="${p3.getEstado==2}">Motivo de Cancelacion</h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" th:text="${p3.getObsrest()}"></h6>
 
                         </div>
@@ -336,7 +390,6 @@
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
 
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()!=1}" th:text="|-|"></h6>
                         </div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Fecha de entrega</h6>
@@ -350,6 +403,7 @@
 
 				<div style="text-align:center">
 					<a  class="btn btn-primary" th:href="@{/cliente/pedidoActual}" type="submit">Regresar</a>
+                    <!--
 					<a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
                     <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel"
@@ -369,6 +423,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
 					</div>
                 <!-- /.container-fluid -->
 

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.NotifiRestDTO;
+import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,15 +274,63 @@ public class LoginController {
         } catch (NumberFormatException n) {
         }
 
+        UsuarioDao ud = new UsuarioDao();
+        ValidarDniDTO udto = ud.validarDni(cliente.getDni());
+        boolean dni_val = true;
+        boolean usuario_val = true;
+        boolean usuario_null = true;
 
+        boolean apellido_val = true;
+        boolean nombre_val = true;
 
+        if(udto.getSuccess().equals("true")){
+            if(cliente.getDni().equals(udto.getRuc())){
+                dni_val = false;
+                // se uso contains para validar 3 nombres
+                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                    usuario_null = false;
+                    if((cliente.getNombres() + " " +cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                        usuario_val = false;
+                        nombre_val = false;
+                        apellido_val = false;
+                    }else{
+                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())){
+                            usuario_val = false;
+                            nombre_val = false;
+                        }
+                        if(cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                            usuario_val = false;
+                            apellido_val = false;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
+        }
 
-        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci) {
+        if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
+                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
 
             //----------------------------------------
 
-
-
+            if(dni_val) {
+                model.addAttribute("msg8","El DNI ingresado no es válido");
+            }
+            if(usuario_null){
+                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            }
+            if(usuario_val){
+                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            }
+            if(nombre_val){
+                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            }
+            if(apellido_val){
+                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            }
 
             if (usuario_direccion) {
                 model.addAttribute("msg2", "Complete sus datos");
@@ -636,7 +685,60 @@ public class LoginController {
             }
         }
 
-        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto) {
+        UsuarioDao ud = new UsuarioDao();
+        ValidarDniDTO udto = ud.validarDni(adminRest.getDni());
+        boolean dni_val = true;
+        boolean usuario_val = true;
+        boolean usuario_null = true;
+
+        boolean apellido_val = true;
+        boolean nombre_val = true;
+
+        if(udto.getSuccess().equals("true")){
+            if(adminRest.getDni().equals(udto.getRuc())){
+                dni_val = false;
+                // se uso contains para validar 3 nombres
+                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                    usuario_null = false;
+                    if((adminRest.getNombres() + " " +adminRest.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                        usuario_val = false;
+                        nombre_val = false;
+                        apellido_val = false;
+                    }else{
+                        if (udto.getNombres().toUpperCase().contains(adminRest.getNombres().toUpperCase())){
+                            usuario_val = false;
+                            nombre_val = false;
+                        }
+                        if(adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
+                                adminRest.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                            usuario_val = false;
+                            apellido_val = false;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
+        }
+
+        if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto
+                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
+            if(dni_val) {
+                model.addAttribute("msg8","El DNI ingresado no es válido");
+            }
+            if(usuario_null){
+                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            }
+            if(usuario_val){
+                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            }
+            if(nombre_val){
+                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            }
+            if(apellido_val){
+                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            }
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
             }
@@ -865,19 +967,26 @@ public class LoginController {
         Usuario usuario1 =usuarioRepository.findByDni(dni);
         Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
         Usuario usuario3 =usuarioRepository.findByCorreo(correo);
-        Movilidad movilidad1 = movilidadRepository.findByLicencia(licencia);
-        Movilidad movilidad2 = movilidadRepository.findByPlaca(placa);
 
+        Movilidad movilidad1;
+        Movilidad movilidad2;
+        if(licencia.equals("") || placa.equals("")){
+            movilidad1 = null;
+            movilidad2 = null;
+        }else{
+            movilidad1 = movilidadRepository.findByLicencia(licencia);
+            movilidad2 = movilidadRepository.findByPlaca(placa);
+        }
 
         Boolean errorMov = false;
         Boolean errorDist=false;
         Boolean errorSexo= false;
         Boolean validarFoto = true;
         String fileName = "";
-        if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals(""))) {
+        if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
             errorMov= true;
         }
-        if(movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals(""))){
+        if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
             errorMov= true;
         }
         if(distritos!=null){
@@ -923,8 +1032,62 @@ public class LoginController {
                 return "Repartidor/registro";
             }
         }
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov ||movilidad1!=null|| movilidad2!=null||
-                errorDist || errorFecha || errorSexo || !validarFoto ){
+
+        UsuarioDao ud = new UsuarioDao();
+        ValidarDniDTO udto = ud.validarDni(usuario.getDni());
+        boolean dni_val = true;
+        boolean usuario_val = true;
+        boolean usuario_null = true;
+
+        boolean apellido_val = true;
+        boolean nombre_val = true;
+
+        if(udto.getSuccess().equals("true")){
+            if(usuario.getDni().equals(udto.getRuc())){
+                dni_val = false;
+                // se uso contains para validar 3 nombres
+                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                    usuario_null = false;
+                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                        usuario_val = false;
+                        nombre_val = false;
+                        apellido_val = false;
+                    }else{
+                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                            usuario_val = false;
+                            nombre_val = false;
+                        }
+                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
+                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                            usuario_val = false;
+                            apellido_val = false;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
+        }
+
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
+                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
+
+            if(dni_val) {
+                model.addAttribute("msg8","El DNI ingresado no es válido");
+            }
+            if(usuario_null){
+                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            }
+            if(usuario_val){
+                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            }
+            if(nombre_val){
+                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            }
+            if(apellido_val){
+                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            }
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
@@ -977,7 +1140,7 @@ public class LoginController {
             //se agrega rol:
             usuario.setRol(rolRepository.findById(4).get());
             //
-            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) {
+            if (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7) {
                 movilidad.setLicencia(null);
                 movilidad.setPlaca(null);
             }

@@ -1837,7 +1837,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 7);
 
         if (codigo == null) {
             codigo = "";
@@ -2118,7 +2118,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             limitInf = 12;
         }
 
-            /*************************************************************************/
+        /*************************************************************************/
 
 
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
@@ -2789,32 +2789,6 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
     }
 
     /************************************************************************************************************************************************************************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public String generarCodigAleatorio() {

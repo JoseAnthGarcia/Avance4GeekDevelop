@@ -270,8 +270,10 @@
 
                 </div>
 
-                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total !=null)}">
-                    <div class="table-responsive">
+                <div class="card-body"  >
+
+                    <div class="table-responsive" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total !=null)}">
+                        <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="| |"></h5>
                         <table id="reportePedido" class="table table-bordered">
 
                             <tr>

@@ -439,8 +439,27 @@ public class RepartidorController {
         }
 
         //TODO: validar fechas:
-        fechaMin = "1900-01-01";
-        fechaMax = "3000-01-01";
+        if(fechaMax==null || fechaMin==null){
+            fechaMin = "1900-12-01";
+            fechaMax = "3000-12-01";
+        }
+
+
+        //String fechaInicio = fechaMin; //fecha de ejemplo
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        try {
+            Date fechaInicio = date.parse(fechaMin);
+            Date fechaFinal = date.parse(fechaMax);
+            if(fechaInicio.after(fechaFinal)){
+                System.out.println("Fecha inicio mayor");
+                fechaMin = "1900-12-01";
+                fechaMax = "3000-12-01";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         double precioMin = -1.0;
         double precioMax = -1.0;

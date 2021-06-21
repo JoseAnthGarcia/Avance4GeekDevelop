@@ -111,12 +111,26 @@
                             </select>
                         </div>
                         <div class="col-sm-3 m-b-2">
-                            <input placeholder="Desde" class="form-control" type="text" name="fechaMin"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date1">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMin.equals('1900-01-01')}">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMin}"
+                                   th:unless="${fechaMin.equals('1900-01-01')}">
                         </div>
                         <div class="col-sm-3 mb-2">
-                            <input placeholder="Hasta" class="form-control" type="text" name="fechaMax"
-                                   onfocus="(this.type='date')" onblur="(this.type='text')" id="date2">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMax.equals('3000-01-01')}">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMax}"
+                                   th:unless="${fechaMax.equals('3000-01-01')}">
                         </div>
 
                     </div>

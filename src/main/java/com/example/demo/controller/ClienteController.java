@@ -1542,6 +1542,8 @@ public class ClienteController {
             }
 
             precioTotal = precioTotal.add(deliveryBig);
+            // precio de la aplicacion TODO by melanie
+            precioTotal = precioTotal.add(BigDecimal.valueOf(2));
 
             BigDecimal efectivoPagarF = BigDecimal.ZERO;
             if(!efectivoPagar.equals("")){

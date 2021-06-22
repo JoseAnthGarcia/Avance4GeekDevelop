@@ -478,7 +478,7 @@ public class ClienteController {
             ubicacion.setUsuario(usuario);
             ubicacion.setDireccion(direccion);
             //TODO: @JOHAM QUE PEDOS
-            Distrito distritoEnviar = distritosRepository.getOne(distrito);
+            Distrito distritoEnviar = distritosRepository.getOne(Integer.parseInt(distrito));
             ubicacion.setDistrito(distritoEnviar);
             listaDirecciones.add(ubicacion);
             ubicacionRepository.save(ubicacion);
@@ -2734,8 +2734,8 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
         descuento= httpSession.getAttribute("descuento") == null ? descuento :  (String) httpSession.getAttribute("descuento");
 
-        int limitSup ;
-        int limitInf ;
+        //int limitSup ;
+        //int limitInf ;
 
         switch (descuento) {
             case "1":

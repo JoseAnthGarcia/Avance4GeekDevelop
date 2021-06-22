@@ -1,7 +1,6 @@
 package com.example.demo.repositories;
 
-import com.example.demo.dtos.ClienteDTO;
-import com.example.demo.dtos.NotiDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
@@ -33,6 +32,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "inner join usuario u on u.idusuario = ub.idusuario\n" +
             "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
     List<Ubicacion> findUbicacionActual(int idUsuario);
+
+
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
@@ -66,6 +67,90 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "and ( `estado` > ?4 and `estado` <= ?5 ) ")
     Page<Usuario> listaUsuarios(String texto, Integer inFrol, Integer maXrol, Integer miFestado, Integer maXestado, Pageable pageable);
 
+
+    @Query(value ="select u.nombres as 'nombrecliente' ,u.apellidos as 'apellidocliente', r.nombre as 'nombrerest', \n" +
+            "pe.codigo , pe.estado  , u1.nombres as 'nombrerepartidor',u1.apellidos as 'apellidorep', pe.fechapedido \n" +
+            " , pe.preciototal, pe.valoracionrestaurante as 'valoracion' from pedido pe \n" +
+            "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
+            "            left join restaurante r on r.idrestaurante=pe.idrestaurante\n" +
+            "            left join usuario u1 on u1.idusuario=pe.idrepartidor\n" +
+            "            where concat(lower(u.nombres),lower(u.apellidos),lower(pe.codigo)) like %?1% and pe.idrepartidor is not null and pe.idrestaurante is not null \n" +
+            "            and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante >?2 and pe.valoracionrestaurante<=?3))  \n" +
+            "            and (pe.preciototal> ?4 and pe.preciototal<=?5)and (pe.estado> ?6 and pe.estado <=?7 )\n "+
+            "            order by pe.fechapedido ASC",nativeQuery = true,
+            countQuery = "select count(*) from pedido pe \n" +
+                    "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
+                    "            left join restaurante r on r.idrestaurante=pe.idrestaurante\n" +
+                    "            left join usuario u1 on u1.idusuario=pe.idrepartidor\n" +
+                    "            where concat(lower(u.nombres),lower(u.apellidos),lower(pe.codigo)) like %?1% and pe.idrepartidor is not null and pe.idrestaurante is not null \n" +
+                    "            and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante >?2 and pe.valoracionrestaurante<=?3))  \n" +
+                    "            and (pe.preciototal> ?4 and pe.preciototal<=?5)and (pe.estado> ?6 and pe.estado <=?7 )\n "+
+                    "            order by pe.fechapedido ASC")
+    Page<UsuarioDtoCliente> listaUsuariosDtoCliente(String texto, Integer miFval, Integer maXval, Integer inFmont, Integer maXmont, Integer miFestado, Integer maXestado, Pageable pageable);
+
+    @Query(value = "select u.nombres  ,u.apellidos  , count(u.idusuario) as 'cantpedidos'from pedido pe\n" +
+            "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
+            "            where pe.idrepartidor is not null and pe.idrestaurante is not null\n" +
+            "            and pe.estado= 6\n" +
+            "            group by u.idusuario order by count(u.idusuario) desc;",nativeQuery = true)
+    List<ClienteConMasPedidosDto> listaClienteConMasPedidos();
+
+    /*@Query(value ="select  u.nombres, u.apellidos,u.dni,u.correo,u.telefono ,pe.valoracionrepartidor , \n" +
+            "count(pe.idrepartidor) as 'cantpedidos'\n" +
+            ", (4*count(pe.mismodistrito = 1)+6*count(pe.mismodistrito = 0)) as 'montototal'\n" +
+            "from usuario u \n" +
+            "left join pedido pe on u.idusuario = pe.idrepartidor \n" +
+            "where  u.idrol=4 and pe.estado = 6  \n" +
+            "and    concat(lower(u.nombres),lower(u.apellidos),lower(u.dni)) like %?1%\n" +
+            "and (pe.valoracionrepartidor is null or (pe.valoracionrepartidor >?2 and pe.valoracionrepartidor<=?3))\n" +
+            "and ('cantpedidos' > ?4 and 'cantpedidos' <=?5)\n" +
+            "and ('montototal'> ?6 and 'montototal'<=?7)\n" +
+            " group by pe.idrepartidor order by u.nombres",nativeQuery = true,
+            countQuery = "select  count(*)\n" +
+                    "from usuario u \n" +
+                    "left join pedido pe on u.idusuario = pe.idrepartidor \n" +
+                    "where  u.idrol=4 and pe.estado = 6  \n" +
+                    "and    concat(lower(u.nombres),lower(u.apellidos),lower(u.dni)) like %?1% \n" +
+                    "and (pe.valoracionrepartidor is null or (pe.valoracionrepartidor >?2 and pe.valoracionrepartidor<=?3))\n" +
+                    "and (count(pe.idrepartidor) > ?4 and count(pe.idrepartidor) <=?5)\n" +
+                    "and ((4*count(pe.mismodistrito = 1)+6*count(pe.mismodistrito = 0)) > ?6 and (4*count(pe.mismodistrito = 1)+6*count(pe.mismodistrito = 0)) <=?7)\n" +
+                    " group by pe.idrepartidor order by u.nombres")
+    Page<UsuarioDtoRepartidor> listaUsuariosDtoRepartidor(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
+*/
+    @Query(value ="select  u.nombres, u.apellidos,u.dni,u.correo,u.telefono ,pe.valoracionrepartidor , \n" +
+            "pe.cantpedidos, pe.montototal \n" +
+            "from usuario u \n" +
+            "left join (select p.idrepartidor, round(AVG(p.valoracionrepartidor),0) as 'valoracionrepartidor' , \n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tcount(p.idrepartidor) as 'cantpedidos', \n" +
+            "\t\t\t\t((4*p1.mismodistrito1) + (6*p0.mismodistrito0)) as 'montototal' \n" +
+            "                from pedido p, usuario u,  \n" +
+            "                (select p.idrepartidor, count(p.idrepartidor) as 'mismodistrito1' from pedido p, usuario u \n" +
+            " where  p.idrepartidor= u.idusuario and p.mismodistrito = 1 group by p.idrepartidor) p1, \n" +
+            " (select p.idrepartidor, count(p.idrepartidor) as 'mismodistrito0' from pedido p, usuario u \n" +
+            " where  p.idrepartidor= u.idusuario and p.mismodistrito = 0 group by p.idrepartidor) p0 \n" +
+            " where p.idrepartidor= u.idusuario and p1.idrepartidor= u.idusuario and p0.idrepartidor= u.idusuario and u.idrol=4 and p.estado = 6 ) pe on u.idusuario = pe.idrepartidor \n" +
+            "where  concat(lower(u.nombres),lower(u.apellidos),lower(u.dni)) like %?1% \n" +
+            "and (pe.valoracionrepartidor is null or (pe.valoracionrepartidor > ?2 and pe.valoracionrepartidor <= ?3 )) \n" +
+            "and (cantpedidos > ?4 and cantpedidos <= ?5 ) \n" +
+            "and (montototal> ?6  and montototal<= ?7 ) \n" +
+            "group by pe.idrepartidor order by u.nombres",nativeQuery = true,
+            countQuery = "select  count(*) \n" +
+                    "from usuario u \n" +
+                    "left join (select p.idrepartidor, round(AVG(p.valoracionrepartidor),0) as 'valoracionrepartidor' , \n" +
+                    "\t\t\t\t\t\t\t\t\t\t\t\tcount(p.idrepartidor) as 'cantpedidos', \n" +
+                    "\t\t\t\t((4*p1.mismodistrito1) + (6*p0.mismodistrito0)) as 'montototal' \n" +
+                    "                from pedido p, usuario u,  \n" +
+                    "                (select p.idrepartidor, count(p.idrepartidor) as 'mismodistrito1' from pedido p, usuario u \n" +
+                    " where  p.idrepartidor= u.idusuario and p.mismodistrito = 1 group by p.idrepartidor) p1, \n" +
+                    " (select p.idrepartidor, count(p.idrepartidor) as 'mismodistrito0' from pedido p, usuario u \n" +
+                    " where  p.idrepartidor= u.idusuario and p.mismodistrito = 0 group by p.idrepartidor) p0 \n" +
+                    " where p.idrepartidor= u.idusuario and p1.idrepartidor= u.idusuario and p0.idrepartidor= u.idusuario and u.idrol=4 and p.estado = 6 ) pe on u.idusuario = pe.idrepartidor \n" +
+                    "where  concat(lower(u.nombres),lower(u.apellidos),lower(u.dni)) like %?1% \n" +
+                    "and (pe.valoracionrepartidor is null or (pe.valoracionrepartidor > ?2 and pe.valoracionrepartidor <= ?3 )) \n" +
+                    "and (cantpedidos > ?4 and cantpedidos <= ?5 ) \n" +
+                    "and (montototal> ?6  and montototal<= ?7 ) \n" +
+                    "group by pe.idrepartidor order by u.nombres")
+    Page<UsuarioDtoRepartidor> listaUsuariosDtoRepartidor(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
     @Query(value = "select datediff(now(),min(fechaRegistro)) from usuario", nativeQuery = true)
     int buscarFechaMinimaRepartidor();

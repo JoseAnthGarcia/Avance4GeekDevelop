@@ -121,8 +121,7 @@
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
 
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE
-                                        VALORACIONES</h5>
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE VALORACIONES</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
                                             id="btnExportar">Exportar
                                     </button>
@@ -156,44 +155,7 @@
                                             <tr th:each="lista,v:${listaValoracionReportes} ">
                                                 <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${lista.getCodigo()}"></td>
-                                                <td th:if="${lista.getValoracion()==5 ||lista.getValoracion()==4 ||lista.getValoracion()==3 ||lista.getValoracion()==2 ||lista.getValoracion()==1}">
-                                                    <div th:switch="${lista.getValoracion()}">
-                                                        <div th:case="1">
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <div th:case="2">
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <div th:case="3">
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <div th:case="4">
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <div th:case="5">
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                            <i class="fas fa-star" style="color: gold"></i>
-                                                        </div>
-                                                    </div>
+                                                <td th:if="${lista.getValoracion()==5 ||lista.getValoracion()==4 ||lista.getValoracion()==3 ||lista.getValoracion()==2 ||lista.getValoracion()==1}" th:text="${lista.getValoracion()}">
                                                 </td>
                                                 <td th:if="${lista.getValoracion()!=5 &&lista.getValoracion()!=4 &&lista.getValoracion()!=3 &&lista.getValoracion()!=2 &&lista.getValoracion()!=1}"
                                                     th:text="|${'No hay valoración'}|"></td>

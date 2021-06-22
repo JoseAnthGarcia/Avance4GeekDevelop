@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                   th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
@@ -178,9 +179,10 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" name="texto"
-                                       th:value="${texto.equals('')?'':texto}"
-                                       th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
+                                <input id="texto" name="texto" type="text" class="form-control bg-light small"
+                                       th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
+                                       th:value="${texto.equals('') ? '' : texto}"
+                                       style="border-color: lightgray">
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
@@ -214,6 +216,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+
                     <div style=text-align:center>
                         <h6 th:if="${msgPedGen != null}" th:text="${msgPedGen}"></h6>
                         <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>
@@ -221,68 +224,125 @@
                             Historial de Pedidos</h6>
                         <h6></h6>
                     </div>
-                    <div>
-                        <table class="table" id="dataTable" width="100%" style="background-color:gray">
+                    <!---------------------------------------------------------- INICIO TABLA---------------------------------------------------------------------->
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered">
+
+                            <thead>
+                            <tr>
+                                <th width="10"> N°</th>
+                                <th width="50" height="60">
+                                    <div style=text-align:center> Restaurante</div>
+                                </th>
+                                <th width="700">
+                                    <div style=text-align:center>
+                                        Descripción
+                                    </div>
+                                </th>
+                                <td>
+                                    <div style=text-align:center>
+                                        Acceder
+                                    </div>
+                                </td>
+
+                                </th>
+                            </tr>
+                            </thead>
+
+
                             <tbody>
 
-                            <div class="row" style="margin-bottom:10px" th:each=" pedido , info:${listaPedidos}">
-                                <div class="col-3">
-                                    <img width="110" height="100" alt="Avatar"
-                                         th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
-                                </div>
-                                <div class="col-6">
-                                    <div class="row mb-2">
-                                        <input class="form-control ph-center" type="text"
-                                               th:placeholder="${pedido.getNombre()}"
-                                               aria-label="Disabled input example" disabled>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <input class="form-control ph-center" type="text"
-                                               th:placeholder="|Fecha de entrega: ${pedido.getFechapedido()}|"
-                                               aria-label="Disabled input example" disabled>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <input class="form-control col-6" type="text"
-                                               th:placeholder="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|"
-                                               aria-label="Disabled input example" disabled>
+                            <tr th:each=" pedido , v:${listaPedidos}">
+                                <!--------------------------------->
+                                <td th:text="${(current -1)*5 + v.index +1}"></td>
 
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado==3}" th:placeholder="|Estado : Preparando |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado==5}" th:placeholder="|Estado : En camino |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado==1}" th:placeholder="|Estado : Aceptado |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado==4}"
-                                               th:placeholder="|Estado : Listo para entregar |"
-                                               aria-label="Disabled input example" disabled>
-                                        <input width="" class="form-control col-5 ml-4" type="text"
-                                               th:if="${pedido.getEstado==0}"
-                                               th:placeholder="|Estado : Pendiente|"
-                                               aria-label="Disabled input example" disabled>
-
+                                <!------------------->
+                                <td>
+                                    <!----------- Imagen------------------------------->
+                                    <div class="col-3">
+                                        <img width="120" height="110" alt="Avatar"
+                                             th:src="@{'/cliente/images?id='+${pedido.getIdrestaurante()}}">
                                     </div>
-                                </div>
-                                <div class="col-3">
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center"><i style="font-size:6em; color:#2C8287"
-                                                                    class="fas fa-eye"></i>
+                                </td>
+                                <!------------------------------------------------------------------->
+
+                                <!------------------------------------DESCRIPCION----------------------------------------------------->
+                                <td>
+                                    <div style=text-align:center>
+                                        <h5 class="mb-2" style="color:#701111;" th:text="${pedido.getNombre()}"></h5>
+                                        <h6></h6>
+                                        <div class="row">
+
+                                            <div class="col-6">
+                                                <div class="ml-2" type="text"
+                                                     th:text="|Fecha de registro: ${pedido.getFechapedido().substring(0,10)}|"></div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="ml-4" type="text"
+                                                     th:text="|Hora de registro: ${pedido.getFechapedido().substring(11,19)}|"></div>
+                                            </div>
+
                                         </div>
-                                    </a>
-                                    <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
-                                        <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
-                                    </a>
-                                </div>
-                            </div>
+                                        <br>
+                                        <div class="row">
 
-                            <div class="topbar-divider d-none d-sm-block"></div>
+                                            <div class="col-6">
+                                                <div class=" ml-2" type="text"
+                                                     th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|"></div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==0}"
+                                                     th:text="|Estado : Pendiente |"
+                                                ></div>
+
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==1}"
+                                                     th:text="|Estado : Aceptado |"
+                                                ></div>
+                                                <div class=" ml-4" type="text"
+                                                     th:if="${pedido.getEstado==4}"
+                                                     th:text="|Estado : Listo para entregar |"
+                                                ></div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <!----------------------------------------------------------------------------------------->
+
+                                <!------------------------------  Visualizar ---------------------------------->
+                                <td>
+                                    <div style=text-align:center>
+                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                            <div class="text-center"><i style="font-size:6em; color:#2C8287"
+                                                                        class="fas fa-eye"></i>
+                                            </div>
+                                        </a>
+                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                            <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
+                                        </a>
+                                    </div>
+                                </td>
+                                <!---------------------------------------------------------------------------------->
+
+                            </tr>
 
                             </tbody>
                         </table>
                     </div>
+
+                    <!------------------------------------------------------------>
 
                     <div class="row">
                         <div class="col-md-2"></div>
@@ -291,18 +351,19 @@
                                 <ul class="pagination justify-content-center">
 
 
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
+                                    <li class="page-item" th:each="page : ${pages}"
+                                        th:classappend="${current == page ? 'active': ''}">
+                                        <a th:unless="${texto == null && estado == null}"
+                                           class="page-link active text-white" style="background-color: #701111"
                                            th:text="${page}"
-                                           th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
+                                           th:href="@{'/cliente/pedidoActualPagina?page='+${page}}"></a>
                                     </li>
-
                                 </ul>
                             </nav>
                         </div>
                         <div class="col-md-2"></div>
                     </div>
-
+                    <!------------------------------------------------------------>
                     <!--
                     <nav aria-label="Pagination">
                         <ul class="pagination justify-content-center">
@@ -386,7 +447,6 @@
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
-
 
 
 </html>

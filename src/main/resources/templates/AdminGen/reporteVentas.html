@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -299,14 +299,14 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE VENTAS POR RESTAURANTE</h2>
-                            <a class="btn btn-warning mr-1">Exportar</a>
+                            <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE VENTAS POR RESTAURANTE</h2>
+                            <button class="btn btn-warning mr-1"  id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-image table-responsive">
+                            <table id="tabla" class="table table-image table-responsive">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -550,6 +550,8 @@
         </div>
     </div>
 </div>
+
+<script th:src="@{/js/exportar.js}"></script>
 
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>

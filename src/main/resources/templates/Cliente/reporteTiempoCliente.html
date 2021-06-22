@@ -169,10 +169,10 @@
                         <div class="form-group row mt-3">
                             <div class="col-sm-3 mb-1 ">
                                 <div class="input-group">
-                                    <input type="busquedaNumeroPedidos" class="form-control bg-light border-0 small"
-                                           name="texto"
-                                           th:value="${texto.equals('')?'':texto}"
-                                           th:placeholder="${texto.equals('')?'Búsqueda por restarurante...':texto}">
+                                    <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                           th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
+                                           th:value="${texto.equals('') ? '' : texto}"
+                                           style="border-color: lightgray">
                                 </div>
                             </div>
                             <div class="col-sm-3 mb-1 ">
@@ -217,11 +217,11 @@
                         <div class="card-header py-3 " style="background-color: #701111;">
 						<div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h5 class="font-weight-bold text-white">REPORTES DE TIEMPO</h5>
+                                <h5 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE TIEMPO</h5>
                             </div>
 							<div class="col-1 d-sm-flex justify-content-center" th:if="${totalsuma1}>0" >
-                                <button class="btn btn-warning mr-1 "onclick="exportTableToExcel('reporteTiempo','reporteTiempo')">Exportar</button>
-							</div>	
+                                <button class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                            </div>
 						</div>
                         </div>
 						
@@ -232,7 +232,7 @@
 						</div>
                         <div class="card-body" th:if="${totalsuma1}>0">
                             <div class="table-responsive">
-                             <table id='reporteTiempo' class="table table-bordered">
+                             <table id='tabla' class="table table-bordered">
                                  <thead>
                                  <tr>
                                      <th>
@@ -254,7 +254,7 @@
                                 </thead>
                             <tbody>
                                 <tr th:each="pedido,info:${listapedidos}">
-                                    <td th:text="${info.index+1}"></td>
+                                    <td th:text="${(current -1)*5 +info.index+1}"></td>
                                     <td th:text="${pedido.getNombre()}"></td>
                                     <td th:text="${pedido.getCantidad()}"></td>
                                     <td th:text="|${pedido.getTiempoentrega()} minutos|"></td>
@@ -286,12 +286,11 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
 
-                                            <li class="page-item" th:each="page : ${pages}">
-                                                <a th:unless="${texto == null && numpedidos == null && mes==null  }" class="page-link active text-white"  style="background-color: #701111"
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
-                                                   th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
+                                                   th:href="@{'/cliente/pedidoActualPagina4?page='+${page}}"></a>
                                             </li>
-
                                         </ul>
                                     </nav>
                                 </div>
@@ -368,6 +367,9 @@
     <!-- Bootstrap core JavaScript-->
 
 </body>
+
+<script th:src="@{/js/exportar.js}"></script>
+
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js" ></script>
 
@@ -383,7 +385,7 @@
 
 <!-- Page level custom scripts -->
 <script  src="/js/demo/datatables-demo.js"></script>
-<script>
+<!--<script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
@@ -414,7 +416,7 @@
             downloadLink.click();
         }
     }
-</script>
+</script>-->
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -35,10 +35,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
-            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) ASC", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 )" +
-            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
+            "ORDER BY UNIX_TIMESTAMP(fechapedido) ASC ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
@@ -50,10 +50,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
             " as pedidosT\n" +
-            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) ASC", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) " +
-            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
+            "ORDER BY UNIX_TIMESTAMP(fechapedido) ASC ")
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
 
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
@@ -101,12 +101,32 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join pedido pe on pe.codigo=ehp.codigo\n" +
             "where ehp.codigo=?1",nativeQuery = true)
     List<ExtraPorPedidoDTO> extrasPorPedido(String codigopedido);
+
+
+
+    @Query(value = "SELECT e.nombre, ehp.preciounitario,ehp.cantidad,ehp.preciounitario*ehp.cantidad as preciototal  FROM extra_has_pedido ehp\n" +
+            "inner join extra e on e.idextra=ehp.idextra\n" +
+            "inner join pedido pe on pe.codigo=ehp.codigo\n" +
+            "where ehp.codigo=?1",nativeQuery = true)
+    Page<ExtraPorPedidoDTO2> extrasPorPedido2(String codigopedido,Pageable pageable);
+
+
+
+
     @Query(value="SELECT php.codigo,pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
             ", php.observacionplatillo\n" +
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
             "where php.codigo = ?1", nativeQuery = true)
     Page<Plato_has_PedidoDTO> detalle2(String codigo, Pageable pageable);
+
+
+
+    @Query(value="SELECT u.nombres, u.apellidos, u.telefono from pedido p\n" +
+            "inner join usuario u on u.idusuario= p.idrepartidor\n" +
+            "where p.codigo=?1",nativeQuery = true)
+    List<RepartidorDetalle> detalleRepartidor(String codigo);
+
 
 
     @Query(value ="select DISTINCT(ped.codigo), r.nombre as 'nombrerest',\n" +
@@ -127,11 +147,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<String> listarPedidosXestadoXrestaurante(int codigo, int estado);
 
 
-    @Query(value="select distinct p.codigo as codigo, date_format(p.fechapedido,'%Y-%m-%d') as fecha, p.preciototal as preciototal, php.cantidad as cantidadplatos\n" +
+    @Query(value="select distinct p.codigo as 'codigo', date_format(p.fechapedido,'%Y-%m-%d') as 'fecha', p.preciototal as 'preciototal', php.cantidad as 'cantidadplatos'\n" +
             "from pedido p\n" +
             "            inner join plato_has_pedido php on p.codigo=php.codigo\n" +
             "            where p.idrestaurante = ?1 and p.estado = ?2 and (date_format(p.fechapedido,'%Y-%m-%d') between ?3 and ?4)\n" +
-            "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7", countQuery ="select distinct count(*) from pedido p \n" +
+            "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7", countQuery ="select count(distinct p.codigo) from pedido p \n" +
             "            inner join plato_has_pedido php on p.codigo=php.codigo \n" +
             "            where p.idrestaurante = ?1 and p.estado = ?2 and (date_format(p.fechapedido,'%Y-%m-%d') between ?3 and ?4) \n" +
             "            and p.codigo like %?5% and p.preciototal >= ?6 and p.preciototal <= ?7" ,nativeQuery = true)

@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="head(title)">
-    <title th:text="${title}"></title>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" th:href="@{Cliente/img/icono_shop.ico}" type="image/x-icon"/>
-
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
+    <title th:text="${title}"></title>
     <!-- Custom fonts for this template -->
     <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
     <link
@@ -47,7 +47,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" th:href="@{/cliente/listaRestaurantes}" >
+        <a class="nav-link" th:href="@{/cliente/listaRestaurantes}">
             <i class="fas fa-utensils"></i>
             <span>Nuevo Pedido</span>
         </a>

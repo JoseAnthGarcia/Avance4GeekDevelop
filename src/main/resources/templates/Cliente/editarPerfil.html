@@ -83,7 +83,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" th:text="${notificaciones.size()}">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -91,22 +92,24 @@
                             <h6 class="notificacion">
                                 Pedido actual
                             </h6>
-                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos pendientes</p>
-                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                               th:each="pedido,in:${notificaciones}" th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos cancelados o entregados</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                               class="dropdown-item d-flex align-items-center"
+                               th:each="noti,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigo='+${noti.getCodigo()}}">
                                 <div class="mr-3">
                                     <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500" th:text="${pedido.getCodigo()}"></div>
-                                    <span class="font-weight-bold" th:text="${pedido.getNombre()}"></span>
-                                    <span class="font-weight-bold" th:if="${pedido.getEstado==0}" th:text=" | - Pendiente|"> </span>
-                                    <span class="font-weight-bold" th:if="${pedido.getEstado!=0}" th:text=" | - Cancelado|"> </span>
+                                    <div  class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
+                                    <span class="font-weight-bold" th:text="${noti.getNombre()}"></span>
+                                    <span class="font-weight-bold" th:if="${noti.estado==2}"> - Cancelado</span>
+                                    <span class="font-weight-bold" th:if="${noti.estado==6}"> - Entregado</span>
                                 </div>
                             </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{cliente/pedidoActual}">
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{/cliente/pedidoActual}">
                                 Mostrar todos mis pedidos</a>
                         </div>
                     </li>

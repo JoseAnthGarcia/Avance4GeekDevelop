@@ -19,7 +19,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="Avance4GeekDevelop" value="4b031c3c-e132-43f7-a238-00f657030edd" />
-          <factory-entry name="entityManagerFactory" value="1879e409-cc5b-474e-b9e0-7bdf59ec7052" />
+          <factory-entry name="entityManagerFactory" value="7aeac770-a0f4-4344-a0a0-6e45d1efbdb8" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>

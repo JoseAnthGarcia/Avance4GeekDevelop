@@ -43,7 +43,7 @@ public class TarjetaController {
 
     @PostMapping("/guardar")
     public String guardarTarjeta(@RequestParam("numeroTarjeta") String numeroTarjeta, @RequestParam("nombreC") String nombreC, @RequestParam("apellidoC") String apellidoC,
-                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") Integer mes, @RequestParam("year") String year,HttpSession httpSession, Model model,
+                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") Integer mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
                                  RedirectAttributes attr) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
@@ -157,7 +157,7 @@ public class TarjetaController {
             if (mes_u) {
                 model.addAttribute("mdg6", "Debe escoger una de las opciones");
             }
-            if(valyear){
+            if (valyear) {
                 model.addAttribute("msg5", "Debe colocar 4 dígitos(números)");
             }
             model.addAttribute("tarjeta", numeroTarjeta);
@@ -180,11 +180,18 @@ public class TarjetaController {
     }
 
     @PostMapping("/eliminar")
-    public String eliminarTarjeta(@RequestParam("listaTarjetasSelecciones") List<Tarjeta> listaTarjetasSeleccionadas) {
+    public String eliminarTarjeta(HttpSession httpSession, @RequestParam("listaTarjetasSelecciones") List<Tarjeta> listaTarjetasSeleccionadas) {
         //validar existencia
-        for (Tarjeta tarjeta : listaTarjetasSeleccionadas) {
-            tarjetaRepository.delete(tarjeta);
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        List<Tarjeta> listaTarejeta = tarjetaRepository.findByUsuario(usuario);
+        for (Tarjeta t : listaTarejeta) {
+            for (Tarjeta tarjeta : listaTarjetasSeleccionadas) {
+                if (t == tarjeta) {
+                    tarjetaRepository.delete(tarjeta);
+                }
+            }
         }
+
         return "redirect:/tarjeta/lista";
     }
 

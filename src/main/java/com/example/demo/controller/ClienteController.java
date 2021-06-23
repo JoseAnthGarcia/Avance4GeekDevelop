@@ -138,6 +138,7 @@ public class ClienteController {
         return "Cliente/editarPerfil";
 
     }
+
     @PostMapping("/guardarEditar")
     public String guardarEdicion(@RequestParam("contraseniaConf") String contraseniaConf,
                                  @RequestParam("telefonoNuevo") String telefonoNuevo,
@@ -354,10 +355,17 @@ public class ClienteController {
     @PostMapping("/guardarDireccion")
     public String guardarDirecciones(HttpSession httpSession, @RequestParam("direccionactual") String direccionActual, Model model) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        usuario.setDireccionactual(direccionActual);
-        httpSession.setAttribute("usuario", usuario);
-        model.addAttribute("listaDistritos", distritosRepository.findAll());
-        clienteRepository.save(usuario);
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+        for (Ubicacion direc: listaDirecciones) {
+            if(direccionActual==direc.getDireccion()){
+                usuario.setDireccionactual(direccionActual);
+                httpSession.setAttribute("usuario", usuario);
+                model.addAttribute("listaDistritos", distritosRepository.findAll());
+                clienteRepository.save(usuario);
+                break;
+            }
+        }
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "redirect:/cliente/listaDirecciones";
     }
@@ -365,24 +373,30 @@ public class ClienteController {
     @PostMapping("/eliminarDireccion")
     public String eliminarDirecciones(@RequestParam("listaIdDireccionesAeliminar") List<String> listaIdDireccionesAeliminar, HttpSession session, Model model) {
         Usuario usuarioS = (Usuario) session.getAttribute("usuario");
-        for (String idUbicacion : listaIdDireccionesAeliminar) {
-            //validad int idUbicacion:
-            int idUb = Integer.parseInt(idUbicacion);
-            Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
+        try {
+            for (String idUbicacion : listaIdDireccionesAeliminar) {
+                //validad int idUbicacion:
+                int idUb = Integer.parseInt(idUbicacion);
+                Ubicacion ubicacion = (ubicacionRepository.findById(idUb)).get();
 
-            model.addAttribute("listaDistritos", distritosRepository.findAll());
-            if (!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())) {
-                ubicacion.setBorrado(1);
-                ubicacionRepository.save(ubicacion);
+                model.addAttribute("listaDistritos", distritosRepository.findAll());
+                if (!ubicacion.getDireccion().equalsIgnoreCase(usuarioS.getDireccionactual())) {
+                    ubicacion.setBorrado(1);
+                    ubicacionRepository.save(ubicacion);
+                }
+
             }
-
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuarioS.getIdusuario()));
+        } catch (Exception e) {
+            model.addAttribute("msg90", "La dirección seleccionada no existe");
+        } finally {
+            return "redirect:/cliente/listaDirecciones";
         }
-        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuarioS.getIdusuario()));
-        return "redirect:/cliente/listaDirecciones";
+
     }
 
     @PostMapping("/agregarDireccion")
-    public String registrarNewDireccion(@RequestParam("direccion") String direccion, @RequestParam("distrito") Integer distrito, HttpSession httpSession, Model model) {
+    public String registrarNewDireccion(@RequestParam("direccion") String direccion, @RequestParam("distrito") String distrito, HttpSession httpSession, Model model) {
         boolean valNul = false;
         boolean valNew = false;
         boolean valLong = false;
@@ -396,17 +410,20 @@ public class ClienteController {
         List<Ubicacion> listaDir = ubicacionRepository.findByUsuarioVal(usuario1);
         Boolean dist_u_val = true;
         try {
-            Integer u_dist = distrito;
+
+            Integer u_dist = Integer.parseInt(distrito);
             System.out.println(u_dist + "ID DISTRITO");
             int dist_c = distritosRepository.findAll().size();
             System.out.println(dist_c);
             for (int i = 1; i <= dist_c; i++) {
                 if (u_dist == i) {
                     dist_u_val = false;
+
                     System.out.println("ENTRO A LA VAIDACION DE AQUI");
                 }
             }
-        } catch (NullPointerException n) {
+
+        } catch (Exception n) {
             System.out.println("No llegó nada");
             dist_u_val = true;
         }
@@ -461,7 +478,7 @@ public class ClienteController {
             ubicacion.setUsuario(usuario);
             ubicacion.setDireccion(direccion);
             //TODO: @JOHAM QUE PEDOS
-            Distrito distritoEnviar = distritosRepository.getOne(distrito);
+            Distrito distritoEnviar = distritosRepository.getOne(Integer.parseInt(distrito));
             ubicacion.setDistrito(distritoEnviar);
             listaDirecciones.add(ubicacion);
             ubicacionRepository.save(ubicacion);
@@ -2051,6 +2068,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
                 limitInf = 0;
         }
 
+
         Page<PedidoValoracionDTO> listaPedidos = historialPedidoService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
         int totalPage = listaPedidos.getTotalPages();
         if (totalPage > 0) {
@@ -2064,6 +2082,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         model.addAttribute("estado", estado);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
+
         return "Cliente/listaHistorialPedidos";
     }
 
@@ -2694,6 +2713,8 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
             page =0;
         }
         Pageable pageRequest = PageRequest.of(page, 5);
+        int limitSup;
+        int limitInf;
 
 
         if (texto == null) {
@@ -2713,8 +2734,8 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
         descuento= httpSession.getAttribute("descuento") == null ? descuento :  (String) httpSession.getAttribute("descuento");
 
-        int limitSup ;
-        int limitInf ;
+        //int limitSup ;
+        //int limitInf ;
 
         switch (descuento) {
             case "1":
@@ -2742,6 +2763,7 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
                 limitInf = 0;
         }
 
+        //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
         Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();

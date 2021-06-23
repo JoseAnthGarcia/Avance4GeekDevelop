@@ -9,7 +9,7 @@ $btnExportar.addEventListener("click", function() {
     let date = formatDate();
     console.log(nombreFormat);
     console.log(date);
-    let xlsx_name = date + "_"+ nombreFormat ;
+    let xlsx_name = date + "_" + nombreFormat ;
 
     console.log(xlsx_name);
 
@@ -25,7 +25,7 @@ $btnExportar.addEventListener("click", function() {
 
 function formatDate() {
     let now = new Date();
-    return now.toLocaleDateString().replaceAll("/","_");
+    return now.toLocaleDateString().replaceAll("/","-") + "T" + now.toLocaleTimeString().split(":")[0]+":"+now.toLocaleTimeString().split(":")[1];
 }
 
 function formatName(name){

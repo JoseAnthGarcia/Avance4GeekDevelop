@@ -14,7 +14,7 @@ public class ReporteTiempoImpl  implements  ReporteTiempoService{
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<ReportePedidoCDTO> findPaginated3(int idCliente, int limitInf, int limitSup, String texto, String numpedidos, Pageable pageable){
-        return this.pedidoRepository.reportetiempo(idCliente,limitInf,limitSup,texto,numpedidos,pageable);
+    public Page<ReportePedidoCDTO> findPaginated3(int idCliente, int limitInf, int limitSup,String anio, String texto, int limitcant1,int limitcant2, Pageable pageable){
+        return this.pedidoRepository.reportetiempo(idCliente,limitInf,limitSup,anio,texto,limitcant1,limitcant2,pageable);
     }
 }

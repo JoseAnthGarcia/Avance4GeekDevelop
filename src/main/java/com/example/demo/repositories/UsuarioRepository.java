@@ -33,7 +33,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
     List<Ubicacion> findUbicacionActual(int idUsuario);
 
-
+    Usuario findByEmail(String email);
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 

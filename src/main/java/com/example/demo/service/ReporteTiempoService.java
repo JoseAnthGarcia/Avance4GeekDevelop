@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ReporteTiempoService {
-    Page<ReportePedidoCDTO> findPaginated3(int idCliente, int limitInf, int limitSup, String texto, String numpedidos, Pageable pageable);
+    Page<ReportePedidoCDTO> findPaginated3(int idCliente, int limitInf, int limitSup,String anio, String texto, int limitcant1,int limitcant2, Pageable pageable);
 }

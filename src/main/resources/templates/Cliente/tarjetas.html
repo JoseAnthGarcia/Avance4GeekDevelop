@@ -63,7 +63,7 @@
 
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
-                           th:text="${session.usuario.direccionactual} ">
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
@@ -224,19 +224,19 @@
                                             <div class="row">
                                                 <div class="col">
                                                     <select class="form-control" id="mes" name="mes">
-                                                        <option th:selected="${year == 0}" value="0">mes</option>
-                                                        <option th:selected="${year == 1}" value="1">1</option>
-                                                        <option th:selected="${year == 2}" value="2">2</option>
-                                                        <option th:selected="${year == 3}" value="3">3</option>
-                                                        <option th:selected="${year == 4}" value="4">4</option>
-                                                        <option th:selected="${year == 5}" value="5">5</option>
-                                                        <option th:selected="${year == 6}" value="6">6</option>
-                                                        <option th:selected="${year == 7}" value="7">7</option>
-                                                        <option th:selected="${year == 8}" value="8">8</option>
-                                                        <option th:selected="${year == 9}" value="9">9</option>
-                                                        <option th:selected="${year == 10}" value="10">10</option>
-                                                        <option th:selected="${year == 11}" value="11">11</option>
-                                                        <option th:selected="${year == 12}" value="12">12</option>
+                                                        <option th:selected="${mes.equals('0')}" value="0" disabled>mes</option>
+                                                        <option th:selected="${mes.equals('1')}" value="1">1</option>
+                                                        <option th:selected="${mes.equals('2')}" value="2">2</option>
+                                                        <option th:selected="${mes.equals('3')}" value="3">3</option>
+                                                        <option th:selected="${mes.equals('4')}" value="4">4</option>
+                                                        <option th:selected="${mes.equals('5')}" value="5">5</option>
+                                                        <option th:selected="${mes.equals('6')}" value="6">6</option>
+                                                        <option th:selected="${mes.equals('7')}" value="7">7</option>
+                                                        <option th:selected="${mes.equals('8')}" value="8">8</option>
+                                                        <option th:selected="${mes.equals('9')}" value="9">9</option>
+                                                        <option th:selected="${mes.equals('10')}" value="10">10</option>
+                                                        <option th:selected="${mes.equals('11')}" value="11">11</option>
+                                                        <option th:selected="${mes.equals('12')}" value="12">12</option>
                                                     </select>
                                                     <div th:if="${mdg6 != null}" th:text="${mdg6}"
                                                          style="color: red; font-size: small; text-align: left"></div>

@@ -37,13 +37,15 @@ public class TarjetaController {
         model.addAttribute("nombre", "");
         model.addAttribute("apellido", "");
         model.addAttribute("cvv", "");
+        model.addAttribute("mes","0");
+        model.addAttribute("year","");
         model.addAttribute("notificaciones", usuarioRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/tarjetas";
     }
 
     @PostMapping("/guardar")
     public String guardarTarjeta(@RequestParam("numeroTarjeta") String numeroTarjeta, @RequestParam("nombreC") String nombreC, @RequestParam("apellidoC") String apellidoC,
-                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") Integer mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
+                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") String mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
                                  RedirectAttributes attr) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
@@ -79,16 +81,13 @@ public class TarjetaController {
         //VALIDACION MES
         Boolean mes_u = true;
         try {
-            Integer u_dist = mes;
-            System.out.println(u_dist + "ID DISTRITO");
+            Integer u_dist = Integer.parseInt(mes);
             for (int i = 1; i <= 12; i++) {
                 if (u_dist == i) {
                     mes_u = false;
-                    System.out.println("ENTRO A LA VAIDACION DE AQUI");
                 }
             }
         } catch (NullPointerException n) {
-            System.out.println("No llegó nada");
             mes_u = true;
         }
         //VALIDACIÓN NOMBRES
@@ -112,7 +111,6 @@ public class TarjetaController {
         if (apellidoC.length() == 0) {
             valNumaA = true;
         }
-        //
         //CVV
         try {
             if (idcvv == null) {
@@ -125,14 +123,12 @@ public class TarjetaController {
         } catch (NumberFormatException numberFormatException) {
             valNumCv = true;
         }
-        //
         //Validar cantidad tarjetas
         Boolean cantTarjetas = false;
         List<Tarjeta> listaTarjetas = tarjetaRepository.findByUsuario(usuario);
         if (listaTarjetas.size() == 5) {
             cantTarjetas = true;
         }
-        //
         if (valNumT || valNumN || valNumaA || valNumCv || cantTarjetas || mes_u || valyear) {
 
 
@@ -155,7 +151,7 @@ public class TarjetaController {
                 model.addAttribute("cantTarj", "Puede registrar 5 tarjetas como máximo");
             }
             if (mes_u) {
-                model.addAttribute("mdg6", "Debe escoger una de las opciones");
+                model.addAttribute("mdg6", "Debe escoger un mes");
             }
             if (valyear) {
                 model.addAttribute("msg5", "Debe colocar 4 dígitos(números)");

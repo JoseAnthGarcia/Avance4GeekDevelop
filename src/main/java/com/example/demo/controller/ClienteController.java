@@ -357,7 +357,7 @@ public class ClienteController {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         for (Ubicacion direc: listaDirecciones) {
-            if(direccionActual==direc.getDireccion()){
+            if(direccionActual.trim().equalsIgnoreCase(direc.getDireccion())){
                 usuario.setDireccionactual(direccionActual);
                 httpSession.setAttribute("usuario", usuario);
                 model.addAttribute("listaDistritos", distritosRepository.findAll());
@@ -366,6 +366,7 @@ public class ClienteController {
             }
         }
 
+        httpSession.setAttribute("distritoActual", distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual()));
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "redirect:/cliente/listaDirecciones";
     }
@@ -429,7 +430,7 @@ public class ClienteController {
         }
 
         for (Ubicacion u : listaDir) {
-            if (u.getDireccion().equalsIgnoreCase(direccion)) {
+            if (u.getDireccion().equalsIgnoreCase(direccion.trim())) {
                 valNew = true;
             }
         }

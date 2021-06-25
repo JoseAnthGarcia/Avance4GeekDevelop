@@ -183,16 +183,18 @@
                             </div>
                         </div>
                         <div class="col-sm-3 mb-1 ">
-                            <div class="input-group">
-                                <input type="busquedaNumeroPedidos" class="form-control" name="numpedidos"
-                                       th:value="${numpedidos.equals('')?'':numpedidos}"
-                                       th:placeholder="${numpedidos.equals('')?'N° de pedidos':numpedidos}"
-                                >
-                            </div>
+                            <select class="form-control" name="numpedidos">
+                                <option value="7" th:selected="${numpedidos.equals('7')}">N° de pedidos</option>
+                                <option value="1" th:selected="${numpedidos.equals('1')}">0 a 10</option>
+                                <option value="2" th:selected="${numpedidos.equals('2')}">10 a 20</option>
+                                <option value="3" th:selected="${numpedidos.equals('3')}">20 a 30</option>
+                                <option value="4" th:selected="${numpedidos.equals('4')}">30 a 40</option>
+                            </select>
+
                         </div>
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="mes">
-                                <option value="" disabled  th:selected="${mes.equals('13')}">Mes</option>
+                                <option value="13"   th:selected="${mes.equals('13')}">Mes</option>
                                 <option value="1" th:selected="${mes.equals('1')}">Enero</option>
                                 <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
                                 <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
@@ -224,7 +226,7 @@
                     <div class="card-header py-3 " style="background-color: #701111;">
                         <div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h5 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE PEDIDOS</h5>
+                                <h5 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE PEDIDOS DEL AÑO 2021</h5>
                             </div>
                             <button th:if="${listarestTop.size()>0 && listarestPl.size()>0 }" id="btnExportar" class="btn btn-warning mr-1" >Exportar</button>
 

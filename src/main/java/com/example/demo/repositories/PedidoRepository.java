@@ -29,7 +29,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<Pedido> pedidosPorCliente(int idCliente, String texto, int valoracion, int fechaPedido);
 
 
-    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
+    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',\n" +
+            "date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+            "date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' from pedido p \n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
@@ -41,7 +43,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "ORDER BY UNIX_TIMESTAMP(fechapedido) ASC ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
 
-    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',p.fechapedido as 'fechapedido',\n" +
+    @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
+            "date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+            "date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
             "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
             "p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
             " p.comentariorestaurante as `comentariorestaurante` , \n" +

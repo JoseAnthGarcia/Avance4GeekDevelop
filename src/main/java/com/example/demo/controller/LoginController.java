@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
+import com.example.demo.oauth.CustomOAuth2User;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,8 +14,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +34,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -82,15 +88,24 @@ public class LoginController {
     MovilidadRepository movilidadRepository;
 
     @GetMapping("/login")
-    public String loginForm() {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        if(authentication==null || authentication instanceof AnonymousAuthenticationToken){
+    public String loginForm(Model model, HttpSession httpSession) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            if(httpSession.getAttribute("noExisteCuentaGoogle")!=null){
+                model.addAttribute("noExisteCuentaGoogle", true);
+                httpSession.removeAttribute("noExisteCuentaGoogle");
+            }
             return "Cliente/login";
-        }else {
+        } else {
             String rol = "";
             for (GrantedAuthority role : authentication.getAuthorities()) {
                 rol = role.getAuthority();
                 break;
+            }
+
+            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+            if(rol.equals("ROLE_USER")){
+                rol = usuario.getRol().getTipo();
             }
             switch (rol) {
                 case "cliente":
@@ -117,12 +132,14 @@ public class LoginController {
 
     @GetMapping("/accessDenied")
     public String acces() {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        String rol="";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String rol = "";
         for (GrantedAuthority role : authentication.getAuthorities()) {
             rol = role.getAuthority();
             break;
         }
+
+
         switch (rol) {
             case "cliente":
 
@@ -145,22 +162,51 @@ public class LoginController {
 
 
     }
-    
+
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
-    public String redirectByRole(Authentication auth, HttpSession session) {
+    public String redirectByRole(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
+
         String rol = "";
 
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
         }
-
         String correo = auth.getName();
-        Usuario usuario = usuarioRepository.findByCorreo(correo);
 
-        session.setAttribute("usuario", usuario);
+        Usuario usuario = null;
+        if(rol.equals("ROLE_USER")){
+            //TODO: PODER FINDBYCORREOANDVALIDCORREO
+            usuario = clienteRepository.findByCorreo(correo);
+            if (usuario==null){
+                try {
+                    httpServletRequest.logout();
+                    session = httpServletRequest.getSession();
+                    session.setAttribute("noExisteCuentaGoogle", true);
+                }catch(Exception e){}
+            }else{
+                rol = usuario.getRol().getTipo();
+                session.setAttribute("usuario", usuario);
+                try {
+                    httpServletRequest.logout();
+                    session = httpServletRequest.getSession();
+                }catch(Exception e){}
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+                List<GrantedAuthority> updatedAuthorities = new ArrayList<>(authentication.getAuthorities());
+                updatedAuthorities.add(new SimpleGrantedAuthority(rol));
+                Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), updatedAuthorities);
+
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
+                Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
+
+            }
+        }else{
+            usuario = usuarioRepository.findByCorreo(correo);
+            session.setAttribute("usuario", usuario);
+
+        }
 
         //redirect:
         switch (rol) {
@@ -180,11 +226,11 @@ public class LoginController {
                 } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if (restaurante == null|| restaurante.getEstado()==2) {
+                if (restaurante == null || restaurante.getEstado() == 2) {
                     return "redirect:/paginabienvenida";
                     //TODO: ojo ver restaurante
                     //return "redirect:/restaurante/paginabienvenida";
-                } else if(restaurante.getEstado()==1){
+                } else if (restaurante.getEstado() == 1) {
                     return "redirect:/plato/";
                 }
             case "repartidor":
@@ -193,14 +239,75 @@ public class LoginController {
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
                 List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
-                if(pedidoAct.size()==0){
+                if (pedidoAct.size() == 0) {
                     return "redirect:/repartidor/listaPedidos";
-                }else{
+                } else {
                     return "redirect:/repartidor/pedidoActual";
                 }
-
             default:
-                return "somewhere"; //no tener en cuenta
+                return "redirect:/login"; //no tener en cuenta
+        }
+    }
+
+    @GetMapping("/redirectByRolGoogle")
+    public String redirectByRolGoogle(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest){
+
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) auth.getPrincipal();
+
+        String correo = oAuth2User.getEmail();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+
+        if(usuario==null){
+            try {
+                httpServletRequest.logout();
+            }catch (Exception e){
+
+            }
+            return "redirect:/login";
+        }else {
+            String rol = usuario.getRol().getTipo();
+
+            session.setAttribute("usuario", usuario);
+
+            //redirect:
+            switch (rol) {
+                case "cliente":
+                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+                    session.setAttribute("poolDirecciones", listaDirecciones);
+
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    Restaurante restaurante = null;
+                    try {
+                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
+                    } catch (NullPointerException e) {
+                        System.out.println("Fallo");
+                    }
+                    if (restaurante == null || restaurante.getEstado() == 2) {
+                        return "redirect:/paginabienvenida";
+                        //TODO: ojo ver restaurante
+                        //return "redirect:/restaurante/paginabienvenida";
+                    } else if (restaurante.getEstado() == 1) {
+                        return "redirect:/plato/";
+                    }
+                case "repartidor":
+                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
+                    session.setAttribute("poolDirecciones", listaDirecciones1);
+                    session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
+                    List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+
+                    if (pedidoAct.size() == 0) {
+                        return "redirect:/repartidor/listaPedidos";
+                    } else {
+                        return "redirect:/repartidor/pedidoActual";
+                    }
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
         }
     }
 
@@ -217,13 +324,11 @@ public class LoginController {
     }
 
 
-
-
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
-                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                 Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -243,7 +348,6 @@ public class LoginController {
 
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
-
 
 
         try {
@@ -283,31 +387,31 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if(udto.getSuccess().equals("true")){
-            if(cliente.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (cliente.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((cliente.getNombres() + " " +cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if ((cliente.getNombres() + " " + cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())){
+                    } else {
+                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if (cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno()) ||
+                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
@@ -316,20 +420,20 @@ public class LoginController {
 
             //----------------------------------------
 
-            if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg8", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg10", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg9", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg11", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg12", "El apellido del usuario no coincide con el propietario del DNI");
             }
 
             if (usuario_direccion) {
@@ -347,8 +451,6 @@ public class LoginController {
             if (!contrasenia2.equals(cliente.getContrasenia())) {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
-
-
 
 
             //   String direccion;
@@ -413,7 +515,7 @@ public class LoginController {
 
         boolean valcorreo = false;
         Usuario clientesxcorreo = clienteRepository.findByCorreo(correo);
-        if (clientesxcorreo==null) {
+        if (clientesxcorreo == null) {
             valcorreo = true;
         }
 
@@ -435,7 +537,7 @@ public class LoginController {
             return "olvidoContrasenia";
 
         } else {
-            if(clientesxcorreo.getRol().getIdrol()==1 ||clientesxcorreo.getRol().getIdrol()==3||clientesxcorreo.getRol().getIdrol()==4) {
+            if (clientesxcorreo.getRol().getIdrol() == 1 || clientesxcorreo.getRol().getIdrol() == 3 || clientesxcorreo.getRol().getIdrol() == 4) {
                 Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, clientesxcorreo.getRol());
                 if (cliente != null) {
                     Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
@@ -609,9 +711,9 @@ public class LoginController {
     }
 
 
-
-
-    /** ESTO ES DE RESTAURANTE LOGIN**/
+    /**
+     * ESTO ES DE RESTAURANTE LOGIN
+     **/
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
         model.addAttribute("adminRest", new Usuario());
@@ -694,50 +796,50 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if(udto.getSuccess().equals("true")){
-            if(adminRest.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (adminRest.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((adminRest.getNombres() + " " +adminRest.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if ((adminRest.getNombres() + " " + adminRest.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (udto.getNombres().toUpperCase().contains(adminRest.getNombres().toUpperCase())){
+                    } else {
+                        if (udto.getNombres().toUpperCase().contains(adminRest.getNombres().toUpperCase())) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                adminRest.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if (adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_materno()) ||
+                                adminRest.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
         if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto
                 || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
-            if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg8", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg10", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg9", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg11", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg12", "El apellido del usuario no coincide con el propietario del DNI");
             }
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
@@ -770,37 +872,37 @@ public class LoginController {
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
                                      BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
 
-        boolean v2=true;
+        boolean v2 = true;
         List<Restaurante> restauranteByNombre = restauranteRepository.findRestauranteByNombre(restaurante.getNombre());
         if (!restauranteByNombre.isEmpty()) {
             model.addAttribute("nombreResta", "El nombre ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
         List<Restaurante> restauranteByDireccion = restauranteRepository.findRestauranteByDireccion(restaurante.getDireccion());
         if (!restauranteByDireccion.isEmpty()) {
             model.addAttribute("direccionResta", "La dirección ingresada ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
 
         List<Restaurante> restauranteByTelefono = restauranteRepository.findRestauranteByTelefono(restaurante.getTelefono());
         if (!restauranteByTelefono.isEmpty()) {
             model.addAttribute("telefonoResta", "El telefono ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
 
         List<Restaurante> restauranteByRuc = restauranteRepository.findRestauranteByRuc(restaurante.getRuc());
         if (!restauranteByRuc.isEmpty()) {
             model.addAttribute("rucResta", "El RUC ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
-        RestauranteDao rd= new RestauranteDao();
-        String success= rd.validarRuc(restaurante.getRuc());
+        RestauranteDao rd = new RestauranteDao();
+        String success = rd.validarRuc(restaurante.getRuc());
 
-        System.out.println("Existe o no existe "+ success);
-        boolean v3=true;
-        if(success.equals("false")){
+        System.out.println("Existe o no existe " + success);
+        boolean v3 = true;
+        if (success.equals("false")) {
             model.addAttribute("validarApi", "El RUC ingresado no es correcto");
-            v3=false;
+            v3 = false;
         }
 
         String fileName = "";
@@ -855,7 +957,7 @@ public class LoginController {
         }
 
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto||!v2||!v3) {
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto || !v2 || !v3) {
 
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
@@ -898,15 +1000,16 @@ public class LoginController {
         } catch (NullPointerException e) {
 
         }
-        if(restaurant==null){
+        if (restaurant == null) {
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
             return "AdminRestaurante/registroResturante";
-        }else{
+        } else {
             return "redirect:/paginabienvenida";
         }
 
     }
+
     @GetMapping("/paginabienvenida")
     public String paginaBienvenida(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -960,60 +1063,60 @@ public class LoginController {
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
-                                    @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
+                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
-        String correo =  usuario.getCorreo();
-        Usuario usuario1 =usuarioRepository.findByDni(dni);
-        Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
-        Usuario usuario3 =usuarioRepository.findByCorreo(correo);
+        String correo = usuario.getCorreo();
+        Usuario usuario1 = usuarioRepository.findByDni(dni);
+        Usuario usuario2 = usuarioRepository.findByTelefono(telefono);
+        Usuario usuario3 = usuarioRepository.findByCorreo(correo);
 
         Movilidad movilidad1;
         Movilidad movilidad2;
-        if(licencia.equals("") || placa.equals("")){
+        if (licencia.equals("") || placa.equals("")) {
             movilidad1 = null;
             movilidad2 = null;
-        }else{
+        } else {
             movilidad1 = movilidadRepository.findByLicencia(licencia);
             movilidad2 = movilidadRepository.findByPlaca(placa);
         }
 
         Boolean errorMov = false;
-        Boolean errorDist=false;
-        Boolean errorSexo= false;
+        Boolean errorDist = false;
+        Boolean errorSexo = false;
         Boolean validarFoto = true;
         String fileName = "";
-        if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
-            errorMov= true;
+        if (movilidad.getTipoMovilidad() == null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
+            errorMov = true;
         }
-        if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
-            errorMov= true;
+        if (movilidad.getTipoMovilidad() == null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("") || movilidad.getPlaca().equals("")))) {
+            errorMov = true;
         }
-        if(distritos!=null){
-            if(distritos.size()>5 || distritos.isEmpty()){
-                errorDist=true;
+        if (distritos != null) {
+            if (distritos.size() > 5 || distritos.isEmpty()) {
+                errorDist = true;
             }
         }
-        if(distritos==null){
-            errorDist=true;
+        if (distritos == null) {
+            errorDist = true;
         }
 
 
         Boolean errorFecha = true;
         try {
             String[] parts = usuario.getFechanacimiento().split("-");
-            System.out.println(parts[0]+"Año");
+            System.out.println(parts[0] + "Año");
             int naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
-            if (anio - naci >18) {
+            if (anio - naci > 18) {
                 errorFecha = false;
             }
         } catch (NumberFormatException n) {
             errorFecha = true;
         }
-        if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
-            errorSexo=true;
+        if (usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))) {
+            errorSexo = true;
         }
         if (file != null) {
 
@@ -1042,80 +1145,80 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if(udto.getSuccess().equals("true")){
-            if(usuario.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (usuario.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if ((usuario.getNombres() + " " + usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                    } else {
+                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if (usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno()) ||
+                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
-                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
+        if (bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1 != null || usuario2 != null || usuario3 != null || errorMov || movilidad1 != null || movilidad2 != null ||
+                errorDist || errorFecha || errorSexo || !validarFoto || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
 
-            if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg8", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg10", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg9", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg11", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg12", "El apellido del usuario no coincide con el propietario del DNI");
             }
-            if(!contrasenia2.equals(usuario.getContrasenia())){
+            if (!contrasenia2.equals(usuario.getContrasenia())) {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
-            if(usuario1!=null){
+            if (usuario1 != null) {
                 model.addAttribute("msg2", "El DNI ingresado ya se encuentra en la base de datos");
             }
-            if(usuario2!=null){
+            if (usuario2 != null) {
                 model.addAttribute("msg3", "El telefono ingresado ya se encuentra en la base de datos");
             }
-            if(usuario3!=null){
+            if (usuario3 != null) {
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
-            if(errorDist){
+            if (errorDist) {
                 model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
             }
-            if(errorMov){
+            if (errorMov) {
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }
-            if(errorFecha){
+            if (errorFecha) {
                 model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse");
             }
-            if(errorSexo){
+            if (errorSexo) {
                 model.addAttribute("msg8", "Seleccione una opción");
             }
-            if(movilidad1!=null){
+            if (movilidad1 != null) {
                 model.addAttribute("msg9", "La licencia ingresada ya se encuentra en la base de datos");
             }
-            if(movilidad2!=null){
+            if (movilidad2 != null) {
                 model.addAttribute("msg10", "La placa ingresada ya se encuentra en la base de datos");
             }
 
@@ -1126,7 +1229,7 @@ public class LoginController {
             model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             return "Repartidor/registro";
-        }else {
+        } else {
 
             try {
                 usuario.setFoto(file.getBytes());

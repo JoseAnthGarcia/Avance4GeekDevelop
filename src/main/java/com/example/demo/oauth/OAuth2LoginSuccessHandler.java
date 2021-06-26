@@ -20,43 +20,24 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Autowired
     UsuarioRepository usuarioRepository;
 
+    @Autowired
+    HttpSession httpSession;
+
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication ) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        //Map<String, Object> atributis = oAuth2User.getAttributes();
-        String email = oAuth2User.getEmail();
-        System.out.println("Email del usuario : "+ email);
-        String nombre = oAuth2User.getName();
-        Usuario usuario=usuarioRepository.findByCorreo(email);
+        Usuario usuario = usuarioRepository.findByCorreo(oAuth2User.getEmail());
 
-
-        if(usuario == null){
-            //register
-            createNewUserAfterOAuthLoginSuccess(email, nombre);
-        }else{
-            //update
-
-            updateNewUserAfterOAuthLoginSuccess(usuario, nombre);
-
+        if(usuario==null) {
+            authentication.setAuthenticated(false);
+            httpSession.setAttribute("noExisteCuentaGoogle", true);
         }
 
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    public void createNewUserAfterOAuthLoginSuccess(String email, String name){
-
-        Usuario usuario = new Usuario();
-        //usuario.setEmail(email);
-        //usuario.setName(name);
-        usuarioRepository.save(usuario);
-
-    }
-    public void updateNewUserAfterOAuthLoginSuccess(Usuario usuario, String name){
-
-        //usuario.setName(name);
-        usuarioRepository.save(usuario);
-
-    }
 }

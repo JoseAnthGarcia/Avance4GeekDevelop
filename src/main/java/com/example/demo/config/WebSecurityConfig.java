@@ -32,17 +32,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests()
-                .antMatchers("/cliente/**").hasAnyAuthority("cliente")
-                .antMatchers("/admin","/admin/**").hasAnyAuthority("administrador","administradorG")
-                .antMatchers("/plato","/plato/**","/restaurante","/restaurante/**","/cupon","/cupon/**", "/extra","/extra/**").hasAnyAuthority("administradorR")
-                .antMatchers("/repartidor", "/repartidor/**").hasAuthority("repartidor")
+                .antMatchers("/cliente/**")
+                    .hasAnyAuthority("cliente", "ROLE_USER")
+                .antMatchers("/admin","/admin/**")
+                    .hasAnyAuthority("administrador","administradorG", "ROLE_USER")
+                .antMatchers("/plato","/plato/**","/restaurante","/restaurante/**","/cupon","/cupon/**", "/extra","/extra/**")
+                    .hasAnyAuthority("administradorR", "ROLE_USER")
+                .antMatchers("/repartidor", "/repartidor/**").hasAnyAuthority("repartidor", "ROLE_USER")
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint().userService(oauth2UserService)
-                .and()
-                .successHandler(oAuth2LoginSuccessHandler);
+                    .loginPage("/login")
+                    .userInfoEndpoint().userService(oauth2UserService)
+                    .and()
+                    .defaultSuccessUrl("/redirectByRole",true);
+        /*
+        .oauth2Login()
+                    .loginPage("/login")
+                    .userInfoEndpoint().userService(oauth2UserService)
+                    .and()
+                    .successHandler(oAuth2LoginSuccessHandler);
+
+         */
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 
 

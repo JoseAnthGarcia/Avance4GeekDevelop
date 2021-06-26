@@ -3,10 +3,11 @@ package com.example.demo.oauth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
-public class CustomOAuth2User implements OAuth2User {
+public class CustomOAuth2User implements OAuth2User, Serializable {
 
     private OAuth2User oAuth2User;
 
@@ -26,12 +27,17 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return oAuth2User.getAttribute("name");
+        return oAuth2User.getAttribute("email");
     }
 
-    public String getFullName(){
-        return oAuth2User.getAttribute("name");
+    public String getNombres(){
+        return oAuth2User.getAttribute("given_name");
     }
+
+    public String getApellidos(){
+        return oAuth2User.getAttribute("family_name");
+    }
+
     public  String getEmail(){
         return oAuth2User.getAttribute("email");
     }

@@ -217,8 +217,7 @@ public class ClienteController {
         Integer limitSupP = 5000;
         Integer limitInfVal = 0;
         Integer limitSupVal = 6;
-        Integer limitInfCat = 0;
-        Integer limitSupCat = 5000;
+
 
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
 
@@ -244,19 +243,13 @@ public class ClienteController {
         }
 
         if(idCategoria == null){
-            idCategoria="0-28";
+            idCategoria="";
         }else {
-            if(idCategoria.contains("-")) {
-                String[] chain = idCategoria.split("-");
-                try {
-                    limitInfCat = Integer.parseInt(chain[0]);
-                    limitSupCat = Integer.parseInt(chain[1]);
-                }catch (NumberFormatException e){
-                    idCategoria="0-28";
-                }
+            try {
+                int idcat=Integer.parseInt(idCategoria);
 
-            }else{
-                idCategoria="0-28";
+            }catch (NumberFormatException e){
+                idCategoria="";
             }
 
         }
@@ -309,11 +302,12 @@ public class ClienteController {
                 limitInfVal = 0;
                 limitSupVal = 6;
         }
+        System.out.println("lmmiteinf: "+limitInfVal);
+        System.out.println("lmmitesup: "+limitSupVal);
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
-
-        Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto, limitInfP, limitSupP, limitInfVal, limitSupVal, limitInfCat, limitSupCat, iddistritoactual,pageRequest);
+        Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,idCategoria,idCategoria,idCategoria,limitInfVal,limitSupVal,iddistritoactual,pageRequest);
         int totalPage = listaRestaurante.getTotalPages();
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
@@ -330,6 +324,7 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/listaRestaurantes";
     }
+
 
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model, HttpSession httpSession) {

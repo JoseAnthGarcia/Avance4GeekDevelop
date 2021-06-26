@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface RestauranteClienteService {
 
-    Page<RestauranteDTO> listaRestaurantePaginada(String texto, Integer limitInfP, Integer limitSupP, Integer limitInfVal, Integer limitSupVal, Integer limitIntCate, Integer limitSupCate,Integer iddistrito, Pageable pageable);
+    Page<RestauranteDTO> listaRestaurantePaginada(String texto, Integer limitInfP, Integer limitSupP, String id1,String id2, String id3,Integer limitInfVal, Integer limitSupVal,Integer iddistrito, Pageable pageable);
 
 }

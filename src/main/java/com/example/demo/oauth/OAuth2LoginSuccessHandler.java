@@ -29,7 +29,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String email = oAuth2User.getEmail();
         System.out.println("Email del usuario : "+ email);
         String nombre = oAuth2User.getName();
-        Usuario usuario=usuarioRepository.findByEmail(email);
+        Usuario usuario=usuarioRepository.findByCorreo(email);
 
 
         if(usuario == null){

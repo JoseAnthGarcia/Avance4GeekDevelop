@@ -23,6 +23,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -102,14 +104,8 @@ public class LoginController {
                 rol = role.getAuthority();
                 break;
             }
-
-            Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-            if(rol.equals("ROLE_USER")){
-                rol = usuario.getRol().getTipo();
-            }
             switch (rol) {
                 case "cliente":
-
                     return "redirect:/cliente/listaRestaurantes";
                 case "administradorG":
                     return "redirect:/admin/usuarios";
@@ -117,18 +113,14 @@ public class LoginController {
                     return "redirect:/admin/usuarios";
                 case "administradorR":
                     return "redirect:/paginabienvenida";
-
                 case "repartidor":
-
                     return "redirect:/repartidor/listaPedidos";
-
                 default:
                     return "somewhere"; //no tener en cuenta
             }
         }
 
     }
-
 
     @GetMapping("/accessDenied")
     public String acces() {
@@ -139,23 +131,17 @@ public class LoginController {
             break;
         }
 
-
         switch (rol) {
             case "cliente":
-
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
                 return "redirect:/admin/usuarios";
             case "administrador":
                 return "redirect:/admin/usuarios";
             case "administradorR":
-
                 return "redirect:/paginabienvenida";
-
             case "repartidor":
-
                 return "redirect:/repartidor/listaPedidos";
-
             default:
                 return "somewhere"; //no tener en cuenta
         }
@@ -168,13 +154,11 @@ public class LoginController {
     public String redirectByRole(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
 
         String rol = "";
-
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
         }
         String correo = auth.getName();
-
         Usuario usuario = null;
         if(rol.equals("ROLE_USER")){
             //TODO: PODER FINDBYCORREOANDVALIDCORREO
@@ -187,20 +171,19 @@ public class LoginController {
                 }catch(Exception e){}
             }else{
                 rol = usuario.getRol().getTipo();
-                session.setAttribute("usuario", usuario);
+
+                //ELIMINO LA CREDENCIAL
                 try {
                     httpServletRequest.logout();
                     session = httpServletRequest.getSession();
                 }catch(Exception e){}
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-                List<GrantedAuthority> updatedAuthorities = new ArrayList<>(authentication.getAuthorities());
-                updatedAuthorities.add(new SimpleGrantedAuthority(rol));
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), updatedAuthorities);
-
-                SecurityContextHolder.getContext().setAuthentication(newAuth);
-                Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
-
+                Set<GrantedAuthority> authorities = new HashSet<>();
+                authorities.add(new SimpleGrantedAuthority(rol));
+                Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
+                        BCryptPasswordEncoder().encode("password"),authorities);
+                SecurityContextHolder.getContext().setAuthentication(reAuth);
+                session.setAttribute("usuario", usuario);
             }
         }else{
             usuario = usuarioRepository.findByCorreo(correo);
@@ -247,6 +230,19 @@ public class LoginController {
             default:
                 return "redirect:/login"; //no tener en cuenta
         }
+    }
+
+    public void login(HttpServletRequest req, String user, String pass) {
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+        Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
+
+                BCryptPasswordEncoder().encode("password"),authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(reAuth);
     }
 
     @GetMapping("/redirectByRolGoogle")

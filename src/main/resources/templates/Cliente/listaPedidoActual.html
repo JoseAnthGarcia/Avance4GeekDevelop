@@ -293,23 +293,21 @@
                                                      th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|"></div>
                                             </div>
                                             <div class="col-6">
-                                                <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==0}"
-                                                     th:text="|Estado : Pendiente |"
+                                                <div class=" ml-4" type="text"   style="color: #2f9d9d; font-weight: bold;"
+                                                     th:if="${pedido.getEstado==0}" th:text="|Estado : Pendiente |"
                                                 ></div>
 
-                                                <div class=" ml-4" type="text"
+                                                <div class=" ml-4" type="text" style="color: yellow; font-weight: bold;"
                                                      th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
                                                 ></div>
-                                                <div class=" ml-4" type="text"
+                                                <div class=" ml-4" type="text" style="color: #76ff2c; font-weight: bold;"
                                                      th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
                                                 ></div>
-                                                <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==1}"
-                                                     th:text="|Estado : Aceptado |"
+                                                <div class=" ml-4" type="text" style="color: #701111; font-weight: bold;"
+                                                     th:if="${pedido.getEstado==1}" th:text="|Estado : Aceptado |"
                                                 ></div>
                                                 <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==4}"
+                                                     th:if="${pedido.getEstado==4}" style="color: blue; font-weight: bold;"
                                                      th:text="|Estado : Listo para entregar |"
                                                 ></div>
 

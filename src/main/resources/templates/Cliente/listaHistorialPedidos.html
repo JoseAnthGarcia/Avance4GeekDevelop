@@ -48,8 +48,7 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;"
-                                                type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -111,6 +110,7 @@
                                 Mostrar todos mis pedidos</a>
                         </div>
                     </li>
+
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
@@ -120,9 +120,9 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold "
-                                style="background-color:white; color:#701111; border:#701111;"
-                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"
+                            >
 
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
@@ -143,18 +143,18 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                            <a class="dropdown-item"  th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -177,10 +177,10 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto"  type="text" class="form-control small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
-                                       style="border-color: lightgray">
+                                       >
                             </div>
                         </div>
                         <div class="col-sm-2 mb-1">
@@ -188,9 +188,6 @@
                                 <option value="7"  th:selected="${estado.equals('7')}">Estados</option>
                                 <option value="6" th:selected="${estado.equals('6')}">Entregado</option>
                                 <option value="2" th:selected="${estado.equals('2')}">Cancelado</option>
-
-
-
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-2 ">
@@ -213,6 +210,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+
                     <div style=text-align:center>
                         <h6>Solo pedidos entregados o cancelados </h6>
                         <h6></h6>

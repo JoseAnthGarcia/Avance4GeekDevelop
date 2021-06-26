@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head th:replace="Cliente/fragments/general.html :: header( title = 'Reporte de Tiempo')"></head>
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Reporte Tiempo')"></head>
 
 <body id="page-top">
 <!-- Page Wrapper -->
@@ -140,7 +140,7 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -169,10 +169,10 @@
                         <div class="form-group row mt-3">
                             <div class="col-sm-3 mb-1 ">
                                 <div class="input-group">
-                                    <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                    <input id="texto" name="texto"  type="text" class="form-control small"
                                            th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                            th:value="${texto.equals('') ? '' : texto}"
-                                           style="border-color: lightgray">
+                                           >
                                 </div>
                             </div>
                             <div class="col-sm-3 mb-1 ">

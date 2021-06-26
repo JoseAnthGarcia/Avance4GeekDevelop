@@ -201,6 +201,7 @@ public class LoginController {
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
                 Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
 
+
             }
         }else{
             usuario = usuarioRepository.findByCorreo(correo);

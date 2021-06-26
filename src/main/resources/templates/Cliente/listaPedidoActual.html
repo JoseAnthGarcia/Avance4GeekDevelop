@@ -148,7 +148,7 @@
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -218,7 +218,7 @@
                 <div class="card-body">
 
                     <div style=text-align:center>
-                        <h6 th:if="${msgPedGen != null}" th:text="${msgPedGen}"></h6>
+                        <div class="alert alert-success" role="alert" th:if="${msgPedGen != null}" th:text="${msgPedGen}"></div>
                         <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>
                         <h6 th:if="${listaPedidos.size()>0}">Si su pedido ya ha sido entregado o cancelado dirijase al
                             Historial de Pedidos</h6>
@@ -293,23 +293,21 @@
                                                      th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|"></div>
                                             </div>
                                             <div class="col-6">
-                                                <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==0}"
-                                                     th:text="|Estado : Pendiente |"
+                                                <div class=" ml-4" type="text"   style="color: #2f9d9d; font-weight: bold;"
+                                                     th:if="${pedido.getEstado==0}" th:text="|Estado : Pendiente |"
                                                 ></div>
 
-                                                <div class=" ml-4" type="text"
+                                                <div class=" ml-4" type="text" style="color: yellow; font-weight: bold;"
                                                      th:if="${pedido.getEstado==3}" th:text="|Estado : Preparando |"
                                                 ></div>
-                                                <div class=" ml-4" type="text"
+                                                <div class=" ml-4" type="text" style="color: #76ff2c; font-weight: bold;"
                                                      th:if="${pedido.getEstado==5}" th:text="|Estado : En camino |"
                                                 ></div>
-                                                <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==1}"
-                                                     th:text="|Estado : Aceptado |"
+                                                <div class=" ml-4" type="text" style="color: #701111; font-weight: bold;"
+                                                     th:if="${pedido.getEstado==1}" th:text="|Estado : Aceptado |"
                                                 ></div>
                                                 <div class=" ml-4" type="text"
-                                                     th:if="${pedido.getEstado==4}"
+                                                     th:if="${pedido.getEstado==4}" style="color: blue; font-weight: bold;"
                                                      th:text="|Estado : Listo para entregar |"
                                                 ></div>
 
@@ -389,7 +387,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Geek Developers &copy; 2021-1</span>
                     </div>
                 </div>
             </footer>
@@ -434,19 +432,21 @@
 </body>
 
 
-<!-- Core plugin JavaScript-->
+<!--
+ Core plugin JavaScript
 <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
+ Custom scripts for all pages
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
+ Page level plugins
 <script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
-<!-- Page level custom scripts -->
+ Page level custom scripts
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+-->
 
 
 </html>

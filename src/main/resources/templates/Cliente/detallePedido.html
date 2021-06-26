@@ -103,7 +103,7 @@
                                 <div>
                                     <div  class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${noti.getNombre()}"></span>
-                                    <span class="font-weight-bold" th:if="${noti.estado==2}"> - Cancelado</span>
+                                    <span class="font-weight-bold" th:if="${noti.estado==2}" > - Cancelado</span>
                                     <span class="font-weight-bold" th:if="${noti.estado==6}"> - Entregado</span>
                                 </div>
                             </a>
@@ -146,7 +146,7 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -187,13 +187,13 @@
                     <br>
                     <div class="row justify-content-center" th:each="p1:${listapedido1}">
                         <h6 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==0}" >Estado : Pendiente</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==1}" >Estado : Aceptado</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==2}" >Estado : Cancelado</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==3}" >Estado : Preparando</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==4}" >Estado : Pedido Listo</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==5}" >Estado : En camino</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==6}" >Estado : Entregado</h6>
+                        <h6 class="col-3 offset-md-3" style="color: #2f9d9d; font-weight: bold;" th:if="${p1.getEstado==0}" >Estado : Pendiente</h6>
+                        <h6 class="col-3 offset-md-3" style="color: #701111; font-weight: bold;" th:if="${p1.getEstado==1}" >Estado : Aceptado</h6>
+                        <h6 class="col-3 offset-md-3" style="color: red; font-weight: bold;" th:if="${p1.getEstado==2}" >Estado : Cancelado</h6>
+                        <h6 class="col-3 offset-md-3" style="color: yellow; font-weight: bold;" th:if="${p1.getEstado==3}" >Estado : Preparando</h6>
+                        <h6 class="col-3 offset-md-3" style="color: blue; font-weight: bold;" th:if="${p1.getEstado==4}" >Estado : Pedido Listo</h6>
+                        <h6 class="col-3 offset-md-3" style="color: #76ff2c; font-weight: bold;" th:if="${p1.getEstado==5}" >Estado : En camino</h6>
+                        <h6 class="col-3 offset-md-3" style="color: green; font-weight: bold;" th:if="${p1.getEstado==6}" >Estado : Entregado</h6>
 
                     </div>
                     <br>

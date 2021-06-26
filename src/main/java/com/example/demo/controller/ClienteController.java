@@ -127,7 +127,23 @@ public class ClienteController {
     @Autowired
     ExtraDetalleService extraDetalleService;
 
+    @GetMapping("/fotoPerfil")
+    public ResponseEntity<byte[]> mostrarPerfil(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = clienteRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] image = usuario.getFoto();
 
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {
@@ -1310,13 +1326,13 @@ public class ClienteController {
         * THINGS TODO:
         * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
         * Validar que solo se reciba un idMetodo de pago
-        * Probar modificar un extra
-        * Probar validaciones de carrito y carritoExtra
-        * Mostrar Carrito de Extras y Platos
-        * Verificar que el monto que se grabe en la BD sea el correcto
+        * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
         * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        int idRest = (int) session.getAttribute("idRest");
+        Optional<Restaurante> restOpt = restauranteRepository.findById(idRest);
+        Restaurante restaurante = restOpt.get();
 
         //Obteniendo el cupon
         Cupon cupon = null;
@@ -1416,7 +1432,7 @@ public class ClienteController {
                             }
                             if(mesValNull){
                                 int mesInt = Integer.parseInt(mes);
-                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves?
+                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves? - mmm? TODO checkar
                                     mesVal = true;
                                 }
                             }
@@ -1465,6 +1481,14 @@ public class ClienteController {
         }catch (NumberFormatException e){
         }
         Double delivery = (Double) session.getAttribute("delivery");
+        // chancando la sesion
+        if(ubicacion.getDistrito().getIddistrito() != restaurante.getDistrito().getIddistrito()){
+            delivery = 8.0;
+        }else{
+            delivery = 5.0;
+        }
+        session.setAttribute("delivery",delivery);
+        // si el distrito es el mismo al que pertenezco esto pasos - si no debo cambair
         BigDecimal deliveryBig = new BigDecimal(delivery);
         /*
         Double precioDel = null;
@@ -1664,7 +1688,7 @@ public class ClienteController {
             session.removeAttribute("carrito");
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
-            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido");
+            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido con código: "+pedido.getCodigo());
             return "redirect:/cliente/pedidoActual";
         }
 
@@ -1839,22 +1863,27 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
 
 
 
-    @GetMapping("/cancelarPedido")
-    public String cancelarPedido(@RequestParam("id") String id,
-                                 Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        int idr = usuario.getIdusuario();
-        Optional<Pedido> pedido1 = pedidoRepository.findById(id);
-        if (pedido1.isPresent()) {
-            Pedido pedido = pedido1.get();
-            if (pedido.getEstado() == 0) {
-                pedido.setEstado(2);
-                pedidoRepository.save(pedido);
-            }
-            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
+@GetMapping("/cancelarPedido")
+public String cancelarPedido(@RequestParam("id") String id,
+                            RedirectAttributes attr,
+                            Model model, HttpSession session) {
+    Usuario cliente = (Usuario) session.getAttribute("usuario");
+
+    model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
+
+    int idr = cliente.getIdusuario();
+
+    Pedido pedido = pedidoRepository.encontrarporId(id);
+
+    if (pedido != null && pedido.getCliente().getIdusuario()==idr) {
+        if (pedido.getEstado() == 0) {
+            pedido.setEstado(1);
+            pedidoRepository.save(pedido);
         }
-        return "redirect:/cliente/historialPedidos";
     }
+    return "redirect:/cliente/historialPedidos";
+}
+
 
     @GetMapping("/detallePedidoActual")
     public String detallePedidoActual(@RequestParam Map<String, Object> params,

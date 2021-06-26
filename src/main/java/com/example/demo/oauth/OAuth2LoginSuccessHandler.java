@@ -42,7 +42,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         }
 
-
         super.onAuthenticationSuccess(request, response, authentication);
     }
 

@@ -445,9 +445,9 @@
                                         <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|- S/. ${descuento}|"></strong></h6>
                                     </div>
                                 </div>
-                                <div class="form-check-inline">
+                               <!-- <div class="form-check-inline">
                                     <div class="container mt-4" style="width: 300px">
-                                        <!-- ONLINE -->
+                                        &lt;!&ndash; ONLINE &ndash;&gt;
                                         <input class="form-check-input" name="metodoPago" form="generarPedido" type="checkbox" value="2" id="online" onclick="escogerMetodoPago()"
                                             th:checked="${msgNumTarjetaVal != null || msgFechaVal != null
                                                             || msgCvvVal != null || msgTipoVal  != null
@@ -456,15 +456,46 @@
                                         <i class="fab fa-cc-mastercard" style="color: darkred"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <!-- POS -->
+                                        &lt;!&ndash; POS &ndash;&gt;
                                         <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="3" id="pos" onclick="escogerMetodoPago()">
                                         <i class="fab fa-paypal" style="color: darkred;"></i>
                                     </div>
                                     <div class="container mt-4">
-                                        <!-- EFECTIVO -->
+                                        &lt;!&ndash; EFECTIVO &ndash;&gt;
                                         <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="1" id="efectivo" onclick="escogerMetodoPago()"
                                                th:checked="${msgEfect != null || msgNotString != null}">
                                         <i class="fas fa-money-bill" style="color: darkgreen"></i>
+                                    </div>
+                                </div>-->
+                                <div class="container mt-3 mb-3">
+                                    <div class="form-check form-check-inline mr-5 ml-5">
+                                        <!--ONLINE-->
+                                        <input class="form-check-input" type="radio" name="metodoPago" id="online" value="2"
+                                               form="generarPedido" onclick="escogerMetodoPago()"
+                                               th:checked="${msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null}">
+                                        <label class="form-check-label" for="online">
+                                            <i class="fab fa-cc-visa" style="color: darkblue"></i>
+                                            <i class="fab fa-cc-mastercard" style="color: darkred"></i>
+                                        </label>
+                                    </div>
+                                    <!--POS-->
+                                    <div class="form-check form-check-inline mr-5 ml-5">
+                                        <input class="form-check-input" type="radio" name="metodoPago" id="pos" value="3"
+                                               form="generarPedido" onclick="escogerMetodoPago()">
+                                        <label class="form-check-label" for="pos">
+                                            <i class="fab fa-paypal" style="color: darkred;"></i>
+                                        </label>
+                                    </div>
+                                    <!--EFECTIVO-->
+                                    <div class="form-check form-check-inline mr-5 ml-5">
+                                        <input class="form-check-input" type="radio" name="metodoPago" id="efectivo" value="1"
+                                               form="generarPedido" onclick="escogerMetodoPago()"
+                                               th:checked="${msgEfect != null || msgNotString != null}">
+                                        <label class="form-check-label" for="efectivo">
+                                            <i class="fas fa-money-bill" style="color: darkgreen"></i>
+                                        </label>
                                     </div>
                                 </div>
                                 <div th:if="${msgMetPagoVal != null}" class="container mt-2 mr-1">
@@ -502,7 +533,7 @@
                                     </div>
                                     <div class="col-4">
                                         <h6 th:if="${descuento == null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras + session.delivery,1,2)}|"></strong></h6>
-                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras - descuento + session.deliviery,1,2)}|"></strong></h6>
+                                        <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito + montoExtras - descuento + session.delivery,1,2)}|"></strong></h6>
                                     </div>
                                 </div>
                                 <hr width="85%" style="border-top: #701111 solid" align="left" class="ml-3">

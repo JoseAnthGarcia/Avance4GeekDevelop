@@ -102,8 +102,8 @@
                                 <div>
                                     <div  class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${noti.getNombre()}"></span>
-                                    <span class="font-weight-bold" th:if="${noti.estado==2}"> - Cancelado</span>
-                                    <span class="font-weight-bold" th:if="${noti.estado==6}"> - Entregado</span>
+                                    <span class="font-weight-bold" th:if="${noti.estado==2}" style="color: red; font-weight: bold;"> - Cancelado</span>
+                                    <span class="font-weight-bold" th:if="${noti.estado==6}" style="color: yellow; font-weight: bold;"> - Entregado</span>
                                 </div>
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" th:href="@{/cliente/pedidoActual}">
@@ -273,10 +273,10 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <div  class=" ml-4" type="text"
+                                            <div  class=" ml-4" type="text" style="color: red; font-weight: bold;"
                                                   th:if="${pedido.getEstado()==2}" th:text="|Estado : Cancelado |"
                                             ></div>
-                                            <div  class=" ml-4" type="text"
+                                            <div  class=" ml-4" type="text" style="color: green; font-weight: bold;"
                                                   th:if="${pedido.getEstado()==6}" th:text="|Estado : Entregado |"
                                             ></div>
 
@@ -650,16 +650,21 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="../vendor/jquery/jquery.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../js/sb-admin-2.min.js"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
+<!-- Page level plugins -->
+<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
+<!-- Page level custom scripts -->
+<script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 <script src="../js/estrellitas/jquery.raty.min.js"></script>
 <script>

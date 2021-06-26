@@ -1343,13 +1343,13 @@ public class ClienteController {
         * THINGS TODO:
         * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
         * Validar que solo se reciba un idMetodo de pago
-        * Probar modificar un extra
-        * Probar validaciones de carrito y carritoExtra
-        * Mostrar Carrito de Extras y Platos
-        * Verificar que el monto que se grabe en la BD sea el correcto
+        * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
         * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
         List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        int idRest = (int) session.getAttribute("idRest");
+        Optional<Restaurante> restOpt = restauranteRepository.findById(idRest);
+        Restaurante restaurante = restOpt.get();
 
         //Obteniendo el cupon
         Cupon cupon = null;
@@ -1449,7 +1449,7 @@ public class ClienteController {
                             }
                             if(mesValNull){
                                 int mesInt = Integer.parseInt(mes);
-                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves?
+                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves? - mmm? TODO checkar
                                     mesVal = true;
                                 }
                             }
@@ -1498,6 +1498,14 @@ public class ClienteController {
         }catch (NumberFormatException e){
         }
         Double delivery = (Double) session.getAttribute("delivery");
+        // chancando la sesion
+        if(ubicacion.getDistrito().getIddistrito() != restaurante.getDistrito().getIddistrito()){
+            delivery = 8.0;
+        }else{
+            delivery = 5.0;
+        }
+        session.setAttribute("delivery",delivery);
+        // si el distrito es el mismo al que pertenezco esto pasos - si no debo cambair
         BigDecimal deliveryBig = new BigDecimal(delivery);
         /*
         Double precioDel = null;
@@ -1697,7 +1705,7 @@ public class ClienteController {
             session.removeAttribute("carrito");
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
-            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido");
+            attr.addFlashAttribute("msgPedGen","Se generó exitosamente un pedido con código: "+pedido.getCodigo());
             return "redirect:/cliente/pedidoActual";
         }
 

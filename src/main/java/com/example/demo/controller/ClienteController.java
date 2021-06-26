@@ -127,7 +127,23 @@ public class ClienteController {
     @Autowired
     ExtraDetalleService extraDetalleService;
 
+    @GetMapping("/fotoPerfil")
+    public ResponseEntity<byte[]> mostrarPerfil(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = clienteRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] image = usuario.getFoto();
 
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
 
     @GetMapping("/editarPerfil")
     public String editarPerfil(HttpSession httpSession, Model model) {

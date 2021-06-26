@@ -224,6 +224,7 @@ public class LoginController {
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
+                                 @RequestParam("photo") MultipartFile file,
                                 Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
@@ -245,7 +246,24 @@ public class LoginController {
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
 
-
+        //VALIDACIÓN DE FOTOS
+        Boolean validarFoto = true;
+        String fileName = "";
+        if (file != null) {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
+                return "Cliente/registro";
+            }
+        }
 
         try {
             Integer u_dist = ubicacion.getDistrito().getIddistrito();
@@ -313,7 +331,7 @@ public class LoginController {
         }
 
         if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
+                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val || !validarFoto) {
 
             //----------------------------------------
 
@@ -363,6 +381,19 @@ public class LoginController {
 
             return "Cliente/registro";
         } else {
+            //
+
+            try {
+                cliente.setFoto(file.getBytes());
+                cliente.setFotonombre(fileName);
+                cliente.setFotocontenttype(file.getContentType());
+                clienteRepository.save(cliente);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "Cliente/registro";
+            }
+            //
             cliente.setEstado(1);
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
@@ -671,7 +702,7 @@ public class LoginController {
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
                 return "AdminRestaurante/registroAR";
             }
         }

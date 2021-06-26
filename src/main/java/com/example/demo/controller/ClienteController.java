@@ -225,6 +225,7 @@ public class ClienteController {
         if(httpSession.getAttribute("extrasCarrito") != null){
             httpSession.removeAttribute("extrasCarrito");
         }
+        System.out.println("IDCATEGORIA: "+ idCategoria);
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         String direccionactual = usuario.getDireccionactual();
@@ -247,7 +248,7 @@ public class ClienteController {
         }
 
         if(val == null || val.equals("")){
-            val = "6";
+            val = "7";
         }
 
         if(idPrecio == null || idPrecio.equals("")){
@@ -257,18 +258,28 @@ public class ClienteController {
         if(texto == null){
             texto = "";
         }
-
+        String id1="";
+        String id2="";
+        String id3="";
         if(idCategoria == null){
             idCategoria="";
+
         }else {
             try {
-                int idcat=Integer.parseInt(idCategoria);
-
+                int idcat = Integer.parseInt(idCategoria);
+                if( idcat>0 && idcat<28) {
+                    id1 = "-"+idCategoria+"-";
+                    id2 = "-"+idCategoria;
+                    id3 = idCategoria+"-";
+                }
             }catch (NumberFormatException e){
                 idCategoria="";
             }
 
         }
+        System.out.println("id1 :"+id1);
+        System.out.println("id12 :"+id2);
+        System.out.println("id3 :"+id3   );
 
         switch (idPrecio){
             case "1":
@@ -295,35 +306,40 @@ public class ClienteController {
 
         switch (val){
             case "1":
+                limitInfVal = 0;
+                limitSupVal = 1;
+                break;
+            case "2":
                 limitInfVal = 1;
                 limitSupVal = 2;
                 break;
-            case "2":
+            case "3":
                 limitInfVal = 2;
                 limitSupVal = 3;
                 break;
-            case "3":
+            case "4":
                 limitInfVal = 3;
                 limitSupVal = 4;
                 break;
-            case "4":
+            case "5":
                 limitInfVal = 4;
                 limitSupVal = 5;
                 break;
-            case "5":
-                limitInfVal = 5;
-                limitSupVal = 6;
-                break;
             default:
                 limitInfVal = 0;
-                limitSupVal = 6;
+                limitSupVal = 5;
         }
         System.out.println("lmmiteinf: "+limitInfVal);
         System.out.println("lmmitesup: "+limitSupVal);
+        System.out.println("preciol1: "+limitSupP);
+        System.out.println("preciol2: "+limitInfP);
+        System.out.println("IDCATEGORIA2: "+idCategoria);
+
+
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
-        Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,idCategoria,idCategoria,idCategoria,limitInfVal,limitSupVal,iddistritoactual,pageRequest);
+        Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
         int totalPage = listaRestaurante.getTotalPages();
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
@@ -331,7 +347,13 @@ public class ClienteController {
         }
 
         model.addAttribute("listaRestaurante", listaRestaurante.getContent());
+        /*
+        List<Categorias> listc=categoriasRestauranteRepository.findAll();
+        for(Categorias c:listc){
+            System.out.println(c.getNombre());
+        }
 
+         */
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);

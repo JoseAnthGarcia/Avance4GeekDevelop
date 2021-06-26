@@ -201,7 +201,7 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${val.equals('6')}">Valoración</option>
+                                <option value="" disabled th:selected="${val.equals('7')}">Valoración</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>
@@ -213,7 +213,7 @@
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idCategoria.equals('')}">Categorias</option>
                                 <option th:each="categoria : ${categorias}"
-                                        th:value="|${categoria.getIdcategoria()}|"
+                                        th:value="${categoria.getIdcategoria()}"
                                         th:text="${categoria.getNombre()}"
                                         th:selected="${idCategoria.equals(categoria.getIdcategoria())}"></option>
                             </select>
@@ -226,6 +226,7 @@
                         </div>
                         <div class="col-sm-2" style="margin-right: 10px" >
                             <a class="btn btn-secondary" th:href="@{'/cliente/listaRestaurantes'}" >Quitar filtros</a>
+
                         </div>
                     </div>
                 </form>

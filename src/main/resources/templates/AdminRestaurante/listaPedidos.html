@@ -195,7 +195,7 @@
                                         <tbody>
                                             <tr th:each="pedidos,v:${listaPedidos} ">
                                                 <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
-                                                <td th:if="${pedidos.estado==0}" style="background-color: #cecda4" th:text="|${'PENDIENTE'}|"></td>
+                                                <td th:if="${pedidos.estado==0}" style="background-color: #d9d9aa" th:text="|${'PENDIENTE'}|"></td>
                                                 <td th:if="${pedidos.estado==1}" style="background-color: #2a7800" th:text="|${'ACEPTADO'}|"></td>
                                                 <td th:if="${pedidos.estado==2}" style="background-color: #971600" th:text="|${'CANCELADO'}|"></td>
                                                 <td th:if="${pedidos.estado==3}" style="background-color: #a35600" th:text="|${'PREPARANDO'}|"></td>

@@ -129,13 +129,12 @@ public class LoginController {
 
     @GetMapping("/accessDenied")
     public String acces() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String rol = "";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String rol="";
         for (GrantedAuthority role : authentication.getAuthorities()) {
             rol = role.getAuthority();
             break;
         }
-
         switch (rol) {
             case "cliente":
 
@@ -158,7 +157,7 @@ public class LoginController {
 
 
     }
-
+    
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
@@ -285,7 +284,6 @@ public class LoginController {
                 Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 session.setAttribute("distritoActual", distritoActual);
-
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
                 return "redirect:/admin/usuarios";
@@ -341,7 +339,8 @@ public class LoginController {
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
-                                 Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                 @RequestParam("photo") MultipartFile file,
+                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -362,7 +361,24 @@ public class LoginController {
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
 
-
+        //VALIDACIÓN DE FOTOS
+        Boolean validarFoto = true;
+        String fileName = "";
+        if (file != null) {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
+                return "Cliente/registro";
+            }
+        }
 
         try {
             Integer u_dist = ubicacion.getDistrito().getIddistrito();
@@ -401,36 +417,36 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if (udto.getSuccess().equals("true")) {
-            if (cliente.getDni().equals(udto.getRuc())) {
+        if(udto.getSuccess().equals("true")){
+            if(cliente.getDni().equals(udto.getRuc())){
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
+                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if ((cliente.getNombres() + " " + cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())) {
+                    if((cliente.getNombres() + " " +cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    } else {
-                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())) {
+                    }else{
+                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if (cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno()) ||
-                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))) {
+                        if(cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        } else {
+        }else{
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
         if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
+                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val || !validarFoto) {
 
             //----------------------------------------
 
@@ -480,6 +496,19 @@ public class LoginController {
 
             return "Cliente/registro";
         } else {
+            //
+
+            try {
+                cliente.setFoto(file.getBytes());
+                cliente.setFotonombre(fileName);
+                cliente.setFotocontenttype(file.getContentType());
+                clienteRepository.save(cliente);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "Cliente/registro";
+            }
+            //
             cliente.setEstado(1);
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
@@ -775,19 +804,13 @@ public class LoginController {
             naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
-            System.out.println("AÑOOOOOOO " + anio);
-            System.out.println("Naciiiiii " + naci);
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
         } catch (NumberFormatException e) {
             System.out.println("Error capturado");
         }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
@@ -798,7 +821,7 @@ public class LoginController {
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
                 return "AdminRestaurante/registroAR";
             }
         }
@@ -914,7 +937,6 @@ public class LoginController {
         RestauranteDao rd= new RestauranteDao();
         String success= rd.validarRuc(restaurante.getRuc());
 
-        System.out.println("Existe o no existe "+ success);
         boolean v3=true;
         if(success.equals("false")){
             model.addAttribute("validarApi", "El RUC ingresado no es correcto");
@@ -932,9 +954,6 @@ public class LoginController {
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         Distrito distrito = restaurante.getDistrito();
@@ -955,13 +974,10 @@ public class LoginController {
         boolean validarFoto = true;
 
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }

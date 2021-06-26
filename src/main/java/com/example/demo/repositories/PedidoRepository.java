@@ -83,7 +83,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "            cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
             "            pe.preciototal , pe.mismodistrito FROM pedido pe\n" +
             "            inner join usuario u on pe.idcliente = u.idusuario\n" +
-            "            inner join usuario ur on pe.idrepartidor= ur.idusuario\n" +
+            "            left join usuario ur on pe.idrepartidor= ur.idusuario\n" +
             "            left join cupon cu on pe.idcupon=cu.idcupon\n" +
             "            inner join metodopago pago on pe.idmetodopago=pago.idmetodopago\n" +
             "            inner join restaurante res on res.idrestaurante=pe.idrestaurante\n" +

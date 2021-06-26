@@ -63,7 +63,7 @@
 
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
-                           th:text="${session.usuario.direccionactual} ">
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">

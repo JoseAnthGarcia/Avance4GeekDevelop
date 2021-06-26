@@ -166,8 +166,9 @@ public class LoginController {
         switch (rol) {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
                 session.setAttribute("poolDirecciones", listaDirecciones);
-
+                session.setAttribute("distritoActual", distritoActual);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
                 return "redirect:/admin/usuarios";
@@ -609,8 +610,6 @@ public class LoginController {
     }
 
 
-
-
     /** ESTO ES DE RESTAURANTE LOGIN**/
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
@@ -638,8 +637,6 @@ public class LoginController {
             bindingResult.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
         String fileName = "";
-        System.out.println(contra2);
-        System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
         adminRest.setEstado(2);
@@ -657,19 +654,13 @@ public class LoginController {
             naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
-            System.out.println("AÑOOOOOOO " + anio);
-            System.out.println("Naciiiiii " + naci);
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
         } catch (NumberFormatException e) {
             System.out.println("Error capturado");
         }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
@@ -796,7 +787,6 @@ public class LoginController {
         RestauranteDao rd= new RestauranteDao();
         String success= rd.validarRuc(restaurante.getRuc());
 
-        System.out.println("Existe o no existe "+ success);
         boolean v3=true;
         if(success.equals("false")){
             model.addAttribute("validarApi", "El RUC ingresado no es correcto");
@@ -814,9 +804,6 @@ public class LoginController {
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         Distrito distrito = restaurante.getDistrito();
@@ -837,13 +824,10 @@ public class LoginController {
         boolean validarFoto = true;
 
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }

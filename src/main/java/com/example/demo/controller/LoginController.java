@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.text.Normalizer;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
@@ -425,18 +426,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cliente.getNombres() + " " +cliente.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cliente.getNombres().toUpperCase())){
+                        if (udto.getNombres().toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cliente.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cliente.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cliente.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -843,7 +844,7 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((adminRest.getNombres() + " " +adminRest.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
@@ -852,9 +853,9 @@ public class LoginController {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                adminRest.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                adminRest.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -1129,6 +1130,12 @@ public class LoginController {
             if(distritos.size()>5 || distritos.isEmpty()){
                 errorDist=true;
             }
+            for(Distrito d : distritos){
+                if(d==null){
+                    errorDist=true;
+                }
+            }
+
         }
         if(distritos==null){
             errorDist=true;
@@ -1184,18 +1191,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -1237,7 +1244,7 @@ public class LoginController {
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
             if(errorDist){
-                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
+                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos válidos.");
             }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
@@ -1304,10 +1311,15 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            return "redirect:/registroRepartidor";
+            return "redirect:/cliente/login";
         }
 
     }
 
+    public String cleanString(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return texto;
+    }
 
 }

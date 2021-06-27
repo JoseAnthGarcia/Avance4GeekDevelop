@@ -76,7 +76,9 @@
                                     <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
                                 </thead>
+
                                 <tbody>
+
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${i.index+1}" >1</th>
                                     <td >
@@ -99,7 +101,9 @@
                                 </tbody>
 
                             </table>
-
+                            <div th:if="${listaPedidos.size()==0}">
+                                <h3 class="text-lg-center text-danger">No tiene solicitudes de reparto.</h3>
+                            </div>
                             <!--Pagination -->
                             <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
                                 <div th:each="i: ${#numbers.sequence(1,totalPages)}" >

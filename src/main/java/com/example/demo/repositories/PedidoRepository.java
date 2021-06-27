@@ -44,7 +44,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 )" +
             "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
-    Page<PedidoDTO> pedidosTotales(int idCliente, String texto, int estado1, int estado2, Pageable pageable);
+    Page<PedidoDTO> pedidosTotales(int idCliente, String texto, Integer estado1, Integer estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
             "date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
@@ -61,9 +61,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) " +
             "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
-    Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, int estado1, int estado2,Pageable pageable);
+    Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, Integer estado1, Integer estado2,Pageable pageable);
 
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
+
+    /****/
+
+    @Query(value = "select * from pedido where idcliente=?1", nativeQuery = true)
+    List <Pedido> listacodigos (int idcliente);
+
+    @Query(value = "SELECT codigo,estado FROM pedido where idcliente=92",nativeQuery = true)
+    List<CodigosEstados> listacod(Integer idcliente);
+
+
 
     List<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor);
 

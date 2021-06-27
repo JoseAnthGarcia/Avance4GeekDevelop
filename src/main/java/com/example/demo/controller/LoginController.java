@@ -1304,7 +1304,7 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            return "redirect:/registroRepartidor";
+            return "redirect:/cliente/login";
         }
 
     }

@@ -18,13 +18,13 @@ Correo:
     clave: Garcia916182017
 
 Pedido:
-0 - Pendiente
-1 - Aceptado
-2 - Cancelado
-3 - Preparando
-4 - Pedido Listo
-5 - En Camino
-6 - Entregado
+0 - Pendiente - amarillo
+1 - Aceptado - color del app
+2 - Cancelado - rojo
+3 - Preparando - celeste
+4 - Pedido Listo - azul
+5 - En Camino - verde claro
+6 - Entregado - verde
 
 Método de pago:
 

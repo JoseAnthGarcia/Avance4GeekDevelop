@@ -79,8 +79,10 @@
                   <button class="btn btn-primary btn-user btn-block" type="submit">Ingresar</button>
                   <div style="color: red; font-size: small; text-align: left"
                        th:if="${param.error}">Acceso denegado</div>
+                  <div style="color: red; font-size: small; text-align: left"
+                       th:if="${noExisteCuentaGoogle!=null}">Acceso denegado</div>
                   <hr>
-                  <a href="index.html" class="btn btn-google btn-user btn-block">
+                  <a th:href="@{/oauth2/authorization/google}" class="btn btn-google btn-user btn-block">
                     <i class="fab fa-google fa-fw"></i> Login with Google
                   </a>
                 </form>

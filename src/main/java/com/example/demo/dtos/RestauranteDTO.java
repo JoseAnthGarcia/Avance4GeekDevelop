@@ -11,4 +11,5 @@ public interface RestauranteDTO {
     Integer getCalificaciones();
     Double getPreciopromedio();
     String getCategorias();
+    String getIdcategorias();
 }

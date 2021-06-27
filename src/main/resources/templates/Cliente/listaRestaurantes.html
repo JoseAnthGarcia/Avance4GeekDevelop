@@ -201,7 +201,7 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${val.equals('6')}">Valoración</option>
+                                <option value="" disabled th:selected="${val.equals('7')}">Valoración</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>
@@ -211,11 +211,11 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${idCategoria.equals('0-28')}">Categorias</option>
+                                <option value="" disabled th:selected="${idCategoria.equals('')}">Categorias</option>
                                 <option th:each="categoria : ${categorias}"
-                                        th:value="|${categoria.getIdcategoria()}-${categoria.getIdcategoria() + 1}|"
+                                        th:value="${categoria.getIdcategoria()}"
                                         th:text="${categoria.getNombre()}"
-                                        th:selected="${idCategoria.equals(categoria.getIdcategoria()+'-'+(categoria.getIdcategoria()+1))}"></option>
+                                        th:selected="${idCategoria.equals(categoria.getIdcategoria())}"></option>
                             </select>
                         </div>
                         <!-- TODO BUSCADOR DE CATEGORÍAS -->
@@ -226,6 +226,7 @@
                         </div>
                         <div class="col-sm-2" style="margin-right: 10px" >
                             <a class="btn btn-secondary" th:href="@{'/cliente/listaRestaurantes'}" >Quitar filtros</a>
+
                         </div>
                     </div>
                 </form>
@@ -387,22 +388,6 @@
 </body>
 
 
-<!-- Bootstrap core JavaScript
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
- Core plugin JavaScript
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
- Custom scripts for all pages
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
- Page level plugins
-<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
-
- Page level custom scripts
-<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
-<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
-<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>-->
 
 </html>

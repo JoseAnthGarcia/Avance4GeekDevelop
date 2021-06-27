@@ -32,7 +32,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
     List<Ubicacion> findUbicacionActual(int idUsuario);
 
-
+    Usuario findByCorreo(String email);
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
@@ -232,7 +232,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Page<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad, Pageable pageable);
 
-    Usuario findByCorreo(String correo);
+
 
     List<Usuario> findUsuarioByCorreo(String correo);
     List<Usuario> findUsuarioByDni(String dni);

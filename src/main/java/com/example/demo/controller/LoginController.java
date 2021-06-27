@@ -1129,6 +1129,12 @@ public class LoginController {
             if(distritos.size()>5 || distritos.isEmpty()){
                 errorDist=true;
             }
+            for(Distrito d : distritos){
+                if(d==null){
+                    errorDist=true;
+                }
+            }
+
         }
         if(distritos==null){
             errorDist=true;
@@ -1237,7 +1243,7 @@ public class LoginController {
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
             if(errorDist){
-                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos");
+                model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos válidos.");
             }
             if(errorMov){
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");

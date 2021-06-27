@@ -15,11 +15,4 @@ public interface UbicacionRepository extends JpaRepository<Ubicacion, Integer> {
 
     @Query(value="select * from ubicacion where idusuario=?1 and borrado = 0",nativeQuery = true)
     List<Ubicacion> findByUsuarioVal(Usuario usuario);
-
-
-
-
-
-
-
 }

@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.oauth.CustomOauth2UserService;
+import com.example.demo.oauth.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,7 +15,11 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private CustomOauth2UserService oauth2UserService;
 
+    @Autowired
+    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -26,12 +32,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests()
-                .antMatchers("/cliente/**").hasAnyAuthority("cliente")
-                .antMatchers("/admin","/admin/**").hasAnyAuthority("administrador","administradorG")
-                .antMatchers("/plato","/plato/**","/restaurante","/restaurante/**","/cupon","/cupon/**", "/extra","/extra/**").hasAnyAuthority("administradorR")
-                .antMatchers("/repartidor", "/repartidor/**").hasAuthority("repartidor")
-                .anyRequest().permitAll();
+                .antMatchers("/cliente/**")
+                    .hasAnyAuthority("cliente")
+                .antMatchers("/admin","/admin/**")
+                    .hasAnyAuthority("administrador","administradorG")
+                .antMatchers("/plato","/plato/**","/restaurante","/restaurante/**","/cupon","/cupon/**", "/extra","/extra/**")
+                    .hasAnyAuthority("administradorR")
+                .antMatchers("/repartidor", "/repartidor/**").hasAnyAuthority("repartidor")
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login()
+                    .loginPage("/login")
+                    .userInfoEndpoint().userService(oauth2UserService)
+                    .and()
+                    .defaultSuccessUrl("/redirectByRole",true);
+        /*
+        .oauth2Login()
+                    .loginPage("/login")
+                    .userInfoEndpoint().userService(oauth2UserService)
+                    .and()
+                    .successHandler(oAuth2LoginSuccessHandler);
+
+         */
         http.exceptionHandling().accessDeniedPage("/accessDenied");
+
+
 
         http.logout()
 
@@ -53,7 +78,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery("select correo, contrasenia, estado FROM usuario WHERE correo = ?")
                 .authoritiesByUsernameQuery("select u.correo, r.tipo from usuario u inner join " +
                         "rol r on (u.idrol = r.idrol) where u.correo = ? and u.estado = 1");
+
+
         System.out.println("query configure");
+
+
 
     }
 }

@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
 @Controller
 @RequestMapping("/restaurante")
 public class AdminRestController {
@@ -289,20 +290,24 @@ public class AdminRestController {
     }
 
     @GetMapping("/rechazarPedido")
-    public String rechazarPedido(@RequestParam("id") String id, @RequestParam("comentarioAR") String comentarioAR,
+    public String rechazarPedido(@RequestParam("id") String id, @RequestParam(value = "comentarioAR", required = false) String comentarioAR,
                                  RedirectAttributes attr,
                                  Model model, HttpSession session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
+
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        System.out.println("------------------------------------------------------------------------------------------");
-        System.out.println(comentarioAR.getClass());
-        if (pedido != null) {
+        boolean cometariovacio=false;
+        if(comentarioAR.equals(" ")){
+            cometariovacio=true;
+            System.out.println("SE HAEEEEEEEEEEEE VERDAD");
+        }
+        if (pedido != null && !cometariovacio) {
             if (pedido.getEstado() == 0) {
-                if (!comentarioAR.equals("")) {
+                if (comentarioAR!=null||!cometariovacio) {
                     pedido.setEstado(2);
                     pedido.setComentrechazorest(comentarioAR);
                     pedidoRepository.save(pedido);

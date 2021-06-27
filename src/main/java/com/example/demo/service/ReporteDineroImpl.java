@@ -14,7 +14,7 @@ public class ReporteDineroImpl implements ReporteDineroService{
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<ReporteDineroDTO> findpage(int idCliente, int limitInf, int limitSup, String texto, String nombrec, Pageable pageable){
-        return this.pedidoRepository.reportedinero(idCliente,limitInf,limitSup,texto,nombrec,pageable);
+    public Page<ReporteDineroDTO> findpage(int idCliente, int limitInf, int limitSup, String anio,String texto, String nombrec, Pageable pageable){
+        return this.pedidoRepository.reportedinero(idCliente,limitInf,limitSup,anio,texto,nombrec,pageable);
     }
 }

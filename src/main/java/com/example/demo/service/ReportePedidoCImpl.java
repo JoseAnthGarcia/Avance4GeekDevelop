@@ -14,8 +14,8 @@ public class ReportePedidoCImpl implements ReportePedidoCService {
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<ReportePedido> findPaginated3(int idCliente, int limitInf, int limitSup, String texto, String numpedidos, Pageable pageable){
-        return this.pedidoRepository.reportexmes(idCliente,limitInf,limitSup,texto,numpedidos,pageable);
+    public Page<ReportePedido> findPaginated3(int idCliente, int limitInf, int limitSup, String texto,String anio,int limit1cant,int limit2cant, Pageable pageable){
+        return this.pedidoRepository.reportexmes(idCliente,limitInf,limitSup,texto,anio,limit1cant,limit2cant,pageable);
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
+import com.example.demo.oauth.CustomOAuth2User;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,11 +14,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +36,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -82,11 +90,15 @@ public class LoginController {
     MovilidadRepository movilidadRepository;
 
     @GetMapping("/login")
-    public String loginForm() {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        if(authentication==null || authentication instanceof AnonymousAuthenticationToken){
+    public String loginForm(Model model, HttpSession httpSession) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            if(httpSession.getAttribute("noExisteCuentaGoogle")!=null){
+                model.addAttribute("noExisteCuentaGoogle", true);
+                httpSession.removeAttribute("noExisteCuentaGoogle");
+            }
             return "Cliente/login";
-        }else {
+        } else {
             String rol = "";
             for (GrantedAuthority role : authentication.getAuthorities()) {
                 rol = role.getAuthority();
@@ -148,7 +160,8 @@ public class LoginController {
     
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
-    public String redirectByRole(Authentication auth, HttpSession session) {
+    public String redirectByRole(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
+
         String rol = "";
 
         for (GrantedAuthority role : auth.getAuthorities()) {
@@ -157,10 +170,37 @@ public class LoginController {
         }
 
         String correo = auth.getName();
-        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        Usuario usuario = null;
+        if(rol.equals("ROLE_USER")){
+            //TODO: PODER FINDBYCORREOANDVALIDCORREO
+            usuario = clienteRepository.findByCorreo(correo);
+            if (usuario==null){
+                try {
+                    httpServletRequest.logout();
+                    session = httpServletRequest.getSession();
+                    session.setAttribute("noExisteCuentaGoogle", true);
+                }catch(Exception e){}
+            }else{
+                rol = usuario.getRol().getTipo();
 
-        session.setAttribute("usuario", usuario);
+                //ELIMINO LA CREDENCIAL
+                try {
+                    httpServletRequest.logout();
+                    session = httpServletRequest.getSession();
+                }catch(Exception e){}
 
+                Set<GrantedAuthority> authorities = new HashSet<>();
+                authorities.add(new SimpleGrantedAuthority(rol));
+                Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
+                        BCryptPasswordEncoder().encode("password"),authorities);
+                SecurityContextHolder.getContext().setAuthentication(reAuth);
+                session.setAttribute("usuario", usuario);
+            }
+        }else{
+            usuario = usuarioRepository.findByCorreo(correo);
+            session.setAttribute("usuario", usuario);
+
+        }
 
         //redirect:
         switch (rol) {
@@ -168,6 +208,82 @@ public class LoginController {
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
                 session.setAttribute("poolDirecciones", listaDirecciones);
 
+                return "redirect:/cliente/listaRestaurantes";
+            case "administradorG":
+                return "redirect:/admin/usuarios";
+            case "administrador":
+                return "redirect:/admin/usuarios";
+            case "administradorR":
+                Restaurante restaurante = null;
+                try {
+                    restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
+                } catch (NullPointerException e) {
+                    System.out.println("Fallo");
+                }
+                if (restaurante == null || restaurante.getEstado() == 2) {
+                    return "redirect:/paginabienvenida";
+                    //TODO: ojo ver restaurante
+                    //return "redirect:/restaurante/paginabienvenida";
+                } else if (restaurante.getEstado() == 1) {
+                    return "redirect:/plato/";
+                }
+            case "repartidor":
+                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
+                session.setAttribute("poolDirecciones", listaDirecciones1);
+                session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
+                List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+
+                if (pedidoAct.size() == 0) {
+                    return "redirect:/repartidor/listaPedidos";
+                } else {
+                    return "redirect:/repartidor/pedidoActual";
+                }
+            default:
+                return "redirect:/login"; //no tener en cuenta
+        }
+    }
+
+    public void login(HttpServletRequest req, String user, String pass) {
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+        Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
+
+                BCryptPasswordEncoder().encode("password"),authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(reAuth);
+    }
+
+    @GetMapping("/redirectByRolGoogle")
+    public String redirectByRolGoogle(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest){
+
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) auth.getPrincipal();
+
+        String correo = oAuth2User.getEmail();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+
+        if(usuario==null){
+            try {
+                httpServletRequest.logout();
+            }catch (Exception e){
+
+            }
+            return "redirect:/login";
+        }else {
+            String rol = usuario.getRol().getTipo();
+
+            session.setAttribute("usuario", usuario);
+
+
+        //redirect:
+        switch (rol) {
+            case "cliente":
+                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
+                session.setAttribute("poolDirecciones", listaDirecciones);
+                session.setAttribute("distritoActual", distritoActual);
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":
                 return "redirect:/admin/usuarios";
@@ -193,14 +309,14 @@ public class LoginController {
                 session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
                 List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
-                if(pedidoAct.size()==0){
-                    return "redirect:/repartidor/listaPedidos";
-                }else{
-                    return "redirect:/repartidor/pedidoActual";
-                }
-
-            default:
-                return "somewhere"; //no tener en cuenta
+                    if (pedidoAct.size() == 0) {
+                        return "redirect:/repartidor/listaPedidos";
+                    } else {
+                        return "redirect:/repartidor/pedidoActual";
+                    }
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
         }
     }
 
@@ -223,6 +339,7 @@ public class LoginController {
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
+                                 @RequestParam("photo") MultipartFile file,
                                 Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
@@ -244,7 +361,24 @@ public class LoginController {
         Boolean usuario_direccion = ubicacion.getDireccion().equalsIgnoreCase("") || ubicacion.getDireccion() == null;
         Boolean dist_u_val = true;
 
-
+        //VALIDACIÓN DE FOTOS
+        Boolean validarFoto = true;
+        String fileName = "";
+        if (file != null) {
+            if (file.isEmpty()) {
+                model.addAttribute("mensajefoto", "Debe subir una imagen");
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                System.out.println("FILE NULL---- HECTOR CTM5");
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
+            }
+            fileName = file.getOriginalFilename();
+            if (fileName.contains("..")) {
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
+                return "Cliente/registro";
+            }
+        }
 
         try {
             Integer u_dist = ubicacion.getDistrito().getIddistrito();
@@ -312,7 +446,7 @@ public class LoginController {
         }
 
         if (bindingResult.hasErrors() || !contrasenia2.equals(cliente.getContrasenia()) || usuario_direccion || dist_u_val || fecha_naci
-                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
+                || dni_val || usuario_val || usuario_null || apellido_val || nombre_val || !validarFoto) {
 
             //----------------------------------------
 
@@ -362,6 +496,19 @@ public class LoginController {
 
             return "Cliente/registro";
         } else {
+            //
+
+            try {
+                cliente.setFoto(file.getBytes());
+                cliente.setFotonombre(fileName);
+                cliente.setFotocontenttype(file.getContentType());
+                clienteRepository.save(cliente);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                return "Cliente/registro";
+            }
+            //
             cliente.setEstado(1);
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
@@ -657,19 +804,13 @@ public class LoginController {
             naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
-            System.out.println("AÑOOOOOOO " + anio);
-            System.out.println("Naciiiiii " + naci);
             if (anio - naci >= 18) {
                 fecha_naci = false;
             }
         } catch (NumberFormatException e) {
             System.out.println("Error capturado");
         }
-        System.out.println("SOY LA FECH DE CUMPLE" + adminRest.getFechanacimiento());
-        System.out.println("Soy solo fecha_naci " + fecha_naci);
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
@@ -680,7 +821,7 @@ public class LoginController {
             }
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                model.addAttribute("mensajefoto", "No se permite '..' een el archivo");
                 return "AdminRestaurante/registroAR";
             }
         }
@@ -796,7 +937,6 @@ public class LoginController {
         RestauranteDao rd= new RestauranteDao();
         String success= rd.validarRuc(restaurante.getRuc());
 
-        System.out.println("Existe o no existe "+ success);
         boolean v3=true;
         if(success.equals("false")){
             model.addAttribute("validarApi", "El RUC ingresado no es correcto");
@@ -814,9 +954,6 @@ public class LoginController {
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         restaurante.setAdministrador(adminRest);
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
-        System.out.println("SOY EL ID DEL ADMI" + adminRest.getDni());
         restaurante.setEstado(2);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         Distrito distrito = restaurante.getDistrito();
@@ -837,13 +974,10 @@ public class LoginController {
         boolean validarFoto = true;
 
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }

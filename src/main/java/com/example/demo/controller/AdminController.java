@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.ValidarDniDTO;
-import com.example.demo.dtos.ClienteConMasPedidosDto;
-import com.example.demo.dtos.UsuarioDtoCliente;
-import com.example.demo.dtos.UsuarioDtoRepartidor;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.*;
@@ -92,6 +89,9 @@ public class AdminController  {
     private UsuarioServiceAPIDtoCliente usuarioServiceAPIDtoCliente;
     @Autowired
     private UsuarioServiceAPIDtoRepartidor usuarioServiceAPIDtoRepartidor;
+    // TODO: 26/06/2021
+    @Autowired
+    private UsuarioServiceAPIDtoReporteVentas usuarioServiceAPIDtoReporteVentas;
 
     @GetMapping("/listaReportes")
     public String listaReportes(Model model, HttpSession session) {
@@ -814,11 +814,11 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -958,10 +958,10 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-
+*/
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -1356,11 +1356,11 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+       /* List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1514,11 +1514,363 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+      /*  List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+        model.addAttribute("texto",texto);
+        model.addAttribute("cantidad",cantidad);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoRepartidor";
+    }
+// TODO: 26/06/2021
+@GetMapping(value ="/ReporteVentas")//lista de reporte de Repartidor pedido
+public String listaReporteVentas(@RequestParam Map<String, Object> params, Model model,
+                                           @RequestParam(value = "texto", required = false) String texto,
+                                           @RequestParam(value = "cantidad", required = false) String cantidad,
+                                           @RequestParam(value = "monto", required = false) String monto,
+                                           @RequestParam(value = "valoracion", required = false) String valoracion,
+                                           HttpSession session) {
+
+    int page;
+    try{
+        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+    }catch(NumberFormatException nfe){
+        page =0;
+    }
+
+    PageRequest pageRequest = PageRequest.of(page, 10);
+    if(monto==null){
+        monto="0";
+        session.removeAttribute("monto");
+    }else{
+        session.setAttribute("monto",monto);
+    }
+    if(valoracion==null){
+        valoracion="0";
+        session.removeAttribute("valoracion");
+
+    }else{
+        session.setAttribute("valoracion",valoracion);
+    }
+
+
+    if(texto==null){
+        texto="";
+        session.removeAttribute("texto");
+
+    }else{
+        session.setAttribute("texto",texto);
+    }
+
+
+    if(cantidad==null){
+        cantidad="7";
+        session.removeAttribute("cantidad");
+    }else{
+        session.setAttribute("cantidad",cantidad);
+    }
+
+    texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+    cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+    monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+    valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+    Integer inFmont ;
+    Integer maXmont ;
+    Integer miFval ;
+    Integer maXval ;
+    Integer miFestado ;
+    Integer maXestado ;
+
+    switch (cantidad){
+        case "7":
+            miFestado=-1;
+            maXestado=100000;
+            break;
+        case "0":
+            miFestado=-1;
+            maXestado=100;
+            break;
+        case "1":
+            miFestado=100;
+            maXestado=200;
+            break;
+        case "2":
+            miFestado=200;
+            maXestado=300;
+            break;
+        case "3":
+            miFestado=300;
+            maXestado=400;
+            break;
+        case "4":
+            miFestado=400;
+            maXestado=500;
+            break;
+        case "5":
+            miFestado=500;
+            maXestado=600;
+            break;
+        case "6":
+            miFestado=600;
+            maXestado=100000;
+            break;
+        default:
+            miFestado=-1;
+            maXestado=100000;
+    }
+
+    switch (monto){
+        case "0":
+            inFmont = 0;
+            maXmont = 10000;
+            break;
+        case "1":
+            inFmont = 0;
+            maXmont = 2000;
+            break;
+        case "2":
+            inFmont = 2000;
+            maXmont = 4000;
+            break;
+        case "3":
+            inFmont = 4000;
+            maXmont = 6000;
+            break;
+        case "4":
+            inFmont = 6000;
+            maXmont = 8000;
+            break;
+        case "5":
+            inFmont = 8000;
+            maXmont = 10000;
+            break;
+        case "6":
+            inFmont = 10000;
+            maXmont = 1000000;
+            break;
+        default:
+            inFmont = 0;
+            maXmont = 100000;
+    }
+
+    switch (valoracion){
+        case "0":
+            miFval = -1;
+            maXval = 7;
+            break;
+        case "1":
+            miFval = 0;
+            maXval = 1;
+            break;
+        case "2":
+            miFval = 1;
+            maXval = 2;
+            break;
+        case "3":
+            miFval = 2;
+            maXval = 3;
+            break;
+        case "4":
+            miFval = 3;
+            maXval = 4;
+            break;
+        case "5":
+            miFval = 4;
+            maXval = 5;
+            break;
+        case "6":
+            miFval = -1;
+            maXval = 0;
+            break;
+        default:
+            miFval = -1;
+            maXval = 7;
+    }
+
+
+
+    Page<UsuarioDtoReporteVentas> pagePersona = usuarioServiceAPIDtoReporteVentas.listaUsuariosDtoReporteVentas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+    int totalPage = pagePersona.getTotalPages();
+    System.out.println(totalPage+"----------------------------ddd-ddd");
+    if(totalPage > 0) {
+        List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+        model.addAttribute("pages", pages);
+    }
+    /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+    model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+    System.out.println(listaClienteConMasPedidos.get(0));
+    model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+    System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+    model.addAttribute("texto",texto);
+    model.addAttribute("cantidad",cantidad);
+    model.addAttribute("monto",monto);
+    model.addAttribute("valoracion",valoracion);
+    model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+    model.addAttribute("current", page + 1);
+    model.addAttribute("next", page + 2);
+    model.addAttribute("prev", page);
+    model.addAttribute("last", totalPage);
+    return "AdminGen/reporteVentas";
+}
+    @GetMapping(value ="/ReporteVentasPagina")//lista de reporte de Repartidor pedido
+    public String listaReporteVentasPagina(@RequestParam Map<String, Object> params, Model model,
+                                     @RequestParam(value = "texto", required = false) String texto,
+                                     @RequestParam(value = "cantidad", required = false) String cantidad,
+                                     @RequestParam(value = "monto", required = false) String monto,
+                                     @RequestParam(value = "valoracion", required = false) String valoracion,
+                                     HttpSession session) {
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (cantidad){
+            case "7":
+                miFestado=-1;
+                maXestado=100000;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=100;
+                break;
+            case "1":
+                miFestado=100;
+                maXestado=200;
+                break;
+            case "2":
+                miFestado=200;
+                maXestado=300;
+                break;
+            case "3":
+                miFestado=300;
+                maXestado=400;
+                break;
+            case "4":
+                miFestado=400;
+                maXestado=500;
+                break;
+            case "5":
+                miFestado=500;
+                maXestado=600;
+                break;
+            case "6":
+                miFestado=600;
+                maXestado=100000;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=100000;
+        }
+
+        switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
+            case "1":
+                inFmont = 0;
+                maXmont = 2000;
+                break;
+            case "2":
+                inFmont = 2000;
+                maXmont = 4000;
+                break;
+            case "3":
+                inFmont = 4000;
+                maXmont = 6000;
+                break;
+            case "4":
+                inFmont = 6000;
+                maXmont = 8000;
+                break;
+            case "5":
+                inFmont = 8000;
+                maXmont = 10000;
+                break;
+            case "6":
+                inFmont = 10000;
+                maXmont = 1000000;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 100000;
+        }
+
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
+
+
+
+        Page<UsuarioDtoReporteVentas> pagePersona = usuarioServiceAPIDtoReporteVentas.listaUsuariosDtoReporteVentas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        System.out.println(listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1529,9 +1881,8 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
-        return "AdminGen/reportePedidoRepartidor";
+        return "AdminGen/reporteVentas";
     }
-
 
     @GetMapping("/buscador2")
     public String buscadorUsuario2(@RequestParam Map<String, Object> params, Model model){

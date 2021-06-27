@@ -63,7 +63,7 @@
 
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
-                           th:text="${session.usuario.direccionactual} ">
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}| ">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
@@ -146,7 +146,7 @@
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -347,6 +347,8 @@
         <!-- End of Footer -->
 
     </div>
+
+    </div>
     <!-- End of Content Wrapper -->
 
 </div>
@@ -357,9 +359,8 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-
-    <!-- Ir a Pagar Modal -->
-    <div class="modal fade" id="irAPagar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- Ir a Pagar Modal -->
+<div class="modal fade" id="irAPagar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

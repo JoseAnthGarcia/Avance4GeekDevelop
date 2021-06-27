@@ -4,7 +4,6 @@ import com.example.demo.dtos.*;
 import com.example.demo.entities.Rol;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.entities.Usuario;
-import com.sun.xml.bind.v2.TODO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +32,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)
     List<Ubicacion> findUbicacionActual(int idUsuario);
 
-
+    Usuario findByCorreo(String email);
 
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
@@ -152,6 +151,57 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "group by pe.idrepartidor order by u.nombres")
     Page<UsuarioDtoRepartidor> listaUsuariosDtoRepartidor(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
+    // TODO: 26/06/2021
+    @Query(value ="select r.nombre, r.ruc, r.estado, pe.mismodistrito1, pe.mismodistrito0 ,pe.valoracionrestaurante , \n" +
+            "pe.cantpedidos, pe.montototal \n" +
+            "from restaurante r \n" +
+            "left join (select p.idrestaurante, round(AVG(p.valoracionrestaurante),0) as 'valoracionrestaurante' , \n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\tcount(p.idrestaurante) as 'cantpedidos', \n" +
+            "\t\t\t\t((4*p1.mismodistrito1) + (6*p0.mismodistrito0)) as 'montototal' ,\n" +
+            "                p1.mismodistrito1 ,p0.mismodistrito0\n" +
+            "                from pedido p, restaurante u,  \n" +
+            "                (select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito1' \n" +
+            "                from pedido p, restaurante u\n" +
+            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 1 \n" +
+            "                group by p.idrestaurante) p1, \n" +
+            "                ( select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito0' \n" +
+            "                from pedido p, restaurante u\n" +
+            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 0 \n" +
+            "                group by p.idrestaurante) p0\n" +
+            " where p.idrestaurante= u.idrestaurante and p1.idrestaurante= u.idrestaurante and p0.idrestaurante= u.idrestaurante)  pe on r.idrestaurante = pe.idrestaurante\n" +
+            "WHERE concat(lower(r.nombre),lower(r.ruc)) like %?1%\n" +
+            "and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante > ?2 and pe.valoracionrestaurante<= ?3 ))\n" +
+            "and (cantpedidos > ?4 and cantpedidos <= ?5 )\n" +
+            "and (montototal> ?6 and montototal<= ?7 )\n" +
+            "group by r.ruc\n" +
+            "order by r.nombre",nativeQuery = true,
+            countQuery = "select count(*) \n" +
+                    "from restaurante r \n" +
+                    "left join (select p.idrestaurante, round(AVG(p.valoracionrestaurante),0) as 'valoracionrestaurante' , \n" +
+                    "\t\t\t\t\t\t\t\t\t\t\t\tcount(p.idrestaurante) as 'cantpedidos', \n" +
+                    "\t\t\t\t((4*p1.mismodistrito1) + (6*p0.mismodistrito0)) as 'montototal' ,\n" +
+                    "                p1.mismodistrito1 ,p0.mismodistrito0\n" +
+                    "                from pedido p, restaurante u,  \n" +
+                    "                (select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito1' \n" +
+                    "                from pedido p, restaurante u\n" +
+                    "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 1 \n" +
+                    "                group by p.idrestaurante) p1, \n" +
+                    "                ( select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito0' \n" +
+                    "                from pedido p, restaurante u\n" +
+                    "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 0 \n" +
+                    "                group by p.idrestaurante) p0\n" +
+                    " where p.idrestaurante= u.idrestaurante and p1.idrestaurante= u.idrestaurante and p0.idrestaurante= u.idrestaurante)  pe on r.idrestaurante = pe.idrestaurante\n" +
+                    "WHERE concat(lower(r.nombre),lower(r.ruc)) like %?1%\n" +
+                    "and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante > ?2 and pe.valoracionrestaurante<= ?3 ))\n" +
+                    "and (cantpedidos > ?4 and cantpedidos <= ?5 )\n" +
+                    "and (montototal> ?6 and montototal<= ?7 )\n" +
+                    "group by r.ruc\n" +
+                    "order by r.nombre")
+    Page<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
+
+
+
+
     @Query(value = "select datediff(now(),min(fechaRegistro)) from usuario", nativeQuery = true)
     int buscarFechaMinimaRepartidor();
 
@@ -182,7 +232,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Page<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad, Pageable pageable);
 
-    Usuario findByCorreo(String correo);
+
 
     List<Usuario> findUsuarioByCorreo(String correo);
     List<Usuario> findUsuarioByDni(String dni);
@@ -241,7 +291,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "            left join restaurante r on r.idrestaurante = p.idrestaurante\n" +
             "            left join usuario u on  p.idcliente = u.idusuario\n" +
             "            where (p.idcliente=?1) and (p.estado=2 or p.estado=6)\n" +
-            "            order by p.fechapedido desc limit 3\n" +
+            "            order by p.fechapedido asc limit 3\n" +
             "            ;" ,nativeQuery = true)
     List<NotiDTO> notificacionCliente(int id);
 

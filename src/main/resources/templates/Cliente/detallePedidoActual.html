@@ -62,7 +62,7 @@
 
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
-                           th:text="${session.usuario.direccionactual} ">
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
@@ -145,7 +145,7 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -353,12 +353,12 @@
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black"  >Delivery</h6>
+                            <h6 class="col-3" style="color:black"  >Entrega</h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1}"  th:text="|S/. 5.00|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0}"  th:text="|S/. 8.00|"></h6>
                         </div>
                         <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black">Cupones</h6>
+                            <h6 class="col-3" style="color:black">Cupón</h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. -${p3.getDescuento}|"></h6>
                         </div>
@@ -405,6 +405,24 @@
 
 				<div style="text-align:center">
 					<a  class="btn btn-primary" th:href="@{/cliente/pedidoActual}" type="submit">Regresar</a>
+                    <a th:if="${listapedido1.get(0).getEstado()==0}" type="button" class="btn btn-danger" data-toggle="modal"
+                       th:data-target="${'#myModal1'}" th:href="${'#myModal1'}">Cancelar</a>
+
+                    <div class="modal" th:id="${'myModal1'}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">El pedido será cancelado</h4>
+                                </div>
+                                <div class="container"></div>
+                                <div class="modal-footer">
+                                    <a th:href="@{'/cliente/cancelarPedido?id='+${listapedido1.get(0).getCodigo()}}"
+                                       class="btn btn-primary">Aceptar</a>
+                                    <a href="#" data-dismiss="modal" class="btn">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--
 					<a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
                     <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"

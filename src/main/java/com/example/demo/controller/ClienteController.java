@@ -1894,7 +1894,7 @@ public String cancelarPedido(@RequestParam("id") String id,
 
     if (pedido != null && pedido.getCliente().getIdusuario()==idr) {
         if (pedido.getEstado() == 0) {
-            pedido.setEstado(1);
+            pedido.setEstado(2);
             pedidoRepository.save(pedido);
         }
     }

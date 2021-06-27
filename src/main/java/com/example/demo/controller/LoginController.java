@@ -206,7 +206,9 @@ public class LoginController {
         switch (rol) {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
                 session.setAttribute("poolDirecciones", listaDirecciones);
+                session.setAttribute("distritoActual", distritoActual);
 
                 return "redirect:/cliente/listaRestaurantes";
             case "administradorG":

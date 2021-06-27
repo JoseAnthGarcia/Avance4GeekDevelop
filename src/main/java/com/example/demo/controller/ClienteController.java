@@ -2058,8 +2058,8 @@ public String cancelarPedido(@RequestParam("id") String id,
         texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
         estado= httpSession.getAttribute("estado") == null ? "7" :  (String) httpSession.getAttribute("estado");
 
-        Integer limitSup;
-        Integer limitInf;
+        Integer limitSup=6;
+        Integer limitInf=0;
         switch (estado) {
             case "2":
                 limitSup = 2;

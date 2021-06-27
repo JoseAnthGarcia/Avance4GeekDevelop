@@ -439,7 +439,7 @@ public class RepartidorController {
         }
 
         //TODO: validar fechas:
-        if(fechaMax==null || fechaMin==null){
+        if(fechaMax == ""|| fechaMin == "" || fechaMax== null || fechaMin ==null){
             fechaMin = "1900-01-01";
             fechaMax = "3000-01-01";
         }

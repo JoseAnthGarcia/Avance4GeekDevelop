@@ -42,3 +42,8 @@ Usuario:
 1 activo
 2 pendiente
 3 rechazado
+
+Restaurante Estados:
+0 pendiente
+1 aceptado
+2 rechazado

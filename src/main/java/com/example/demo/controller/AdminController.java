@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.ValidarDniDTO;
-import com.example.demo.dtos.ClienteConMasPedidosDto;
-import com.example.demo.dtos.UsuarioDtoCliente;
-import com.example.demo.dtos.UsuarioDtoRepartidor;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.*;
@@ -92,6 +89,9 @@ public class AdminController  {
     private UsuarioServiceAPIDtoCliente usuarioServiceAPIDtoCliente;
     @Autowired
     private UsuarioServiceAPIDtoRepartidor usuarioServiceAPIDtoRepartidor;
+    // TODO: 26/06/2021
+    @Autowired
+    private UsuarioServiceAPIDtoReporteVentas usuarioServiceAPIDtoReporteVentas;
 
     @GetMapping("/listaReportes")
     public String listaReportes(Model model, HttpSession session) {
@@ -111,8 +111,8 @@ public class AdminController  {
                                      @RequestParam(value = "numPag", required = false) Integer numPag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                                     @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                                     @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
+                                     @RequestParam(value = "fechaRegistro", required = false) String fechaRegistro1,
                                      @RequestParam(value = "dni", required = false) String dni1,
                                      @RequestParam(value = "nombreRest", required = false) String nombreRest1,
                                      @RequestParam(value = "ruc", required = false) String ruc1){
@@ -130,7 +130,7 @@ public class AdminController  {
         int tamPag = 3;
 
         //-------
-
+        Integer fechaRegistro = 1;
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
@@ -145,12 +145,22 @@ public class AdminController  {
                     model.addAttribute("ruc1", ruc1);
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+
+                        }catch (NumberFormatException e){
+                            fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        }
                     }
 
                     System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1*-1);
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro*-1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();
@@ -174,12 +184,19 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
                     System.out.println(fechaRegistro1);
 
-                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
-
+                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro*-1);
 
                 }
 
@@ -205,15 +222,32 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
 
 
                     model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+
+                    Integer tipoMovilidad = 5;
+                    if(tipoMovilidad1!=null){
+                        try {
+                            tipoMovilidad = Integer.parseInt(tipoMovilidad1);
+                        }catch (NumberFormatException e){
+                            tipoMovilidad1= null;
+                        }
+                    }
                     if(tipoMovilidad1==null){
-                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1);
                     }else{
-                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1, tipoMovilidad);
                     }
                 }
 
@@ -235,7 +269,7 @@ public class AdminController  {
 
 
     @GetMapping("/aceptarSolicitudRest")
-    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
@@ -244,19 +278,26 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(1);
-                //Fecha de registro:
-                //Date date = new Date();
-                //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                //restaurante.setFechaadmitido(hourdateFormat.format(date));
-                //
-                restauranteRepository.save(restaurante);
+                if(restaurante.getEstado()==2) {
 
-                String contenido = "Hola "+ restaurante.getNombre()+" tu cuenta fue creada exitosamente";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    restaurante.setEstado(1);
+                    //Fecha de registro:
+                    //Date date = new Date();
+                    //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    //restaurante.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    restauranteRepository.save(restaurante);
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else {
+                    attr.addFlashAttribute("msg2", "No se pudo aceptar el restaurante indicado.");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
+                attr.addFlashAttribute("msg3", "El restaurante ingresado no existe.");
                 return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
             }
         }
@@ -297,7 +338,7 @@ public class AdminController  {
         }
     }
     @GetMapping("/rechazarSolicitudRest")
-    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -306,12 +347,17 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(3);
-                restauranteRepository.save(restaurante);
-                String contenido = "Hola "+ restaurante.getAdministrador().getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                if(restaurante.getEstado()==2) {
+                    restaurante.setEstado(3);
+                    restauranteRepository.save(restaurante);
+                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }
@@ -334,33 +380,40 @@ public class AdminController  {
 // HOLA
     @GetMapping("/aceptarSolicitud")////error al direccionar - administrador rest
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
-                                 @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                 @RequestParam(value = "tipo", required = false) String tipo,
+                                 RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
-            return ""; //Retornar pagina principal
+            return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(1);
-                //Fecha de registro:
-                Date date = new Date();
-                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                usuario.setFechaadmitido(hourdateFormat.format(date));
-                //
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(1);
+                    //Fecha de registro:
+                    Date date = new Date();
+                    DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    usuario.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" tu solicitud fue aceptada exitosamente";
-                sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    /////-----------------------------------------  ------/////
+                    attr.addFlashAttribute("msg1", "Usuario aceptado exitosamente");
+
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else {
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 
@@ -368,7 +421,8 @@ public class AdminController  {
 
     @GetMapping("/rechazarSolicitud")////Error al redireccionar - administrador rest
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
-                                    @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                    @RequestParam(value = "tipo", required = false) String tipo,
+                                    RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -377,19 +431,23 @@ public class AdminController  {
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(3);
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(3);
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" solicitud fue rechazada";
-                sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
 
-
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
+                    /////-----------------------------------------  ------/////
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 
@@ -814,11 +872,11 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -958,10 +1016,10 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-
+*/
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -1356,11 +1414,11 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+       /* List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1514,11 +1572,363 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+      /*  List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
-        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+        model.addAttribute("texto",texto);
+        model.addAttribute("cantidad",cantidad);
+        model.addAttribute("monto",monto);
+        model.addAttribute("valoracion",valoracion);
+        model.addAttribute("listaUsuarios", pagePersona.getContent());
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return "AdminGen/reportePedidoRepartidor";
+    }
+// TODO: 26/06/2021
+@GetMapping(value ="/ReporteVentas")//lista de reporte de Repartidor pedido
+public String listaReporteVentas(@RequestParam Map<String, Object> params, Model model,
+                                           @RequestParam(value = "texto", required = false) String texto,
+                                           @RequestParam(value = "cantidad", required = false) String cantidad,
+                                           @RequestParam(value = "monto", required = false) String monto,
+                                           @RequestParam(value = "valoracion", required = false) String valoracion,
+                                           HttpSession session) {
+
+    int page;
+    try{
+        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+    }catch(NumberFormatException nfe){
+        page =0;
+    }
+
+    PageRequest pageRequest = PageRequest.of(page, 10);
+    if(monto==null){
+        monto="0";
+        session.removeAttribute("monto");
+    }else{
+        session.setAttribute("monto",monto);
+    }
+    if(valoracion==null){
+        valoracion="0";
+        session.removeAttribute("valoracion");
+
+    }else{
+        session.setAttribute("valoracion",valoracion);
+    }
+
+
+    if(texto==null){
+        texto="";
+        session.removeAttribute("texto");
+
+    }else{
+        session.setAttribute("texto",texto);
+    }
+
+
+    if(cantidad==null){
+        cantidad="7";
+        session.removeAttribute("cantidad");
+    }else{
+        session.setAttribute("cantidad",cantidad);
+    }
+
+    texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+    cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+    monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+    valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+    Integer inFmont ;
+    Integer maXmont ;
+    Integer miFval ;
+    Integer maXval ;
+    Integer miFestado ;
+    Integer maXestado ;
+
+    switch (cantidad){
+        case "7":
+            miFestado=-1;
+            maXestado=100000;
+            break;
+        case "0":
+            miFestado=-1;
+            maXestado=100;
+            break;
+        case "1":
+            miFestado=100;
+            maXestado=200;
+            break;
+        case "2":
+            miFestado=200;
+            maXestado=300;
+            break;
+        case "3":
+            miFestado=300;
+            maXestado=400;
+            break;
+        case "4":
+            miFestado=400;
+            maXestado=500;
+            break;
+        case "5":
+            miFestado=500;
+            maXestado=600;
+            break;
+        case "6":
+            miFestado=600;
+            maXestado=100000;
+            break;
+        default:
+            miFestado=-1;
+            maXestado=100000;
+    }
+
+    switch (monto){
+        case "0":
+            inFmont = 0;
+            maXmont = 10000;
+            break;
+        case "1":
+            inFmont = 0;
+            maXmont = 2000;
+            break;
+        case "2":
+            inFmont = 2000;
+            maXmont = 4000;
+            break;
+        case "3":
+            inFmont = 4000;
+            maXmont = 6000;
+            break;
+        case "4":
+            inFmont = 6000;
+            maXmont = 8000;
+            break;
+        case "5":
+            inFmont = 8000;
+            maXmont = 10000;
+            break;
+        case "6":
+            inFmont = 10000;
+            maXmont = 1000000;
+            break;
+        default:
+            inFmont = 0;
+            maXmont = 100000;
+    }
+
+    switch (valoracion){
+        case "0":
+            miFval = -1;
+            maXval = 7;
+            break;
+        case "1":
+            miFval = 0;
+            maXval = 1;
+            break;
+        case "2":
+            miFval = 1;
+            maXval = 2;
+            break;
+        case "3":
+            miFval = 2;
+            maXval = 3;
+            break;
+        case "4":
+            miFval = 3;
+            maXval = 4;
+            break;
+        case "5":
+            miFval = 4;
+            maXval = 5;
+            break;
+        case "6":
+            miFval = -1;
+            maXval = 0;
+            break;
+        default:
+            miFval = -1;
+            maXval = 7;
+    }
+
+
+
+    Page<UsuarioDtoReporteVentas> pagePersona = usuarioServiceAPIDtoReporteVentas.listaUsuariosDtoReporteVentas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+    int totalPage = pagePersona.getTotalPages();
+    System.out.println(totalPage+"----------------------------ddd-ddd");
+    if(totalPage > 0) {
+        List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+        model.addAttribute("pages", pages);
+    }
+    /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+    model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+    System.out.println(listaClienteConMasPedidos.get(0));
+    model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+    System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+    model.addAttribute("texto",texto);
+    model.addAttribute("cantidad",cantidad);
+    model.addAttribute("monto",monto);
+    model.addAttribute("valoracion",valoracion);
+    model.addAttribute("listaUsuarios", pagePersona.getContent());
+
+    model.addAttribute("current", page + 1);
+    model.addAttribute("next", page + 2);
+    model.addAttribute("prev", page);
+    model.addAttribute("last", totalPage);
+    return "AdminGen/reporteVentas";
+}
+    @GetMapping(value ="/ReporteVentasPagina")//lista de reporte de Repartidor pedido
+    public String listaReporteVentasPagina(@RequestParam Map<String, Object> params, Model model,
+                                     @RequestParam(value = "texto", required = false) String texto,
+                                     @RequestParam(value = "cantidad", required = false) String cantidad,
+                                     @RequestParam(value = "monto", required = false) String monto,
+                                     @RequestParam(value = "valoracion", required = false) String valoracion,
+                                     HttpSession session) {
+
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
+        cantidad= session.getAttribute("cantidad") == null ? "7" :  (String) session.getAttribute("cantidad");
+        monto= session.getAttribute("monto") == null ? "0" :  (String) session.getAttribute("monto");
+        valoracion= session.getAttribute("valoracion") == null ? "0" :  (String) session.getAttribute("valoracion");
+
+        Integer inFmont ;
+        Integer maXmont ;
+        Integer miFval ;
+        Integer maXval ;
+        Integer miFestado ;
+        Integer maXestado ;
+
+        switch (cantidad){
+            case "7":
+                miFestado=-1;
+                maXestado=100000;
+                break;
+            case "0":
+                miFestado=-1;
+                maXestado=100;
+                break;
+            case "1":
+                miFestado=100;
+                maXestado=200;
+                break;
+            case "2":
+                miFestado=200;
+                maXestado=300;
+                break;
+            case "3":
+                miFestado=300;
+                maXestado=400;
+                break;
+            case "4":
+                miFestado=400;
+                maXestado=500;
+                break;
+            case "5":
+                miFestado=500;
+                maXestado=600;
+                break;
+            case "6":
+                miFestado=600;
+                maXestado=100000;
+                break;
+            default:
+                miFestado=-1;
+                maXestado=100000;
+        }
+
+        switch (monto){
+            case "0":
+                inFmont = 0;
+                maXmont = 10000;
+                break;
+            case "1":
+                inFmont = 0;
+                maXmont = 2000;
+                break;
+            case "2":
+                inFmont = 2000;
+                maXmont = 4000;
+                break;
+            case "3":
+                inFmont = 4000;
+                maXmont = 6000;
+                break;
+            case "4":
+                inFmont = 6000;
+                maXmont = 8000;
+                break;
+            case "5":
+                inFmont = 8000;
+                maXmont = 10000;
+                break;
+            case "6":
+                inFmont = 10000;
+                maXmont = 1000000;
+                break;
+            default:
+                inFmont = 0;
+                maXmont = 100000;
+        }
+
+        switch (valoracion){
+            case "0":
+                miFval = -1;
+                maXval = 7;
+                break;
+            case "1":
+                miFval = 0;
+                maXval = 1;
+                break;
+            case "2":
+                miFval = 1;
+                maXval = 2;
+                break;
+            case "3":
+                miFval = 2;
+                maXval = 3;
+                break;
+            case "4":
+                miFval = 3;
+                maXval = 4;
+                break;
+            case "5":
+                miFval = 4;
+                maXval = 5;
+                break;
+            case "6":
+                miFval = -1;
+                maXval = 0;
+                break;
+            default:
+                miFval = -1;
+                maXval = 7;
+        }
+
+
+
+        Page<UsuarioDtoReporteVentas> pagePersona = usuarioServiceAPIDtoReporteVentas.listaUsuariosDtoReporteVentas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont,  pageRequest);
+        int totalPage = pagePersona.getTotalPages();
+        System.out.println(totalPage+"----------------------------ddd-ddd");
+        if(totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        /*List<ClienteConMasPedidosDto> listaClienteConMasPedidos = usuarioRepository.listaClienteConMasPedidos();
+        model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
+        System.out.println(listaClienteConMasPedidos.get(0));
+        model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
+        System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1529,9 +1939,8 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
-        return "AdminGen/reportePedidoRepartidor";
+        return "AdminGen/reporteVentas";
     }
-
 
     @GetMapping("/buscador2")
     public String buscadorUsuario2(@RequestParam Map<String, Object> params, Model model){

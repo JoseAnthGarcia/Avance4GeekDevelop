@@ -16,7 +16,7 @@ public class PedidoActualImpl implements PedidoActualService {
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<PedidoDTO> findPaginated(int idCliente, String texto, int limitInf, int limitSup, Pageable pageable) {
+    public Page<PedidoDTO> findPaginated(int idCliente, String texto, Integer limitInf, Integer limitSup, Pageable pageable) {
         return this.pedidoRepository.pedidosTotales(idCliente,texto,limitInf,limitSup,pageable);
     }
 }

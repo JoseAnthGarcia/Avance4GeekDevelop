@@ -269,7 +269,7 @@ public class AdminController  {
 
 
     @GetMapping("/aceptarSolicitudRest")
-    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
@@ -278,19 +278,26 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(1);
-                //Fecha de registro:
-                //Date date = new Date();
-                //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                //restaurante.setFechaadmitido(hourdateFormat.format(date));
-                //
-                restauranteRepository.save(restaurante);
+                if(restaurante.getEstado()==2) {
 
-                String contenido = "Hola "+ restaurante.getNombre()+" tu cuenta fue creada exitosamente";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    restaurante.setEstado(1);
+                    //Fecha de registro:
+                    //Date date = new Date();
+                    //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    //restaurante.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    restauranteRepository.save(restaurante);
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else {
+                    attr.addFlashAttribute("msg2", "No se pudo aceptar el restaurante indicado.");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
+                attr.addFlashAttribute("msg3", "El restaurante ingresado no existe.");
                 return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
             }
         }
@@ -331,7 +338,7 @@ public class AdminController  {
         }
     }
     @GetMapping("/rechazarSolicitudRest")
-    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -340,12 +347,17 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(3);
-                restauranteRepository.save(restaurante);
-                String contenido = "Hola "+ restaurante.getAdministrador().getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                if(restaurante.getEstado()==2) {
+                    restaurante.setEstado(3);
+                    restauranteRepository.save(restaurante);
+                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }
@@ -368,33 +380,40 @@ public class AdminController  {
 // HOLA
     @GetMapping("/aceptarSolicitud")////error al direccionar - administrador rest
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
-                                 @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                 @RequestParam(value = "tipo", required = false) String tipo,
+                                 RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
-            return ""; //Retornar pagina principal
+            return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(1);
-                //Fecha de registro:
-                Date date = new Date();
-                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                usuario.setFechaadmitido(hourdateFormat.format(date));
-                //
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(1);
+                    //Fecha de registro:
+                    Date date = new Date();
+                    DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    usuario.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" tu solicitud fue aceptada exitosamente";
-                sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    /////-----------------------------------------  ------/////
+                    attr.addFlashAttribute("msg1", "Usuario aceptado exitosamente");
+
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else {
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 
@@ -402,7 +421,8 @@ public class AdminController  {
 
     @GetMapping("/rechazarSolicitud")////Error al redireccionar - administrador rest
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
-                                    @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                    @RequestParam(value = "tipo", required = false) String tipo,
+                                    RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -411,19 +431,23 @@ public class AdminController  {
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(3);
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(3);
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" solicitud fue rechazada";
-                sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
 
-
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
+                    /////-----------------------------------------  ------/////
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 

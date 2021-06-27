@@ -82,6 +82,16 @@
 
 
                 </form>
+
+                <div class="alert alert-success" role="alert"
+                     th:if="${msg1!=null}" th:text="${msg1}">
+                </div>
+                <div class="alert alert-danger" role="alert"
+                     th:if="${msg2!=null}" th:text="${msg2}">
+                </div>
+                <div class="alert alert-danger" role="alert"
+                     th:if="${msg3!=null}" th:text="${msg3}">
+                </div>
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">

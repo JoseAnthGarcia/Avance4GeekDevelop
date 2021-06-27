@@ -37,3 +37,6 @@ Tipo Movilidad:
 5 - moto
 6 - carro
 7 - ticla
+
+Restaurante Estados:
+

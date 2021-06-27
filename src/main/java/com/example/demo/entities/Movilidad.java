@@ -12,6 +12,8 @@ public class Movilidad implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idmovilidad;
     //@Pattern(regexp = "^[A-Z]{3}-[1-9]{3}|^[A-Z]{1}[1-9]{1}[A-Z]{1}-[1-9]{3}|^[1-9]{4}-[A-Z,1-9]{2}|^[A-Z]{2}-[1-9]{3}$",message = "Ingrese una placa válida")
+
+    @Pattern(regexp = "^([A-Z]{3}-\\d{3})$",message = "Ingrese una placa correcta")
     private String placa;
     private String licencia;
 

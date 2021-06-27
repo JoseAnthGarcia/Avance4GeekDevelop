@@ -1216,19 +1216,19 @@ public class LoginController {
                 errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
 
             if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+                model.addAttribute("msg11","El DNI ingresado no es válido");
             }
             if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+                model.addAttribute("msg12","No hay persona registrado para este DNI");
             }
             if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg13","El usuario no coincide con el propietario del DNI");
             }
             if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg14","El nombre del usuario no coincide con el propietario del DNI");
             }
             if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg15","El apellido del usuario no coincide con el propietario del DNI");
             }
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");

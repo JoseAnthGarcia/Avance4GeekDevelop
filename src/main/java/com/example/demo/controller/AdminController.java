@@ -111,8 +111,8 @@ public class AdminController  {
                                      @RequestParam(value = "numPag", required = false) Integer numPag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                                     @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                                     @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
+                                     @RequestParam(value = "fechaRegistro", required = false) String fechaRegistro1,
                                      @RequestParam(value = "dni", required = false) String dni1,
                                      @RequestParam(value = "nombreRest", required = false) String nombreRest1,
                                      @RequestParam(value = "ruc", required = false) String ruc1){
@@ -130,7 +130,7 @@ public class AdminController  {
         int tamPag = 3;
 
         //-------
-
+        Integer fechaRegistro = 1;
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
@@ -145,12 +145,22 @@ public class AdminController  {
                     model.addAttribute("ruc1", ruc1);
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+
+                        }catch (NumberFormatException e){
+                            fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        }
                     }
 
                     System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1*-1);
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro*-1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();
@@ -174,12 +184,19 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
                     System.out.println(fechaRegistro1);
 
-                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
-
+                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro*-1);
 
                 }
 
@@ -205,15 +222,32 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
 
 
                     model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+
+                    Integer tipoMovilidad = 5;
+                    if(tipoMovilidad1!=null){
+                        try {
+                            tipoMovilidad = Integer.parseInt(tipoMovilidad1);
+                        }catch (NumberFormatException e){
+                            tipoMovilidad1= null;
+                        }
+                    }
                     if(tipoMovilidad1==null){
-                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1);
                     }else{
-                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1, tipoMovilidad);
                     }
                 }
 

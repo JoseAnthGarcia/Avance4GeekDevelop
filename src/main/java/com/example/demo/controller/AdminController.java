@@ -35,6 +35,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -2274,23 +2275,23 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         boolean nombre_val = true;
 
         if(udto.getSuccess().equals("true")){
-            if(usuario.getDni().equals(udto.getRuc())){
+            if(cleanString(usuario.getDni()).equals(udto.getRuc())){
                 dni_val = false;
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -2434,5 +2435,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
-
+    public String cleanString(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return texto;
+    }
 }

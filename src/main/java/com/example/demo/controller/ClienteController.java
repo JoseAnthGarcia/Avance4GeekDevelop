@@ -1354,27 +1354,28 @@ public class ClienteController {
 
         //Obteniendo el cupon
         Cupon cupon = null;
-        boolean idCuponVal = false;
-        if(idCupon == null){
+        boolean idCuponVal = true;
+   /*     if(idCupon == null || idCupon.equals("")){
             idCupon = "";
             idCuponVal = true;
-        }
+        }*/
 
         if(efectivoPagar == null){
             efectivoPagar = "";
         }
 
-        if(!idCupon.equals("")) {
-            try {
+        try {
+            //if(!idCupon.equals("") || idCupon != null) {
                 int idCuponInt = Integer.parseInt(idCupon);
                 Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
                 if (cuponOpt.isPresent()) {
                     cupon = cuponOpt.get();
-                    idCuponVal = true;
+                    idCuponVal = false;
                 }
-            } catch (NumberFormatException e) {
-            }
+            //}
+        } catch (NumberFormatException | NullPointerException e) {
         }
+
 
         //Obteniendo Ubicacion
         Ubicacion ubicacion = null;

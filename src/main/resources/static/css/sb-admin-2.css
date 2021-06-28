@@ -4977,7 +4977,7 @@ input[type="button"].btn-block {
 
 .page-link:hover {
     z-index: 2;
-    color: #224abe;
+    color: #701111;
     text-decoration: none;
     background-color: #eaecf4;
     border-color: #dddfeb;
@@ -5002,9 +5002,9 @@ input[type="button"].btn-block {
 
 .page-item.active .page-link {
     z-index: 3;
-    color: #fff;
-    background-color: #4e73df;
-    border-color: #4e73df;
+    color: #701111;
+    background-color: #fff;
+    border-color: #dddfeb;
 }
 
 .page-item.disabled .page-link {

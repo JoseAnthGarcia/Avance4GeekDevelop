@@ -505,6 +505,8 @@ public class AdminController  {
                                 HttpSession session) {
 
         int page;
+        int estadoBuscador = 0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -519,6 +521,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("texto",texto);
+            estadoBuscador=1;
         }
 
 
@@ -527,6 +530,7 @@ public class AdminController  {
             session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
+            estadoBuscador=1;
         }
 
 
@@ -535,6 +539,7 @@ public class AdminController  {
             session.removeAttribute("idrol");
         }else{
             session.setAttribute("idrol",idrol);
+            estadoBuscador=1;
         }
 
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
@@ -601,6 +606,9 @@ public class AdminController  {
             model.addAttribute("pages", pages);
         }
 
+// TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
+
 
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
@@ -620,6 +628,7 @@ public class AdminController  {
                                 @RequestParam(value = "idrol", required = false) String idrol,
                                 HttpSession session) {
         int page;
+        int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -630,6 +639,10 @@ public class AdminController  {
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
         estado= session.getAttribute("estado") == null ? "3" :  (String) session.getAttribute("estado");
         idrol= session.getAttribute("idrol") == null ? "6" :  (String) session.getAttribute("idrol");
+
+
+
+
         Integer inFrol ;
         Integer maXrol ;
         Integer miFestado ;
@@ -687,7 +700,8 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-
+// TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
 
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
@@ -709,6 +723,8 @@ public class AdminController  {
                                 @RequestParam(value = "valoracion", required = false) String valoracion,
                                              HttpSession session) {
         int page;
+        int estadoBuscador = 0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -720,6 +736,7 @@ public class AdminController  {
             session.removeAttribute("monto");
         }else{
             session.setAttribute("monto",monto);
+            estadoBuscador=1;
         }
         if(valoracion==null){
             valoracion="0";
@@ -727,6 +744,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("valoracion",valoracion);
+            estadoBuscador=1;
         }
 
 
@@ -736,6 +754,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("texto",texto);
+            estadoBuscador=1;
         }
 
 
@@ -744,6 +763,7 @@ public class AdminController  {
             session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
+            estadoBuscador=1;
         }
 
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
@@ -878,6 +898,10 @@ public class AdminController  {
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
         System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+
+        // TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
+
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -898,6 +922,8 @@ public class AdminController  {
                                              @RequestParam(value = "valoracion", required = false) String valoracion,
                                              HttpSession session) {
         int page;
+        int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1021,6 +1047,8 @@ public class AdminController  {
         model.addAttribute("listaClienteConMasPedidos", listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
 */
+        // TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
         model.addAttribute("monto",monto);
@@ -1042,6 +1070,7 @@ public class AdminController  {
                                 HttpSession session) {
 
         int page;
+        int estadoBuscador = 0;
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1055,6 +1084,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("texto",texto);
+            estadoBuscador=1;
         }
 
 
@@ -1063,6 +1093,7 @@ public class AdminController  {
             session.removeAttribute("estado");
         }else{
             session.setAttribute("estado",estado);
+            estadoBuscador=1;
         }
 
 
@@ -1071,6 +1102,7 @@ public class AdminController  {
             session.removeAttribute("idrol");
         }else{
             session.setAttribute("idrol",idrol);
+            estadoBuscador=1;
         }
 
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
@@ -1136,7 +1168,8 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-
+// TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
 
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
@@ -1158,6 +1191,8 @@ public class AdminController  {
                                  HttpSession session) {
 
         int page;
+        int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1227,7 +1262,8 @@ public class AdminController  {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-
+// TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
 
         model.addAttribute("texto",texto);
         model.addAttribute("estado",estado);
@@ -1250,6 +1286,7 @@ public class AdminController  {
                                              HttpSession session) {
 
         int page;
+        int estadoBuscador = 0;
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1262,6 +1299,7 @@ public class AdminController  {
             session.removeAttribute("monto");
         }else{
             session.setAttribute("monto",monto);
+            estadoBuscador=1;
         }
         if(valoracion==null){
             valoracion="0";
@@ -1269,6 +1307,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("valoracion",valoracion);
+            estadoBuscador=1;
         }
 
 
@@ -1278,6 +1317,7 @@ public class AdminController  {
 
         }else{
             session.setAttribute("texto",texto);
+            estadoBuscador=1;
         }
 
 
@@ -1286,6 +1326,7 @@ public class AdminController  {
             session.removeAttribute("cantidad");
         }else{
             session.setAttribute("cantidad",cantidad);
+            estadoBuscador=1;
         }
 
         texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
@@ -1420,6 +1461,9 @@ public class AdminController  {
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
         System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+
+        // TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1441,6 +1485,8 @@ public class AdminController  {
                                                HttpSession session) {
 
         int page;
+        int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("valoracion") != null || session.getAttribute("cantidad") != null || session.getAttribute("valoracion") != null  ? 1 :0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1578,6 +1624,10 @@ public class AdminController  {
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
         System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+
+        // TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
+
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -1599,6 +1649,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                                            HttpSession session) {
 
     int page;
+    int estadoBuscador = 0;
     try{
         page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
     }catch(NumberFormatException nfe){
@@ -1611,6 +1662,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         session.removeAttribute("monto");
     }else{
         session.setAttribute("monto",monto);
+        estadoBuscador=1;
     }
     if(valoracion==null){
         valoracion="0";
@@ -1618,6 +1670,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
     }else{
         session.setAttribute("valoracion",valoracion);
+        estadoBuscador=1;
     }
 
 
@@ -1627,6 +1680,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
     }else{
         session.setAttribute("texto",texto);
+        estadoBuscador=1;
     }
 
 
@@ -1635,6 +1689,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         session.removeAttribute("cantidad");
     }else{
         session.setAttribute("cantidad",cantidad);
+        estadoBuscador=1;
     }
 
     texto= session.getAttribute("texto") == null ? "" :  (String) session.getAttribute("texto");
@@ -1769,6 +1824,10 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     System.out.println(listaClienteConMasPedidos.get(0));
     model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
     System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+
+    // TODO: 27/06/2021
+    model.addAttribute("estadoBuscador",estadoBuscador);
+
     model.addAttribute("texto",texto);
     model.addAttribute("cantidad",cantidad);
     model.addAttribute("monto",monto);
@@ -1790,6 +1849,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                                      HttpSession session) {
 
         int page;
+        int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("cantidad") != null || session.getAttribute("monto") != null || session.getAttribute("valoracion") != null ? 1 :0;
+
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
@@ -1930,6 +1991,10 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         System.out.println(listaClienteConMasPedidos.get(0));
         model.addAttribute("listaClienteConMenosPedidos",listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));
         System.out.println(listaClienteConMasPedidos.get(listaClienteConMasPedidos.size()-1));*/
+
+        // TODO: 27/06/2021
+        model.addAttribute("estadoBuscador",estadoBuscador);
+
         model.addAttribute("texto",texto);
         model.addAttribute("cantidad",cantidad);
         model.addAttribute("monto",monto);
@@ -2029,46 +2094,61 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     @GetMapping("/detalle")
     public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
                                  Model model) {
+        try{
+            Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+            double totalIngresos = 0.0;
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
-        double totalIngresos = 0.0;
 
+            if (usuarioOpt.isPresent()) {
+                Usuario usuario = usuarioOpt.get();
 
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
+                for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
+                    totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
+                }
 
-            for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
-                totalIngresos += usuario.getListaPedidosPorUsuario().get(i).getPreciototal();
+                switch (usuario.getRol().getTipo()) {
+                    case "administrador":
+                        model.addAttribute("administrador",usuario);
+                        return "AdminGen/visualizarAdministrador";
+                    case "repartidor":
+                        model.addAttribute("repartidor",usuario);
+                        model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
+                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
+                        model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
+                   //     model.addAttribute("totalIngresos", totalIngresos);
+                        return "AdminGen/visualizarRepartidor";
+                    case "cliente":
+                        //TODO ver que solo sean los pedidos entregados
+                        model.addAttribute("cliente",usuario);
+                        model.addAttribute("totalIngresos", totalIngresos);
+                        model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
+                        return "AdminGen/visualizarCliente";
+                    case "administradorR":
+                        model.addAttribute("administradorRestaurante",usuario);
+                       return "AdminGen/visualizarAdministradorRestaurante";
+                    default:
+                        //TODO ver si enviar con mensaje de alerta
+                        return "redirect:/admin/usuarios";
+                }
+            }else {
+                //TODO ver si enviar con mensaje de alerta
+                return "redirect:/admin/usuarios";
             }
 
-            switch (usuario.getRol().getTipo()) {
-                case "administrador":
-                    model.addAttribute("administrador",usuario);
-                    return "AdminGen/visualizarAdministrador";
-                case "repartidor":
-                    model.addAttribute("repartidor",usuario);
-                    model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
-                    model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
-                    model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
-               //     model.addAttribute("totalIngresos", totalIngresos);
-                    return "AdminGen/visualizarRepartidor";
-                case "cliente":
-                    //TODO ver que solo sean los pedidos entregados
-                    model.addAttribute("cliente",usuario);
-                    model.addAttribute("totalIngresos", totalIngresos);
-                    model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
-                    return "AdminGen/visualizarCliente";
-                case "administradorR":
-                    model.addAttribute("administradorRestaurante",usuario);
-                   return "AdminGen/visualizarAdministradorRestaurante";
-                default:
-                    //TODO ver si enviar con mensaje de alerta
-                    return "redirect:/admin/usuarios";
-            }
-        }else {
-            //TODO ver si enviar con mensaje de alerta
+        }catch (NullPointerException e){
+
             return "redirect:/admin/usuarios";
+
+        }catch (NumberFormatException ee){
+
+            return "redirect:/admin/usuarios";
+
+        }finally{
+
+            return "redirect:/admin/usuarios";
+
         }
+
     }
 
 
@@ -2108,9 +2188,10 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     }*/
 
     @GetMapping("/actualizar")
-    public String actualizarEstado(@RequestParam("idUsuario") int id, RedirectAttributes attr){
+    public String actualizarEstado(@RequestParam("idUsuario") String  id, RedirectAttributes attr){
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        try {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(id));
 
         if(usuarioOpt.isPresent()){
             Usuario usuario = usuarioOpt.get();
@@ -2122,25 +2203,43 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                 DESBLOQUEAR: DE 0 - 1
             */
             switch (usuario.getEstado()){
-        case 0:
-            // de bloqueado a aceptado
-            usuario.setEstado(1);
-            usuarioRepository.save(usuario);
-            attr.addFlashAttribute("msgAceptado", "Usuario Desbloqueado exitosamente");
-            return "redirect:/admin/usuarios";
-        case 1:
-            // de activo a bloquado
-            usuario.setEstado(0);
-            usuarioRepository.save(usuario);
-            attr.addFlashAttribute("msgBloqueado", "Usuario Bloqueado exitosamente");
-            return "redirect:/admin/usuarios";
-        default:
-            return "redirect:/admin/ususarios";
-    }
-}
+                case 0:
+                    // de bloqueado a aceptado
+                    usuario.setEstado(1);
+                    usuarioRepository.save(usuario);
+                    attr.addFlashAttribute("msgAceptado", "Usuario Desbloqueado exitosamente");
+                    return "redirect:/admin/usuarios";
 
-        return "";
-                }
+                case 1:
+                    // de activo a bloquado
+                    usuario.setEstado(0);
+                    usuarioRepository.save(usuario);
+                    attr.addFlashAttribute("msgBloqueado", "Usuario Bloqueado exitosamente");
+                    return "redirect:/admin/usuarios";
+
+                default:
+                    return "redirect:/admin/usuarios";
+
+                     }
+        }else{
+            return "redirect:/admin/usuarios";
+        }
+
+        }catch (NullPointerException e){
+
+            return "redirect:/admin/usuarios";
+
+        }catch (NumberFormatException ee){
+
+            return "redirect:/admin/usuarios";
+
+        }finally{
+
+            return "redirect:/admin/usuarios";
+
+        }
+
+    }
 
 
     @GetMapping("/crear")
@@ -2206,9 +2305,24 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                 return "redirect:/admin/solicitudes";
             }
         }
-
     }
+    @GetMapping("/fotoAdmin")
+    public ResponseEntity<byte[]> mostrarPerfilAdmin(@RequestParam("id") int id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] image = usuario.getFoto();
 
+            // HttpHeaders permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta.
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+
+            return new ResponseEntity<>(image, httpHeaders, HttpStatus.OK);
+
+        } else {
+            return null;
+        }
+    }
 
 
     @PostMapping("/guardarAdmin")//error para guardar
@@ -2302,8 +2416,26 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
+        boolean validarSexo= true;
 
-        if (bindingResult2.hasErrors() || fecha_naci || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
+        switch (usuario.getSexo()){
+            case "FEMENINO":
+                // FEMENINO
+                usuario.setSexo("FEMENINO");
+                break;
+
+            case "MASCULINO":
+                // MASCULINO
+                usuario.setSexo("MASCULINO");
+                break;
+
+            default:
+                validarSexo=false;
+                break;
+
+        }
+
+        if (bindingResult2.hasErrors() || !validarSexo || fecha_naci || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
             System.out.println("siguen errores");
 
             //----------------------------------------
@@ -2343,13 +2475,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());
             String fechanacimiento = LocalDate.now().toString();
-            usuario.setFecharegistro(fechanacimiento);
+            //usuario.setFecharegistro(fechanacimiento);
 
             attr.addFlashAttribute("msg", "Usuario creado exitosamente");
 
             Date date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             usuario.setFecharegistro(hourdateFormat.format(date));
+            usuario.setFechaadmitido(hourdateFormat.format(date));
 
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -2360,7 +2493,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
             /////----------------Envio Correo--------------------/////
 
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente";
+            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
             sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);

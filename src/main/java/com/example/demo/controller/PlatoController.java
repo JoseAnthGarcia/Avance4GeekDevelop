@@ -95,7 +95,7 @@ public class PlatoController {
                         break;
                     }
                 }
-                return findPaginated("", 1, "0", 1, idcategoria, restaurante.getIdrestaurante(), model, session);
+                return findPaginated("", 1, "0", "1" , idcategoria, restaurante.getIdrestaurante(), model, session);
             }catch(NumberFormatException e){
                 return "redirect:/plato/categoria";
             }
@@ -107,7 +107,7 @@ public class PlatoController {
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "inputDisponible", required = false) Integer inputDisponible,
                                 @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, @RequestParam(value = "idcategoria", required = false) String idcategoria,
+                                @RequestParam(value = "pageNo", required = false) String pageNo1, @RequestParam(value = "idcategoria", required = false) String idcategoria,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) {
 
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
@@ -122,11 +122,18 @@ public class PlatoController {
                 idcat = Integer.parseInt(idcategoria);
                 for (Categorias categoria : listaCategorias) {
                     if (categoria.getIdcategoria() == idcat) {
-                        if (pageNo == null || pageNo == 0) {
+                        int pageNo = 0;
+                        if (pageNo1 == null) {
                             pageNo = 1;
                         }
-
-
+                        try {
+                            pageNo = Integer.parseInt(pageNo1);
+                            if (pageNo == 0) {
+                                pageNo = 1;
+                            }
+                        } catch (NumberFormatException e) {
+                            pageNo = 1;
+                        }
                         int inputID = 1;
                         int pageSize = 5;
                         Page<Plato> page;

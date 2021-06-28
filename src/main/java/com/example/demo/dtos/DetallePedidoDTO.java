@@ -11,7 +11,7 @@ public interface DetallePedidoDTO {
     String getCupon();
     BigDecimal getDescuento();
     int getEstado();
-    int getMetodopago();
+    String getMetodopago();
     String getComentario();
     BigDecimal getPreciototal();
     int getMismodistrito();

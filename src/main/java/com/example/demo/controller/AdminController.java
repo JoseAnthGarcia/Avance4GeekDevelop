@@ -739,7 +739,6 @@ public class AdminController  {
                                              HttpSession session) {
         int page;
         int estadoBuscador = 0;
-
         try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){

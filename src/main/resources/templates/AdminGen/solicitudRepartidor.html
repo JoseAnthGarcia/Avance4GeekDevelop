@@ -201,14 +201,15 @@
                 </div>
             </div><div th:if="${ totalPages >= 1}" class="pagination text-center ml-3">
             <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
-
                 <a th:if="${currentPage != i}"
-                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}}"
+                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
+                   +'&nombreUsuario=' +${nombreUsuario1==null?'':nombreUsuario1}
+                   + '&tipoMovilidad='+${tipoMovilidad1==null?'':tipoMovilidad1}
+                   + '&fechaRegistro=' +${fechaRegistro1==null?'':fechaRegistro1}}"
                    th:utext="${i}"
                    class="active mt-2 no"></a>
                 <a th:unless="${currentPage != i}"
                    th:utext="${i}" class="text-white" style="pointer-events: none"></a>
-
             </div>
         </div>
             <!-- /.container-fluid -->

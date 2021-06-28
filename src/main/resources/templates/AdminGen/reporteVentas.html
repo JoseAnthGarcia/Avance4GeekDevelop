@@ -32,7 +32,7 @@
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1" >
-                            <input type="text" class="form-control bg-light border-0 small" name="texto"
+                            <input type="text" class="form-control" name="texto"
                                    th:value="${texto.equals('')?'':texto}"
                                    th:placeholder="${texto.equals('')?'Búsqueda por Restaurante - RUC':texto}">
                         </div>
@@ -163,111 +163,111 @@
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
                                     <ul class="pagination justify-content-center">
-                                        <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                            <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${prev}|}">Anterior</a>
-                                        </li>
-                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${page}|}" th:text="${page}"></a>
-                                        </li>
-                                        <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                            <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${next}|}">Siguiente</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <div class="col-md-2"></div>
-                        </div>
-                    </div>
-                </div>
+                                        <!--  <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
+                                              <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${prev}|}">Anterior</a>
+                                          </li>-->
+                                          <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                              <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${page}|}" th:text="${page}"></a>
+                                          </li>
+                                        <!--      <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
+                                                   <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${next}|}">Siguiente</a>
+                                               </li>-->
+                                           </ul>
+                                       </nav>
+                                   </div>
+                                   <div class="col-md-2"></div>
+                               </div>
+                           </div>
+                       </div>
 
-                <!--  <div class="card shadow mb-4">
-                      <div class="card-header py-3 " style="background-color: #701111;">
+                       <!--  <div class="card shadow mb-4">
+                             <div class="card-header py-3 " style="background-color: #701111;">
 
-                          <div class="d-sm-flex align-items-center justify-content-between">
+                                 <div class="d-sm-flex align-items-center justify-content-between">
 
-                              <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOP CLIENTES</h5>
+                                     <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOP CLIENTES</h5>
 
-                          </div>
+                                 </div>
 
-                      </div>
-                      <div class="card-body">
-                          <div class="container-fluid">
-                              <div class="container-fluid">
+                             </div>
+                             <div class="card-body">
+                                 <div class="container-fluid">
+                                     <div class="container-fluid">
 
-                                  <div class="row">
-                                      <div class="col-sm-6">
-                                          <div class="row">
-
-
-                                          </div>
+                                         <div class="row">
+                                             <div class="col-sm-6">
+                                                 <div class="row">
 
 
-                                      </div>
-                                      <div class="col-sm-6 mx-auto " style="position: relative; left: 25%">
-                                          <h5  style="color: black">Total de pedidos</h5>
-                                      </div>
-                                  </div>
+                                                 </div>
 
 
-                                  <div class="row">
-                                      <div class="col-sm-6">
-                                          <div class="row">
-                                              <div class="col">
-                                                  <div class="row">
-
-                                                      <h4  style="color: black">CLIENTE CON MÁS PEDIDOS</h4>
-                                                  </div>
-                                                  <div class="row">
-
-                                                      <div th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getApellidos() +','+listaClienteConMasPedidos.getNombres() }"> </div>
-
-                                                  </div>
-
-                                              </div>
+                                             </div>
+                                             <div class="col-sm-6 mx-auto " style="position: relative; left: 25%">
+                                                 <h5  style="color: black">Total de pedidos</h5>
+                                             </div>
+                                         </div>
 
 
-                                          </div>
+                                         <div class="row">
+                                             <div class="col-sm-6">
+                                                 <div class="row">
+                                                     <div class="col">
+                                                         <div class="row">
+
+                                                             <h4  style="color: black">CLIENTE CON MÁS PEDIDOS</h4>
+                                                         </div>
+                                                         <div class="row">
+
+                                                             <div th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getApellidos() +','+listaClienteConMasPedidos.getNombres() }"> </div>
+
+                                                         </div>
+
+                                                     </div>
 
 
-                                      </div>
-                                      <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                          <h4 th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getCantpedidos()}" style="color: black"> </h4>
-                                      </div>
-                                  </div>
-                                  <div class="row">
-                                      <div class="col-sm-6">
-                                          <div class="row">
-
-                                              <div class="col">
-                                                  <div class="row">
-
-                                                      <h4  style="color: black">CLIENTE CON MENOS PEDIDOS</h4>
-                                                  </div>
-                                                  <div class="row">
-                                                      <div th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getApellidos() +','+listaClienteConMenosPedidos.getNombres() }"> </div>
-
-                                                  </div>
-
-                                              </div>
+                                                 </div>
 
 
+                                             </div>
+                                             <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                                 <h4 th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getCantpedidos()}" style="color: black"> </h4>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-sm-6">
+                                                 <div class="row">
+
+                                                     <div class="col">
+                                                         <div class="row">
+
+                                                             <h4  style="color: black">CLIENTE CON MENOS PEDIDOS</h4>
+                                                         </div>
+                                                         <div class="row">
+                                                             <div th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getApellidos() +','+listaClienteConMenosPedidos.getNombres() }"> </div>
+
+                                                         </div>
+
+                                                     </div>
 
 
-                                          </div>
 
 
-                                      </div>
-                                      <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                          <h4 th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getCantpedidos() }" style="color: black"> </h4>
-                                      </div>
-                                  </div>
+                                                 </div>
 
-                              </div>
 
-                          </div>
-                      </div>
+                                             </div>
+                                             <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                                 <h4 th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getCantpedidos() }" style="color: black"> </h4>
+                                             </div>
+                                         </div>
 
-                  </div>-->
+                                     </div>
+
+                                 </div>
+                             </div>
+
+                         </div>-->
             </div>
 
         </div>

@@ -181,7 +181,7 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE DELIVERYS REALIZADOS</h5>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE ENTREGAS REALIZADAS</h5>
                             <button id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
                         </div>
 
@@ -228,7 +228,9 @@
                                 </tbody>
 
                             </table>
-
+                            <div th:if="${listaPedidoReporte.size()==0}">
+                                <h3 class="text-lg-center text-danger">No tiene repartos realizados.</h3>
+                            </div>
                         </div>
                         <!--Pagination -->
 
@@ -299,39 +301,13 @@
         </div>
     </div>
 </div>
-<script>
-    function exportTableToExcel(tableID, filename = ''){
-        var downloadLink;
-        var dataType = 'application/vnd.ms-excel';
-        var tableSelect = document.getElementById(tableID);
-        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-        var now = new Date();
-        // Specify file name
 
-        filename = filename?filename+now+'.xls':'excel_data.xls';
 
-        // Create download link element
-        downloadLink = document.createElement("a");
 
-        document.body.appendChild(downloadLink);
+</body>
+<script th:src="@{/js/exportar.js}"></script>
 
-        if(navigator.msSaveOrOpenBlob){
-            var blob = new Blob(['ufeff', tableHTML], {
-                type: dataType
-            });
-            navigator.msSaveOrOpenBlob( blob, filename);
-        }else{
-            // Create a link to the file
-            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
 
-            // Setting the file name
-            downloadLink.download = filename;
-
-            //triggering the function
-            downloadLink.click();
-        }
-    }
-</script>
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
@@ -345,43 +321,8 @@
 <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
 <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
-<script th:src="@{/js/exportar.js}"></script>
-
 <!-- Page level custom scripts -->
 <script  th:src="@{/js/demo/datatables-demo.js}"></script>
-</body>
-<script>
-    // Add the following code if you want the name of the file appear on select
-    $(".custom-file-input").on("change", function() {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    });
-</script>
-<script>$(document).ready(function () {
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                $('#image_preview').attr('src', e.target.result);
-                $('#image_preview').removeAttr('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-            console.log(input.files[0].name.split(".")[1])
-            let extensions = ['jpg', 'jpeg', 'png']
-            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
-                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
-                $('#error').attr('hidden', 'true');
-            } else {
-                $('#photo_error').attr('hidden', 'true');
-            }
-        }
-    }
-
-    $("#imagen").change(function () {
-        console.log("sdafefdgsagsagasdg");
-        readURL(this);
-    });
-})</script>
 
 
 </html>

@@ -35,6 +35,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -111,8 +112,8 @@ public class AdminController  {
                                      @RequestParam(value = "numPag", required = false) Integer numPag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
-                                     @RequestParam(value = "tipoMovilidad", required = false) Integer tipoMovilidad1,
-                                     @RequestParam(value = "fechaRegistro", required = false) Integer fechaRegistro1,
+                                     @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
+                                     @RequestParam(value = "fechaRegistro", required = false) String fechaRegistro1,
                                      @RequestParam(value = "dni", required = false) String dni1,
                                      @RequestParam(value = "nombreRest", required = false) String nombreRest1,
                                      @RequestParam(value = "ruc", required = false) String ruc1){
@@ -130,7 +131,7 @@ public class AdminController  {
         int tamPag = 3;
 
         //-------
-
+        Integer fechaRegistro = 1;
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
         switch (tipo){
             case "restaurante":
@@ -145,12 +146,22 @@ public class AdminController  {
                     model.addAttribute("ruc1", ruc1);
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+
+                        }catch (NumberFormatException e){
+                            fechaRegistro = restauranteRepository.buscarFechaMinimaRestaurante()+1;
+                        }
                     }
 
                     System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
 
-                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro1*-1);
+                    pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro*-1);
                 }
 
                 List<Restaurante> listaRestaurantes = pagina2.getContent();
@@ -174,12 +185,19 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
                     System.out.println(fechaRegistro1);
 
-                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro1*-1);
-
+                    pagina1=adminRestService.administradorRestBusqueda(numPag,tamPag,nombreUsuario1,nombreUsuario1,dni1,fechaRegistro*-1);
 
                 }
 
@@ -205,15 +223,32 @@ public class AdminController  {
                     model.addAttribute("fechaRegistro1", fechaRegistro1);
 
                     if(fechaRegistro1==null){
-                        fechaRegistro1 = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                    }else{
+                        try{
+
+                            fechaRegistro = Integer.parseInt(fechaRegistro1);
+                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                        }catch (NumberFormatException e){
+                            fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                        }
                     }
 
 
                     model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+
+                    Integer tipoMovilidad = 5;
+                    if(tipoMovilidad1!=null){
+                        try {
+                            tipoMovilidad = Integer.parseInt(tipoMovilidad1);
+                        }catch (NumberFormatException e){
+                            tipoMovilidad1= null;
+                        }
+                    }
                     if(tipoMovilidad1==null){
-                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1);
                     }else{
-                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro1*-1, tipoMovilidad1);
+                        pagina = repartidorService.repartidorPaginacionBusqueda2(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1, tipoMovilidad);
                     }
                 }
 
@@ -235,7 +270,7 @@ public class AdminController  {
 
 
     @GetMapping("/aceptarSolicitudRest")
-    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String aceptarSolitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
@@ -244,19 +279,26 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(1);
-                //Fecha de registro:
-                //Date date = new Date();
-                //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                //restaurante.setFechaadmitido(hourdateFormat.format(date));
-                //
-                restauranteRepository.save(restaurante);
+                if(restaurante.getEstado()==2) {
 
-                String contenido = "Hola "+ restaurante.getNombre()+" tu cuenta fue creada exitosamente";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    restaurante.setEstado(1);
+                    //Fecha de registro:
+                    //Date date = new Date();
+                    //DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    //restaurante.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    restauranteRepository.save(restaurante);
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else {
+                    attr.addFlashAttribute("msg2", "No se pudo aceptar el restaurante indicado.");
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
+                attr.addFlashAttribute("msg3", "El restaurante ingresado no existe.");
                 return "redirect:/admin/solicitudes?tipo=restaurante"; //Retornar pagina principal
             }
         }
@@ -297,7 +339,7 @@ public class AdminController  {
         }
     }
     @GetMapping("/rechazarSolicitudRest")
-    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id){
+    public String rechazarSolicitudRest(@RequestParam(value = "id", required = false) Integer id, RedirectAttributes attr){
 
         if(id == null){
             return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -306,12 +348,17 @@ public class AdminController  {
 
             if(restauranteOpt.isPresent()){
                 Restaurante restaurante = restauranteOpt.get();
-                restaurante.setEstado(3);
-                restauranteRepository.save(restaurante);
-                String contenido = "Hola "+ restaurante.getAdministrador().getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                if(restaurante.getEstado()==2) {
+                    restaurante.setEstado(3);
+                    restauranteRepository.save(restaurante);
+                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
-                return "redirect:/admin/solicitudes?tipo=restaurante";
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=restaurante";
+                }
             }else{
                 return "redirect:/admin/solicitudes?tipo=restaurante";
             }
@@ -334,33 +381,40 @@ public class AdminController  {
 // HOLA
     @GetMapping("/aceptarSolicitud")////error al direccionar - administrador rest
     public String aceptarSolitud(@RequestParam(value = "id", required = false) Integer id,
-                                 @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                 @RequestParam(value = "tipo", required = false) String tipo,
+                                 RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
-            return ""; //Retornar pagina principal
+            return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(1);
-                //Fecha de registro:
-                Date date = new Date();
-                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                usuario.setFechaadmitido(hourdateFormat.format(date));
-                //
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(1);
+                    //Fecha de registro:
+                    Date date = new Date();
+                    DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    usuario.setFechaadmitido(hourdateFormat.format(date));
+                    //
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" tu solicitud fue aceptada exitosamente";
-                sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    /////-----------------------------------------  ------/////
+                    attr.addFlashAttribute("msg1", "Usuario aceptado exitosamente");
+
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else {
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 
@@ -368,7 +422,8 @@ public class AdminController  {
 
     @GetMapping("/rechazarSolicitud")////Error al redireccionar - administrador rest
     public String rechazarSolicitud(@RequestParam(value = "id", required = false) Integer id,
-                                    @RequestParam(value = "tipo", required = false) String tipo) throws MessagingException {
+                                    @RequestParam(value = "tipo", required = false) String tipo,
+                                    RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
             return ""; //Retornar pagina principal
@@ -377,19 +432,23 @@ public class AdminController  {
 
             if(usuarioOpt.isPresent()){
                 Usuario usuario = usuarioOpt.get();
-                usuario.setEstado(3);
-                usuarioRepository.save(usuario);
-                /////----------------Envio Correo--------------------/////
+                if(usuario.getEstado()==2) {
+                    usuario.setEstado(3);
+                    usuarioRepository.save(usuario);
+                    /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" solicitud fue rechazada";
-                sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
 
-
-                /////-----------------------------------------  ------/////
-                return "redirect:/admin/solicitudes?tipo="+tipo;
+                    attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
+                    /////-----------------------------------------  ------/////
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }else{
+                    return "redirect:/admin/solicitudes?tipo=" + tipo;
+                }
             }else{
-                return ""; //Retornar pagina principal
+                return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
             }
         }
 
@@ -2216,23 +2275,23 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         boolean nombre_val = true;
 
         if(udto.getSuccess().equals("true")){
-            if(usuario.getDni().equals(udto.getRuc())){
+            if(cleanString(usuario.getDni()).equals(udto.getRuc())){
                 dni_val = false;
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((usuario.getNombres() + " " +usuario.getApellidos()).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(usuario.getNombres().toUpperCase())){
+                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(usuario.getApellidos().equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                usuario.getApellidos().equalsIgnoreCase(udto.getApellido_materno())  ||
-                                usuario.getApellidos().equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -2376,5 +2435,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
-
+    public String cleanString(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return texto;
+    }
 }

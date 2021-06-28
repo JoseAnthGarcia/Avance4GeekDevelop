@@ -1354,7 +1354,7 @@ public class ClienteController {
 
         //Obteniendo el cupon
         Cupon cupon = null;
-        boolean idCuponVal = true;
+        boolean idCuponVal = false;
    /*     if(idCupon == null || idCupon.equals("")){
             idCupon = "";
             idCuponVal = true;
@@ -1365,16 +1365,22 @@ public class ClienteController {
         }
 
         try {
-            //if(!idCupon.equals("") || idCupon != null) {
+            if(!idCupon.equals("")) {
                 int idCuponInt = Integer.parseInt(idCupon);
                 Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
                 if (cuponOpt.isPresent()) {
                     cupon = cuponOpt.get();
-                    idCuponVal = false;
+                    idCuponVal = true;
                 }
-            //}
-        } catch (NumberFormatException | NullPointerException e) {
+            }else{
+                idCuponVal = false;
+            }
+        } catch (NumberFormatException en){
+        } catch (NullPointerException ex){
+            idCuponVal = true;
         }
+
+
 
 
         //Obteniendo Ubicacion

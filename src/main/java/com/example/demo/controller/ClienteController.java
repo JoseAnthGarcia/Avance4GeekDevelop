@@ -363,13 +363,6 @@ public class ClienteController {
 
 
 
-        /*
-        List<Categorias> listc=categoriasRestauranteRepository.findAll();
-        for(Categorias c:listc){
-            System.out.println(c.getNombre());
-        }
-
-         */
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);

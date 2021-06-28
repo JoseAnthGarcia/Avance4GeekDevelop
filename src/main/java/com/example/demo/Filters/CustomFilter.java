@@ -34,8 +34,7 @@ public class CustomFilter implements javax.servlet.Filter {
         System.out.println(id);
 
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        System.out.println(restaurante.getEstado()+"shskjgd###############");
-        if(restaurante.getEstado()==0 || restaurante.getEstado()==2){
+        if(restaurante.getEstado()==0 || restaurante.getEstado()==2||restaurante.getEstado()==3){
          response.sendRedirect(request.getContextPath()+"/login");
         }else {
             chain.doFilter(req, resp);

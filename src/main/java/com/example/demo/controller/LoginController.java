@@ -223,7 +223,7 @@ public class LoginController {
                 } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if (restaurante == null || restaurante.getEstado() == 2) {
+                if (restaurante == null || restaurante.getEstado() == 2|| restaurante.getEstado() == 3 ) {
                     return "redirect:/paginabienvenida";
                     //TODO: ojo ver restaurante
                     //return "redirect:/restaurante/paginabienvenida";
@@ -505,7 +505,7 @@ public class LoginController {
                 cliente.setFoto(file.getBytes());
                 cliente.setFotonombre(fileName);
                 cliente.setFotocontenttype(file.getContentType());
-                clienteRepository.save(cliente);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
@@ -1090,10 +1090,12 @@ public class LoginController {
     }
 
     @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
+    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario ,
                                     BindingResult bindingResult,
                                     @RequestParam("photo") MultipartFile file,
-                                    Movilidad movilidad, Model model,
+                                    @Valid Movilidad movilidad ,
+                                    BindingResult bindingResult2,
+                                    Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
@@ -1213,23 +1215,23 @@ public class LoginController {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
+        if(bindingResult.hasErrors() || bindingResult2.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
                 errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
 
             if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+                model.addAttribute("msg11","El DNI ingresado no es válido");
             }
             if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+                model.addAttribute("msg12","No hay persona registrado para este DNI");
             }
             if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg13","El usuario no coincide con el propietario del DNI");
             }
             if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg14","El nombre del usuario no coincide con el propietario del DNI");
             }
             if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+                model.addAttribute("msg15","El apellido del usuario no coincide con el propietario del DNI");
             }
             if(!contrasenia2.equals(usuario.getContrasenia())){
                 model.addAttribute("msg", "Las contraseñas no coinciden");

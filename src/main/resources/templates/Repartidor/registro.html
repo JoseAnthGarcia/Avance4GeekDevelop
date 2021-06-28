@@ -34,6 +34,12 @@
 
             $("#placaInput").hide();
             $("#licenciaInput").hide();
+            var idMovilidad = $("#selectMovilidad").val();
+
+            if(idMovilidad==5 || idMovilidad == 6){
+                $("#placaInput").show();
+                $("#licenciaInput").show();
+            }
 
         });
 
@@ -47,6 +53,10 @@
             if(idMovilidad==5 || idMovilidad == 6){
                 $("#placaInput").show();
                 $("#licenciaInput").show();
+            }
+            if(idMovilidad==7){
+                $("#placaInput").val("");
+                $("#licenciaInput").val("");
             }
         }
     </script>
@@ -106,16 +116,16 @@
                             <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"></div>
                             <div style="color: red; font-size: small; text-align: left"
-                                 th:if="${msg11 != null}"
-                                 th:text="${msg11}"></div>
+                                 th:if="${msg14 != null}"
+                                 th:text="${msg14}"></div>
                         </div>
                         <div class="col-sm-6 mb-2">
                             <input th:field="*{apellidos}" type="text" class="form-control" placeholder="Apellidos"/>
                             <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
                             <div style="color: red; font-size: small; text-align: left"
-                                 th:if="${msg12 != null}"
-                                 th:text="${msg12}"></div>
+                                 th:if="${msg15 != null}"
+                                 th:text="${msg15}"></div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -169,14 +179,14 @@
                             <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
                             <div style="color: red; font-size: small; text-align: left"
-                                 th:if="${msg8 != null}"
-                                 th:text="${msg8}"></div>
+                                 th:if="${msg11 != null}"
+                                 th:text="${msg11}"></div>
                             <div style="color: red; font-size: small; text-align: left"
-                                 th:if="${msg9 != null}"
-                                 th:text="${msg9}"></div>
+                                 th:if="${msg13 != null}"
+                                 th:text="${msg13}"></div>
                             <div style="color: red; font-size: small; text-align: left"
-                                 th:if="${msg10 != null}"
-                                 th:text="${msg10}"></div>
+                                 th:if="${msg12 != null}"
+                                 th:text="${msg12}"></div>
                         </div>
 
 

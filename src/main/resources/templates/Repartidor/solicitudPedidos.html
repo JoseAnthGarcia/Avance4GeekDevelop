@@ -137,7 +137,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="row">
-                                            <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}">Ceviche - Restaurante Marino</h1>
+                                            <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}+' - '+${pedidoDetalle.codigo}">Ceviche - Restaurante Marino</h1>
                                             <p class="card-text" th:utext="'Dirección de restaurante: '+${pedidoDetalle.restaurante.direccion}
                                             +'<br>Direción de envio: '+${pedidoDetalle.cliente.direccionactual}
                                              +'<br>Cliente: '+${pedidoDetalle.cliente.nombres +' '+ pedidoDetalle.cliente.apellidos }

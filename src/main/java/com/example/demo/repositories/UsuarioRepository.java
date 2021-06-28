@@ -73,7 +73,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
             "            left join restaurante r on r.idrestaurante=pe.idrestaurante\n" +
             "            left join usuario u1 on u1.idusuario=pe.idrepartidor\n" +
-            "            where concat(lower(u.nombres),lower(u.apellidos),lower(pe.codigo)) like %?1% and pe.idrepartidor is not null and pe.idrestaurante is not null \n" +
+            "            where concat(lower(u.nombres),lower(u.apellidos),lower(pe.codigo)) like %?1% and pe.idrestaurante is not null \n" +
             "            and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante >?2 and pe.valoracionrestaurante<=?3))  \n" +
             "            and (pe.preciototal> ?4 and pe.preciototal<=?5)and (pe.estado> ?6 and pe.estado <=?7 )\n "+
             "            order by pe.fechapedido ASC",nativeQuery = true,

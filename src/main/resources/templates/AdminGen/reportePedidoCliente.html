@@ -105,7 +105,7 @@
                         <div class="d-sm-flex align-items-center justify-content-between">
 
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE PEDIDOS POR CLIENTE</h2>
-                            <button th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                            <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
@@ -159,7 +159,7 @@
                                         <div th:case="5" th:text="|En Camino|"></div>
                                         <div th:case="6" th:text="|Entregado|"></div>
                                     </td>
-                                    <td th:text="${usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getNombrerepartidor()==null ||usuario.getApellidorep()== null ? 'Repartidor no asignado' : usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getFechapedido().substring(0,18)}"  class="text-center" style="width: 160px"></td>
                                     <td  th:text="|S/ ${usuario.getPrecioTotal()}|" class="text-center" style="width: 110px"></td>
                                     <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>

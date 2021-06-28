@@ -192,13 +192,13 @@
                                         <tbody>
                                             <tr th:each="pedidos,v:${listaPedidos} ">
                                                 <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
-                                                <td th:if="${pedidos.estado==0}" style="background-color: #d9d9aa" th:text="|${'PENDIENTE'}|"></td>
-                                                <td th:if="${pedidos.estado==1}" style="background-color: #2a7800" th:text="|${'ACEPTADO'}|"></td>
-                                                <td th:if="${pedidos.estado==2}" style="background-color: #971600" th:text="|${'CANCELADO'}|"></td>
-                                                <td th:if="${pedidos.estado==3}" style="background-color: #a35600" th:text="|${'PREPARANDO'}|"></td>
-                                                <td th:if="${pedidos.estado==4}" style="background-color: #027179" th:text="|${'PEDIDO LISTO'}|"></td>
-                                                <td th:if="${pedidos.estado==5}" style="background-color: #c605e2" th:text="|${'EN CAMINO'}|"></td>
-                                                <td th:if="${pedidos.estado==6}" style="background-color: #041fff" th:text="|${'ENTREGADO'}|"></td>
+                                                <td th:if="${pedidos.estado==0}" style="background-color: #5dce41;color: black" th:text="|${'PENDIENTE'}|"></td>
+                                                <td th:if="${pedidos.estado==1}" style="background-color: #3670f8;color: black" th:text="|${'ACEPTADO'}|"></td>
+                                                <td th:if="${pedidos.estado==2}" style="background-color: #ff4a30;color: black" th:text="|${'CANCELADO'}|"></td>
+                                                <td th:if="${pedidos.estado==3}" style="background-color: #e89035;color: black" th:text="|${'PREPARANDO'}|"></td>
+                                                <td th:if="${pedidos.estado==4}" style="background-color: #10bac4;color: black" th:text="|${'PEDIDO LISTO'}|"></td>
+                                                <td th:if="${pedidos.estado==5}" style="background-color: #ded29d;color: black" th:text="|${'EN CAMINO'}|"></td>
+                                                <td th:if="${pedidos.estado==6}" style="background-color: #62d48c;color: black" th:text="|${'ENTREGADO'}|"></td>
                                                 <td th:text="${pedidos.cliente.nombres}+' '+${pedidos.cliente.apellidos}"></td>
                                                 <td th:text="${'S/. '+pedidos.getPreciototal()}"></td>
                                                 <td th:text="${pedidos.getFechapedido()}"></td>

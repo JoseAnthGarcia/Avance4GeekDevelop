@@ -289,7 +289,9 @@
                                                     class="fas fa-minus"></i></button>
                                         </div>
                                     </td>
-                                    <td style="width: 250px" th:text="|S/. ${plato.getPreciounitario() * plato.getCantidad()}|"></td>
+                                    <td style="width: 250px" id="precio">
+                                        <input class="form-control mr-3 mb-3 mt-3 precio" th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}" th:value="|S/. ${plato.getPreciounitario() * plato.getCantidad()}|"  type="text" size="5%" name="precio" disabled>
+                                    </td>
                                     <td style="width: 700px"><textarea class="form-control" aria-label="With textarea" name="observacion" form="terminarCompra"
                                                                        style="background: #ededed"></textarea></td>
                                     </tr>
@@ -470,6 +472,10 @@
         let pedido = $(this).data('pedido')
         let $cantidad_input=$(".cantidad[data-pedido='" + pedido +"']").first()
         let cantidad = parseInt($cantidad_input.val());
+        //TODO
+        let $precio_td=$("#precio[text='" + pedido * cantidad + "']").first()
+        let precio = parseInt($precio_td.val())
+        console.log(precio)
         if(cantidad!==maximo){
             $cantidad_input.val(cantidad+ 1)
         }

@@ -224,7 +224,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where us.idrol=4 and\n" +
             "us.estado = 2 and\n" +
             "(lower(us.nombres) like %?1% or lower(us.apellidos) like %?2%) and\n" +
-            "us.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)", nativeQuery = true)
+            "us.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)",
+            nativeQuery = true,
+            countQuery = "select count(*) from usuario us\n" +
+                    "left join movilidad m on us.idmovilidad = m.idmovilidad\n" +
+                    "where us.idrol=4 and\n" +
+                    "us.estado = 2 and\n" +
+                    "(lower(us.nombres) like %?1%\n" +
+                    "or lower(us.apellidos) like %?2%)\n" +
+                    "and us.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)")
     Page<Usuario> buscarRepartidoresSinMovilidad(String nombres, String apellidos, int fechaRegistro, Pageable pageable);
 
     @Query(value = "select u.* from usuario u\n" +
@@ -232,7 +240,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "where u.idrol=4 and\n" +
             "u.estado = 2 and\n" +
             "(lower(u.nombres) like %?1% or lower(u.apellidos) like %?2%) and\n" +
-            "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true)
+            "u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY) and m.idtipomovilidad = ?4", nativeQuery = true
+            , countQuery = "select count(*) from usuario u\n" +
+            "left join movilidad m on u.idmovilidad = m.idmovilidad\n" +
+            "where u.idrol=4 and\n" +
+            "u.estado = 2 and\n" +
+            "(lower(u.nombres) like %?1%\n" +
+            "or lower(u.apellidos) like %?2%)\n" +
+            "and u.fechaRegistro>= DATE_ADD(now(), INTERVAL ?3 DAY)\n" +
+            "and m.idtipomovilidad = ?4")
 
     Page<Usuario> buscarRepartidoresConMovilidad(String nombres,String apellidos, int fechaRegistro, int idMovilidad, Pageable pageable);
 

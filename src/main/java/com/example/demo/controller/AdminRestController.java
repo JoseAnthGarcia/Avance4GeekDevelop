@@ -421,7 +421,7 @@ public class AdminRestController {
         for (int i = 0; i < listaExtras.size(); i++) {
             sumatotalExtra = sumatotalExtra.add(listaExtras.get(i).getPreciototal());
         }
-        System.out.println("##############V= " + v);
+
         model.addAttribute("detalles", detallesPedido);
         model.addAttribute("platos", listaPlatos);
         model.addAttribute("extras", listaExtras);

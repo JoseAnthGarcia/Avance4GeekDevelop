@@ -117,15 +117,15 @@
                                         <ul class="list-group col-10  ml-5">
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()}">
+                                                <h5 th:text="${'Cliente: '+detalles.get(0).getCliente()+'-'+detalles.get(0).getTelc()}">
                                                     <b>Cliente: </b>Hector
                                                     Ventura</h5>
                                                 <span class="text-light "><h6></h6></span>
                                             </li>
                                             <li class="text-light list-group-item d-flex justify-content-between align-items-center"
                                                 style="background-color: #701111;">
-                                                <h5 th:text="${'Celular: '+detalles.get(0).getTelc()}">
-                                                    <b>Celular: </b>Hector
+                                                <h5 th:text="${'Código: '+detalles.get(0).getCodigo()}">
+                                                    <b>Código: </b>Hector
                                                     Ventura</h5>
                                                 <span class="text-light"><h6></h6></span>
                                             </li>
@@ -149,17 +149,13 @@
                                                 style="background-color: #701111;">
                                                 <h5 th:text="${'Repartidor: '+(detalles.get(0).getRepartidor()==null? 'Sin repartidor': detalles.get(0).getRepartidor()+'-'+detalles.get(0).getTelr())}"><b></b>
                                                 </h5>
-
-                                                <!--<h5 th:if="${detalles.get(0).getMetodopago()==0}"
-                                                    th:text="${'Método de Pago: Efectivo'}"><b>Método de Pago: </b>Efectivo
+                                                <span class="text-light "><h6></h6></span>
+                                            </li>
+                                            <li class="text-light list-group-item d-flex justify-content-between align-items-center"
+                                                style="background-color: #701111;">
+                                                <h5 th:text="${'Método de Pago: '+(detalles.get(0).getMetodopago()==null? 'Sin método de pago': detalles.get(0).getMetodopago())}"><b></b>
                                                 </h5>
-                                                <h5 th:if="${detalles.get(0).getMetodopago()==1}"
-                                                    th:text="${'Método de Pago: POS'}"><b>Método de Pago: </b>Efectivo
-                                                </h5>
-                                                <h5 th:if="${detalles.get(0).getMetodopago()==2}"
-                                                    th:text="${'Método de Pago: Online'}"><b>Método de Pago: </b>Efectivo
-                                                </h5>
-                                                --><span class="text-light "><h6></h6></span>
+                                                <span class="text-light "><h6></h6></span>
                                             </li>
                                         </ul>
                                     </td>
@@ -252,9 +248,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <label>Extras:</label>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" width="100%" cellspacing="0">
+                                <label th:if="${extras.size()!=0}">Extras:</label>
+                                <div  class="table-responsive">
+                                    <table th:if="${extras.size()!=0}" class="table table-bordered"  width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -277,7 +273,7 @@
                                         </thead>
                                         <tbody>
 
-                                            <tr th:each="extra,v:${extras}">
+                                            <tr  th:each="extra,v:${extras}">
                                                 <td>
                                                     <div style="text-align:center" th:text="${v.index+1}">
                                                     </div>
@@ -315,16 +311,28 @@
                                 </div>
                                 <div class="row">
                                     <div class="card-group col-6">
-                                        <div class="card text-dark" style="max-width: 22rem;">
+                                        <div class="card text-dark" style="max-width: 12rem;">
                                             <div class="card-header" style="color: white;background-color:#701111;">
                                                 <b>Delivery:</b></div>
                                             <div th:if="${(detalles.get(0)).getMismodistrito()==0}" class="card-body" style="background-color: #ffe8d8;color: black">
                                                 <h4 class="card-text" style="text-align:center"
-                                                   th:text="${'S/. 8.00'}"></h4>
+                                                   th:text="${'S/. 6.00'}"></h4>
                                             </div>
                                             <div th:if="${(detalles.get(0)).getMismodistrito()==1}" class="card-body" style="background-color: #ffe8d8;color: black">
                                                 <h4 class="card-text" style="text-align:center"
-                                                   th:text="${'S/. 5.00'}"></h4>
+                                                   th:text="${'S/. 4.00'}"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="card text-dark ml-3" style="max-width: 12rem;">
+                                            <div class="card-header" style="color: white;background-color:#701111;">
+                                                <b>Aplicación:</b></div>
+                                            <div th:if="${(detalles.get(0)).getMismodistrito()==0}" class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                    th:text="${'S/. 2.00'}"></h4>
+                                            </div>
+                                            <div th:if="${(detalles.get(0)).getMismodistrito()==1}" class="card-body" style="background-color: #ffe8d8;color: black">
+                                                <h4 class="card-text" style="text-align:center"
+                                                    th:text="${'S/. 1.00'}"></h4>
                                             </div>
                                         </div>
                                         <div class="card text-dark  ml-3" style="max-width: 12rem;">
@@ -379,6 +387,13 @@
                         </div>
                     </div>
                 </div>
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Geek Developers &copy; 2021-1</span>
+                        </div>
+                    </div>
+                </footer>
             </div>
 
             <!-- End of Main Content -->

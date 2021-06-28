@@ -2137,7 +2137,8 @@ public String cancelarPedido(@RequestParam("id") String id,
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam(value = "val", required = false) String valoraRest, @RequestParam("comentRest") String comentRest) {
+                              @RequestParam(value = "val", required = false) String valoraRest,
+                              @RequestParam(value = "comentRest", required = false) String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Pedido pedido = pedidoRepository.encontrarporId(id);
         try {
@@ -2164,7 +2165,8 @@ public String cancelarPedido(@RequestParam("id") String id,
 
     @PostMapping("/valorarRep")
     public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                             @RequestParam(value = "val", required = false) String valoraRest, @RequestParam("comentRep") String comentRest) {
+                             @RequestParam(value = "val", required = false) String valoraRest,
+                             @RequestParam(value = "comentRep", required = false) String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         System.out.println(valoraRest);
         System.out.println(comentRest);

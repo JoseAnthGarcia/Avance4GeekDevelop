@@ -324,7 +324,6 @@
                                             <td th:text="${p2.getCantidad()}"></td>
                                             <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
                                             <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
-                                            <!------------------------------------------------------------------------------------------------------------------------------------------------------------------>
                                         </tr>
 
                                         </tbody>
@@ -368,14 +367,6 @@
                             <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getPreciototal()}|"></h6>
                         </div>
 
-                        <!--
-                        <div class="row justify-content-center">
-                            <h6 class="col-3" style="color:black">Monto Total</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()+5 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()+8 - p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()+5}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()+8}|"></h6>
-                        </div>-->
 
                         <div class="dropdown-divider" style="border-color:#701111;"  th:if="${p3.getEstado==2}"></div>
 
@@ -423,27 +414,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-					<a  class="btn btn-danger"  data-toggle="modal" th:if="${listapedido1.get(0).getEstado()==0}" th:data-target="${'#cancelar'+listapedido1.get(0).getCodigo()}" th:href="${'#cancelar'+listapedido1.get(0).getCodigo()==0}">Cancelar Pedido</a>
-                    <div class="modal fade" th:id="${'cancelar'+listapedido1.get(0).getCodigo()}" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel4">¿Desea cancelar el pedido?</h5>
-                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                                    <button class="btn btn-primary" th:href="@{'/cliente/cancelarPedido?id='+${listapedido1.get(0).getCodigo()}}" type="submit">Sí</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
+
 					</div>
                 <!-- /.container-fluid -->
 

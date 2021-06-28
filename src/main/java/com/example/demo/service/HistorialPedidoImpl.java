@@ -16,7 +16,7 @@ public class HistorialPedidoImpl implements HistorialPedidoService{
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<PedidoValoracionDTO> findPaginated2(int idCliente, String texto, int limitInf, int limitSup, Pageable pageable) {
+    public Page<PedidoValoracionDTO> findPaginated2(int idCliente, String texto, Integer limitInf, Integer limitSup, Pageable pageable) {
         return this.pedidoRepository.pedidosTotales2(idCliente,texto,limitInf,limitSup,pageable);
     }
 

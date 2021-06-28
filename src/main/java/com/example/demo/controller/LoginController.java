@@ -45,6 +45,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 
@@ -420,24 +422,28 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
+        System.out.println(udto.getApellido_paterno()+" "+udto.getApellido_materno());
+        System.out.println(cliente.getApellidos());
+        System.out.println(cleanString(cliente.getApellidos()));
+
         if(udto.getSuccess().equals("true")){
             if(cliente.getDni().equals(udto.getRuc())){
                 dni_val = false;
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
+                        if (cleanString(udto.getNombres()).toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -844,18 +850,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(adminRest.getNombres().toUpperCase())){
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(adminRest.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -1093,8 +1099,7 @@ public class LoginController {
     public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario ,
                                     BindingResult bindingResult,
                                     @RequestParam("photo") MultipartFile file,
-                                    @Valid Movilidad movilidad ,
-                                    BindingResult bindingResult2,
+                                    Movilidad movilidad ,
                                     Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
@@ -1122,11 +1127,41 @@ public class LoginController {
         Boolean errorSexo= false;
         Boolean validarFoto = true;
         String fileName = "";
+        Boolean noHayMov = false;
+
         if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
             errorMov= true;
+            if(movilidad.getTipoMovilidad()==null){
+                noHayMov= true;
+            }
         }
         if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
             errorMov= true;
+            if(movilidad.getTipoMovilidad()==null){
+                noHayMov= true;
+            }
+        }
+        Boolean errorLicencia = false;
+        Boolean errorPlaca = false;
+
+        if(movilidad.getTipoMovilidad()!=null) {
+
+            if ((movilidad.getTipoMovilidad().getIdtipomovilidad() == 5 || movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) && !movilidad.getLicencia().equals("")) {
+                Pattern pat = Pattern.compile("^([A-Z]{1}\\d{8})$");
+                Matcher mat = pat.matcher(licencia);
+                if (!mat.matches()) {
+                    errorLicencia = true;
+                }
+            }
+
+            if ((movilidad.getTipoMovilidad().getIdtipomovilidad() == 5 || movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) && !movilidad.getPlaca().equals("")) {
+
+                Pattern pat = Pattern.compile("^([A-Z]{3}\\d{3})$");
+                Matcher mat = pat.matcher(placa);
+                if (!mat.matches()) {
+                    errorPlaca = true;
+                }
+            }
         }
         if(distritos!=null){
             if(distritos.size()>5 || distritos.isEmpty()){
@@ -1193,18 +1228,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -1215,8 +1250,8 @@ public class LoginController {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || bindingResult2.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
-                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
+        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
+                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val ||errorPlaca || errorLicencia || noHayMov){
 
             if(dni_val) {
                 model.addAttribute("msg11","El DNI ingresado no es válido");
@@ -1262,6 +1297,15 @@ public class LoginController {
             }
             if(movilidad2!=null){
                 model.addAttribute("msg10", "La placa ingresada ya se encuentra en la base de datos");
+            }
+            if(errorPlaca){
+                model.addAttribute("msg16",  "Ingrese una placa en el formato correcto. Ej: AAA111, ABC123");
+            }
+            if(errorLicencia){
+                model.addAttribute("msg17",  "Ingrese una licencia en el formato correcto. Ej: Q12345678, R23432245");
+            }
+            if(noHayMov){
+                model.addAttribute("msg18",  "Debe seleccionar una movilidad.");
             }
 
             model.addAttribute("usuario", usuario);

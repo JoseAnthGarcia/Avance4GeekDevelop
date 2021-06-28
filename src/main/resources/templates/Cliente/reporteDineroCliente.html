@@ -201,6 +201,28 @@
                             </select>
 
                             </div>
+                            <div class="col-sm-2 mb-2" th:if="${tam.equals('0')}" >
+                                <select id="anio" name="anio" class="form-control" style="border-color: lightgray">
+                                    <option value="" disabled th:selected="${anio.equals('')}">Año</option>
+                                    <option th:each=" an : ${listanios}"
+                                            th:value="${an.getAnio()}"
+                                            th:text="${an.getAnio()}"
+                                            th:selected="${anio.equals(an.getAnio())}"></option>
+                                </select>
+
+
+                            </div>
+
+                            <div class="col-sm-2 mb-2" th:if="${tam.equals('1')}">
+                                <select id="anio2" name="anio" class="form-control" style="border-color: lightgray">
+                                    <option value="" disabled th:selected="${anio.equals('')}">Año</option>
+                                    <option th:each=" an : ${listanios}"
+                                            th:value="${an}"
+                                            th:text="${an}"
+                                            th:selected="${anio.equals(an)}"></option>
+                                </select>
+
+                            </div>
                             <div class="input-group-append col-sm-1 mb-2 ">
                                 <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                         type="submit">
@@ -285,16 +307,7 @@
                                 <div class="col-md-2"></div>
                             </div>
 
-                                        <!--
-                                        <nav aria-label="Pagination">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item" th:each="page : ${pages}" >
-                                                    <a style="background-color: #701111"  th:unless="${texto == null && nombrec == null && mes==null  }" class="page-link active" th:text="${page}"
-                                                       th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&nombrec='+${nombrec}}"></a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-            -->
+
 
 
                         </div>

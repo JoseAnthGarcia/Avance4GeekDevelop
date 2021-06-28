@@ -211,7 +211,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "select * from usuario \n" +
             "where idrol=3 and estado = 2 and\n" +
             "(lower(nombres) like %?1% or lower(apellidos) like %?2%) and (dni like %?3%)\n" +
-            "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?4 DAY))", nativeQuery = true)
+            "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?4 DAY))", nativeQuery = true,
+            countQuery ="select count(*) from usuario\n" +
+                    "where idrol=3 and estado = 2 and\n" +
+                    "(lower(nombres) like %?1% or lower(apellidos) like %?2%) and (dni like %?3%)\n" +
+                    "and (fechaRegistro>= DATE_ADD(now(), INTERVAL ?4 DAY))")
     Page<Usuario> buscarAdministradorR(String nombres, String apellidos, String dni, int fechaRegistro, Pageable pageable);
 
 

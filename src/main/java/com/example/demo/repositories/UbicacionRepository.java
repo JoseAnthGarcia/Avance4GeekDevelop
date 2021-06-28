@@ -9,10 +9,16 @@ import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UbicacionRepository extends JpaRepository<Ubicacion, Integer> {
 
     @Query(value="select * from ubicacion where idusuario=?1 and borrado = 0",nativeQuery = true)
     List<Ubicacion> findByUsuarioVal(Usuario usuario);
+
+    @Query(value = "select * from ubicacion u where u.idubicacion = ?1 and u.idusuario = ?2 and u.borrado = 0 ", nativeQuery = true)
+    Optional<Ubicacion> findByIdusuarioAndIdubicacionVal(int idubicacion, int idusuario);
+
+
 }

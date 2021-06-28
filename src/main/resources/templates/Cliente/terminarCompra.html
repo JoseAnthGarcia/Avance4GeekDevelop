@@ -468,10 +468,10 @@
                                     </div>
                                 </div>-->
                                 <div class="container mt-3 mb-3">
-                                    <div class="form-check form-check-inline mr-5 ml-5">
+                                    <div class="form-check form-check-inline mr-5">
                                         <!--ONLINE-->
                                         <input class="form-check-input" type="radio" name="metodoPago" id="online" value="2"
-                                               form="generarPedido" onclick="escogerMetodoPago()"
+                                               form="generarPedido" onchange="online_tab()"
                                                th:checked="${msgNumTarjetaVal != null || msgFechaVal != null
                                                                 || msgCvvVal != null || msgTipoVal  != null
                                                                 || msgNullMdp != null}">
@@ -483,7 +483,7 @@
                                     <!--POS-->
                                     <div class="form-check form-check-inline mr-5 ml-5">
                                         <input class="form-check-input" type="radio" name="metodoPago" id="pos" value="3"
-                                               form="generarPedido" onclick="escogerMetodoPago()">
+                                               form="generarPedido" onchange="pos_tab()">
                                         <label class="form-check-label" for="pos">
                                             <i class="fab fa-paypal" style="color: darkred;"></i>
                                         </label>
@@ -491,7 +491,7 @@
                                     <!--EFECTIVO-->
                                     <div class="form-check form-check-inline mr-5 ml-5">
                                         <input class="form-check-input" type="radio" name="metodoPago" id="efectivo" value="1"
-                                               form="generarPedido" onclick="escogerMetodoPago()"
+                                               form="generarPedido" onchange="efectivo_tab()"
                                                th:checked="${msgEfect != null || msgNotString != null}">
                                         <label class="form-check-label" for="efectivo">
                                             <i class="fas fa-money-bill" style="color: darkgreen"></i>

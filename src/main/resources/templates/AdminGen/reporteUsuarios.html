@@ -99,13 +99,13 @@
                             <div class="d-sm-flex align-items-center justify-content-between">
 
                                 <h2 class="font-weight-bold text-white text-lg-center mx-auto "  id="nombre_pagina">REPORTE DE USUARIOS</h2>
-                                <button class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                                <button th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                             </div>
 
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="tabla" class="table table-image table-responsive">
+                                <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                     <thead>
                                     <tr>
                                         <th class="text-center">
@@ -149,7 +149,13 @@
                                 </table>
 
                             </div>
-                            <div class="row">
+                            <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                            </div>
+                            <div th:if="${estadoBuscador == 0 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                            </div>
+                            <div class="row" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">

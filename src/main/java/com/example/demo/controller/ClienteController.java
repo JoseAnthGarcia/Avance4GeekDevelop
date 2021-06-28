@@ -1345,27 +1345,28 @@ public class ClienteController {
 
         //Obteniendo el cupon
         Cupon cupon = null;
-        boolean idCuponVal = false;
-        if(idCupon == null){
+        boolean idCuponVal = true;
+   /*     if(idCupon == null || idCupon.equals("")){
             idCupon = "";
             idCuponVal = true;
-        }
+        }*/
 
         if(efectivoPagar == null){
             efectivoPagar = "";
         }
 
-        if(!idCupon.equals("")) {
-            try {
+        try {
+            //if(!idCupon.equals("") || idCupon != null) {
                 int idCuponInt = Integer.parseInt(idCupon);
                 Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
                 if (cuponOpt.isPresent()) {
                     cupon = cuponOpt.get();
-                    idCuponVal = true;
+                    idCuponVal = false;
                 }
-            } catch (NumberFormatException e) {
-            }
+            //}
+        } catch (NumberFormatException | NullPointerException e) {
         }
+
 
         //Obteniendo Ubicacion
         Ubicacion ubicacion = null;
@@ -2149,7 +2150,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
     @PostMapping("/valorarRest")
     public String valorarRest(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                              @RequestParam(value = "val", required = false) String valoraRest, @RequestParam("comentRest") String comentRest) {
+                              @RequestParam(value = "val", required = false) String valoraRest,
+                              @RequestParam(value = "comentRest", required = false) String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         Pedido pedido = pedidoRepository.encontrarporId(id);
         try {
@@ -2176,7 +2178,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
     @PostMapping("/valorarRep")
     public String valorarRep(Model model, HttpSession httpSession, @RequestParam("id") String id,
-                             @RequestParam(value = "val", required = false) String valoraRest, @RequestParam("comentRep") String comentRest) {
+                             @RequestParam(value = "val", required = false) String valoraRest,
+                             @RequestParam(value = "comentRep", required = false) String comentRest) {
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
         System.out.println(valoraRest);
         System.out.println(comentRest);

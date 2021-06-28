@@ -38,6 +38,14 @@ h6.notificacion{
     transition: background-color .3s;
 
 }
+
+.pagen-item.active .page-link {
+    z-index: 3;
+    color: #701111;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
 .bontondate{
     background-color: rgb(255, 255, 255);
     color: black;

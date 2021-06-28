@@ -3,7 +3,7 @@
 
     <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Creación exitosa')"></head>
 
-    <body th:if="${estadoRestaurante==null||estadoRestaurante==0}"
+    <body th:if="${(estadoRestaurante!=2&&estadoRestaurante!=1&&estadoRestaurante!=3)||estadoRestaurante==null||estadoRestaurante==0}"
           id="page-top">
 
         <!-- Page Wrapper -->

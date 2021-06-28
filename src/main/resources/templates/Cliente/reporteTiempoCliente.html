@@ -175,7 +175,7 @@
                                            >
                                 </div>
                             </div>
-                            <div class="col-sm-3 mb-1 ">
+                            <div class="col-sm-2 mb-2">
                                 <select class="form-control" name="numpedidos">
                                     <option value="7" th:selected="${numpedidos.equals('7')}">N° de pedidos</option>
                                     <option value="1" th:selected="${numpedidos.equals('1')}">0 a 10</option>
@@ -184,7 +184,7 @@
                                     <option value="4" th:selected="${numpedidos.equals('4')}">30 a 40</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2 mb-1">
+                            <div class="col-sm-2 mb-2">
                                 <select class="form-control" name="mes">
                                     <option value="13"  th:selected="${mes.equals('13')}">Mes</option>
                                     <option value="1" th:selected="${mes.equals('1')}">Enero</option>
@@ -201,13 +201,36 @@
                                     <option value="12" th:selected="${mes.equals('12')}">Diciembre</option>
                                 </select>
                             </div>
-                            <div class="input-group-append col-sm-1 mb-2 ">
+                            <div class="col-sm-2 mb-2" th:if="${tam.equals('0')}" >
+                                <select id="anio" name="anio" class="form-control" style="border-color: lightgray">
+                                    <option value="" disabled th:selected="${anio.equals('')}">Año</option>
+                                    <option th:each=" an : ${listanios}"
+                                            th:value="${an.getAnio()}"
+                                            th:text="${an.getAnio()}"
+                                            th:selected="${anio.equals(an.getAnio())}"></option>
+                                </select>
+
+
+                            </div>
+
+                            <div class="col-sm-2 mb-2" th:if="${tam.equals('1')}">
+                                <select id="anio2" name="anio" class="form-control" style="border-color: lightgray">
+                                    <option value="" disabled th:selected="${anio.equals('')}">Año</option>
+                                    <option th:each=" an : ${listanios}"
+                                            th:value="${an}"
+                                            th:text="${an}"
+                                            th:selected="${anio.equals(an)}"></option>
+                                </select>
+
+                            </div>
+
+                            <div class="input-group-append col-sm-1 mb-3 ml-0 ">
                                 <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                         type="submit">
                                     <i class="fas fa-filter"></i>
                                 </button>
                             </div>
-                            <div class="col-sm-2" style="margin-right: 10px">
+                            <div class="col-sm-2 mb-1 ml-0" style="margin-right: 10px">
                                 <a class="btn btn-secondary" th:href="@{'/cliente/reporteTiempo'}">Quitar filtros</a>
                             </div>
                         </div>
@@ -296,17 +319,6 @@
                                 </div>
                                 <div class="col-md-2"></div>
                             </div>
-
-                            <!--
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && numpedidos == null && mes==null  }" class="page-link active" th:text="${page}"
-                                           style="background-color: #701111"  th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&mes='+${mes}+'&numpedidos='+${numpedidos}}"></a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        -->
 
                         </div>
                     </div>

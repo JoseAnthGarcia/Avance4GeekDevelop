@@ -4,6 +4,9 @@ Correo:
 -ADMINISTRADOR GENERAL:
     adminGeneral: admin@gmail.com
     password: adminGeneral
+
+-ADMINISTRADOR:
+
 -USUARIO:
     usuario: a20181459@pucp.edu.pe
     clave: 123456789
@@ -47,3 +50,10 @@ Restaurante Estados:
 0 pendiente
 1 aceptado
 2 rechazado
+
+
+
+----- nueva BASE DE DATOS -----
+username = admin
+hostname:geekdevelopdb.cnpoqke0qvwy.us-east-1.rds.amazonaws.com
+password = wyw4VrtdEx19kMW9IU6R

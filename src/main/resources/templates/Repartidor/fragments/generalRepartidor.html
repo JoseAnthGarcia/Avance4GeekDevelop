@@ -5,6 +5,9 @@
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous"></script>
     <meta charset="UTF-8">
+
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
+
     <title th:text="${page_name}">Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -32,6 +35,36 @@
 
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+    <script>
+
+
+
+        $(document).ready(function(){
+            $("#userDropdown").click(function (){
+
+                $("#mostrar").addClass("show");
+                $("#userDropdown").setAttribute("aria-expanded", "true");
+                $("#mostrar2").addClass("show");
+            });
+
+            $("#alertsDropdown").click(function (){
+
+                $("#mostrar3").addClass("show");
+                $("#alertsDropdown").setAttribute("aria-expanded", "true");
+                $("#mostrar4").addClass("show");
+            });
+
+            $(document).click(function(){
+                $("#mostrar3").removeClass("show");
+                $("#alertsDropdown").setAttribute("aria-expanded", "false");
+                $("#mostrar4").removeClass("show");
+                $("#mostrar").removeClass("show")
+                $("#userDropdown").setAttribute("aria-expanded", "false");
+                $("#mostrar2").removeClass("show");
+            })
+        });
+
+    </script>
 
     <!-- Core plugin JavaScript-->
 
@@ -116,7 +149,7 @@
         </li>
 
         <!-- Nav Item - Alerts -->
-        <li class="nav-item dropdown no-arrow mx-1">
+        <li class="nav-item dropdown no-arrow mx-1" id="mostrar3">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
@@ -125,7 +158,7 @@
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                 aria-labelledby="alertsDropdown">
+                 aria-labelledby="alertsDropdown" id="mostrar4">
                 <h6 class="notificacion">
                     Nuevos Pedidos
                 </h6>
@@ -150,7 +183,7 @@
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow">
+        <li class="nav-item dropdown no-arrow" id="mostrar">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
@@ -159,14 +192,12 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                 aria-labelledby="userDropdown">
+                 aria-labelledby="userDropdown" id="mostrar2">
                 <a class="dropdown-item" th:href="@{/repartidor/editarPerfil}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Editar Perfil
                 </a>
                 <div class="dropdown-divider"></div>
-
-
 
                 <!-- LOGOUT-->
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">

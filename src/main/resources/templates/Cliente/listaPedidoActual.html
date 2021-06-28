@@ -220,7 +220,7 @@
                     <div style=text-align:center>
                         <div class="alert alert-success" role="alert" th:if="${msgPedGen != null}" th:text="${msgPedGen}"></div>
                         <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>
-                        <h6 th:if="${listaPedidos.size()>0}">Si su pedido ya ha sido entregado o cancelado dirijase al
+                        <h6 th:if="${listaPedidos.size()>0}">Si su pedido ya ha sido <font color="green"><b>entregado</b></font>  o <font color="red"><b>cancelado</b></font> dirijase al
                             Historial de Pedidos</h6>
                         <h6></h6>
                     </div>

@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface HistorialPedidoService {
-    Page<PedidoValoracionDTO> findPaginated2(int idCliente, String texto, int limitInf, int limitSup, Pageable pageable);
+    Page<PedidoValoracionDTO> findPaginated2(int idCliente, String texto, Integer limitInf, Integer limitSup, Pageable pageable);
 }

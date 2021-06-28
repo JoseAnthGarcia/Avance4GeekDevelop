@@ -212,7 +212,7 @@
                 <div class="card-body">
 
                     <div style=text-align:center>
-                        <h6>Solo pedidos entregados o cancelados </h6>
+                        <h6>Solo pedidos  <font color="green"><b>entregados</b></font>  o <font color="red"><b>cancelados</b></font </h6>
                         <h6></h6>
                     </div>
 
@@ -557,12 +557,12 @@
                                 <td>
 
                                     <div style=text-align:center>
-                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                        <a th:href="@{'/cliente/detalleHistorialPedido?codigo='+${pedido.getCodigo()}}">
                                             <div class="text-center"><i style="font-size:6em; color:#2C8287"
                                                                         class="fas fa-eye"></i>
                                             </div>
                                         </a>
-                                        <a th:href="@{'/cliente/detallePedidoActual?codigo='+${pedido.getCodigo()}}">
+                                        <a th:href="@{'/cliente/detalleHistorialPedido?codigo='+${pedido.getCodigo()}}">
                                             <div class="text-center" style="color:#2C8287">Detalle de Pedido</div>
                                         </a>
                                     </div>
@@ -587,7 +587,7 @@
                                 <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                     <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
                                        th:text="${page}"
-                                       th:href="@{'/cliente/pedidoActualPagina2?page='+${page}}"></a>
+                                       th:href="@{'/cliente/paginacionHistPed?page='+${page}}"></a>
                                 </li>
                             </ul>
                         </nav>

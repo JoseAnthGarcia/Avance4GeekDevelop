@@ -280,16 +280,25 @@ public class RepartidorController {
     }
 
     @PostMapping("/cambiarDistrito")
-    public String cambiarDistritoActual(@RequestParam("idubicacion") int idubicacion, HttpSession session) {
-        Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        Optional<Ubicacion> ubicacionOpt = ubicacionRepository.findById(idubicacion);
+    public String cambiarDistritoActual(@RequestParam("idubicacion") String idubicacion, HttpSession session) {
 
-        if (ubicacionOpt.isPresent()) {
-            Ubicacion ubicacion = ubicacionOpt.get();
-            if (ubicacion.getUsuario().getIdusuario().intValue() == repartidor.getIdusuario().intValue()) {
-                session.setAttribute("ubicacionActual", ubicacion);
+        try {
+            int idUbicacionInt = Integer.parseInt(idubicacion);
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            Optional<Ubicacion> ubicacionOpt = ubicacionRepository.findById(idUbicacionInt);
+
+            if (ubicacionOpt.isPresent()) {
+                Ubicacion ubicacion = ubicacionOpt.get();
+                if (ubicacion.getUsuario().getIdusuario().intValue() == repartidor.getIdusuario().intValue()) {
+                    session.setAttribute("ubicacionActual", ubicacion);
+                }
             }
+        }catch (NumberFormatException e){
+            return "redirect:/repartidor/listaPedidos";
         }
+
+
+
 
         return "redirect:/repartidor/listaPedidos";
     }
@@ -439,7 +448,7 @@ public class RepartidorController {
         }
 
         //TODO: validar fechas:
-        if(fechaMax==null || fechaMin==null){
+        if(fechaMax == ""|| fechaMin == "" || fechaMax== null || fechaMin ==null){
             fechaMin = "1900-01-01";
             fechaMax = "3000-01-01";
         }

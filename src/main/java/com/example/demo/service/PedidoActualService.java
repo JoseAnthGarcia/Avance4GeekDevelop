@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PedidoActualService {
 
-    Page<PedidoDTO> findPaginated(int idCliente, String texto, int limitInf, int limitSup,Pageable pageable);
+    Page<PedidoDTO> findPaginated(int idCliente, String texto, Integer limitInf, Integer limitSup,Pageable pageable);
 }

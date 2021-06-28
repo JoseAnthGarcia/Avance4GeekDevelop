@@ -254,14 +254,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value="select r.nombre as 'nombrerest' , count(p.idrestaurante) as `numpedidos` ,\n" +
             "EXTRACT(MONTH from p.fechapedido) as `mes` from pedido p \n" +
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
-            "where p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido) <=?3  group by p.idrestaurante limit 0,2",nativeQuery = true)
+            "where p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido) <=?3  group by p.idrestaurante limit 0,3",nativeQuery = true)
     List<ReporteTop3> reporteTop3Rest(int idcliente, int mes1,int mes2);
 
     @Query(value="select  pl.nombre ,sum(cantidad) as 'totalplato' from pedido p \n" +
             "inner join plato_has_pedido php on p.codigo=php.codigo\n" +
             "inner join plato pl on php.idplato=pl.idplato\n" +
             "where  p.idcliente=?1 and EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido) <=?3\n" +
-            "group by pl.idplato order by sum(cantidad) desc limit 0,2 ;", nativeQuery = true)
+            "group by pl.idplato order by sum(cantidad) desc limit 0,3 ;", nativeQuery = true)
 
     List<ReporteTop3P> reporteTop3Pl(int idcliente, int mes1, int mes2);
 

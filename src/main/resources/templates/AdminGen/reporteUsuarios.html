@@ -36,7 +36,7 @@
 
                         <div class="form-group row">
                             <div class="col-sm-3 mb-1" >
-                                <input type="text" class="form-control bg-light border-0 small" name="texto"
+                                <input type="text" class="form-control" name="texto"
                                        th:value="${texto.equals('')?'':texto}"
                                        th:placeholder="${texto.equals('')?'Búsqueda por usuario...':texto}">
                             </div>
@@ -160,25 +160,25 @@
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
-                                            <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${prev}|}">Anterior</a>
-                                            </li>
-                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${page}|}" th:text="${page}"></a>
-                                            </li>
-                                            <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${next}|}">Siguiente</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="col-md-2"></div>
-                            </div>
-                        </div>
-                    </div>
+                                            <!--  <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
+                                                  <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${prev}|}">Anterior</a>
+                                              </li>-->
+                                              <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                  <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${page}|}" th:text="${page}"></a>
+                                              </li>
+                                          <!--    <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
+                                                  <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${next}|}">Siguiente</a>
+                                              </li>-->
+                                          </ul>
+                                      </nav>
+                                  </div>
+                                  <div class="col-md-2"></div>
+                              </div>
+                          </div>
+                      </div>
 
-                </div>
-                <!-- /.container-fluid -->
+                  </div>
+                  <!-- /.container-fluid -->
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->

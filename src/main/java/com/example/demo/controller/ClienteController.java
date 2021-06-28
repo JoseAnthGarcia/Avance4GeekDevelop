@@ -1203,7 +1203,8 @@ public class ClienteController {
         //TODO ver validacion en caso ca
         //CUPONES
         List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
-        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        //  List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
         //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
         int idRest = (Integer) session.getAttribute("idRest");
@@ -1354,7 +1355,8 @@ public class ClienteController {
         * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
         * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
-        List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+     //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(cliente);
         int idRest = (int) session.getAttribute("idRest");
         Optional<Restaurante> restOpt = restauranteRepository.findById(idRest);
         Restaurante restaurante = restOpt.get();

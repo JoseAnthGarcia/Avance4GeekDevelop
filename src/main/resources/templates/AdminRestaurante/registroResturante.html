@@ -58,8 +58,8 @@
                     <!-- Begin Page Content -->
                     <div class="container">
 
-                        <a class="dropdown-item user" data-toggle="modal" data-target="#volverModal"
-                           style="position: relative; right:12%">
+                        <a class="user" data-toggle="modal" data-target="#volverModal"
+                           style="position: relative; right:12%; color: rgba(12,10,12,0.7)">
                             <i class="fas fa-chevron-circle-left"></i>
                             Volver
                         </a>
@@ -74,21 +74,21 @@
                                     <input type="text" class="form-control"
                                            id="nombre" name="nombre"
                                            placeholder="Nombre del restaurante" th:field="*{nombre}">
-                                    <h1 style="color: red; font-size: small; text-align: left"
+                                    <div class="text-danger"
                                         th:if="${#fields.hasErrors('nombre')}"
-                                        th:errors="*{nombre}"></h1>
-                                    <h1 th:if="${nombreResta!=null}" th:text="${nombreResta}"
-                                        style="color: red; font-size: small; text-align: left"></h1>
+                                        th:errors="*{nombre}"></div>
+                                    <div th:if="${nombreResta!=null}" th:text="${nombreResta}"
+                                        class="text-danger"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <input type="text" class="form-control"
                                            id="direccion" name="direccion"
                                            placeholder="Dirección" th:field="*{direccion}">
-                                    <h1 style="color: red; font-size: small; text-align: left"
+                                    <div class="text-danger"
                                         th:if="${#fields.hasErrors('direccion')}"
-                                        th:errors="*{direccion}"></h1>
-                                    <h1 th:if="${direccionResta!=null}" th:text="${direccionResta}"
-                                        style="color: red; font-size: small; text-align: left"></h1>
+                                        th:errors="*{direccion}"></div>
+                                    <div th:if="${direccionResta!=null}" th:text="${direccionResta}"
+                                         class="text-danger"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -96,23 +96,23 @@
                                     <input type="text" class="form-control"
                                            id="ruc" name="ruc"
                                            placeholder="RUC" th:field="*{ruc}">
-                                    <h1 style="color: red; font-size: small; text-align: left"
+                                    <div class="text-danger"
                                         th:if="${#fields.hasErrors('ruc')}"
-                                        th:errors="*{ruc}"></h1>
-                                    <h1 th:if="${rucResta!=null}" th:text="${rucResta}"
-                                        style="color: red; font-size: small; text-align: left"></h1>
-                                    <h1 th:if="${validarApi!=null}" th:text="${validarApi}"
-                                        style="color: red; font-size: small; text-align: left"></h1>
+                                        th:errors="*{ruc}"></div>
+                                    <div th:if="${rucResta!=null}" th:text="${rucResta}"
+                                         class="text-danger"></div>
+                                    <div th:if="${validarApi!=null}" th:text="${validarApi}"
+                                         class="text-danger"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <input type="text" class="form-control"
                                            id="telefono" name="telefono"
                                            placeholder="Teléfono" th:field="*{telefono}">
-                                    <h1 style="color: red; font-size: small; text-align: left"
+                                    <div class="text-danger"
                                         th:if="${#fields.hasErrors('telefono')}"
-                                        th:errors="*{telefono}"></h1>
-                                    <h1 th:if="${telefonoResta!=null}" th:text="${telefonoResta}"
-                                        style="color: red; font-size: small; text-align: left"></h1>
+                                        th:errors="*{telefono}"></div>
+                                    <div th:if="${telefonoResta!=null}" th:text="${telefonoResta}"
+                                        class="text-danger"></div>
                                 </div>
 
                             </div>
@@ -128,9 +128,9 @@
                                                 th:text="${distritos.getNombre()}"></option>
                                     </select>
                                     <div th:if="${msg3 != null}" th:text="${msg3}"
-                                         style="color: red; font-size: small; text-align: left"></div>
+                                         class="text-danger"></div>
                                     <div th:if="${msg5 != null}" th:text="${msg5}"
-                                         style="color: red; font-size: small; text-align: left"></div>
+                                         class="text-danger"></div>
 
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
@@ -141,8 +141,8 @@
                                                accept="image/png, image/jpeg, image/webp, image/jpg"
                                                class="custom-file-input" id="customFile">
                                         <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
-                                        <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
-                                            style="color: red; font-size: small; text-align: left"></h1>
+                                        <div th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                            class="text-danger"></div>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                                 th:text="${categorias.getNombre()}"></option>
                                     </select>
                                     <div th:if="${msg != null}" th:text="${msg}"
-                                         style="color: red; font-size: small; text-align: left">
+                                         class="text-danger">
                                     </div>
                                 </div>
                             </div>

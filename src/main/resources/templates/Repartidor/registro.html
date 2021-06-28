@@ -224,6 +224,7 @@
                                     <div class="text-danger" th:if="${#fields.hasErrors('placa')}"
                                          th:errors="*{placa}"></div>
                                     <div th:if="${msg10 != null}" th:text="${msg5}" class="text-danger" ></div>
+                                    <div th:if="${msg16 != null}" th:text="${msg16}" class="text-danger" ></div>
                                 </div>
 
                             </div>
@@ -236,7 +237,8 @@
                                     <div th:if="${msg6 != null}" th:text="${msg6}" class="text-danger" ></div>
                                     <div class="text-danger" th:if="${#fields.hasErrors('licencia')}"
                                          th:errors="*{licencia}"></div>
-                                    <div th:if="${msg9 != null}" th:text="${msg5}" class="text-danger" ></div>
+                                    <div th:if="${msg9 != null}" th:text="${msg9}" class="text-danger" ></div>
+                                    <div th:if="${msg17 != null}" th:text="${msg17}" class="text-danger" ></div>
                                 </div>
                             </div>
                         </div>

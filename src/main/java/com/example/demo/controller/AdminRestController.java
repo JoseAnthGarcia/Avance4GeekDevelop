@@ -123,7 +123,7 @@ public class AdminRestController {
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
@@ -132,12 +132,22 @@ public class AdminRestController {
                                 @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                 @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "pageNo", required = false) String pageNo1,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) throws ParseException {
 
-        if (pageNo == null || pageNo == 0) {
+        int pageNo = 0;
+        if (pageNo1 == null) {
             pageNo = 1;
         }
+        try {
+            pageNo = Integer.parseInt(pageNo1);
+            if (pageNo == 0) {
+                pageNo = 1;
+            }
+        } catch (NumberFormatException e) {
+            pageNo = 1;
+        }
+
         int inputID = 1;
         int pageSize = 5;
         Page<Pedido> page;
@@ -300,14 +310,14 @@ public class AdminRestController {
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        boolean cometariovacio=false;
-        if(comentarioAR.equals(" ")){
-            cometariovacio=true;
+        boolean cometariovacio = false;
+        if (comentarioAR.equals(" ")) {
+            cometariovacio = true;
             System.out.println("SE HAEEEEEEEEEEEE VERDAD");
         }
         if (pedido != null && !cometariovacio) {
             if (pedido.getEstado() == 0) {
-                if (comentarioAR!=null||!cometariovacio) {
+                if (comentarioAR != null || !cometariovacio) {
                     pedido.setEstado(2);
                     pedido.setComentrechazorest(comentarioAR);
                     pedidoRepository.save(pedido);
@@ -428,7 +438,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", "0", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVen("", "1980-05-21", "3000-05-21", "0", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVen")
@@ -437,11 +447,20 @@ public class AdminRestController {
                                       @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                       @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
                                       @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
-                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                      @RequestParam(value = "pageNo", required = false) String pageNo1,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
 
-        if (pageNo == null || pageNo == 0) {
+        int pageNo = 0;
+        if (pageNo1 == null) {
+            pageNo = 1;
+        }
+        try {
+            pageNo = Integer.parseInt(pageNo1);
+            if (pageNo == 0) {
+                pageNo = 1;
+            }
+        } catch (NumberFormatException e) {
             pageNo = 1;
         }
         int inputID = 1;
@@ -550,7 +569,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepVal("6", "1980-05-21", "3000-05-21", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepVal("6", "1980-05-21", "3000-05-21", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pageVal")
@@ -558,11 +577,20 @@ public class AdminRestController {
             (@ModelAttribute @RequestParam(value = "inputValoracion", required = false) String inputValoracion,
              @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
              @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
-             @RequestParam(value = "pageNo", required = false) Integer pageNo,
+             @RequestParam(value = "pageNo", required = false) String pageNo1,
              @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                      session) {
 
-        if (pageNo == null || pageNo == 0) {
+        int pageNo = 0;
+        if (pageNo1 == null) {
+            pageNo = 1;
+        }
+        try {
+            pageNo = Integer.parseInt(pageNo1);
+            if (pageNo == 0) {
+                pageNo = 1;
+            }
+        } catch (NumberFormatException e) {
             pageNo = 1;
         }
         int inputID = 1;
@@ -580,8 +608,8 @@ public class AdminRestController {
                 inputValoracion2 = Integer.parseInt(inputValoracion);
                 if (inputValoracion2 > 6) {
                     return "redirect:/restaurante/reporteValoracion";
-                } else if (inputValoracion2 == 6){
-                    inputValoracion="";
+                } else if (inputValoracion2 == 6) {
+                    inputValoracion = "";
                 }
             } catch (NumberFormatException e) {
                 return "redirect:/restaurante/reporteValoracion";
@@ -655,7 +683,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        return findPaginatedRepPla("", "0", "0", 1, restaurante.getIdrestaurante(), model, session);
+        return findPaginatedRepPla("", "0", "0", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/pagePla")
@@ -663,7 +691,7 @@ public class AdminRestController {
                                               textBuscador,
                                       @ModelAttribute @RequestParam(value = "inputCantidad", required = false) String inputCantidad,
                                       @ModelAttribute @RequestParam(value = "inputCategoria", required = false) String inputCategoria,
-                                      @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                      @RequestParam(value = "pageNo", required = false) String pageNo1,
                                       @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession
                                               session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
@@ -697,9 +725,18 @@ public class AdminRestController {
                             return "redirect:/restaurante/reportePlatos";
                         }
                     }
-                    i ++;
+                    i++;
                 }
-                if (pageNo == null || pageNo == 0) {
+                int pageNo = 0;
+                if (pageNo1 == null) {
+                    pageNo = 1;
+                }
+                try {
+                    pageNo = Integer.parseInt(pageNo1);
+                    if (pageNo == 0) {
+                        pageNo = 1;
+                    }
+                } catch (NumberFormatException e) {
                     pageNo = 1;
                 }
                 int inputID = 1;

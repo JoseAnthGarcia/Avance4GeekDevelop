@@ -98,12 +98,14 @@
                     </div>
                         <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-image table-responsive">
+                            <table class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}">
                                 <thead>
                                 <tr>
                                     <th class="text-center">
                                         N°
                                     </th>
+                                    <div class="topbar-divider d-none d-sm-block"></div>
+
                                     <th class="text-center">
                                         Usuario
                                     </th>
@@ -158,20 +160,26 @@
                                 <a href="#">6</a>
                                 <a href="#">&raquo;</a>
                             </div>-->
+                            <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                            </div>
+                            <div th:if="${estadoBuscador == 0 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                            </div>
 
-                            <div class="row">
+                            <div class="row"  th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}">Anterior</a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}"> << </a>
                                             </li>
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a class="page-link" th:href="@{|/admin/pagina/?page=${page}|}" th:text="${page}"></a>
                                             </li>
                                             <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}">Siguiente</a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}"> >> </a>
                                             </li>
                                         </ul>
                                     </nav>

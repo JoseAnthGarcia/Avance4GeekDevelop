@@ -118,6 +118,9 @@ public class ClienteController {
     @Autowired
     ExtraDetalleService extraDetalleService;
 
+    @Autowired
+    RestauranteClienteService2 restauranteClienteService2;
+
     @GetMapping("/fotoPerfil")
     public ResponseEntity<byte[]> mostrarPerfil(@RequestParam("id") int id) {
         Optional<Usuario> usuarioOptional = clienteRepository.findById(id);
@@ -273,6 +276,7 @@ public class ClienteController {
         System.out.println("id1 :"+id1);
         System.out.println("id12 :"+id2);
         System.out.println("id3 :"+id3   );
+        System.out.println("valoracion :"+val   );
 
         switch (idPrecio){
             case "1":
@@ -281,7 +285,7 @@ public class ClienteController {
                 break;
             case "2":
                 limitInfP = 15;
-                limitSupP = 20;
+                limitSupP = 25;
                 break;
             case "3":
                 limitInfP = 25;
@@ -332,14 +336,33 @@ public class ClienteController {
 
         int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
-        Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
-        int totalPage = listaRestaurante.getTotalPages();
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+
+
+        if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
+            System.out.println(" ENTRO AL QUERY 1"  );
+            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
+            int totalPage = listaRestaurante2.getTotalPages();
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
+            }
+
+            model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
+
+        }else{
+            System.out.println(" ENTRO AL QUERY 2"  );
+            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
+            int totalPage = listaRestaurante.getTotalPages();
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
+            }
+
+            model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
 
-        model.addAttribute("listaRestaurante", listaRestaurante.getContent());
+
+
         /*
         List<Categorias> listc=categoriasRestauranteRepository.findAll();
         for(Categorias c:listc){

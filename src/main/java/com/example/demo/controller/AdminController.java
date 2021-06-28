@@ -2399,13 +2399,13 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }

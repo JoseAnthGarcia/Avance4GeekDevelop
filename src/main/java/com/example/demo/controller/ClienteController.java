@@ -2208,7 +2208,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
     public String pedidoActual3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "nombrec", required = false) String nombrec
-            ,@RequestParam(value = "mes", required = false) String mes) {
+            ,@RequestParam(value = "mes", required = false) String mes,
+                                @RequestParam(value = "anio", required = false) String anio) {
 
 
 
@@ -2240,6 +2241,30 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             httpSession.setAttribute("nombrec",nombrec);
         }
 
+        /*********************************************++AÑO *************************************/
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
+
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+
+
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
+        /*******************************************************************/
         /******************************/
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
@@ -2281,11 +2306,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
         mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
 
+        anio= httpSession.getAttribute("anio") == null ? anio:  (String) httpSession.getAttribute("anio");
 
 
         Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, nombrec, pageRequest);
@@ -2307,7 +2329,32 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("totalsuma", totalsuma1);
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
+
+
+        /*************************************/
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+
+            model.addAttribute("listanios",lista);
+
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        String tam;
+        if(listanios3.isEmpty()){
+            tam ="1";
+        }else{
+            tam ="0";
+        }
+        model.addAttribute("tam",tam);
+
+        model.addAttribute("anio",anio);
+        /*************************************/
+
+
         model.addAttribute("nombrec", nombrec);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteDineroCliente";
     }
@@ -2318,7 +2365,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
     public String pedidoActualPagina3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "nombrec", required = false) String nombrec
-            ,@RequestParam(value = "mes", required = false) String mes) {
+            ,@RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "anio", required = false) String anio) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -2339,6 +2387,30 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
         mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
+
+
+
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+        anio = httpSession.getAttribute("anio") == null ?  Integer.toString(a): (String) httpSession.getAttribute("anio");
+
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
 
 
         int limitSup = 0;
@@ -2369,10 +2441,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             limitInf = 0;
         }
 
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
+
 
 
         Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, nombrec, pageRequest);
@@ -2395,6 +2464,24 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
         model.addAttribute("nombrec", nombrec);
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+
+            model.addAttribute("listanios",lista);
+
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        String tam;
+        if(listanios3.isEmpty()){
+            tam ="1";
+        }else{
+            tam ="0";
+        }
+        model.addAttribute("tam",tam);
+
+        model.addAttribute("anio",anio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteDineroCliente";
     }
@@ -2407,7 +2494,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
     public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "numpedidos", required = false) String numpedidos
-            ,@RequestParam(value = "mes", required = false) String mes) {
+                                ,@RequestParam(value = "mes", required = false) String mes,
+                                @RequestParam(value = "anio", required = false) String anio) {
 
 
 
@@ -2437,6 +2525,32 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         }else{
             httpSession.setAttribute("numpedidos",numpedidos);
         }
+
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
+
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+
+
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
+
+
+
         int limitSup = 0;
         int limitInf = 12;
 
@@ -2475,6 +2589,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :  (String) httpSession.getAttribute("numpedidos");
 
         mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
+        anio= httpSession.getAttribute("anio") == null ? anio:  (String) httpSession.getAttribute("anio");
 
         int limit1cant;
         int limit2cant;
@@ -2504,15 +2619,11 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
                 limit2cant = 50;
         }
 
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
         System.out.println("limiteInf: "+ limitInf);
         System.out.println("limiteSup: "+ limitSup);
         System.out.println("limit1cat: "+ limit1cant);
         System.out.println("limit2cat: "+ limit2cant);
-        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, anio,limit1cant,limit2cant, pageRequest);
+        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant, pageRequest);
 
         List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitInf, limitSup);
         List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitInf,limitSup);
@@ -2532,6 +2643,13 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
         System.out.println(totalsuma);
+        System.out.println("limiteInf(reportePedido): "+ limitInf);
+        System.out.println("limiteSup(reportePedido): "+ limitSup);
+        System.out.println("limit1cant(reportePedido): "+ limit1cant);
+        System.out.println("limit2cant(reportePedido): "+ limit2cant);
+        System.out.println("anio(reportePedido): "+ anio);
+        System.out.println("usuario(reportePedido): "+ usuario1.getIdusuario());
+
         model.addAttribute("current", page + 1);
         model.addAttribute("totalsuma", totalsuma);
         model.addAttribute("listapedidos", listapedidos);
@@ -2541,6 +2659,24 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("mes", mes);
         model.addAttribute("total", totalPage);
         model.addAttribute("numpedidos", numpedidos);
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+
+            model.addAttribute("listanios",lista);
+
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        String tam;
+        if(listanios3.isEmpty()){
+            tam ="1";
+        }else{
+            tam ="0";
+        }
+        model.addAttribute("tam",tam);
+
+        model.addAttribute("anio",anio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
     }
@@ -2552,7 +2688,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
     public String pedidoActualPagina5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "numpedidos", required = false) String numpedidos
-            ,@RequestParam(value = "mes", required = false) String mes) {
+            ,@RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "anio", required = false) String anio) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -2576,6 +2713,29 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         int m = c1.get(Calendar.MONTH) + 1;
         mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
         System.out.println(m);
+
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
+
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+        anio = httpSession.getAttribute("anio") == null ?  Integer.toString(a): (String) httpSession.getAttribute("anio");
+
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
 
 
         int limitSup = 0;
@@ -2635,14 +2795,14 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
                 limit2cant = 50;
         }
 
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
-        System.out.println("limiteInf: "+ limitInf);
-        System.out.println("limiteSup: "+ limitSup);
-        System.out.println("limit1cat: "+ limit1cant);
-        System.out.println("limit2cat: "+ limit2cant);
+
+        System.out.println("limiteInf(reportePedido): "+ limitInf);
+        System.out.println("limiteSup(reportePedido): "+ limitSup);
+        System.out.println("limit1cant(reportePedido): "+ limit1cant);
+        System.out.println("limit2cant(reportePedido): "+ limit2cant);
+        System.out.println("anio(reportePedido): "+ anio);
+        System.out.println("usuario(reportePedido): "+ usuario1.getIdusuario());
+
         Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, anio,limit1cant,limit2cant, pageRequest);
 
         List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitInf, limitSup);
@@ -2671,6 +2831,24 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("mes", mes);
         model.addAttribute("total", totalPage);
         model.addAttribute("numpedidos", numpedidos);
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+            model.addAttribute("listanios",lista);
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        String tam;
+        if(listanios3.isEmpty()){
+            tam ="1";
+        }else{
+            tam ="0";
+        }
+        model.addAttribute("tam",tam);
+
+        model.addAttribute("anio",anio);
+
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
     }
@@ -2719,8 +2897,10 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
 
-
+        /*********************************************++AÑO *************************************/
         List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
+
         Calendar c2 = GregorianCalendar.getInstance();
         int a = c2.get(Calendar.YEAR) ;
         String anio1=Integer.toString(a);
@@ -2740,6 +2920,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             anio = anio1;
 
         }
+        /*******************************************************************/
 
 
         Calendar c1 = GregorianCalendar.getInstance();
@@ -2836,8 +3017,26 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
         model.addAttribute("numpedidos", numpedidos);
-        model.addAttribute("listanios",listanios);
+        /*************************************/
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+
+            model.addAttribute("listanios",lista);
+
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        String tam;
+        if(listanios3.isEmpty()){
+            tam ="1";
+        }else{
+            tam ="0";
+        }
+        model.addAttribute("tam",tam);
+
         model.addAttribute("anio",anio);
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";
     }
@@ -2873,6 +3072,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
         List<YearDTO> listanios = pedidoRepository.listanios();
+        List<YearDTO> listanios3 = pedidoRepository.listanios();
         Calendar c2 = GregorianCalendar.getInstance();
         int a = c2.get(Calendar.YEAR) ;
         String anio1=Integer.toString(a);
@@ -2980,7 +3180,16 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
         model.addAttribute("numpedidos", numpedidos);
-        model.addAttribute("listanios",listanios);
+        if(listanios.isEmpty()){
+            ArrayList<String> lista = new ArrayList<>();
+            lista.add(anio1);
+
+            model.addAttribute("listanios",lista);
+
+        }else{
+            model.addAttribute("listanios",listanios);
+        }
+        model.addAttribute("tam",listanios3.size());
         model.addAttribute("anio",anio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";

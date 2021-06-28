@@ -85,7 +85,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value = "select * from pedido where idcliente=?1", nativeQuery = true)
     List <Pedido> listacodigos (int idcliente);
 
-    @Query(value = "SELECT codigo,estado FROM pedido where idcliente=92",nativeQuery = true)
+    @Query(value = "SELECT codigo,estado FROM pedido where idcliente=?1",nativeQuery = true)
     List<CodigosEstados> listacod(Integer idcliente);
 
 
@@ -197,7 +197,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
             "where p.idcliente=?1 and (EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido)<=?3 )\n" +
             "and lower(r.nombre) like %?4% and (EXTRACT(YEAR from p.fechapedido) like ?5)\n" +
-            "             group by p.idrestaurante  having ( count(r.idrestaurante)>?6 and count(r.idrestaurante)<= ?7)",nativeQuery = true)
+            "group by p.idrestaurante  having ( count(r.idrestaurante)>?6 and count(r.idrestaurante)<= ?7)",nativeQuery = true)
 
     Page<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,String texto,String anio,int limit1cant,int limit2cant,Pageable pageable);
 
@@ -242,11 +242,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where p.idrestaurante=?1 and p.estado=?2 and (pl.nombre like %?3%) and (c.idcategoria like %?4%)\n" +
             "group by php.idplato) as T2 having suma >= ?5 and suma <=?6", nativeQuery = true)
     Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, int cantMin, int cantMax, Pageable pageable);
-
-
-
-
-
 
 
     @Query(value = "select pe.codigo,dis.nombre as lugar, date_format(pe.fechapedido, '%H:%i') as hora, u.nombres as cliente  from pedido pe\n" +

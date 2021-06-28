@@ -18,7 +18,7 @@ Correo:
     clave: hector123
 -REPARTIDOR:
     6.- garcia.jose@pucp.edu.pe
-    joseGarcia123
+    joseGarcia123 - Amauta, Lince, Los Olivos, Jesus Maria, Santiago de Surco
 
     brayan.urpa@gmail.com
     adminGeneral

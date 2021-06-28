@@ -181,7 +181,7 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE DELIVERYS REALIZADOS</h5>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE ENTREGAS REALIZADAS</h5>
                             <button id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
                         </div>
 
@@ -228,7 +228,9 @@
                                 </tbody>
 
                             </table>
-
+                            <div th:if="${listaPedidoReporte.size()==0}">
+                                <h3 class="text-lg-center text-danger">No tiene repartos realizados.</h3>
+                            </div>
                         </div>
                         <!--Pagination -->
 

@@ -18,13 +18,13 @@ Correo:
     clave: Garcia916182017
 
 Pedido:
-0 - Pendiente - amarillo
-1 - Aceptado - color del app
-2 - Cancelado - rojo
-3 - Preparando - celeste
-4 - Pedido Listo - azul
-5 - En Camino - verde claro
-6 - Entregado - verde
+0 - Pendiente - verde limon pastel
+1 - Aceptado - azul pastel
+2 - Cancelado - rojo pastel
+3 - Preparando - naranja pastel
+4 - Pedido Listo - verde jade pastel
+5 - En Camino - amarillo pastel
+6 - Entregado - verde pastel
 
 Método de pago:
 
@@ -37,6 +37,13 @@ Tipo Movilidad:
 5 - moto
 6 - carro
 7 - ticla
+Usuario:
+0 bloqueado
+1 activo
+2 pendiente
+3 rechazado
 
 Restaurante Estados:
-
+0 pendiente
+1 aceptado
+2 rechazado

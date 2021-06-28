@@ -13,6 +13,9 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
+    @Query(value="select max(codigo)  from pedido;", nativeQuery = true)
+    String maxCodigo();
+
     @Query(value = "(select datediff(now(),min(fechapedido)) from pedido) ", nativeQuery = true)
     int fechaPedidoMinimo();
 

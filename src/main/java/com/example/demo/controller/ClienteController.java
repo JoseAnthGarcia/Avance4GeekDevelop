@@ -1623,27 +1623,13 @@ public class ClienteController {
             Pedido pedido = new Pedido();
             pedido.setPreciototal(precioTotal.floatValue());
 
-            String codigoAleatorio = "";
-            while (true) {
-                codigoAleatorio = generarCodigAleatorio();
-                Pedido pedido1 = pedidoRepository.findByCodigo(codigoAleatorio);
-                if (pedido1 == null) {
-                    break;
-                }
-            }
 
-            pedido.setCodigo(codigoAleatorio);
             if(!efectivoPagar.equals("")){
                 pedido.setCantidadapagar(Float.valueOf(efectivoPagar));
             }
             pedido.setEstado(0);
 
-            //seteo fecha
-            Date date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            pedido.setFechapedido(hourdateFormat.format(date));
             //seteo mismoDistrito
-
             if (delivery.equals(Double.parseDouble("5"))) {
                 pedido.setTiempoentrega(45);
                 pedido.setMismodistrito(true);
@@ -1658,6 +1644,16 @@ public class ClienteController {
             pedido.setCliente(cliente);
             pedido.setMetodopago(metodoDePago);
             pedido.setUbicacion(ubicacion);
+
+            //seteo fecha
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            pedido.setFechapedido(hourdateFormat.format(date));
+
+            //obtengo codigo del Pedido
+            String codigoAleatorio = generarCodigoPedido();
+            System.out.println(codigoAleatorio);
+            pedido.setCodigo(codigoAleatorio);
 
             pedido = pedidoRepository.save(pedido);
 
@@ -3146,17 +3142,45 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
     /************************************************************************************************************************************************************************************************************/
 
+    public String generarCodigoPedido() {
+        String codigo_mayor = pedidoRepository.maxCodigo();
+        Date ahora = new Date();
+        SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
 
-    public String generarCodigAleatorio() {
-        char[] chars = "1234567890".toCharArray();
-        int charsLength = chars.length;
-        Random random = new Random();
-        StringBuffer buffer = new StringBuffer();
-        int tamCodigo = 10;
-        for (int i = 0; i < tamCodigo; i++) {
-            buffer.append(chars[random.nextInt(charsLength)]);
+        String fecha = formateador.format(ahora);
+
+        String[] parte = fecha.split("-");
+
+        int anioHoy;
+        int codigo2 = 0;
+        anioHoy = Integer.parseInt(parte[2]) % 100;
+        int mesHoy = Integer.parseInt(parte[1]);
+        int diaHoy = Integer.parseInt(parte[0]);
+        String codigoAc = anioHoy + parte[1] + parte[0];
+        if (codigo_mayor == null) {
+            codigo_mayor = codigoAc + "1000";
         }
-        return buffer.toString();
+        String codigo1 = "0";
+        String codigoPedido = "";
+        if (Integer.parseInt(codigoAc) >= Integer.parseInt(codigo1)) {
+            int codigoAnio = (int) (Double.parseDouble(codigo_mayor) / 100000000);
+            int codigoMes = (int) (Double.parseDouble(codigo_mayor) / 1000000);
+            codigoMes = codigoMes % 100;
+            int codigoDia = (int) (Double.parseDouble(codigo_mayor) / 10000);
+            codigoDia = codigoDia % 100;
+            codigo1 = codigoAc;
+            if (codigoAnio == anioHoy && codigoMes == mesHoy && codigoDia == diaHoy) {
+                codigo2 = (int) ((Double.parseDouble(codigo_mayor)) % 10000);//1001
+                codigo2++;
+                codigoPedido = (codigo1 + codigo2);
+            } else {
+                codigo2 = 1000;
+                codigo2++;
+                codigoPedido = (codigo1 + codigo2);
+            }
+        }
+
+        return codigoPedido;
     }
 
 }

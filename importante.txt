@@ -17,8 +17,23 @@ Correo:
     usuario: hector.ventura@pucp.edu.pe
     clave: hector123
 -REPARTIDOR:
-    usuario: garcia.josea@gmail.com
-    clave: Garcia916182017
+    6.- garcia.jose@pucp.edu.pe
+    joseGarcia123
+
+    brayan.urpa@gmail.com
+    adminGeneral
+
+    mario.caminos@gmail.com
+    marioCaminos123
+
+    susana.villa@gmail.com
+    susana.villa789
+
+    alberto.huaman@gmail.com
+    alberto.huaman15
+
+    rubi.flores23@gmail.com
+    rubiFlores23
 
 Pedido:
 0 - Pendiente - verde limon pastel

@@ -2092,10 +2092,10 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     }
 
     @GetMapping("/detalle")
-    public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
+    public String detalleUsuario(@RequestParam("idUsuario") String idUsuario,
                                  Model model) {
         try{
-            Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+            Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(idUsuario));
             double totalIngresos = 0.0;
 
 
@@ -2110,10 +2110,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                     case "administrador":
                         model.addAttribute("administrador",usuario);
                         return "AdminGen/visualizarAdministrador";
+
                     case "repartidor":
                         model.addAttribute("repartidor",usuario);
-                        model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
-                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
+                        model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(Integer.parseInt(idUsuario)));
+                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario)));
                         model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
@@ -2140,10 +2141,6 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             return "redirect:/admin/usuarios";
 
         }catch (NumberFormatException ee){
-
-            return "redirect:/admin/usuarios";
-
-        }finally{
 
             return "redirect:/admin/usuarios";
 

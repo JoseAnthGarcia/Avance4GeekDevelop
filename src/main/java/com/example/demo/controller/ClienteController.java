@@ -1431,26 +1431,77 @@ public class ClienteController {
                 if(metodoDePago.getIdmetodopago() == 2) {
                     //en caso seleccione una
                     if(tarjeta != null){
-                        try {
-                            int idTarjeta = Integer.parseInt(tarjeta);
-                            Optional<Tarjeta> tarjetaOpt = tarjetaRepository.findById(String.valueOf(idTarjeta));
-                            if (tarjetaOpt.isPresent()) {
-                                idTarjetaVal = true;
-                                //para que no me haga las validaciones al guardar
-                                //TODO agregar un JavaScript para cuando seleccione un tarjeta,
-                                //desabilite el formulario
-                                cvvVal = true;
-                                numTarjetaVal = true;
-                                mesVal = true;
-                                anioVal = true;
-                                tipoVal = true;
+                        if(!tarjeta.equals("")) {
+                            try {
+                                int idTarjeta = Integer.parseInt(tarjeta);
+                                Optional<Tarjeta> tarjetaOpt = tarjetaRepository.findById(String.valueOf(idTarjeta));
+                                if (tarjetaOpt.isPresent()) {
+                                    idTarjetaVal = true;
+                                    //para que no me haga las validaciones al guardar
+                                    //TODO agregar un JavaScript para cuando seleccione un tarjeta,
+                                    //desabilite el formulario
+                                    cvvVal = true;
+                                    numTarjetaVal = true;
+                                    mesVal = true;
+                                    anioVal = true;
+                                    tipoVal = true;
 
+                                    cvvValNull = true;
+                                    numTarjetaValNull = true;
+                                    mesValNull = true;
+                                    anioValNull = true;
+                                }
+                            } catch (NumberFormatException e) {
+                            }
+                        }else{
+                            //VALIDANDO EL CVV
+                            if(cvv != null){
                                 cvvValNull = true;
-                                numTarjetaValNull = true;
+                            }
+                            if(cvvValNull){
+                                if (cvv.length() == 3) {
+                                    int cvvInt = Integer.parseInt(cvv);
+                                    cvvVal = true;
+                                }
+                            }
+                            //validando el mes
+                            if(mes != null){
                                 mesValNull = true;
+                            }
+                            if(mesValNull){
+                                int mesInt = Integer.parseInt(mes);
+                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves? - mmm? TODO checkar
+                                    mesVal = true;
+                                }
+                            }
+                            //validando el año
+                            //validando el mes
+                            if(year != null){
                                 anioValNull = true;
                             }
-                        } catch (NumberFormatException e) {
+                            if(anioValNull){
+                                if(year.length() == 4) {
+                                    int anioInt = Integer.parseInt(year);
+                                    anioVal = true;
+                                }
+                            }
+                            //validando el numero de tarjeta
+                            if(numeroTarjeta != null){
+                                numTarjetaValNull = true;
+                            }
+                            if(numTarjetaValNull){
+                                if(numeroTarjeta.length() == 16) {
+                                    numTarjetaVal = true;
+                                }
+                            }
+                            //validacion del tipo de tarjeta
+                            // 1 - visa
+                            // 2 - mastercard
+                            int tipoInt = Integer.parseInt(tipoTarjeta);
+                            if(tipoInt == 1 || tipoInt == 2){
+                                tipoVal = true;
+                            }
+                            idTarjetaVal = true;
                         }
                     //caso contrario estará registrando una negistrando una nueva - pero no guardandola
                     }else{
@@ -1501,6 +1552,7 @@ public class ClienteController {
                             if(tipoInt == 1 || tipoInt == 2){
                                 tipoVal = true;
                             }
+                            idTarjetaVal = true;
                     }
                 }
                 else if(metodoDePago.getIdmetodopago() == 1 || metodoDePago.getIdmetodopago() == 3){
@@ -1741,7 +1793,7 @@ public class ClienteController {
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/listaReportes";
+        return "Cliente/listaReportes1";
     }
 
 

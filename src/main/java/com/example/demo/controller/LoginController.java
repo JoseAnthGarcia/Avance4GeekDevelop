@@ -504,7 +504,7 @@ public class LoginController {
                 cliente.setFoto(file.getBytes());
                 cliente.setFotonombre(fileName);
                 cliente.setFotocontenttype(file.getContentType());
-                clienteRepository.save(cliente);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");

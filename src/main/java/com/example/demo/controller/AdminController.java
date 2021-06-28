@@ -219,32 +219,47 @@ public class AdminController  {
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
                     model.addAttribute("nombreUsuario1", nombreUsuario1);
-                    model.addAttribute("tipoMovilidad1", tipoMovilidad1);
-                    model.addAttribute("fechaRegistro1", fechaRegistro1);
-
                     if(fechaRegistro1==null){
                         fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }else{
                         try{
-
                             fechaRegistro = Integer.parseInt(fechaRegistro1);
-                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                            if(fechaRegistro!=1 && fechaRegistro!=7 && fechaRegistro!=30 && fechaRegistro!=365){
+                                fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                                fechaRegistro1 = null;
+                            }else{
+                                model.addAttribute("fechaRegistro1", fechaRegistro);
+                            }
                         }catch (NumberFormatException e){
                             fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                            fechaRegistro1 = null;
                         }
                     }
-
+                    if(fechaRegistro1==null){
+                        model.addAttribute("fechaRegistro1", fechaRegistro1);
+                    }
 
                     model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
 
-                    Integer tipoMovilidad = 5;
+                    int tipoMovilidad = -1;
                     if(tipoMovilidad1!=null){
                         try {
                             tipoMovilidad = Integer.parseInt(tipoMovilidad1);
+                            if((tipoMovilidad!=5
+                                    && tipoMovilidad!= 6
+                                    && tipoMovilidad!=7)){
+                                tipoMovilidad1 = null;
+                            }else{
+                                model.addAttribute("tipoMovilidad1", tipoMovilidad);
+                            }
                         }catch (NumberFormatException e){
                             tipoMovilidad1= null;
                         }
                     }
+                    if(tipoMovilidad1==null){
+                        model.addAttribute("tipoMovilidad1", tipoMovilidad1);
+                    }
+
                     if(tipoMovilidad1==null){
                         pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1);
                     }else{
@@ -2092,10 +2107,10 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     }
 
     @GetMapping("/detalle")
-    public String detalleUsuario(@RequestParam("idUsuario") int idUsuario,
+    public String detalleUsuario(@RequestParam("idUsuario") String idUsuario,
                                  Model model) {
         try{
-            Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+            Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(idUsuario));
             double totalIngresos = 0.0;
 
 
@@ -2110,10 +2125,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                     case "administrador":
                         model.addAttribute("administrador",usuario);
                         return "AdminGen/visualizarAdministrador";
+
                     case "repartidor":
                         model.addAttribute("repartidor",usuario);
-                        model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(idUsuario));
-                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(idUsuario));
+                        model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(Integer.parseInt(idUsuario)));
+                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario)));
                         model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
@@ -2140,10 +2156,6 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             return "redirect:/admin/usuarios";
 
         }catch (NumberFormatException ee){
-
-            return "redirect:/admin/usuarios";
-
-        }finally{
 
             return "redirect:/admin/usuarios";
 

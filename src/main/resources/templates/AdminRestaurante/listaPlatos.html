@@ -165,7 +165,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="platos,v:${listaPlatos} ">
-                                                <td th:text="${(v.index+1)*currentPage}"></td>
+                                                <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${platos.nombre}"></td>
                                                 <td th:text="${'S/. '+platos.precio}"></td>
                                                 <td th:text="${platos.descripcion}"></td>

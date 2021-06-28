@@ -179,9 +179,6 @@
                                                     Fecha de Pedido
                                                 </th>
                                                 <th class="text-center">
-                                                    Comentario
-                                                </th>
-                                                <th class="text-center">
                                                     Aceptar
                                                 </th>
                                                 <th class="text-center">
@@ -205,8 +202,6 @@
                                                 <td th:text="${pedidos.cliente.nombres}+' '+${pedidos.cliente.apellidos}"></td>
                                                 <td th:text="${'S/. '+pedidos.getPreciototal()}"></td>
                                                 <td th:text="${pedidos.getFechapedido()}"></td>
-                                                <td id="comentario"
-                                                    th:text="${pedidos.getComentariorestaurante()}"></td>
                                                 <td th:if="${pedidos.estado==0}"><a style="color: #dce3f9"
                                                                                     class=" btn btn-success btn-circle align"
                                                                                     data-toggle="modal"

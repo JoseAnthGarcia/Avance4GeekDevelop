@@ -1089,10 +1089,12 @@ public class LoginController {
     }
 
     @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
+    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario ,
                                     BindingResult bindingResult,
                                     @RequestParam("photo") MultipartFile file,
-                                    Movilidad movilidad, Model model,
+                                    @Valid Movilidad movilidad ,
+                                    BindingResult bindingResult2,
+                                    Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
@@ -1212,7 +1214,7 @@ public class LoginController {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
+        if(bindingResult.hasErrors() || bindingResult2.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
                 errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val){
 
             if(dni_val) {

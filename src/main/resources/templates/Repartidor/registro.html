@@ -34,7 +34,12 @@
 
             $("#placaInput").hide();
             $("#licenciaInput").hide();
+            var idMovilidad = $("#selectMovilidad").val();
 
+            if(idMovilidad==5 || idMovilidad == 6){
+                $("#placaInput").show();
+                $("#licenciaInput").show();
+            }
 
         });
 

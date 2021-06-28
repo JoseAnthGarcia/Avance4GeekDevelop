@@ -173,13 +173,13 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}"> << </a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}">Anterior</a>
                                             </li>
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a class="page-link" th:href="@{|/admin/pagina/?page=${page}|}" th:text="${page}"></a>
                                             </li>
                                             <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}"> >> </a>
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}">Siguiente</a>
                                             </li>
                                         </ul>
                                     </nav>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Lista  Usuarios')"></head>
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Crear Admin')"></head>
 
 
 <body id="page-top">
@@ -86,8 +86,8 @@
                                     <label class="form-label text-dark text-lg">Sexo:</label>
                                     <select class="form-control border-secondary" th:field="*{sexo}">
                                         <option value="" disabled selected>Sexo</option>
-                                        <option value="femenino">Femenino</option>
-                                        <option value="masculino">Masculino</option>
+                                        <option value="FEMENINO">FEMENINO</option>
+                                        <option value="MASCULINO">MASCULINO</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6  mb-2 mb-sm-0">

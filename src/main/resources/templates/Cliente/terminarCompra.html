@@ -247,12 +247,12 @@
 
                                                     <div class="container">
                                                         <select th:if="${tipo != null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
-                                                            <option value="" disabled>Seleccione el tipo de su tarjeta</option>
+                                                            <option value="">Seleccione el tipo de su tarjeta</option>
                                                             <option value="1" th:selected="${tipo.equals('1')}">Visa</option>
                                                             <option value="2" th:selected="${tipo.equals('2')}">Mastercad</option>
                                                         </select>
                                                         <select th:if="${tipo == null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
-                                                            <option value="" disabled selected>Seleccione el tipo de su tarjeta</option>
+                                                            <option value=""  selected>Seleccione el tipo de su tarjeta</option>
                                                             <option value="1">Visa</option>
                                                             <option value="2">Mastercad</option>
                                                         </select>
@@ -262,7 +262,7 @@
                                                     <div class="input-group input-group-sm">
                                                         <input type="text" class="form-control text-center"
                                                                name="numeroTarjeta" form="generarPedido"
-                                                                th:placeholder="${numTarjeta == null ? '' : numTarjeta }">
+                                                                th:value="${numTarjeta == null ? '' : numTarjeta }">
                                                         <h6 th:if="${msgNumTarjetaVal != null}" style="color: red; font-size: 15px" th:text="${msgNumTarjetaVal}"></h6>
                                                     </div>
                                                     <br>

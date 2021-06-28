@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.print.attribute.standard.MediaSize;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -37,10 +34,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
-            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
-            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=0 ||  p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5 )" +
-            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC", nativeQuery = true,
+            countQuery = "select count(*) from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
+                    "            date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+                    "            date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
+                    "            p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+                    "            p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
+                    "p.comentariorestaurante as `comentariorestaurante` , \n" +
+                    "            p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
+                    "            p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
+                    "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                    "            where p.idcliente=?1 and (p.estado= 2 || p.estado= 6 ) ) as pedidosT\n" +
+                    "            where lower(`nombre`) like %?2% and (estado > ?3 and estado <= ?4)\n" +
+                    "            ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, Integer estado1, Integer estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
@@ -54,10 +60,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
             " as pedidosT\n" +
-            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC", nativeQuery = true, countQuery = "select count(*) from pedido p \n" +
-            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-            "where p.idcliente= ?1 and (p.estado=2 || p.estado=6 ) " +
-            "ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
+            "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC", nativeQuery = true,
+             countQuery = "select count(*) from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
+                     "            date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+                     "            date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
+                     "            p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+                     "            p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
+                     "\t\t\tp.comentariorestaurante as `comentariorestaurante` , \n" +
+                     "            p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
+                     "            p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
+                     "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                     "            where p.idcliente=?1 and (p.estado= 2 || p.estado= 6 ) ) as pedidosT\n" +
+                     "            where lower(`nombre`) like %?2% and (estado > ?3 and estado <= ?4)\n" +
+                     "            ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, Integer estado1, Integer estado2,Pageable pageable);
 
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
@@ -310,5 +325,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     //sin distrito
     Page<Pedido> findByEstadoAndRepartidorAndFechapedidoBetweenAndPreciototalBetweenAndValoracionrepartidorBetweenAndAndRestaurante_NombreContaining
     (int estado, Usuario repartidor, String fechaMin, String fechaMax, double precioMin, double precioMax, int valMin, int valMax, String nombreRest, Pageable pageable);
+
+
+    @Query(value=" select distinct(year(fechapedido)) as anio from  pedido",nativeQuery = true)
+    List<YearDTO> listanios();
 
 }

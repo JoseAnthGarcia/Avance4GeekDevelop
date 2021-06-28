@@ -16,27 +16,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.InvalidMimeTypeException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.model.IModel;
 
-import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.Option;
-import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -2699,13 +2690,10 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
     public String pedidoActual4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "numpedidos", required = false) String numpedidos
-                                ,@RequestParam(value = "mes", required = false) String mes) {
-
-
+                                ,@RequestParam(value = "mes", required = false) String mes,
+                                @RequestParam(value = "anio", required = false) String anio) {
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
-
-
 
         int page;
         try{
@@ -2724,7 +2712,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             httpSession.setAttribute("texto",texto);
         }
 
-        /******************************/
+
         if (numpedidos == null) {
             numpedidos= "";
             httpSession.removeAttribute("numpedidos");
@@ -2733,13 +2721,35 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             httpSession.setAttribute("numpedidos",numpedidos);
         }
 
-        /******************************/
+
+
+
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+
+
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
+
+
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
         int limitSup = 0;
         int limitInf = 12;
-
-
         try {
             if (mes == null) {
                 mes = Integer.toString(m);
@@ -2765,7 +2775,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         }
 
 
-        /*************************************************************************/
+
 
 
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
@@ -2774,6 +2784,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
         mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
+        anio= httpSession.getAttribute("anio") == null ? anio:  (String) httpSession.getAttribute("anio");
         int limit1cant;
         int limit2cant;
         switch (numpedidos) {
@@ -2803,10 +2814,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         }
 
 
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
+
 
         Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, limit1cant,limit2cant, pageRequest);
         int totalPage = listapedidos.getTotalPages();
@@ -2832,20 +2840,23 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
         model.addAttribute("numpedidos", numpedidos);
+        model.addAttribute("listanios",listanios);
+        model.addAttribute("anio",anio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";
     }
-
 
     //Reporte Dinero
     @GetMapping("/reportetiempopage")
     public String pedidoActualPagina4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "numpedidos", required = false) String numpedidos
-            ,@RequestParam(value = "mes", required = false) String mes) {
+                                      ,@RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "anio", required = false) String anio) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
 
         int page;
         try{
@@ -2863,6 +2874,31 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
         mes = httpSession.getAttribute("mes") == null ?  Integer.toString(m): (String) httpSession.getAttribute("mes");
+
+
+        List<YearDTO> listanios = pedidoRepository.listanios();
+        Calendar c2 = GregorianCalendar.getInstance();
+        int a = c2.get(Calendar.YEAR) ;
+        String anio1=Integer.toString(a);
+        anio = httpSession.getAttribute("anio") == null ?  Integer.toString(a): (String) httpSession.getAttribute("anio");
+        try {
+            if (anio == null) {
+                anio = anio1;
+                httpSession.removeAttribute("anio");
+            } else if (mes!=null){
+                int an=Integer.parseInt(anio);
+                httpSession.setAttribute("anio", anio);
+            } else{
+                anio = anio1;
+            }
+        } catch (NumberFormatException e) {
+            anio = anio1;
+
+        }
+
+
+
+
 
 
         int limitSup = 0;
@@ -2892,6 +2928,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             limitSup = 12;
             limitInf = 0;
         }
+
         int limit1cant;
         int limit2cant;
         switch (numpedidos) {
@@ -2921,10 +2958,7 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         }
 
 
-        Calendar c2 = GregorianCalendar.getInstance();
-        int a = c2.get(Calendar.YEAR) ;
-        System.out.println("a: "+ a);
-        String anio=Integer.toString(a);
+
 
         Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, limit1cant,limit2cant, pageRequest);
         int totalPage = listapedidos.getTotalPages();
@@ -2950,6 +2984,8 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
         model.addAttribute("texto", texto);
         model.addAttribute("mes", mes);
         model.addAttribute("numpedidos", numpedidos);
+        model.addAttribute("listanios",listanios);
+        model.addAttribute("anio",anio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reporteTiempoCliente";
     }

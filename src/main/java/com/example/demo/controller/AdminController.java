@@ -2493,7 +2493,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
             /////----------------Envio Correo--------------------/////
 
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente";
+            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
             sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);

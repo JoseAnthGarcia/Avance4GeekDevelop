@@ -1123,28 +1123,40 @@ public class LoginController {
         Boolean errorSexo= false;
         Boolean validarFoto = true;
         String fileName = "";
+        Boolean noHayMov = false;
+
         if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
             errorMov= true;
+            if(movilidad.getTipoMovilidad()==null){
+                noHayMov= true;
+            }
         }
         if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
             errorMov= true;
+            if(movilidad.getTipoMovilidad()==null){
+                noHayMov= true;
+            }
         }
         Boolean errorLicencia = false;
         Boolean errorPlaca = false;
-        if((movilidad.getTipoMovilidad().getIdtipomovilidad()== 5 ||movilidad.getTipoMovilidad().getIdtipomovilidad()== 6) && !movilidad.getLicencia().equals("")  ){
-            Pattern pat = Pattern.compile( "^([A-Z]{1}\\d{8})$");
-            Matcher mat = pat.matcher(licencia);
-            if (!mat.matches()) {
-                errorLicencia = true;
+
+        if(movilidad.getTipoMovilidad()!=null) {
+
+            if ((movilidad.getTipoMovilidad().getIdtipomovilidad() == 5 || movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) && !movilidad.getLicencia().equals("")) {
+                Pattern pat = Pattern.compile("^([A-Z]{1}\\d{8})$");
+                Matcher mat = pat.matcher(licencia);
+                if (!mat.matches()) {
+                    errorLicencia = true;
+                }
             }
-        }
 
-        if((movilidad.getTipoMovilidad().getIdtipomovilidad()== 5 ||movilidad.getTipoMovilidad().getIdtipomovilidad()== 6) && !movilidad.getPlaca().equals("")  ){
+            if ((movilidad.getTipoMovilidad().getIdtipomovilidad() == 5 || movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) && !movilidad.getPlaca().equals("")) {
 
-            Pattern pat = Pattern.compile( "^([A-Z]{3}\\d{3})$");
-            Matcher mat = pat.matcher(placa);
-            if (!mat.matches()) {
-                errorPlaca = true;
+                Pattern pat = Pattern.compile("^([A-Z]{3}\\d{3})$");
+                Matcher mat = pat.matcher(placa);
+                if (!mat.matches()) {
+                    errorPlaca = true;
+                }
             }
         }
         if(distritos!=null){
@@ -1235,7 +1247,7 @@ public class LoginController {
         }
 
         if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
-                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val ||errorPlaca || errorLicencia){
+                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val ||errorPlaca || errorLicencia || noHayMov){
 
             if(dni_val) {
                 model.addAttribute("msg11","El DNI ingresado no es válido");
@@ -1287,6 +1299,9 @@ public class LoginController {
             }
             if(errorLicencia){
                 model.addAttribute("msg17",  "Ingrese una licencia en el formato correcto. Ej: Q12345678, R23432245");
+            }
+            if(noHayMov){
+                model.addAttribute("msg18",  "Debe seleccionar una movilidad.");
             }
 
             model.addAttribute("usuario", usuario);

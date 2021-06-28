@@ -234,6 +234,7 @@
                                     <input th:field="*{licencia}" type="text"
                                            class="form-control" id="licenciaInput"
                                            placeholder="Licencia de conducir"/>
+                                    <div th:if="${msg18 != null}" th:text="${msg18}" class="text-danger" ></div>
                                     <div th:if="${msg6 != null}" th:text="${msg6}" class="text-danger" ></div>
                                     <div class="text-danger" th:if="${#fields.hasErrors('licencia')}"
                                          th:errors="*{licencia}"></div>

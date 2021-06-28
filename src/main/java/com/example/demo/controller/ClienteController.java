@@ -1399,7 +1399,7 @@ public class ClienteController {
         boolean idUbicVal= false;
         try{
             int idUbicInt= Integer.parseInt(idUbicacion);
-            Optional<Ubicacion> ubiOpt = ubicacionRepository.findById(idUbicInt);
+            Optional<Ubicacion> ubiOpt = ubicacionRepository.findByIdusuarioAndIdubicacionVal(idUbicInt,cliente.getIdusuario());
             if(ubiOpt.isPresent()){
                 ubicacion = ubiOpt.get();
                 idUbicVal = true;
@@ -1518,13 +1518,16 @@ public class ClienteController {
         }
         Double delivery = (Double) session.getAttribute("delivery");
         // chancando la sesion
-        if(ubicacion.getDistrito().getIddistrito() != restaurante.getDistrito().getIddistrito()){
-            delivery = 8.0;
-        }else{
-            delivery = 5.0;
+        try{
+            if(ubicacion.getDistrito().getIddistrito() != restaurante.getDistrito().getIddistrito()){
+                delivery = 8.0;
+            }else{
+                delivery = 5.0;
+            }
+            session.setAttribute("delivery",delivery);
+        }catch (NullPointerException e){
         }
-        session.setAttribute("delivery",delivery);
-        // si el distrito es el mismo al que pertenezco esto pasos - si no debo cambair
+       // si el distrito es el mismo al que pertenezco esto pasos - si no debo cambair
         BigDecimal deliveryBig = new BigDecimal(delivery);
         /*
         Double precioDel = null;

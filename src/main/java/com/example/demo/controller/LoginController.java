@@ -422,24 +422,28 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
+        System.out.println(udto.getApellido_paterno()+" "+udto.getApellido_materno());
+        System.out.println(cliente.getApellidos());
+        System.out.println(cleanString(cliente.getApellidos()));
+
         if(udto.getSuccess().equals("true")){
             if(cliente.getDni().equals(udto.getRuc())){
                 dni_val = false;
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
+                        if (cleanString(udto.getNombres()).toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -846,18 +850,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(adminRest.getNombres().toUpperCase())){
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(adminRest.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }
@@ -1224,18 +1228,18 @@ public class LoginController {
                 // se uso contains para validar 3 nombres
                 if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
                     usuario_null = false;
-                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(udto.getNombres() + " " + udto.getApellido_paterno() + " " + udto.getApellido_materno())){
+                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
                     }else{
-                        if (udto.getNombres().toUpperCase().contains(cleanString(usuario.getNombres().toUpperCase()))){
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(usuario.getNombres().toUpperCase()))){
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_paterno()) ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase(udto.getApellido_materno())  ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase((udto.getApellido_paterno() + " " + udto.getApellido_materno()))){
+                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
                             usuario_val = false;
                             apellido_val = false;
                         }

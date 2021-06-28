@@ -1362,7 +1362,7 @@ public class ClienteController {
         //Obteniendo el cupon
         Cupon cupon = null;
         boolean idCuponVal = false;
-   /*     if(idCupon == null || idCupon.equals("")){
+     /*     if(idCupon == null || idCupon.equals("")){
             idCupon = "";
             idCuponVal = true;
         }*/
@@ -1371,20 +1371,24 @@ public class ClienteController {
             efectivoPagar = "";
         }
 
+        // por defecto si no selecciona nada entonces debería dejar pasa
         try {
+/*
             if(!idCupon.equals("")) {
+*/
                 int idCuponInt = Integer.parseInt(idCupon);
                 Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
                 if (cuponOpt.isPresent()) {
                     cupon = cuponOpt.get();
                     idCuponVal = true;
                 }
-            }else{
+            /*}else{
                 idCuponVal = false;
+            }*/
+        } catch (NumberFormatException e){
+            if(idCupon == null || idCupon.trim().equals("")){
+                idCuponVal = true;
             }
-        } catch (NumberFormatException en){
-        } catch (NullPointerException ex){
-            idCuponVal = true;
         }
 
 
@@ -1600,8 +1604,10 @@ public class ClienteController {
 
 
             BigDecimal desc = new BigDecimal(0);
-            if(!idCupon.equals("")){
-                desc = BigDecimal.valueOf(cupon.getDescuento());
+            if(idCupon != null){
+                if(!idCupon.trim().equals("")) {
+                    desc = BigDecimal.valueOf(cupon.getDescuento());
+                }
             }
 
             BigDecimal precioTotal = new BigDecimal(0);
@@ -1609,8 +1615,10 @@ public class ClienteController {
             if(listaExtra != null){
                 precioTotal = precioTotal.add(precioTotalExtras);
             }
-            if(!idCupon.equals("")){
-                precioTotal = precioTotal.subtract(desc);
+            if(idCupon != null){
+                if(!idCupon.trim().equals("")) {
+                    precioTotal = precioTotal.subtract(desc);
+                }
             }
 
             precioTotal = precioTotal.add(deliveryBig);
@@ -1661,8 +1669,10 @@ public class ClienteController {
                 pedido.setMismodistrito(false);
             }
             pedido.setRestaurante(restauranteRepository.findById(listaPlatos.get(0).getPlato().getIdrestaurante()).get());
-            if(!idCupon.equals("")) {
-              pedido.setCupon(cupon);
+            if(idCupon != null) {
+                if(!idCupon.trim().equals("")) {
+                    pedido.setCupon(cupon);
+                }
             }
             pedido.setCliente(cliente);
             pedido.setMetodopago(metodoDePago);
@@ -1680,15 +1690,16 @@ public class ClienteController {
 
             pedido = pedidoRepository.save(pedido);
 
-            if(!idCupon.equals("")) {
-                Cliente_has_cuponKey cliente_has_cuponKey = new Cliente_has_cuponKey();
-                Cliente_has_cupon cliente_has_cupon = new Cliente_has_cupon();
-                cliente_has_cuponKey.setIdcliente(cliente.getIdusuario());
-                cliente_has_cuponKey.setIdcupon(cupon.getIdcupon());
-                cliente_has_cupon.setCliente_has_cuponKey(cliente_has_cuponKey);
-                cliente_has_cupon.setUtilizado(true);
-
-                clienteHasCuponRepository.save(cliente_has_cupon);
+            if(idCupon != null) {
+                if(!idCupon.trim().equals("")) {
+                    Cliente_has_cuponKey cliente_has_cuponKey = new Cliente_has_cuponKey();
+                    Cliente_has_cupon cliente_has_cupon = new Cliente_has_cupon();
+                    cliente_has_cuponKey.setIdcliente(cliente.getIdusuario());
+                    cliente_has_cuponKey.setIdcupon(cupon.getIdcupon());
+                    cliente_has_cupon.setCliente_has_cuponKey(cliente_has_cuponKey);
+                    cliente_has_cupon.setUtilizado(true);
+                    clienteHasCuponRepository.save(cliente_has_cupon);
+                }
             }
             for (Plato_has_pedido plato_has_pedido : listaPlatos) {
                 Plato_has_pedidoKey plato_has_pedidoKey = new Plato_has_pedidoKey();

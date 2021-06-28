@@ -55,5 +55,5 @@ Restaurante Estados:
 
 ----- nueva BASE DE DATOS -----
 username = admin
-hostname:geekdevelopdb.cnpoqke0qvwy.us-east-1.rds.amazonaws.com
+hostname: geekdevelopdb.cnpoqke0qvwy.us-east-1.rds.amazonaws.com
 password = wyw4VrtdEx19kMW9IU6R

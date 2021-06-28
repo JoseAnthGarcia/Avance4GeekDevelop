@@ -188,6 +188,7 @@ public class PlatoController {
                         model.addAttribute("idcategoria", idcategoria);
                         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + disponibilidad + "\n" + inputPMin + "\n" + inputPMax + "\n" + idcategoria);
 
+                        model.addAttribute("pageSize", pageSize);
                         model.addAttribute("currentPage", pageNo);
                         model.addAttribute("totalPages", page.getTotalPages());
                         model.addAttribute("totalItems", page.getTotalElements());

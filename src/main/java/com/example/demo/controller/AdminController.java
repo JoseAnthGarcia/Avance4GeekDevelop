@@ -219,32 +219,47 @@ public class AdminController  {
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
                     model.addAttribute("nombreUsuario1", nombreUsuario1);
-                    model.addAttribute("tipoMovilidad1", tipoMovilidad1);
-                    model.addAttribute("fechaRegistro1", fechaRegistro1);
-
                     if(fechaRegistro1==null){
                         fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }else{
                         try{
-
                             fechaRegistro = Integer.parseInt(fechaRegistro1);
-                            model.addAttribute("fechaRegistro1", fechaRegistro);
+                            if(fechaRegistro!=1 && fechaRegistro!=7 && fechaRegistro!=30 && fechaRegistro!=365){
+                                fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                                fechaRegistro1 = null;
+                            }else{
+                                model.addAttribute("fechaRegistro1", fechaRegistro);
+                            }
                         }catch (NumberFormatException e){
                             fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
+                            fechaRegistro1 = null;
                         }
                     }
-
+                    if(fechaRegistro1==null){
+                        model.addAttribute("fechaRegistro1", fechaRegistro1);
+                    }
 
                     model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
 
-                    Integer tipoMovilidad = 5;
+                    int tipoMovilidad = -1;
                     if(tipoMovilidad1!=null){
                         try {
                             tipoMovilidad = Integer.parseInt(tipoMovilidad1);
+                            if((tipoMovilidad!=5
+                                    && tipoMovilidad!= 6
+                                    && tipoMovilidad!=7)){
+                                tipoMovilidad1 = null;
+                            }else{
+                                model.addAttribute("tipoMovilidad1", tipoMovilidad);
+                            }
                         }catch (NumberFormatException e){
                             tipoMovilidad1= null;
                         }
                     }
+                    if(tipoMovilidad1==null){
+                        model.addAttribute("tipoMovilidad1", tipoMovilidad1);
+                    }
+
                     if(tipoMovilidad1==null){
                         pagina = repartidorService.repartidorPaginacionBusqueda1(numPag, tamPag, nombreUsuario1,nombreUsuario1, fechaRegistro*-1);
                     }else{

@@ -74,7 +74,7 @@ public class ExtraController {
         } else {
             try {
                 idcategoria=Integer.parseInt(id);
-                return findPaginated("", "0", 1, id, model, session);
+                return findPaginated("", "0", "1", id, model, session);
             }catch(NumberFormatException e){
                 return "redirect:/extra/categoria";
             }
@@ -85,7 +85,7 @@ public class ExtraController {
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
                                 @ModelAttribute @RequestParam(value = "textPrecio", required = false) String inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo,
+                                @RequestParam(value = "pageNo", required = false) String pageNo1,
                                 @RequestParam(value = "idcategoria", required = false) String idcategoria, Model model, HttpSession session) {
         System.out.println(idcategoria);
         int idcat;
@@ -102,8 +102,17 @@ public class ExtraController {
                     model.addAttribute("listaNotiRest", listaNotificacion);
                     int idrestaurante = restaurante.getIdrestaurante();
                     System.out.println(idcat);
-                    System.out.println(pageNo);
-                    if (pageNo == null || pageNo == 0) {
+                    System.out.println(pageNo1);
+                    int pageNo = 0;
+                    if (pageNo1 == null) {
+                        pageNo = 1;
+                    }
+                    try {
+                        pageNo = Integer.parseInt(pageNo1);
+                        if (pageNo == 0) {
+                            pageNo = 1;
+                        }
+                    } catch (NumberFormatException e) {
                         pageNo = 1;
                     }
                     int inputID = 1;

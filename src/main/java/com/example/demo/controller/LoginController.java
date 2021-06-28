@@ -225,7 +225,7 @@ public class LoginController {
                 } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if (restaurante == null || restaurante.getEstado() == 2) {
+                if (restaurante == null || restaurante.getEstado() == 2|| restaurante.getEstado() == 3 ) {
                     return "redirect:/paginabienvenida";
                     //TODO: ojo ver restaurante
                     //return "redirect:/restaurante/paginabienvenida";

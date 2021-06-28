@@ -1741,7 +1741,7 @@ public class ClienteController {
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "Cliente/listaReportes";
+        return "Cliente/listaReportes1";
     }
 
 

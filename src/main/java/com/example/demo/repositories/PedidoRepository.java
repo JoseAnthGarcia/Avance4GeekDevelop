@@ -240,7 +240,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "inner join plato pl on pl.idplato=php.idplato \n" +
             "inner join categoriarestaurante c on pl.idcategoriarestaurante=c.idcategoria \n" +
             "where p.idrestaurante=?1 and p.estado=?2 and (pl.nombre like %?3%) and (c.idcategoria like %?4%)\n" +
-            "group by php.idplato) as T2 having suma >= ?5 and suma <=?6", nativeQuery = true)
+            "group by php.idplato) as T2 where suma >= ?5 and suma <=?6", nativeQuery = true
+            , countQuery = "select count(*) from (select pl.idplato as id,pl.nombre as nombre, c.nombre as nombrecat, sum(php.cantidad) as suma \n" +
+            "from plato_has_pedido php\n" +
+            "inner join pedido p on php.codigo=p.codigo\n" +
+            "inner join plato pl on pl.idplato=php.idplato\n" +
+            "inner join categoriarestaurante c on pl.idcategoriarestaurante=c.idcategoria\n" +
+            "where p.idrestaurante=?1 and p.estado=?2 and (pl.nombre like %?3%) and (c.idcategoria like %?4%)\n" +
+            "group by php.idplato) as T2 where suma >= ?5 and suma <= ?6")
     Page<PlatoReporteDTO> reportePlato(int id, int estado, String nombre, String idcategoria, int cantMin, int cantMax, Pageable pageable);
 
 

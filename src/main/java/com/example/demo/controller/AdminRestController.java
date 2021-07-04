@@ -761,7 +761,7 @@ public class AdminRestController {
                 try {
                     inputCantidadInt = Integer.parseInt(inputCantidad);
                     if (inputCantidadInt == 0) {
-                        inputCantidadMin = 0;
+                        inputCantidadMin = 1;
                         inputCantidadMax = 1000;
                     } else if (inputCantidadInt == 4) {
                         inputCantidadMin = inputCantidadInt;
@@ -777,7 +777,11 @@ public class AdminRestController {
                 }
 
                 System.out.println("#################");
+                System.out.println(restaurante.getIdrestaurante());
+                System.out.println(inputCantidadMin * 5 - 5);
+                System.out.println(inputCantidadMax * 5);
                 System.out.println("#################");
+
 
                 //Obtener lista de reportes
 
@@ -795,7 +799,7 @@ public class AdminRestController {
                 model.addAttribute("listaCategorias", listaCategorias);
 
 
-                System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad);
+                System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad + "\n" + page.getTotalElements() + "\n" + page.getTotalPages());
 
                 //Enviar lista y valores para paginación
                 model.addAttribute("pageSize", pageSize);

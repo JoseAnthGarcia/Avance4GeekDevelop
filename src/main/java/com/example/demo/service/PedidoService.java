@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 
 public interface PedidoService {
 
-    Page<Pedido> findPaginated(int pageNo, int pageSize, int idrestaurante, String nombre, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin);
+    Page<Pedido> findPaginated(int pageNo, int pageSize, int idrestaurante, String nombre, String direccion, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin);
 }

@@ -123,7 +123,7 @@ public class AdminRestController {
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", "1", restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00","", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
@@ -132,6 +132,7 @@ public class AdminRestController {
                                 @ModelAttribute @RequestParam(value = "inputPrecio", required = false) String inputPrecio,
                                 @ModelAttribute @RequestParam(value = "fechainicio", required = false) String fechainicio,
                                 @ModelAttribute @RequestParam(value = "fechafin", required = false) String fechafin,
+                                @ModelAttribute @RequestParam(value = "textDireccion", required = false) String textDireccion,
                                 @RequestParam(value = "pageNo", required = false) String pageNo1,
                                 @RequestParam(value = "idrestaurante", required = false) Integer idrestaurante, Model model, HttpSession session) throws ParseException {
 
@@ -282,12 +283,13 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20, fechainicio3, fechafin3);
+        page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, textDireccion, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20, fechainicio3, fechafin3);
         listaPedidos = page.getContent();
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoE", inputEstado);
         model.addAttribute("textoP", inputPrecio);
+        model.addAttribute("textoDr", textDireccion);
 
         System.out.println(pageNo + "\n" + pageSize + "\n" + page.getTotalElements() + "\n" + textBuscador + "\n" + inputEstado + "\n" + inputPrecio + "\n" + inputEstadoMin + "\n" + inputEstadoMax + "\n" + inputPMin + "\n" + inputPMax + "\n" + fechainicio3 + "\n" + fechafin3);
 

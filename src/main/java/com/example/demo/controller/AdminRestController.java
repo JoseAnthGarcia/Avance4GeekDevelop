@@ -150,7 +150,7 @@ public class AdminRestController {
         }
 
         int inputID = 1;
-        int pageSize = 5;
+        int pageSize = 10;
         Page<Pedido> page;
         List<Pedido> listaPedidos;
         System.out.println(textBuscador);
@@ -466,7 +466,7 @@ public class AdminRestController {
             pageNo = 1;
         }
         int inputID = 1;
-        int pageSize = 5;
+        int pageSize = 10;
         Page<PedidoReporteDTO> page;
         List<PedidoReporteDTO> listaVentasReporte;
 
@@ -596,7 +596,7 @@ public class AdminRestController {
             pageNo = 1;
         }
         int inputID = 1;
-        int pageSize = 5;
+        int pageSize = 10;
         Page<ValoracionReporteDTO> page;
         List<ValoracionReporteDTO> listaValoracionReporte;
 
@@ -742,7 +742,7 @@ public class AdminRestController {
                     pageNo = 1;
                 }
                 int inputID = 1;
-                int pageSize = 5;
+                int pageSize = 10;
                 Page<PlatoReporteDTO> page;
                 List<PlatoReporteDTO> listaPlatoReporte;
 

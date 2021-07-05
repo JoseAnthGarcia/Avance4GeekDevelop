@@ -93,7 +93,7 @@ public class CuponController {
         }
         System.out.println(pageNo);
         int inputID = 1;
-        int pageSize = 5;
+        int pageSize = 10;
         Page<Cupon> page;
         List<Cupon> listaCupon;
 

@@ -23,7 +23,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Page<Pedido> findPaginated(int pageNo, int pageSize, int idrestaurante, String nombre, String direccion, int inputEstadoMin, int inputEstadoMax, double inputPMin, double inputPMax, String fechainicio, String fechafin) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.pedidoRepository.findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndCliente_DireccionactualIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetween(idrestaurante,
+        return this.pedidoRepository.findByRestaurante_IdrestauranteAndCliente_NombresIsContainingAndCliente_DireccionactualIsContainingAndEstadoGreaterThanEqualAndEstadoLessThanEqualAndPreciototalGreaterThanEqualAndPreciototalLessThanEqualAndFechapedidoBetweenOrderByEstadoAsc(idrestaurante,
                 nombre, direccion, inputEstadoMin, inputEstadoMax, inputPMin, inputPMax, fechainicio, fechafin, pageable);
     }
 

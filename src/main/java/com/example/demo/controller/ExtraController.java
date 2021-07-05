@@ -116,7 +116,7 @@ public class ExtraController {
                         pageNo = 1;
                     }
                     int inputID = 1;
-                    int pageSize = 5;
+                    int pageSize = 10;
                     Page<Extra> page;
                     List<Extra> listaExtras;
                     System.out.println(textBuscador);

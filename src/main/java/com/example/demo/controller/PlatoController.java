@@ -135,7 +135,7 @@ public class PlatoController {
                             pageNo = 1;
                         }
                         int inputID = 1;
-                        int pageSize = 5;
+                        int pageSize = 10;
                         Page<Plato> page;
                         List<Plato> listaPlatos;
                         System.out.println(textBuscador);

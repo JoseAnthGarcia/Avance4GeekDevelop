@@ -182,10 +182,10 @@
 
                                     </table>
                                 </div>
-                                <div th:if="${totalItems==0 && (!texto.isEmpty() || !textoC.equalsIgnoreCase('0') || !textoCant.equalsIgnoreCase('0'))}">
+                                <div th:if="${totalItems==0 && (!texto.isEmpty() || !textoC.isEmpty() || !textoCant.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
                                 </div>
-                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoC.equalsIgnoreCase('0') && textoCant.equalsIgnoreCase('0'))}">
+                                <div th:if="${totalItems==0 && (texto.isEmpty() && textoC.isEmpty() && textoCant.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay reportes de platos disponibles.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center">

@@ -182,7 +182,7 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto"  type="text" class="form-control bg-white small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
                                        style="border-color: lightgray">
@@ -201,7 +201,7 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${val.equals('7')}">Valoración</option>
+                                <option value="" th:selected="${val.equals('7')}">Valoración</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>

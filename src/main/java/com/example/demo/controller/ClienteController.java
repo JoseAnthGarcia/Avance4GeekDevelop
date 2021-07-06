@@ -229,7 +229,7 @@ public class ClienteController {
         Integer limitInfP = 0;
         Integer limitSupP = 5000;
         Integer limitInfVal = 0;
-        Integer limitSupVal = 6;
+        Integer limitSupVal = 6; //TODO 5
 
 
         //buscar que direccion de milista de direcciones coincide con mi direccion actual
@@ -255,8 +255,8 @@ public class ClienteController {
             texto = "";
         }
         String id1="";
-        String id2="";
-        String id3="";
+        String id2="-";
+        String id3="-";
         if(idCategoria == null){
             idCategoria="";
 
@@ -340,7 +340,7 @@ public class ClienteController {
 
         if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
             System.out.println(" ENTRO AL QUERY 1"  );
-            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
+            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante2.getTotalPages();
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
@@ -351,7 +351,7 @@ public class ClienteController {
 
         }else{
             System.out.println(" ENTRO AL QUERY 2"  );
-            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistritoactual,pageRequest);
+            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante.getTotalPages();
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());

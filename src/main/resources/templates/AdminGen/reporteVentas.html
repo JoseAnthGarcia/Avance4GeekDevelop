@@ -142,7 +142,7 @@
 
                                     <td th:text="${usuario.getNombre()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getRuc()}" class="text-center" style="width: 260px"></td>
-                                    <td th:text="${usuario.getCantpedidos()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getMismodistrito1()+ usuario.getMismodistrito0()}" class="text-center" style="width: 240px"></td>
                                     <td  th:text="|S/ ${usuario.getMontototal()}|" class="text-center" style="width: 160px"></td>
                                     <td  th:text="${usuario.getValoracionrestaurante()==null ? 'Sin Valoración' : usuario.getValoracionrestaurante() }" class="text-center" style="width: 60px"></td>
                                 </tr>

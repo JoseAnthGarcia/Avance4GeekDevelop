@@ -349,11 +349,10 @@
                             <nav aria-label="pagination">
                                 <ul class="pagination justify-content-center">
 
-
                                     <li class="page-item" th:each="page : ${pages}"
                                         th:classappend="${current == page ? 'active': ''}">
                                         <a th:unless="${texto == null && estado == null}"
-                                           class="page-link active text-white" style="background-color: #701111"
+                                           class="page-link"
                                            th:text="${page}"
                                            th:href="@{'/cliente/pedidoActualPagina?page='+${page}}"></a>
                                     </li>
@@ -363,17 +362,7 @@
                         <div class="col-md-2"></div>
                     </div>
                     <!------------------------------------------------------------>
-                    <!--
-                    <nav aria-label="Pagination">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:each="page : ${pages}">
-                                <a th:unless="${texto == null && estado == null}" class="page-link active"
-                                   style="background-color: #FFFFFF" th:text="${page}"
-                                   th:href="@{'/cliente/pedidoActual?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
-                            </li>
-                        </ul>
-                    </nav>
-                    -->
+
 
 
                 </div>

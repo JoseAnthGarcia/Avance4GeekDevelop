@@ -14,7 +14,7 @@ public class RestauranteClienteServiceImpl implements RestauranteClienteService{
     RestauranteRepository restauranteRepository;
 
     @Override
-    public Page<RestauranteDTO> listaRestaurantePaginada(String texto, Integer limitInfP, Integer limitSupP,Integer limitInfVal, Integer limitSupVal, String id1,String id2, String id3,Integer iddistrito, Pageable pageable) {
-        return restauranteRepository.listaRestaurante(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistrito, pageable);
+    public Page<RestauranteDTO> listaRestaurantePaginada(Integer limitInfP, Integer limitSupP,Integer limitInfVal, Integer limitSupVal, String texto, String id1,String id2, String id3,Integer iddistrito, Pageable pageable) {
+        return restauranteRepository.listaRestaurante(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistrito, pageable);
     }
 }

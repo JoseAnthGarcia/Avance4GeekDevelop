@@ -257,7 +257,6 @@ public class ClienteController {
         String id1="";
         String id2="-";
         String id3="-";
-
         if(idCategoria == null){
             idCategoria="";
 
@@ -2678,9 +2677,9 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
 
 
 
-        texto= httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
 
-        numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :(String) httpSession.getAttribute("numpedidos");
+        numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :  (String) httpSession.getAttribute("numpedidos");
 
         mes= httpSession.getAttribute("mes") == null ? mes:  (String) httpSession.getAttribute("mes");
         anio= httpSession.getAttribute("anio") == null ? anio:  (String) httpSession.getAttribute("anio");

@@ -30,7 +30,93 @@
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle"  data-toggle="modal"
+                                   href="#Credencial" data-target="#Credencial"
+                                   aria-haspopup="true" aria-expanded="false" >
+                                    <i class="fas fa-info-circle fa-fw"
+                                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Credenciales"></i>
+                                </a>
+                            </li>
 
+                            <div class="modal fade" id="Credencial" tabindex="-1" role="dialog" aria-labelledby="exampleCredencial"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <!-- bg-gradient-light static-top shadow-->
+                                        <div class="modal-header bg-primary mb-4 static-top shadow text-light text-justify" >
+                                            <h3 class="modal-title " id="exampleCredencial" ><strong th:text="${credencial1.get(0).getNombre()+' - '+credencial1.get(0).getRuc()}"></strong></h3>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                                                <span aria-hidden="true" style="color: #ffffff">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5><strong th:text="${'Celular:  '+credencial1.get(0).getTelefono()}"></strong></h5>
+                                            <h5><strong th:text="${'Dirección:  '+credencial1.get(0).getDireccion()}"></strong></h5>
+                                            <h5><strong th:text="${'Pedidos Totales:  '+pedidosCredenciales.get(0).getTotal()}"></strong></h5>
+                                            <h5><strong th:text="${'Pedidos Aceptados:  '+pedidosCredenciales.get(0).getEntrega()}"></strong></h5>
+                                            <h5><strong th:text="${'Pedidos Cancelados:  '+pedidosCredenciales.get(0).getCancela()}"></strong></h5>
+                                            <h5><strong th:text="${'Otros Pedidos:  '+(pedidosCredenciales.get(0).getTotal()-pedidosCredenciales.get(0).getEntrega()-pedidosCredenciales.get(0).getCancela())}"></strong></h5>
+                                            <h3 style="color: black"><strong>Administrador</strong></h3>
+                                            <h5 style="text-transform: capitalize;"><strong  th:text="${'Nombre:  '+credencial1.get(0).getAdministrador().split(' ')[0]+' '+credencial1.get(0).getAdministrador().split(' ')[2] }"></strong></h5>
+                                            <h5><strong th:text="${'Correo:  '+credencial1.get(0).getCorreo()}"></strong></h5>
+                                            <h5><strong th:text="${'Celular:  '+credencial1.get(0).getCelular}"></strong></h5>
+                                            <h5><strong th:text="${'DNI:  '+credencial1.get(0).getDni}"></strong></h5>
+
+                                            <h5 style="color: black"> <strong>Platos:</strong></h5>
+
+                                            <div class="container ml-5 mt-1">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="card">
+                                                            <div class="card-block">
+                                                                <label class="card-title" th:text="${'Más vendido('+platoMasVendido.get(0).getCantidad()+')'}"></label>
+                                                                <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                    <img th:src="@{|/plato/imagen/${platoMasVendido.get(0).getIdplato()}|}"
+                                                                         alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                    <a class="overlay2" style="height: 150px;width:150px">
+                                                                        <h1 class="text-justify" style="font-weight: bolder">
+                                                                            <div style="text-transform: uppercase;height: 150px;width:150px"
+                                                                                 class="text2 font-weight-bolder mt-lg-5"
+                                                                                 th:text="${platoMasVendido.get(0).getNombre()}"></div>
+                                                                        </h1>
+                                                                    </a>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="card">
+                                                            <div class="card-block">
+                                                                <label class="card-title" th:text="${'Menos vendido('+platoMenosVendido.get(0).getCantidad()+')'}"></label>
+                                                                <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                    <img th:src="@{|/plato/imagen/${platoMenosVendido.get(0).getIdplato()}|}"
+                                                                         alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                    <a class="overlay2" style="height: 150px;width:150px">
+                                                                        <h1 class="text-justify" style="font-weight: bolder">
+                                                                            <div style="text-transform: uppercase; height: 150px;width:150px"
+                                                                                 class="text2 font-weight-bolder mt-lg-5"
+                                                                                 th:text="${platoMenosVendido.get(0).getNombre()}"></div>
+                                                                        </h1>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- End information -->
                             <!-- Nav Item - Alerts campanita Notificaciones -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"

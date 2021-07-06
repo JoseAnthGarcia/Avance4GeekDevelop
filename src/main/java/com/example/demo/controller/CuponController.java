@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
 import ch.qos.logback.core.util.CachingDateFormatter;
+import com.example.demo.dtos.CredencialPedidosDTO;
+import com.example.demo.dtos.CredencialRest1DTO;
+import com.example.demo.dtos.CredencialRest2DTO;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.CuponRepository;
@@ -165,7 +168,14 @@ public class CuponController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listaCupon", listaCupon);
-
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         return "AdminRestaurante/listaCupones";
     }
 
@@ -177,6 +187,14 @@ public class CuponController {
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         return "AdminRestaurante/nuevoCupon";
     }
 
@@ -190,6 +208,14 @@ public class CuponController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         cupon.setIdrestaurante(restaurante.getIdrestaurante());
         if (bindingResult.hasErrors()) {
             return "AdminRestaurante/nuevoCupon";
@@ -227,6 +253,14 @@ public class CuponController {
         Restaurante restaurante = restauranteRepository.encontrarRest(ida);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         System.out.println(fechainicio);
         if (optionalCupon.isPresent()) {
@@ -249,6 +283,14 @@ public class CuponController {
         Restaurante restaurante = restauranteRepository.encontrarRest(ida);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
         LocalDate date = LocalDate.now();
         if (optionalCupon.isPresent()) {

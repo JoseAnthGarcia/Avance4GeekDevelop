@@ -255,8 +255,8 @@ public class ClienteController {
             texto = "";
         }
         String id1="";
-        String id2="";
-        String id3="";
+        String id2="-";
+        String id3="-";
 
         if(idCategoria == null){
             idCategoria="";

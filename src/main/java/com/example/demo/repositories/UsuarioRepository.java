@@ -162,11 +162,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "                from pedido p, restaurante u,  \n" +
             "                (select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito1' \n" +
             "                from pedido p, restaurante u\n" +
-            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 1 \n" +
+            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 1 and p.estado = 6 \n" +
             "                group by p.idrestaurante) p1, \n" +
             "                ( select p.idrestaurante, count(p.idrestaurante) as 'mismodistrito0' \n" +
             "                from pedido p, restaurante u\n" +
-            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 0 \n" +
+            "                where  p.idrestaurante= u.idrestaurante and p.mismodistrito = 0 and p.estado = 6 \n" +
             "                group by p.idrestaurante) p0\n" +
             " where p.idrestaurante= u.idrestaurante and p1.idrestaurante= u.idrestaurante and p0.idrestaurante= u.idrestaurante)  pe on r.idrestaurante = pe.idrestaurante\n" +
             "WHERE concat(lower(r.nombre),lower(r.ruc)) like %?1%\n" +

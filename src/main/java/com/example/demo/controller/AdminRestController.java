@@ -32,6 +32,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 
 @Controller
@@ -321,6 +324,20 @@ public class AdminRestController {
     public String rechazarPedido(@RequestParam("id") String id, @RequestParam(value = "comentarioAR", required = false) String comentarioAR,
                                  RedirectAttributes attr,
                                  Model model, HttpSession session) {
+        boolean cometariovacio = false;
+        String s3=comentarioAR.trim();
+
+        Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
+        Matcher mat = pat.matcher(s3);
+        System.out.println(s3);
+        if (mat.matches()) {
+            System.out.println("SI");
+            cometariovacio = false;
+        } else {
+            System.out.println("NO");
+            cometariovacio = true;
+        }
+    
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
 
@@ -336,23 +353,23 @@ public class AdminRestController {
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
-        boolean cometariovacio = false;
-        if (comentarioAR.equals(" ")) {
-            cometariovacio = true;
-            System.out.println("SE HAEEEEEEEEEEEE VERDAD");
-        }
+        
         if (pedido != null && !cometariovacio) {
+            System.out.println("xd11");
             if (pedido.getEstado() == 0) {
                 if (comentarioAR != null || !cometariovacio) {
                     pedido.setEstado(2);
-                    pedido.setComentrechazorest(comentarioAR);
+                    pedido.setComentrechazorest(s3);
                     pedidoRepository.save(pedido);
                     attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
                 } else {
+                    System.out.println("xd12112121");
                     attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
                 }
 
             }
+        }else{
+            attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
         }
         return "redirect:/restaurante/listaPedidos";
     }

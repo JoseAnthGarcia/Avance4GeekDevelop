@@ -388,13 +388,12 @@ public class PlatoController {
     }
 
     @GetMapping("/editar")
-    public String editarPlato(@RequestParam("id") int id,
+    public String editarPlato(@RequestParam("id") String id,
                               Model model,
                               @ModelAttribute("plato") Plato plato,
-                              @RequestParam(value = "idcategoria", required = false) Integer idcategoria, HttpSession session) {
-        Optional<Plato> platoOptional = platoRepository.findById(id);
-        Optional<Categorias> listaca = categoriaRespository.findById(idcategoria);
-        model.addAttribute("idcategoria", idcategoria);
+                              @RequestParam(value = "idcategoria", required = false) String idcategoria, HttpSession session) {
+
+
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
@@ -408,21 +407,35 @@ public class PlatoController {
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
+
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         model.addAttribute("listaCategorias", listaCategorias);
-        for (Categorias lista : listaCategorias) {
-            if (lista.getIdcategoria() == idcategoria) {
-                model.addAttribute("nombreCate", lista.getNombre());
-                break;
+
+        int idplato;
+        try {
+            for (Categorias lista : listaCategorias) {
+                if (lista.getIdcategoria() == Integer.parseInt(idcategoria)) {
+                    model.addAttribute("nombreCate", lista.getNombre());
+                    break;
+                }
             }
-        }
-        if (platoOptional.isPresent()) {
-            plato = platoOptional.get();
-            model.addAttribute("plato", plato);
-            model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
-            return "AdminRestaurante/nuevoPlato";
-        } else {
-            return "redirect:/plato/lista";
+            idplato=Integer.parseInt(id);
+            model.addAttribute("idcategoria", idcategoria);
+            Optional<Plato> platoOptional = platoRepository.findById(idplato);
+            Optional<Categorias> listaca = categoriaRespository.findById(Integer.parseInt(idcategoria));
+            Plato plato2 = platoRepository.findByIdrestauranteAndIdcategoriaplatoAndIdplato(restaurante.getIdrestaurante(), Integer.parseInt(idcategoria),idplato);
+            if (platoOptional.isPresent() && plato2 != null) {
+                plato = platoOptional.get();
+                model.addAttribute("plato", plato);
+
+                model.addAttribute("listaCategoria", categoriaExtraRepository.findAll());
+                return "AdminRestaurante/nuevoPlato";
+            } else {
+                return "redirect:/plato/lista?idcategoria="+idcategoria;
+            }
+        }catch(NumberFormatException e){
+            System.out.println("error");
+            return "redirect:/plato/lista?idcategoria="+idcategoria;
         }
     }
 

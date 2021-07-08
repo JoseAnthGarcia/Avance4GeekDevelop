@@ -16,6 +16,8 @@ public interface PlatoRepository extends JpaRepository<Plato, Integer> {
 
     Plato findByIdplatoAndIdrestaurante(int idPlato, int idRestaurante);
 
+    Plato findByIdrestauranteAndIdcategoriaplatoAndIdplato(int idRestaurante, int idCategoria, int idplato);
+
     Page<Plato> findByIdrestauranteAndDisponible(int id,boolean disponible, Pageable pageable);
 
     Page<Plato> findByIdrestauranteAndIdcategoriaplatoAndDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(int idrestaurante,int idcategoriaplato,boolean disponible, String nombre, Pageable pageable, double inputPMin, double inputPMax);

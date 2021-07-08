@@ -204,7 +204,7 @@ public class ClienteController {
 
 
     }
-
+/*********************************************************  LISTA RESTAURANTE***************************************************************************************/
     @GetMapping("/listaRestaurantes")
     public String listaRestaurantes(Model model, HttpSession httpSession,
                                     @RequestParam Map<String, Object> params,
@@ -224,7 +224,18 @@ public class ClienteController {
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         System.out.println("USUARIO ID: "+ usuario.getIdusuario());
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+        Pageable pageRequest = PageRequest.of(page, 2);
         String direccionactual = usuario.getDireccionactual();
+
+
+
+
         int iddistritoactual = 1;
         Integer limitInfP = 0;
         Integer limitSupP = 5000;
@@ -232,7 +243,7 @@ public class ClienteController {
         Integer limitSupVal = 6; //TODO 5
 
 
-        //buscar que direccion de milista de direcciones coincide con mi direccion actual
+
 
         List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
 
@@ -243,23 +254,35 @@ public class ClienteController {
             }
         }
 
+
         if(val == null || val.equals("")){
             val = "7";
+            httpSession.removeAttribute("val");
+        }else{
+            httpSession.setAttribute("val",val);
         }
 
         if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
+            httpSession.removeAttribute("idPrecio");
+        }else{
+            httpSession.setAttribute("idPrecio",idPrecio);
         }
 
-        if(texto == null){
+        if (texto == null) {
             texto = "";
+            httpSession.removeAttribute("texto");
+
+        }else{
+            httpSession.setAttribute("texto",texto);
         }
+
         String id1="";
         String id2="-";
         String id3="-";
         if(idCategoria == null){
             idCategoria="";
-
+            httpSession.removeAttribute("idCategoria");
         }else {
             try {
                 int idcat = Integer.parseInt(idCategoria);
@@ -268,15 +291,25 @@ public class ClienteController {
                     id2 = "-"+idCategoria;
                     id3 = idCategoria+"-";
                 }
+                httpSession.setAttribute("idCategoria",idCategoria);
             }catch (NumberFormatException e){
                 idCategoria="";
+                httpSession.removeAttribute("idCategoria");
             }
 
         }
+
+
         System.out.println("id1 :"+id1);
         System.out.println("id12 :"+id2);
         System.out.println("id3 :"+id3   );
         System.out.println("valoracion :"+val   );
+
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        val= httpSession.getAttribute("val") == null ? val :  (String) httpSession.getAttribute("val");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? idCategoria :  (String) httpSession.getAttribute("idCategoria");
+        idPrecio= httpSession.getAttribute("idPrecio") == null ? idPrecio :  (String) httpSession.getAttribute("idPrecio");
+
 
         switch (idPrecio){
             case "1":
@@ -333,9 +366,177 @@ public class ClienteController {
         System.out.println("IDCATEGORIA2: "+idCategoria);
 
 
+        if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
+            System.out.println(" ENTRO AL QUERY 1"  );
+            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
+            int totalPage = listaRestaurante2.getTotalPages();
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
+            }
 
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
+            model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
+
+        }else{
+            System.out.println(" ENTRO AL QUERY 2"  );
+            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
+            int totalPage = listaRestaurante.getTotalPages();
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
+            }
+
+            model.addAttribute("listaRestaurante", listaRestaurante.getContent());
+        }
+        model.addAttribute("current", page + 1);
+        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
+        model.addAttribute("idPrecio", idPrecio);
+        model.addAttribute("idCategoria", idCategoria);
+        model.addAttribute("texto", texto);
+        model.addAttribute("val", val);
+        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
+        return "Cliente/listaRestaurantes";
+    }
+
+
+    @GetMapping("/listaRestaurantespag")
+    public String listaRestaurantespag(Model model, HttpSession httpSession,
+                                    @RequestParam Map<String, Object> params,
+                                    @RequestParam(value = "texto",required = false) String texto,
+                                    @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                                    @RequestParam(value = "idCategoria",required = false) String idCategoria,
+                                    @RequestParam(value = "val",required = false) String val) {
+
+        if(httpSession.getAttribute("carrito") != null){
+            httpSession.removeAttribute("carrito");
+        }
+        if(httpSession.getAttribute("extrasCarrito") != null){
+            httpSession.removeAttribute("extrasCarrito");
+        }
+        System.out.println("IDCATEGORIA: "+ idCategoria);
+
+
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+        System.out.println("USUARIO ID: "+ usuario.getIdusuario());
+        int page;
+        try{
+            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        }catch(NumberFormatException nfe){
+            page =0;
+        }
+        Pageable pageRequest = PageRequest.of(page, 2);
+        String direccionactual = usuario.getDireccionactual();
+
+
+
+
+        int iddistritoactual = 1;
+        Integer limitInfP = 0;
+        Integer limitSupP = 5000;
+        Integer limitInfVal = 0;
+        Integer limitSupVal = 6; //TODO 5
+
+
+
+
+        List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
+
+        for (ClienteDTO cl : listadirecc) {
+            if (cl.getDireccion().equalsIgnoreCase(direccionactual)) {
+                iddistritoactual = cl.getIddistrito();
+                break;
+            }
+        }
+
+
+        String id1="";
+        String id2="-";
+        String id3="-";
+
+
+
+        System.out.println("id1 :"+id1);
+        System.out.println("id12 :"+id2);
+        System.out.println("id3 :"+id3   );
+        System.out.println("valoracion :"+val   );
+
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        val= httpSession.getAttribute("val") == null ? "7" :  (String) httpSession.getAttribute("val");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? "" :  (String) httpSession.getAttribute("idCategoria");
+        idPrecio= httpSession.getAttribute("idPrecio") == null ? "6" :  (String) httpSession.getAttribute("idPrecio");
+
+        if(idCategoria == null){
+            idCategoria="";
+            httpSession.removeAttribute("idCategoria");
+        }else {
+            try {
+                int idcat = Integer.parseInt(idCategoria);
+                if( idcat>0 && idcat<28) {
+                    id1 = "-"+idCategoria+"-";
+                    id2 = "-"+idCategoria;
+                    id3 = idCategoria+"-";
+                }
+                httpSession.setAttribute("idCategoria",idCategoria);
+            }catch (NumberFormatException e){
+                idCategoria="";
+                httpSession.removeAttribute("idCategoria");
+            }
+
+        }
+
+        switch (idPrecio){
+            case "1":
+                limitInfP = 0;
+                limitSupP = 15;
+                break;
+            case "2":
+                limitInfP = 15;
+                limitSupP = 25;
+                break;
+            case "3":
+                limitInfP = 25;
+                limitSupP = 40;
+                break;
+            case "4":
+                limitInfP = 40;
+                limitSupP = 5000;
+                break;
+
+            default:
+                limitInfP = 0;
+                limitSupP = 5000;
+        }
+
+        switch (val){
+            case "1":
+                limitInfVal = 0;
+                limitSupVal = 1;
+                break;
+            case "2":
+                limitInfVal = 1;
+                limitSupVal = 2;
+                break;
+            case "3":
+                limitInfVal = 2;
+                limitSupVal = 3;
+                break;
+            case "4":
+                limitInfVal = 3;
+                limitSupVal = 4;
+                break;
+            case "5":
+                limitInfVal = 4;
+                limitSupVal = 5;
+                break;
+            default:
+                limitInfVal = 0;
+                limitSupVal = 5;
+        }
+        System.out.println("lmmiteinf: "+limitInfVal);
+        System.out.println("lmmitesup: "+limitSupVal);
+        System.out.println("preciol1: "+limitSupP);
+        System.out.println("preciol2: "+limitInfP);
+        System.out.println("IDCATEGORIA2: "+idCategoria);
 
 
         if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
@@ -360,9 +561,7 @@ public class ClienteController {
 
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
-
-
-
+        model.addAttribute("current", page + 1);
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
@@ -371,6 +570,27 @@ public class ClienteController {
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/listaRestaurantes";
     }
+
+
+
+
+
+
+
+
+
+/************************************************************************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
 
 
     @GetMapping("/listaDirecciones")

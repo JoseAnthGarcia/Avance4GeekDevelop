@@ -349,13 +349,10 @@
                             <nav aria-label="pagination">
                                 <ul class="pagination justify-content-center">
 
-                                    <li class="page-item" th:each="page : ${pages}"
-                                        th:classappend="${current == page ? 'active': ''}">
-                                        <a th:unless="${texto == null && estado == null}"
-                                           class="page-link"
-                                           th:text="${page}"
-                                           th:href="@{'/cliente/pedidoActualPagina?page='+${page}}"></a>
+                                    <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                        <a class="page-link" th:href="@{'/cliente/pedidoActualPagina?page='+${page}}" th:text="${page}"></a>
                                     </li>
+
                                 </ul>
                             </nav>
                         </div>

@@ -336,4 +336,27 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value=" select distinct(year(fechapedido)) as anio from  pedido",nativeQuery = true)
     List<YearDTO> listanios();
 
+    @Query(value ="SELECT php.idplato,pl.nombre, sum(php.cantidad) as cantidad FROM plato_has_pedido php\n" +
+            "inner join (SELECT pe.codigo FROM pedido pe where pe.idrestaurante=?1 and pe.estado=6) ped\n" +
+            "inner join plato pl on pl.idplato=php.idplato\n" +
+            "where php.codigo=ped.codigo group by php.idplato order by cantidad desc limit 0,1" ,nativeQuery = true)
+    List<CredencialRest2DTO> platoMasVendido(int rest);
+
+    @Query(value ="SELECT php.idplato,pl.nombre, sum(php.cantidad) as cantidad FROM plato_has_pedido php\n" +
+            "inner join (SELECT pe.codigo FROM pedido pe where pe.idrestaurante=?1 and pe.estado=6) ped\n" +
+            "inner join plato pl on pl.idplato=php.idplato\n" +
+            "where php.codigo=ped.codigo group by php.idplato order by cantidad asc limit 0,1" ,nativeQuery = true)
+    List<CredencialRest2DTO> platoMenosVendido(int rest);
+
+    @Query(value = "select re.nombre, re.ruc, re.telefono, concat(re.direccion,' - ',dis.nombre) as direccion, \n" +
+            "concat(us.nombres,' ', us.apellidos) as administrador,\n" +
+            " us.correo, us.telefono as celular, us.dni from restaurante re\n" +
+            "inner join distrito dis on dis.iddistrito=re.iddistrito\n" +
+            "inner join usuario us on us.idusuario=re.idadministrador where re.idrestaurante=?1",nativeQuery = true)
+    List<CredencialRest1DTO> credencialRest(int idrest);
+
+    @Query(value = "select * from (SELECT count(*) as entrega FROM pedido where idrestaurante=?1 and estado=6) entrega,\n" +
+            "(SELECT count(*) as cancela FROM pedido where idrestaurante=?1 and estado=2) cancela,\n" +
+            "(SELECT count(*) as total FROM pedido where idrestaurante=?1) total",nativeQuery = true)
+    List<CredencialPedidosDTO> pedidosCredencia(int idrest);
 }

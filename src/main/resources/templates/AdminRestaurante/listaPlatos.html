@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Lista de platos')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Lista de platos')">
+
+    </head>
 
     <body id="page-top">
 
@@ -257,7 +259,7 @@
                                                 <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${platos.nombre}"></td>
                                                 <td th:text="${'S/. '+platos.precio}"></td>
-                                                <td th:text="${platos.descripcion}"></td>
+                                                <td style="width: 500px; text-align: left"><div class="comentarioplatos" th:text="${platos.descripcion}"></div></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
                                                                             th:href="@{'/plato/editar?idcategoria='+${idcategoria}+'&id='+ ${platos.idplato}}"><i
@@ -338,6 +340,7 @@
         <!-- Begin Scripts -->
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
+
 
     </body>
 

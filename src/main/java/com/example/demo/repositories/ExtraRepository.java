@@ -17,6 +17,7 @@ import java.util.List;
 public interface ExtraRepository extends JpaRepository<Extra, Integer> {
 
     Extra findByIdextraAndIdrestaurante(int idExtra, int idRest);
+    Extra findByIdextraAndIdrestauranteAndIdcategoriaextra(int idExtra, int idRest, int idcategoria);
 
     Page<Extra> findByIdrestauranteAndIdcategoriaextraAndDisponibleAndNombreIsContainingAndPreciounitarioGreaterThanEqualAndPreciounitarioLessThanEqual(int idrestaurante,int idcategoriaextra, boolean disponible, String nombre, Pageable pageable, double inputPMin, double inputPMax);
 

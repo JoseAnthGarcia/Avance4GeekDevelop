@@ -97,7 +97,6 @@
                         <div class="card-header py-3 " style="background-color: #701111;">
 
                             <div class="d-sm-flex align-items-center justify-content-between">
-
                                 <h2 class="font-weight-bold text-white text-lg-center mx-auto "  id="nombre_pagina">REPORTE DE USUARIOS</h2>
                                 <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                             </div>
@@ -160,15 +159,9 @@
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
-                                            <!--  <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
-                                                  <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${prev}|}">Anterior</a>
-                                              </li>-->
                                               <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                   <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${page}|}" th:text="${page}"></a>
                                               </li>
-                                          <!--    <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
-                                                  <a class="page-link" th:href="@{|/admin/usuariosRPagina/?page=${next}|}">Siguiente</a>
-                                              </li>-->
                                           </ul>
                                       </nav>
                                   </div>

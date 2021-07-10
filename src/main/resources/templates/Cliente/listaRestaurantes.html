@@ -182,7 +182,7 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto"  type="text" class="form-control bg-white small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
                                        style="border-color: lightgray">
@@ -191,7 +191,7 @@
                         <div class="col-sm-2 mb-1">
                             <select id="buscadorPrecios" name="idPrecio" class="form-control"
                                     style="border-color: lightgray">
-                                <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
+                                <option value="6"  th:selected="${idPrecio.equals('6')}">Precio</option>
                                 <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./15.00</option>
                                 <option value="2" th:selected="${idPrecio.equals('2')}">S./15.00 hasta S./25.00</option>
                                 <option value="3" th:selected="${idPrecio.equals('3')}">S./25.00 hasta S./40.00</option>
@@ -201,7 +201,7 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
-                                <option value="" th:selected="${val.equals('7')}">Valoración</option>
+                                <option value="7" th:selected="${val.equals('7')}">Valoración</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>
@@ -266,7 +266,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="rest, v : ${listaRestaurante}">
-                                    <td th:text="${v.index + 1}"></td>
+                                    <td th:text="${(current -1)*2 + v.index +1}"></td>
                                     <td>
                                         <div style=text-align:center>
                                             <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">
@@ -314,15 +314,25 @@
 
 
 
-                <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center" >
-                    <li class="page-item" th:each="page : ${pages}">
-                        <a th:unless="${texto == null && idPrecio == null && val == null && idCategoria == null }"
-                           class="page-link" style="background-color: #701111"  th:text="${page}"
-                           th:href="@{'/cliente/listaRestaurantes?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&val='+${val}+'&idCategoria='+${idCategoria}}"></a>
-                    </li>
-                </ul>
-                </nav>
+
+
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a class="page-link" th:href="@{'/cliente/listaRestaurantespag?page='+${page}}" th:text="${page}"></a>
+                                        </li>
+
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+
+
 
 
             </div>

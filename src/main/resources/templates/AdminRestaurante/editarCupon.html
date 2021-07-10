@@ -89,41 +89,133 @@
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle"  data-toggle="modal"
+                                   href="#Credencial" data-target="#Credencial"
+                                   aria-haspopup="true" aria-expanded="false" >
+                                    <i class="fas fa-info-circle fa-fw"
+                                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Credenciales"></i>
                                 </a>
+                                <div class="modal fade" id="Credencial" tabindex="-1" role="dialog" aria-labelledby="exampleCredencial"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <!-- bg-gradient-light static-top shadow-->
+                                            <div class="modal-header bg-primary mb-4 static-top shadow text-light text-justify" >
+                                                <h3 class="modal-title " id="exampleCredencial" ><strong th:text="${credencial1.get(0).getNombre()+' - '+credencial1.get(0).getRuc()}"></strong></h3>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                                                    <span aria-hidden="true" style="color: #ffffff">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getTelefono()}"></strong></h5>
+                                                <h5><strong th:text="${'Dirección:  '+credencial1.get(0).getDireccion()}"></strong></h5>
+
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Totales:  '+pedidosCredenciales.get(0).getTotal()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Aceptados:  '+pedidosCredenciales.get(0).getEntrega()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Pedidos Cancelados:  '+pedidosCredenciales.get(0).getCancela()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Otros Pedidos:  '+(pedidosCredenciales.get(0).getTotal()-pedidosCredenciales.get(0).getEntrega()-pedidosCredenciales.get(0).getCancela())}"></strong></h5>
+
+                                                <h3 style="color: black"><strong>Administrador</strong></h3>
+                                                <h5 style="text-transform: capitalize;"><strong  th:text="${'Nombre:  '+credencial1.get(0).getAdministrador().split(' ')[0]+' '+credencial1.get(0).getAdministrador().split(' ')[2] }"></strong></h5>
+                                                <h5><strong th:text="${'Correo:  '+credencial1.get(0).getCorreo()}"></strong></h5>
+                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getCelular}"></strong></h5>
+                                                <h5><strong th:text="${'DNI:  '+credencial1.get(0).getDni}"></strong></h5>
+
+                                                <h5 th:if="${!platoMasVendido.isEmpty()}" style="color: black"> <strong>Platos:</strong></h5>
+                                                <div th:if="${!platoMasVendido.isEmpty()}" class="container ml-5 mt-1">
+                                                    <div  class="row">
+                                                        <div class="col-6">
+                                                            <div class="card">
+                                                                <div class="card-block">
+                                                                    <label class="card-title" th:text="${'Más vendido('+platoMasVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                        <img th:src="@{|/plato/imagen/${platoMasVendido.get(0).getIdplato()}|}"
+                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                        <a class="overlay2" style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                                <div style="text-transform: uppercase;height: 150px;width:150px"
+                                                                                     class="text2 font-weight-bolder mt-lg-5"
+                                                                                     th:text="${platoMasVendido.get(0).getNombre()}"></div>
+                                                                            </h1>
+                                                                        </a>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="card">
+                                                                <div class="card-block">
+                                                                    <label class="card-title" th:text="${'Menos vendido('+platoMenosVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                        <img th:src="@{|/plato/imagen/${platoMenosVendido.get(0).getIdplato()}|}"
+                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                        <a class="overlay2" style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                                <div style="text-transform: uppercase; height: 150px;width:150px"
+                                                                                     class="text2 font-weight-bolder mt-lg-5"
+                                                                                     th:text="${platoMenosVendido.get(0).getNombre()}"></div>
+                                                                            </h1>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
 
+                            <!-- End information -->
                             <!-- Nav Item - Alerts campanita Notificaciones -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
+                                    <i class="fas fa-bell fa-fw"
+                                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
                                     <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter" th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" th:text="${listaNotiRest.size()}"></span>
+                                    <span class="badge badge-danger badge-counter"
+                                          th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                          th:text="${listaNotiRest.size()}"></span>
                                 </a>
                                 <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                                     aria-labelledby="alertsDropdown">
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="alertsDropdown" id="notifi">
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
-                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
-                                       th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?codigoPedido='+${p.codigo}}">
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}" class="mt-3 ml-4"> No
+                                        tiene pedidos
+                                        pendientes</p>
+                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                       class="dropdown-item d-flex align-items-center"
+                                       th:each="p,in:${listaNotiRest}"
+                                       th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="small text-gray-500" th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold" th:text="${p.getCliente()}">Arroz con pollo</span>
+                                            <div class="small text-gray-500"
+                                                 th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm
+                                            </div>
+                                            <span class="font-weight-bold"
+                                                  th:text="${p.getCliente()}">Arroz con pollo</span>
                                         </div>
                                     </a>
-                                    <a class="dropdown-item text-center small text-gray-500" th:href="@{/restaurante/listaPedidos}">Ver todos los
+                                    <a class="dropdown-item text-center small text-gray-500"
+                                       th:href="@{/restaurante/listaPedidos}">Ver todos los
                                         pedidos</a>
                                 </div>
                             </li>
@@ -131,25 +223,7 @@
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                              th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
-                                    <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
-                                         type="image/png" alt="avatar">
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <form id="cerrar" th:action="@{/logout}" method="post">
-                                        <a class="nav-link" data-toggle="modal"
-                                           href="#logoutModal" data-target="#logoutModal"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar Sesión
-                                        </a>
-                                    </form>
-                                </div>
-                            </li>
+                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
 
                         </ul>
                     </nav>

@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -168,6 +170,10 @@ public class LoginController {
 
         String rol = "";
 
+        // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        //System.out.println("yyyy/MM/dd HH:mm:ss-> "+dtf.format(LocalDateTime.now()));
+
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
             break;
@@ -198,10 +204,17 @@ public class LoginController {
                 Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
                         BCryptPasswordEncoder().encode("password"),authorities);
                 SecurityContextHolder.getContext().setAuthentication(reAuth);
+                // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+                usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+                usuarioRepository.save(usuario);
                 session.setAttribute("usuario", usuario);
             }
         }else{
             usuario = usuarioRepository.findByCorreo(correo);
+
+            // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+            usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+            usuarioRepository.save(usuario);
             session.setAttribute("usuario", usuario);
 
         }
@@ -267,6 +280,8 @@ public class LoginController {
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) auth.getPrincipal();
 
+        // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String correo = oAuth2User.getEmail();
         Usuario usuario = usuarioRepository.findByCorreo(correo);
 
@@ -279,7 +294,9 @@ public class LoginController {
             return "redirect:/login";
         }else {
             String rol = usuario.getRol().getTipo();
-
+            // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+            usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+            usuarioRepository.save(usuario);
             session.setAttribute("usuario", usuario);
 
 

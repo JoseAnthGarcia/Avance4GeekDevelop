@@ -13,7 +13,7 @@ public class RestauranteClienteImpl2 implements RestauranteClienteService2{
     RestauranteRepository restauranteRepository;
 
     @Override
-    public Page<RestauranteDTO> listaRestaurantePaginada2(String texto, Integer limitInfP, Integer limitSupP, Integer limitInfVal, Integer limitSupVal, String id1, String id2, String id3, Integer iddistrito, Pageable pageable) {
-        return restauranteRepository.listaRestaurante2(texto,limitInfP,limitSupP,limitInfVal,limitSupVal,id1,id2,id3,iddistrito, pageable);
+    public Page<RestauranteDTO> listaRestaurantePaginada2(Integer limitInfP, Integer limitSupP, Integer limitInfVal, Integer limitSupVal, String texto, String id1, String id2, String id3, Integer iddistrito, Pageable pageable) {
+        return restauranteRepository.listaRestaurante2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistrito, pageable);
     }
 }

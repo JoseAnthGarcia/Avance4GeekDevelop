@@ -21,7 +21,7 @@ public class Plato implements Serializable {
     private String nombre;
     @Column(name="descripcion", nullable = false)
     @NotBlank(message = "Este campo es obligatorio")
-    @Size(max=100, message = "Maximo 100 caracteres")
+    @Size(max=150, min=50, message = "Debe ingresar como mínimo 50 caracteres y como máximo 150 caracteres")
     private String descripcion;
     @Column(name="precio", nullable = false)
     @Positive(message = "Ingrese una cantidad positiva")

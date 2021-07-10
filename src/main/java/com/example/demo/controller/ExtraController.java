@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.ExtraDTO;
-import com.example.demo.dtos.NotifiRestDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.service.ExtraService;
@@ -58,6 +57,14 @@ public class ExtraController {
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         return "AdminRestaurante/extras";
     }
 
@@ -68,6 +75,14 @@ public class ExtraController {
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         int idcategoria;
         if (id == null) {
             return "redirect:/extra/categoria";
@@ -100,6 +115,14 @@ public class ExtraController {
                     Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
                     List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
                     model.addAttribute("listaNotiRest", listaNotificacion);
+                    List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+                    List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+                    List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+                    List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+                    model.addAttribute("credencial1", credencialRest1DTOS);
+                    model.addAttribute("platoMasVendido", platoTOP);
+                    model.addAttribute("platoMenosVendido", platoDOWN);
+                    model.addAttribute("pedidosCredenciales",pedidosDTOList);
                     int idrestaurante = restaurante.getIdrestaurante();
                     System.out.println(idcat);
                     System.out.println(pageNo1);
@@ -116,7 +139,7 @@ public class ExtraController {
                         pageNo = 1;
                     }
                     int inputID = 1;
-                    int pageSize = 5;
+                    int pageSize = 10;
                     Page<Extra> page;
                     List<Extra> listaExtras;
                     System.out.println(textBuscador);
@@ -180,6 +203,14 @@ public class ExtraController {
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         model.addAttribute("idcategoria", id);
         return "AdminRestaurante/nuevoExtra";
     }
@@ -194,20 +225,15 @@ public class ExtraController {
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
         int idrestaurante = restaurante.getIdrestaurante();
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaa " + idc);
-        System.out.println("id categoriaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " + idc);
 
         String fileName = "";
         boolean validarFoto = true;
@@ -311,22 +337,40 @@ public class ExtraController {
     }
 
     @GetMapping("/editar")
-    public String editarExtra(@RequestParam("id") int id,
+    public String editarExtra(@RequestParam("id") String id,
                               Model model,
-                              @ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int idc, HttpSession session) {
-        Optional<Extra> extraOptional = extraRepository.findById(id);
+                              @ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") String idc, HttpSession session) {
+
+
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idadmin = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        model.addAttribute("idcategoria", idc);
-        if (extraOptional.isPresent()) {
-            extra = extraOptional.get();
-            model.addAttribute("extra", extra);
-            return "AdminRestaurante/nuevoExtra";
-        } else {
-            return "redirect:/extra/lista";
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        int idextra;
+        try {
+            idextra=Integer.parseInt(id);
+            model.addAttribute("idcategoria", idc);
+            Optional<Extra> extraOptional = extraRepository.findById(idextra);
+            Extra extra2=extraRepository.findByIdextraAndIdrestauranteAndIdcategoriaextra(idextra,restaurante.getIdrestaurante(),Integer.parseInt(idc));
+            if (extraOptional.isPresent() && extra2!=null) {
+                extra = extraOptional.get();
+                model.addAttribute("extra", extra);
+                return "AdminRestaurante/nuevoExtra";
+            } else {
+                return "redirect:/extra/lista?idcategoria="+idc;
+            }
+        }catch(NumberFormatException e){
+            System.out.println("Falló");
+            return "redirect:/extra/lista?idcategoria="+idc;
         }
     }
 

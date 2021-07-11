@@ -99,11 +99,17 @@ public class AdminController  {
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         model.addAttribute("notificaciones", usuarioRepository.notificacionCliente(usuario1.getIdusuario()));
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         return "AdminGen/listaReportes";
     }
 
     @GetMapping("tipoSolicitud")
-    public String tipoSolicitud(){
+    public String tipoSolicitud(Model model){
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/tipoSolicitudes";
     }
 
@@ -133,6 +139,10 @@ public class AdminController  {
         //-------
         Integer fechaRegistro = 1;
         model.addAttribute("listaTipoMovilidad", tipoMovilidadRepository.findAll());
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         switch (tipo){
             case "restaurante":
                 Page<Restaurante> pagina2;
@@ -384,6 +394,8 @@ public class AdminController  {
     public String detalleRestSoli(@RequestParam("idRest") int idRest,
                                    Model model){
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         if (restauranteOpt.isPresent()) {
             Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("restaurante", restaurante);
@@ -441,7 +453,7 @@ public class AdminController  {
                                     RedirectAttributes attr) throws MessagingException {
 
         if(id == null){
-            return ""; //Retornar pagina principal
+            return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
@@ -472,6 +484,8 @@ public class AdminController  {
     public String detalleAdminSOli(@RequestParam("idUsuario") int idUsuario,
                                    Model model){
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
@@ -622,6 +636,9 @@ public class AdminController  {
         }
 
 // TODO: 27/06/2021
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         model.addAttribute("estadoBuscador",estadoBuscador);
 
 
@@ -727,6 +744,10 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         return "AdminGen/lista";
     }
 
@@ -926,6 +947,9 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/reportePedidoCliente";
     }
     @GetMapping(value ="/reporteClientesPedidoPagina")//lista de reporte de cliente pedido Pagina
@@ -1073,6 +1097,9 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/reportePedidoCliente";
     }
 
@@ -1194,6 +1221,9 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/reporteUsuarios";
     }
 
@@ -1288,6 +1318,9 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/reporteUsuarios";
     }
 
@@ -1488,6 +1521,10 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         return "AdminGen/reportePedidoRepartidor";
     }
     @GetMapping(value ="/reporteRepartidorPedidoPagina")//lista de reporte de Repartidor pedido
@@ -1651,6 +1688,10 @@ public class AdminController  {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021
@@ -1852,6 +1893,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     model.addAttribute("next", page + 2);
     model.addAttribute("prev", page);
     model.addAttribute("last", totalPage);
+
+    List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+    model.addAttribute("notificaciones", notificaciones);
     return "AdminGen/reporteVentas";
 }
     @GetMapping(value ="/ReporteVentasPagina")//lista de reporte de Repartidor pedido
@@ -2019,6 +2063,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         return "AdminGen/reporteVentas";
     }
 
@@ -2034,6 +2081,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         model.addAttribute("fechaBuscador", fechaRegsitro);
         model.addAttribute("rolBuscador", idRol);
         model.addAttribute("estadoBuscador", estado);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
 
         //si es nulo se manda la fecha minima de la lista de USUARIOS
         if(fechaRegsitro==null){
@@ -2063,6 +2113,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         model.addAttribute("fechaBuscador", fechaRegsitro);
         model.addAttribute("rolBuscador", idRol);
         model.addAttribute("estadoBuscador", estado);
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
 
         //si es nulo se manda la fecha minima de la lista de USUARIOS
         if(fechaRegsitro==null){
@@ -2097,6 +2150,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         model.addAttribute("valoracionBuscador", valoracion);
         model.addAttribute("idUsuario", idUsuario);
 
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
+
         if(fechaPedido == null){
             fechaPedido = usuarioRepository.buscarFechaMinimaRepartidor();
         }
@@ -2108,6 +2164,9 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     @GetMapping("/detalle")
     public String detalleUsuario(@RequestParam("idUsuario") String idUsuario,
                                  Model model) {
+
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         try{
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(idUsuario));
             double totalIngresos = 0.0;
@@ -2257,7 +2316,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     public String crearAdministrador(@ModelAttribute("usuario") Usuario usuario,HttpSession httpSession,Model model) {
 
         Usuario usuario2 = (Usuario) httpSession.getAttribute("usuario");
-
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         if (usuario2.getRol().getIdrol()!=2){
            model.addAttribute("listaUsuarios", usuarioRepository.findAll());
             return "redirect:/admin/usuarios";
@@ -2275,6 +2335,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     @GetMapping("/editarPerfil")
     public String editarAdministrador(HttpSession httpSession, Model model) {
 
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
 
@@ -2285,10 +2347,12 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
     @PostMapping("/guardar")
     public String guardarAdmin(@ModelAttribute("usuario") @Valid Usuario usuario,
-                               BindingResult bindingResult, RedirectAttributes attr) throws MessagingException {
+                               BindingResult bindingResult, RedirectAttributes attr, Model model) throws MessagingException {
 
         // TODO: 8/05/2021 Falta validar que no se repita el correo y dni
         if(bindingResult.hasErrors()){
+            List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+            model.addAttribute("notificaciones", notificaciones);
             return "AdminGen/crearAdmin";
         }else {
 
@@ -2356,6 +2420,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             bindingResult2.rejectValue("telefono", "error.Usuario", "El telefono ingresado ya se encuentra en la base de datos");
         }
 
+        List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
+        model.addAttribute("notificaciones", notificaciones);
 
         Boolean fecha_naci = true;
         Boolean validarFoto = true;

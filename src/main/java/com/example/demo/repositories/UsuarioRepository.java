@@ -35,6 +35,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Usuario findByCorreo(String email);
     Usuario findByCorreoAndEstado(String correo, int estado);
 
+    List<Usuario> findByEstadoOrderByFecharegistroAsc(int estado);
+
     Page<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol, Pageable pageable);
 
     //List<Usuario> findEmployeesByEmailAndEmployeeIdNot(String email,int id);

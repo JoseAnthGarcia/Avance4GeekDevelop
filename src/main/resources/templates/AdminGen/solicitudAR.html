@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
+
 <head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes AR')"></head>
 
 <body id="page-top">
@@ -189,15 +191,15 @@
                                     </tbody>
                                 </table>
 
-                                <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
+                                <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/admin/solicitudes?tipo=adminRest&numPag=' + ${i}}"
                                            th:utext="${i}"
-                                           class="active mt-2 no "></a>
+                                           class="active page-link"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+                                           th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
 
                                     </div>
                                 </div>

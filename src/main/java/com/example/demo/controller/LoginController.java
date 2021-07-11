@@ -58,6 +58,10 @@ import java.util.regex.Pattern;
 @Controller
 
 public class LoginController {
+
+    public String ip = "localhost";
+    public String puerto = "8080";
+
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
@@ -190,7 +194,7 @@ public class LoginController {
         Usuario usuario = null;
         if (rol.equals("ROLE_USER")) {
             //TODO: PODER FINDBYCORREOANDVALIDCORREO
-            usuario = clienteRepository.findByCorreo(correo);
+            usuario = clienteRepository.findByCorreoAndEstado(correo, 1);
             if (usuario == null) {
                 try {
                     httpServletRequest.logout();
@@ -1390,7 +1394,8 @@ public class LoginController {
 
     @GetMapping("/validarCuenta")
     public String validarCuenta(@RequestParam(value = "correo", required = false) String correo,
-                                @RequestParam(value = "value", required = false) String codigoHash){
+                                @RequestParam(value = "value", required = false) String codigoHash,
+                                Model model){
         if(correo != null && codigoHash!=null){
             Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, codigoHash);
             if(validarcorreo!= null){
@@ -1398,6 +1403,7 @@ public class LoginController {
                 Usuario usuario = usuarioRepository.findByCorreo(correo);
                 usuario.setEstado(2);
                 usuarioRepository.save(usuario);
+                model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";
             }else{
                 return "redirect:/cliente/login";
@@ -1422,12 +1428,11 @@ public class LoginController {
         validarcorreo.setHash(codigoHash);
         validarCorreoRepository.save(validarcorreo);
 
-        //genero url:
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String url = "http://localhost:8080/foodDelivery/validarCuenta?correo="
+        String url = "http://"+ip+":"+puerto+"/foodDelivery/validarCuenta?correo="
                 +correo+"&value="+codigoHash;
         String content = "Su cuenta ha sido creada exitosamente."+
-                "Para validar su correo electronico ingrese al siguiente link:\n" + url;
+                "Debe validar su correo para empezar a usar su cuenta.\n"
+                +"Para validar su correo electrónico ingrese al siguiente link:\n" + url;
         String subject = "Bienvenido a Food Delivery!";
         sendEmail(correo, subject, content);
     }

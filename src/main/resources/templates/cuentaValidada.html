@@ -40,9 +40,10 @@
 
                     <div class="card-body" style="text-align: center">
                         <h1 style="color: #FFFFFF; font-size: 110%; text-align: center" class="text-sm-center"
-                            >
-                            PruebaTexto
+                            th:if="${rol == 3 || rol == 4}">
+                            Los administradores están evaluando su cuenta.
                         </h1>
+                        <a th:href="@{/login}">Entendido</a>
                         </div>
                     <a class="btn-success" type="bu"></a>
                     <div class="card-body"></div>

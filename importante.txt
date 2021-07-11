@@ -36,6 +36,13 @@ Correo:
     rubi.flores23@gmail.com
     rubiFlores23
 
+Roles:
+1 - cliente
+2 - adminGenera
+3 - adminRest
+4 - repartidor
+5 - adminitrador
+
 Pedido:
 0 - Pendiente - verde limon pastel
 1 - Aceptado - azul pastel

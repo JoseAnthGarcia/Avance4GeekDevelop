@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
 <head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reporte de deliverys')"></head>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
@@ -234,17 +234,17 @@
                         </div>
                         <!--Pagination -->
 
-                        <div th:if="${totalPages >= 1}" class="pagination text-center">
-                            <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                        <div th:if="${totalPages >= 1}" class="pagination justify-content-center">
+                            <div th:each="i: ${#numbers.sequence(1,totalPages)}" class="page-item">
 
                                 <a th:if="${pag != i}"
                                    th:href="@{'/repartidor/reporteDelivery?nombreRest='+${nombreRest}
                                     + '&idDistrito='+ ${idDistrito}+ '&fechaMin='+ ${fechaMin}+ '&fechaMax='+ ${fechaMax}
                                     + '&monto='+ ${monto} + '&valoracion='+ ${valoracion}+'&pag=' + ${i}} "
                                    th:utext="${i}"
-                                   class="active mt-2 no"></a>
+                                   class="active page-link "></a>
                                 <a th:unless="${pag != i}"
-                                   th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+                                   th:utext="${i}" class=" page-link " style="pointer-events: none ;background-color: #701111; color: #FFFFFF"></a>
                             </div>
                         </div>
                         <!-- End of pagination -->

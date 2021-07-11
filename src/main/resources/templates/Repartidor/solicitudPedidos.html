@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
 
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
 <head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Solicitudes pedidos')"></head>
 
 <body id="page-top">
@@ -80,7 +80,7 @@
                                 <tbody>
 
                                 <tr th:each="pedido, i : ${listaPedidos}">
-                                    <th scope="row" th:text="${i.index+1}" >1</th>
+                                    <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}" >1</th>
                                     <td >
                                         <a th:href="@{'/repartidor/listaPedidos?numPag=' + ${currentPage}+'&idPedido='+${pedido.codigo}}"
                                            th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}" class="btn">
@@ -105,15 +105,15 @@
                                 <h3 class="text-lg-center text-danger">No tiene solicitudes de reparto.</h3>
                             </div>
                             <!--Pagination -->
-                            <div th:if="${ totalPages >= 1}" class="pagination text-center ml-3 mx-auto">
-                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                            <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
+                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" class="page-item">
 
                                     <a th:if="${currentPage != i}"
                                        th:href="@{'/repartidor/listaPedidos?numPag=' + ${i}}"
                                        th:utext="${i}"
-                                       class="active mt-2 no "></a>
+                                       class="active page-link "  ></a>
                                     <a th:unless="${currentPage != i}"
-                                       th:utext="${i}" class="text-white " style="pointer-events: none"></a>
+                                       th:utext="${i}" class=" page-link "  style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
 
                                 </div>
                             </div>

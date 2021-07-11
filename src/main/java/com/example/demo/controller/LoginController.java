@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
 
 public class LoginController {
 
-    public String ip = "localhost";
+    public String ip = "54.175.37.128.nip.io";
     public String puerto = "8080";
 
     @Autowired
@@ -646,7 +646,7 @@ public class LoginController {
                     //genero url:
                     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                     String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
-                    String url = "http://18.206.225.27:8080/foodDelivery/cambioContra?id=" + urlPart;
+                    String url = "http://"+ip+":"+puerto+"/foodDelivery/cambioContra?id=" + urlPart;
                     String content = "Para cambio de contraseña:\n" + url;
                     String subject = "OLVIDE MI CONTRASEÑA";
                     sendEmail(correo, subject, content);

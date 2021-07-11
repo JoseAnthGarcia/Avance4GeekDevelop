@@ -82,8 +82,8 @@
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}" >1</th>
                                     <td >
-                                        <a th:href="@{'/repartidor/listaPedidos?numPag=' + ${currentPage}+'&idPedido='+${pedido.codigo}}" th:text="${pedido.restaurante.nombre}" class="btn">
-
+                                        <a th:href="@{'/repartidor/listaPedidos?numPag=' + ${currentPage}+'&idPedido='+${pedido.codigo}}"
+                                           th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}" class="btn">
                                         </a>
                                         </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>

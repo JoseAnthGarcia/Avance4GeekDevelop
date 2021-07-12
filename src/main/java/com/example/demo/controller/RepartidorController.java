@@ -420,6 +420,205 @@ public class RepartidorController {
         return "Repartidor/reporteIngresos";
     }
 
+    @GetMapping("/reporteDelivery2")
+    public String repoteDelivery2(HttpSession session, Model model,
+                                  @RequestParam(value = "nombreRest", required = false) String nombreRest,
+                                  @RequestParam(value = "idDistrito", required = false) String idDistrito,
+                                  @RequestParam(value = "fechaMin", required = false) String fechaMin,
+                                  @RequestParam(value = "fechaMax", required = false) String fechaMax,
+                                  @RequestParam(value = "monto", required = false) String monto,
+                                  @RequestParam(value = "valoracion", required = false) String valoracion,
+                                  @RequestParam(value = "pag", required = false) String pag) {
+
+        int tamPag = 5;
+        int numeroPag = -1;
+        if (pag == null) {
+            numeroPag = 1;
+        } else {
+            try {
+                numeroPag = Integer.parseInt(pag);
+            } catch (NumberFormatException e) {
+                numeroPag = 1;
+            }
+        }
+        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
+
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
+
+        //idDistrito valoracion nombreRest fechaMin fechaMax monto
+        //idDistrito, monto, valoracion
+        Page<Pedido> pagina;
+        if (nombreRest == null && fechaMin == null && fechaMax == null &&
+                monto == null && valoracion == null && idDistrito == null) {
+            pagina = pedidoRepository.findByEstadoAndRepartidor(6, repartidor, pageable);
+        } else {
+            ////########
+            //TODO: validar fechas:
+            if (fechaMax.equals("") || fechaMin.equals("") || fechaMax == null || fechaMin == null) {
+                fechaMin = "1900-01-01";
+                fechaMax = "3000-01-01";
+            }
+
+
+            //String fechaInicio = fechaMin; //fecha de ejemplo
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+
+
+            try {
+                Date fechaInicio = date.parse(fechaMin);
+                Date fechaFinal = date.parse(fechaMax);
+                if (fechaInicio.after(fechaFinal)) {
+                    System.out.println("Fecha inicio mayor");
+                    fechaMin = "1900-01-01";
+                    fechaMax = "3000-01-01";
+                }
+            } catch (ParseException e) {
+                fechaMin = "1900-01-01";
+                fechaMax = "3000-01-01";
+            }
+
+            ////########
+
+            double precioMin = -1.0;
+            double precioMax = -1.0;
+            if (monto == null) {
+                precioMin = 0.0;
+                precioMax = 9999.0;
+            } else {
+                try {
+                    int montoInt = Integer.parseInt(monto);
+                    switch (montoInt) {
+                        case 1:
+                            precioMin = 0.0;
+                            precioMax = 20.0;
+                            break;
+                        case 2:
+                            precioMin = 20.0;
+                            precioMax = 40.0;
+                            break;
+                        case 3:
+                            precioMin = 40.0;
+                            precioMax = 60.0;
+                            break;
+                        case 4:
+                            precioMin = 60.0;
+                            precioMax = 9999.0;
+                            break;
+                        default:
+                            precioMin = 0.0;
+                            precioMax = 9999.0;
+                    }
+                } catch (NumberFormatException e) {
+                    precioMin = 0.0;
+                    precioMax = 9999.0;
+                }
+            }
+
+
+            int valoracionMin = -1;
+            int valoracionMax = -1;
+            int valoracionInt = -1;
+            if (valoracion != null) {
+                try {
+                    valoracionInt = Integer.parseInt(valoracion);
+                    switch (valoracionInt) {
+                        case 1:
+                            valoracionMin = 0;
+                            valoracionMax = 2;
+                            break;
+                        case 2:
+                            valoracionMin = 3;
+                            valoracionMax = 5;
+                            break;
+                        case 3:
+                            valoracionMin = -1;
+                            valoracionMax = -1;
+                            break;
+                        default:
+                            valoracion = null;
+                    }
+                } catch (NumberFormatException e) {
+                    valoracion = null;
+                }
+            }
+
+            int idDis = -1;
+            Distrito distrito = null;
+            try {
+                idDis = Integer.parseInt(idDistrito);
+                Optional<Distrito> distritoOpt = distritosRepository.findById(idDis);
+                if (distritoOpt.isPresent()) {
+                    distrito = distritoOpt.get();
+                } else {
+                    idDistrito = null;
+                }
+            } catch (NumberFormatException e) {
+                idDistrito = null;
+            }
+
+            if(nombreRest==null){
+                nombreRest="";
+            }
+
+            if (idDistrito == null && valoracion == null) {
+                //idDistrito valoracion nombreRest fechaMin fechaMax monto
+                pagina = pedidoRepository.findByEstadoAndRepartidorAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                        (6, repartidor, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+
+            } else if (idDistrito == null && valoracion != null) {
+                if (valoracionInt == 3) {
+                    pagina = pedidoRepository.findByEstadoAndRepartidorAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                            (6, repartidor, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+                } else {
+                    pagina = pedidoRepository.findByEstadoAndRepartidorAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                            (6, repartidor, valoracionMin, valoracionMax, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+                }
+            } else {
+                if (valoracion == null) {
+                    //idDistrito!=null && valoracion==null
+                    pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                            (6, repartidor, distrito,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+
+                } else {
+                    //idDistrito!=null && valoracion!=null
+                    if (valoracionInt == 3) {
+                        pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                        (6, repartidor,distrito,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+                    } else {
+                        pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
+                        (6, repartidor,distrito, valoracionMin, valoracionMax ,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
+                    }
+                }
+            }
+
+            if(nombreRest.equals("")){
+                nombreRest=null;
+            }
+        }
+        model.addAttribute("listaPedidoReporte", pagina.getContent());
+
+        //Busque:
+        model.addAttribute("nombreRest", nombreRest);
+        model.addAttribute("fechaMin", fechaMin);
+        model.addAttribute("fechaMax", fechaMax);
+        model.addAttribute("idDistrito", idDistrito);
+        model.addAttribute("monto", monto);
+        model.addAttribute("valoracion", valoracion);
+        model.addAttribute("totalPages", pagina.getTotalPages());
+        model.addAttribute("pag", numeroPag);
+        model.addAttribute("tamPag", tamPag);
+
+        List<Distrito> listaDistritos = distritosRepository.findAll();
+        Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
+        List<Pedido> notificaciones = pedidoRepository.findByEstadoAndUbicacion_Distrito(4, ubicacionActual.getDistrito());
+        model.addAttribute("notificaciones", notificaciones);
+        model.addAttribute("distritos", listaDistritos);
+
+
+        return "Repartidor/reporteDeliveries2";
+    }
+
+     /*
     @GetMapping("/reporteDelivery")
     public String repoteDelivery(HttpSession session, Model model,
                                  @RequestParam(value = "nombreRest", required = false) String nombreRest,
@@ -583,151 +782,5 @@ public class RepartidorController {
 
         return "Repartidor/reporteDeliverys";
 
-    }
-
-
-    @GetMapping("/reporteDelivery2")
-    public String repoteDelivery2(HttpSession session, Model model,
-                                  @RequestParam(value = "nombreRest", required = false) String nombreRest,
-                                  @RequestParam(value = "idDistrito", required = false) String idDistrito,
-                                  @RequestParam(value = "fechaMin", required = false) String fechaMin,
-                                  @RequestParam(value = "fechaMax", required = false) String fechaMax,
-                                  @RequestParam(value = "monto", required = false) String monto,
-                                  @RequestParam(value = "valoracion", required = false) String valoracion,
-                                  @RequestParam(value = "pag", required = false) String pag) {
-
-        int tamPag = 3;
-        int numeroPag = -1;
-        if (pag == null) {
-            numeroPag = 1;
-        } else {
-            try {
-                numeroPag = Integer.parseInt(pag);
-            } catch (NumberFormatException e) {
-                numeroPag = 1;
-            }
-        }
-        Pageable pageable = PageRequest.of(numeroPag - 1, tamPag);
-
-        Usuario repartidor = (Usuario) session.getAttribute("usuario");
-
-        //idDistrito valoracion nombreRest fechaMin fechaMax monto
-        //idDistrito, monto, valoracion
-        Page<Pedido> pagina;
-        if (nombreRest == null && fechaMin == null && fechaMax == null &&
-                monto == null && valoracion == null && idDistrito == null) {
-            pagina = pedidoRepository.findByEstadoAndRepartidor(6, repartidor, pageable);
-        } else {
-
-            double precioMin = -1.0;
-            double precioMax = -1.0;
-            if (monto == null) {
-                precioMin = 0.0;
-                precioMax = 9999.0;
-            } else {
-                try {
-                    int montoInt = Integer.parseInt(monto);
-                    switch (montoInt) {
-                        case 1:
-                            precioMin = 0.0;
-                            precioMax = 20.0;
-                            break;
-                        case 2:
-                            precioMin = 20.0;
-                            precioMax = 40.0;
-                            break;
-                        case 3:
-                            precioMin = 40.0;
-                            precioMax = 60.0;
-                            break;
-                        case 4:
-                            precioMin = 60.0;
-                            precioMax = 9999.0;
-                            break;
-                        default:
-                            precioMin = 0.0;
-                            precioMax = 9999.0;
-                    }
-                } catch (NumberFormatException e) {
-                    precioMin = 0.0;
-                    precioMax = 9999.0;
-                }
-            }
-
-
-            int valoracionMin = -1;
-            int valoracionMax = -1;
-            int valoracionInt = -1;
-            if (valoracion != null) {
-                try {
-                    valoracionInt = Integer.parseInt(valoracion);
-                    switch (valoracionInt) {
-                        case 1:
-                            valoracionMin = 0;
-                            valoracionMax = 2;
-                            break;
-                        case 2:
-                            valoracionMin = 3;
-                            valoracionMax = 5;
-                            break;
-                        case 3:
-                            valoracionMin = -1;
-                            valoracionMax = -1;
-                        default:
-                            valoracion = null;
-                    }
-                } catch (NumberFormatException e) {
-                    valoracion = null;
-                }
-            }
-
-            int idDis = -1;
-            Distrito distrito = null;
-            try {
-                idDis = Integer.parseInt(idDistrito);
-                Optional<Distrito> distritoOpt = distritosRepository.findById(idDis);
-                if (distritoOpt.isPresent()) {
-                    distrito = distritoOpt.get();
-                } else {
-                    idDistrito = null;
-                }
-            } catch (NumberFormatException e) {
-                idDistrito = null;
-            }
-
-            if (idDistrito == null && valoracion == null) {
-                //idDistrito valoracion nombreRest fechaMin fechaMax monto
-                pagina = pedidoRepository.findByEstadoAndRepartidorAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                        (6, repartidor, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-
-            } else if (idDistrito == null && valoracion != null) {
-                if (valoracionInt == 3) {
-                    pagina = pedidoRepository.findByEstadoAndRepartidorAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                            (6, repartidor, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-                } else {
-                    pagina = pedidoRepository.findByEstadoAndRepartidorAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                            (6, repartidor, valoracionMin, valoracionMax, nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-                }
-            } else {
-                if (valoracion == null) {
-                    //idDistrito!=null && valoracion==null
-                    pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                            (6, repartidor, distrito,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-
-                } else {
-                    //idDistrito!=null && valoracion!=null
-                    if (valoracionInt == 3) {
-                        pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                        (6, repartidor,distrito,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-                    } else {
-                        pagina = pedidoRepository.findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween
-                        (6, repartidor,distrito, valoracionMin, valoracionMax ,nombreRest, fechaMin, fechaMax, precioMin, precioMax, pageable);
-                    }
-                }
-            }
-        }
-
-
-        return "Repartidor/reporteDeliverys";
-    }
+    }*/
 }

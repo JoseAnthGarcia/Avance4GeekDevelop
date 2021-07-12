@@ -190,7 +190,9 @@
                                     </tr>
                                     </tbody>
                                 </table>
-
+                                <div th:if="${listaAdminRestSolicitudes.size()==0}">
+                                    <h3 class="text-lg-center text-danger">No tiene solicitudes de administradores de restaurante.</h3>
+                                </div>
                                 <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
 

@@ -134,7 +134,7 @@ public class AdminController  {
             numPag= 1;
         }
 
-        int tamPag = 3;
+        int tamPag = 5;
 
         //-------
         Integer fechaRegistro = 1;
@@ -169,7 +169,6 @@ public class AdminController  {
                         }
                     }
 
-                    System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
 
                     pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro*-1);
                 }
@@ -288,7 +287,7 @@ public class AdminController  {
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
                 return "AdminGen/solicitudRepartidor";
             default:
-                return "";
+                return  "redirect:/admin/tipoSolicitud";
                 //mandar a la vista principal
         }
     }

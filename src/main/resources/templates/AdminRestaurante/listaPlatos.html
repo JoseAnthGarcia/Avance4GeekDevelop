@@ -274,13 +274,13 @@
                                 <div th:if="${totalItems==0 && (texto.isEmpty() && textoP.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay platos registrados.</h3>
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center justify-content-center">
+                                    <div class="page-item" th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2 no"></a>
+                                           class="active"></a>
                                         <a th:unless="${currentPage != i}"
                                            th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 

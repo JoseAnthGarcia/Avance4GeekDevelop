@@ -1399,7 +1399,7 @@ public class LoginController {
         if(correo != null && codigoHash!=null){
             Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, codigoHash);
             if(validarcorreo!= null){
-                validarCorreoRepository.delete(validarcorreo);
+//                validarCorreoRepository.delete(validarcorreo);
                 Usuario usuario = usuarioRepository.findByCorreo(correo);
                 usuario.setEstado(2);
                 usuarioRepository.save(usuario);

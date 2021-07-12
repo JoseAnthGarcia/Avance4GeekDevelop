@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Formatter;
+import java.util.List;
 
 @Entity
 @Table(name = "pedido")
@@ -62,6 +63,12 @@ public class Pedido implements Serializable {
 
     @Column(nullable = true)
     private Float cantidadapagar;
+
+    @ManyToMany
+    @JoinTable(name="plato_has_pedido",
+            joinColumns = @JoinColumn(name = "codigo"),
+            inverseJoinColumns = @JoinColumn(name="idplato"))
+    private List<Plato> listaPlatos;
 
     public Float getCantidadapagar() {
         return cantidadapagar;
@@ -211,5 +218,13 @@ public class Pedido implements Serializable {
 
     public void setComentrechazorest(String comentrechazorest) {
         this.comentrechazorest = comentrechazorest;
+    }
+
+    public List<Plato> getListaPlatos() {
+        return listaPlatos;
+    }
+
+    public void setListaPlatos(List<Plato> listaPlatos) {
+        this.listaPlatos = listaPlatos;
     }
 }

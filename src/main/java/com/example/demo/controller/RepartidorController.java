@@ -39,6 +39,8 @@ import java.util.*;
 public class RepartidorController {
 
     @Autowired
+    PlatoHasPedidoRepository platoHasPedidoRepository;
+    @Autowired
     TipoMovilidadRepository tipoMovilidadRepository;
 
     @Autowired
@@ -86,6 +88,7 @@ public class RepartidorController {
     public String verListaPedidos(Model model, HttpSession session,
                                   @RequestParam(value = "idPedido", required = false) String codigoPedido,
                                   @RequestParam(value = "numPag", required = false) Integer numPag,
+                                  @RequestParam(value = "codigoMostrar", required = false) String codigoMostrar,
                                   RedirectAttributes attr) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
@@ -102,7 +105,6 @@ public class RepartidorController {
 
             pagina = pedidoRepartidorService.pedidosPaginacion(numPag, tamPag, session);
             List<Pedido> pedidos = pagina.getContent();
-
 
             if (pedidos.size() != 0) {
                 if (codigoPedido == null) {
@@ -132,7 +134,13 @@ public class RepartidorController {
             model.addAttribute("direcciones", direcciones);
             model.addAttribute("listaPedidos", pedidos);
             model.addAttribute("listaDistritos", listaDistritos);
-            return "Repartidor/solicitudPedidos";
+
+            if(codigoMostrar!=null){
+                model.addAttribute("codigoMostrar", codigoMostrar);
+            }
+
+            //return "Repartidor/solicitudPedidos";
+            return "Repartidor/solicitudPedidos2";
         } else {
             attr.addFlashAttribute("msg", "Debes culminar tu entrega para poder visualizar otras solicitudes de reparto.");
             return "redirect:/repartidor/pedidoActual";
@@ -445,6 +453,7 @@ public class RepartidorController {
 
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
 
+        //idDistrito valoracion nombreRest fechaMin fechaMax monto
         //idDistrito valoracion nombreRest fechaMin fechaMax monto
         //idDistrito, monto, valoracion
         Page<Pedido> pagina;

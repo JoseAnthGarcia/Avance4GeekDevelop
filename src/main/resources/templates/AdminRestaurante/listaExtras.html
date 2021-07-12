@@ -274,12 +274,12 @@
                                 <div th:if="${totalItems==0 && (texto.isEmpty() && textoP.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay extras registrados.</h3>
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination text-center">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center justify-content-center">
                                     <div th:each="i: ${#numbers.sequence(1,totalPages)}">
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/extra/page?idcategoria=' + ${idcategoria} +'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2"></a>
+                                           class="active"></a>
                                         <a th:unless="${currentPage != i}"
                                            th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 

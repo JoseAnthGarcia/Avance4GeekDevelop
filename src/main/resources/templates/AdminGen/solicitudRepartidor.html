@@ -204,9 +204,9 @@
             <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
                 <a th:if="${currentPage != i}"
                    th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
-                   +'&nombreUsuario=' +${nombreUsuario1==null?'':nombreUsuario1}
-                   + '&tipoMovilidad='+${tipoMovilidad1==null?'':tipoMovilidad1}
-                   + '&fechaRegistro=' +${fechaRegistro1==null?'':fechaRegistro1}}"
+                   +${(nombreUsuario1==null || nombreUsuario1.equals(''))?'':'&nombreUsuario='+nombreUsuario1}
+                   +${tipoMovilidad1==null?'':'&tipoMovilidad='+tipoMovilidad1}
+                   +${fechaRegistro1==null?'':'&fechaRegistro=' +fechaRegistro1}}"
                    th:utext="${i}"
                    class="active page-link"></a>
                 <a th:unless="${currentPage != i}"

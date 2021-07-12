@@ -1132,7 +1132,8 @@ public class LoginController {
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
-                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos) {
+                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos,
+                                    RedirectAttributes redAt) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
         String correo = usuario.getCorreo();
@@ -1385,9 +1386,10 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            enviarCorreoValidacion(usuario.getCorreo());
+            //enviarCorreoValidacion(usuario.getCorreo());
+            redAt.addFlashAttribute("usuarioCreado", true);
 
-            return "redirect:/cliente/login";
+            return "redirect:/login";
         }
 
     }

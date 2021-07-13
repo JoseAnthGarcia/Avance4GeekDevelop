@@ -65,6 +65,15 @@
                   <div class="alert alert-success" role="alert" th:if="${usuarioCreado!=null}">
                     Su registro fue exitoso. Proceda a confirmar su correo electronico.
                   </div>
+                  <div class="alert alert-danger" role="alert" th:if="${urlInvalido!=null}">
+                    Enlace no valido.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${contraseniaAct!=null}">
+                    La contraseña fue actualizada.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${correoEnviado!=null}">
+                    Ingrese a su correo para cambiar su contraseña.
+                  </div>
                 </div>
                 <form class="user" th:action="@{/processLogin}" method="post" >
                   <div class="form-group">

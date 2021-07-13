@@ -204,7 +204,7 @@
                     <p class="card-text mt-0 mb-0">Platos:</p>
                     <p class="card-text mb-0" th:each="plato : ${pedido.listaPlatos}"
                        th:utext="'-'+${plato.nombre}"></p>
-                    <a class="btn btn-success " style="position: relative; left: 45%" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}">Aceptar pedido</a>
+                    <a class="btn btn-success " style="position: relative; left: 36%" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}">Aceptar pedido</a>
                 </div>
             </div>
 

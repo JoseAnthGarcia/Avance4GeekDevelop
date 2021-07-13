@@ -225,7 +225,7 @@
                   <td style="width: 250px" th:text="${pedido.restaurante.nombre}">La Leña</td>
                   <td style="width: 160px" th:text="${pedido.ubicacion.distrito.nombre}">La Molina</td>
                   <td style="width: 160px" th:text="${pedido.fechapedido}">04/02/2021</td>
-                  <td style="width: 160px" th:text="${pedido.preciototal}">S/. 32.0</td>
+                  <td style="width: 160px" th:text="|S/. ${pedido.preciototal}|">S/. 32.0</td>
                   <td style="width: 160px" th:text="${pedido.valoracionrepartidor==null?'-':pedido.valoracionrepartidor}">4.5</td>
                 </tr>
                 </tbody>

@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
+
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.dtos.ValidarDniDTO;
 import com.example.demo.entities.*;
@@ -43,8 +47,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +59,11 @@ import java.util.regex.Pattern;
 @Controller
 
 public class LoginController {
+
+    //public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
+    public String puerto = "8080";
+
     @Autowired
     CategoriasRestauranteRepository categoriasRestauranteRepository;
 
@@ -93,11 +105,14 @@ public class LoginController {
     @Autowired
     MovilidadRepository movilidadRepository;
 
+    @Autowired
+    ValidarCorreoRepository validarCorreoRepository;
+
     @GetMapping("/login")
     public String loginForm(Model model, HttpSession httpSession) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            if(httpSession.getAttribute("noExisteCuentaGoogle")!=null){
+            if (httpSession.getAttribute("noExisteCuentaGoogle") != null) {
                 model.addAttribute("noExisteCuentaGoogle", true);
                 httpSession.removeAttribute("noExisteCuentaGoogle");
             }
@@ -133,8 +148,8 @@ public class LoginController {
 
     @GetMapping("/accessDenied")
     public String acces() {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        String rol="";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String rol = "";
         for (GrantedAuthority role : authentication.getAuthorities()) {
             rol = role.getAuthority();
             break;
@@ -161,12 +176,16 @@ public class LoginController {
 
 
     }
-    
+
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
 
         String rol = "";
+
+        // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        //System.out.println("yyyy/MM/dd HH:mm:ss-> "+dtf.format(LocalDateTime.now()));
 
         for (GrantedAuthority role : auth.getAuthorities()) {
             rol = role.getAuthority();
@@ -175,33 +194,42 @@ public class LoginController {
 
         String correo = auth.getName();
         Usuario usuario = null;
-        if(rol.equals("ROLE_USER")){
+        if (rol.equals("ROLE_USER")) {
             //TODO: PODER FINDBYCORREOANDVALIDCORREO
-            usuario = clienteRepository.findByCorreo(correo);
-            if (usuario==null){
+            usuario = clienteRepository.findByCorreoAndEstado(correo, 1);
+            if (usuario == null) {
                 try {
                     httpServletRequest.logout();
                     session = httpServletRequest.getSession();
                     session.setAttribute("noExisteCuentaGoogle", true);
-                }catch(Exception e){}
-            }else{
+                } catch (Exception e) {
+                }
+            } else {
                 rol = usuario.getRol().getTipo();
 
                 //ELIMINO LA CREDENCIAL
                 try {
                     httpServletRequest.logout();
                     session = httpServletRequest.getSession();
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
 
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 authorities.add(new SimpleGrantedAuthority(rol));
-                Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
-                        BCryptPasswordEncoder().encode("password"),authorities);
+                Authentication reAuth = new UsernamePasswordAuthenticationToken("user", new
+                        BCryptPasswordEncoder().encode("password"), authorities);
                 SecurityContextHolder.getContext().setAuthentication(reAuth);
+                // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+                usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+                usuarioRepository.save(usuario);
                 session.setAttribute("usuario", usuario);
             }
-        }else{
+        } else {
             usuario = usuarioRepository.findByCorreo(correo);
+
+            // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+            usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+            usuarioRepository.save(usuario);
             session.setAttribute("usuario", usuario);
 
         }
@@ -210,7 +238,7 @@ public class LoginController {
         switch (rol) {
             case "cliente":
                 List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
-                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
+                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(), usuario.getDireccionactual());
                 session.setAttribute("poolDirecciones", listaDirecciones);
                 session.setAttribute("distritoActual", distritoActual);
 
@@ -226,7 +254,7 @@ public class LoginController {
                 } catch (NullPointerException e) {
                     System.out.println("Fallo");
                 }
-                if (restaurante == null || restaurante.getEstado() == 2|| restaurante.getEstado() == 3 ) {
+                if (restaurante == null || restaurante.getEstado() == 2 || restaurante.getEstado() == 3) {
                     return "redirect:/paginabienvenida";
                     //TODO: ojo ver restaurante
                     //return "redirect:/restaurante/paginabienvenida";
@@ -255,65 +283,69 @@ public class LoginController {
         authorities.add(new SimpleGrantedAuthority("USER"));
         authorities.add(new SimpleGrantedAuthority("ADMIN"));
 
-        Authentication reAuth = new UsernamePasswordAuthenticationToken("user",new
+        Authentication reAuth = new UsernamePasswordAuthenticationToken("user", new
 
-                BCryptPasswordEncoder().encode("password"),authorities);
+                BCryptPasswordEncoder().encode("password"), authorities);
 
         SecurityContextHolder.getContext().setAuthentication(reAuth);
     }
 
     @GetMapping("/redirectByRolGoogle")
-    public String redirectByRolGoogle(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest){
+    public String redirectByRolGoogle(Authentication auth, HttpSession session, HttpServletRequest httpServletRequest) {
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) auth.getPrincipal();
 
+        // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String correo = oAuth2User.getEmail();
         Usuario usuario = usuarioRepository.findByCorreo(correo);
 
-        if(usuario==null){
+        if (usuario == null) {
             try {
                 httpServletRequest.logout();
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
             return "redirect:/login";
-        }else {
+        } else {
             String rol = usuario.getRol().getTipo();
-
+            // TODO: 10/07/2021 Actualizacion de ultima fecha de ingreso
+            usuario.setUltimoingreso(dtf.format(LocalDateTime.now()));
+            usuarioRepository.save(usuario);
             session.setAttribute("usuario", usuario);
 
 
-        //redirect:
-        switch (rol) {
-            case "cliente":
-                List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
-                Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual());
-                session.setAttribute("poolDirecciones", listaDirecciones);
-                session.setAttribute("distritoActual", distritoActual);
-                return "redirect:/cliente/listaRestaurantes";
-            case "administradorG":
-                return "redirect:/admin/usuarios";
-            case "administrador":
-                return "redirect:/admin/usuarios";
-            case "administradorR":
-                Restaurante restaurante = null;
-                try {
-                    restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
-                } catch (NullPointerException e) {
-                    System.out.println("Fallo");
-                }
-                if (restaurante == null|| restaurante.getEstado()==2) {
-                    return "redirect:/paginabienvenida";
-                    //TODO: ojo ver restaurante
-                    //return "redirect:/restaurante/paginabienvenida";
-                } else if(restaurante.getEstado()==1){
-                    return "redirect:/plato/";
-                }
-            case "repartidor":
-                List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
-                session.setAttribute("poolDirecciones", listaDirecciones1);
-                session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
-                List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
+            //redirect:
+            switch (rol) {
+                case "cliente":
+                    List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
+                    Distrito distritoActual = distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(), usuario.getDireccionactual());
+                    session.setAttribute("poolDirecciones", listaDirecciones);
+                    session.setAttribute("distritoActual", distritoActual);
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    Restaurante restaurante = null;
+                    try {
+                        restaurante = restauranteRepository.encontrarRest(usuario.getIdusuario());
+                    } catch (NullPointerException e) {
+                        System.out.println("Fallo");
+                    }
+                    if (restaurante == null || restaurante.getEstado() == 2) {
+                        return "redirect:/paginabienvenida";
+                        //TODO: ojo ver restaurante
+                        //return "redirect:/restaurante/paginabienvenida";
+                    } else if (restaurante.getEstado() == 1) {
+                        return "redirect:/plato/";
+                    }
+                case "repartidor":
+                    List<Ubicacion> listaDirecciones1 = ubicacionRepository.findByUsuarioVal(usuario);
+                    session.setAttribute("poolDirecciones", listaDirecciones1);
+                    session.setAttribute("ubicacionActual", listaDirecciones1.get(0));
+                    List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, usuario);
 
                     if (pedidoAct.size() == 0) {
                         return "redirect:/repartidor/listaPedidos";
@@ -339,14 +371,12 @@ public class LoginController {
     }
 
 
-
-
     @PostMapping("/ClienteGuardar")
     public String guardarCliente(@ModelAttribute("cliente") @Valid Usuario cliente, BindingResult bindingResult,
                                  @ModelAttribute("ubicacion") @Valid Ubicacion ubicacion,
                                  BindingResult bindingResult2,
                                  @RequestParam("photo") MultipartFile file,
-                                Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
+                                 Model model, RedirectAttributes attr, @RequestParam("contrasenia2") String contrasenia2) throws MessagingException {
 
 
         List<Usuario> clientesxcorreo = clienteRepository.findUsuarioByCorreo(cliente.getCorreo());
@@ -423,35 +453,35 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        System.out.println(udto.getApellido_paterno()+" "+udto.getApellido_materno());
+        System.out.println(udto.getApellido_paterno() + " " + udto.getApellido_materno());
         System.out.println(cliente.getApellidos());
         System.out.println(cleanString(cliente.getApellidos()));
 
-        if(udto.getSuccess().equals("true")){
-            if(cliente.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (cliente.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
+                    if ((cleanString(cliente.getNombres()) + " " + cleanString(cliente.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (cleanString(udto.getNombres()).toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))){
+                    } else {
+                        if (cleanString(udto.getNombres()).toUpperCase().contains(cleanString(cliente.getNombres().toUpperCase()))) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
-                                cleanString(cliente.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
+                        if (cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno())) ||
+                                cleanString(cliente.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
@@ -460,20 +490,20 @@ public class LoginController {
 
             //----------------------------------------
 
-            if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg8", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg10", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg9", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg11", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg12", "El apellido del usuario no coincide con el propietario del DNI");
             }
 
             if (usuario_direccion) {
@@ -491,8 +521,6 @@ public class LoginController {
             if (!contrasenia2.equals(cliente.getContrasenia())) {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
-
-
 
 
             //   String direccion;
@@ -566,11 +594,12 @@ public class LoginController {
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
-    public String envioCorreo(@RequestParam("correo") String correo, Model model) {
+    public String envioCorreo(@RequestParam("correo") String correo,
+                              Model model, RedirectAttributes redAt) {
 
         boolean valcorreo = false;
-        Usuario clientesxcorreo = clienteRepository.findByCorreo(correo);
-        if (clientesxcorreo==null) {
+        Usuario clientesxcorreo = clienteRepository.findByCorreoAndEstado(correo, 1);
+        if (clientesxcorreo == null) {
             valcorreo = true;
         }
 
@@ -583,47 +612,51 @@ public class LoginController {
         if (valVacio || valcorreo) {
             if (valcorreo) {
                 System.out.println("validacion correo");
-                model.addAttribute("msg1", "El correo no está registrado");
+                model.addAttribute("msg1", "El correo no está registrado o la cuenta no está activa.");
             }
             if (valVacio) {
-                model.addAttribute("msg2", "Ingrese su correo");
+                model.addAttribute("msg2", "Ingrese su correo.");
             }
 
             return "olvidoContrasenia";
 
         } else {
-            if(clientesxcorreo.getRol().getIdrol()==1 ||clientesxcorreo.getRol().getIdrol()==3||clientesxcorreo.getRol().getIdrol()==4) {
+            if (clientesxcorreo.getRol().getIdrol() == 1 || clientesxcorreo.getRol().getIdrol() == 3
+                    || clientesxcorreo.getRol().getIdrol() == 4 || clientesxcorreo.getRol().getIdrol() == 5) {
                 Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, clientesxcorreo.getRol());
                 if (cliente != null) {
-                    Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
-                    if (urlcorreo1 != null) {
-                        urlCorreoRepository.delete(urlcorreo1);
+                    Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario(cliente);
+                    if (validarcorreo != null) {
+                        validarCorreoRepository.delete(validarcorreo);
                     }
                     String codigoAleatorio = "";
                     while (true) {
-                        codigoAleatorio = generarCodigAleatorio();
-                        Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
-                        if (urlcorreo2 == null) {
+                        codigoAleatorio = cipherPassword(generarCodigAleatorio());
+                        Validarcorreo validarcorreo1 = validarCorreoRepository.findByHash(codigoAleatorio);
+                        if (validarcorreo1 == null) {
                             break;
                         }
                     }
-                    Urlcorreo urlcorreo3 = new Urlcorreo();
-                    urlcorreo3.setCodigo(codigoAleatorio);
-                    urlcorreo3.setUsuario(cliente);
+
+                    Validarcorreo validarcorreo2 = new Validarcorreo();
+                    validarcorreo2.setUsuario(cliente);
+                    validarcorreo2.setHash(codigoAleatorio);
 
                     //genero fecha:
                     Date date = new Date();
                     DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    urlcorreo3.setFecha(hourdateFormat.format(date));
-                    urlCorreoRepository.save(urlcorreo3);
+                    validarcorreo2.setFecha(hourdateFormat.format(date));
+                    validarCorreoRepository.save(validarcorreo2);
 
                     //genero url:
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
-                    String url = "http://18.206.225.27:8080/foodDelivery/cambioContra?id=" + urlPart;
-                    String content = "Para cambio de contraseña:\n" + url;
-                    String subject = "OLVIDE MI CONTRASEÑA";
+                    String url = "http://" + ip + ":" + puerto + "/foodDelivery/cambioContra?correo=" +
+                            cliente.getCorreo() + "&id=" + codigoAleatorio;
+                    String content = "Hemos recibido una solicitud de cambio de contraseña.\n"
+                            + "Para cambiar su contraseña ingrese al siguiene enlace:\n" + url
+                            + "\nEnlace valido por 10 min.\n(Si no ha solicitado el cambio de contraseña omita este correo)";
+                    String subject = "OLVIDO DE CONTRASEÑA";
                     sendEmail(correo, subject, content);
+                    redAt.addFlashAttribute("correoEnviado", true);
                 }
             }
             return "redirect:/login";
@@ -633,32 +666,56 @@ public class LoginController {
     }
 
     @GetMapping("/cambioContra")
-    public String cambiarContra(@RequestParam("id") String id, Model model) {
-        List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
-        Boolean redireccionar = false;
-        for (Urlcorreo urlcorreo : listaUrlCorreo) {
-            String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
-            if (BCrypt.checkpw(comparar, id)) {
-                redireccionar = true;
-
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                id = passwordEncoder.encode(comparar);
-
-                model.addAttribute("id", id);
-            }
-        }
-
-        if (redireccionar) {
-            return "recuperarContra";
-        } else {
+    public String cambiarContra(@RequestParam(value = "id", required = false) String id,
+                                @RequestParam(value = "correo", required = false) String correo,
+                                RedirectAttributes redAt,Model model) {
+        if (id == null || correo == null) {
             return "redirect:/login";
+        } else {
+            Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, id);
+            if (validarcorreo != null) {
+                String fecha = validarcorreo.getFecha();
+
+                LocalDateTime dateTime = LocalDateTime.now();
+                dateTime = dateTime.minusMinutes(10);
+                String fechaComp = dateTime.toString().subSequence(0, 10) + " " + dateTime.toString().subSequence(11, 19);
+                System.out.println(fechaComp);
+
+                model.addAttribute("correo", correo);
+
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat date2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+                boolean noValido = false;
+                try {
+                    Date fechaCompDate = date.parse(fechaComp);
+                    Date fechaDB = date2.parse(fecha);
+                    if (fechaCompDate.after(fechaDB)) {
+                        noValido = true;
+                    }
+                } catch (ParseException e) {
+
+                }
+
+                if(noValido){
+                    validarCorreoRepository.delete(validarcorreo);
+                    redAt.addFlashAttribute("urlInvalido", true);
+                    return "redirect:/login";
+                }else{
+                    model.addAttribute("id", id);
+                    return "recuperarContra";
+                }
+            } else {
+                return "redirect:/login";
+            }
         }
     }
 
     @PostMapping("/actualizarContraOlvidada")
     public String actualizarContraOlvidada(@RequestParam("id") String id,
                                            @RequestParam("contra1") String contra1,
-                                           @RequestParam("contra2") String contra2, Model model) {
+                                           @RequestParam("contra2") String contra2,
+                                           Model model, RedirectAttributes redAt) {
 
         boolean valLong1 = false;
         boolean valLong2 = false;
@@ -703,19 +760,40 @@ public class LoginController {
 
             return "recuperarContra";
         } else {
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(id);
 
-            List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
-            for (Urlcorreo urlcorreo : listaUrlCorreo) {
-                String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
-                if (BCrypt.checkpw(comparar, id)) {
-                    //TODO: MANDAR CODIGO EXPIRADO Y BORRAR SI YA ESTA EXPIRADO
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    String nuevaContra = passwordEncoder.encode(contra1);
-                    urlcorreo.getUsuario().setContrasenia(nuevaContra);
-                    usuarioRepository.save(urlcorreo.getUsuario());
-                    urlCorreoRepository.delete(urlcorreo);
+            String fecha = validarcorreo.getFecha();
+
+            LocalDateTime dateTime = LocalDateTime.now();
+            dateTime = dateTime.minusMinutes(10);
+            String fechaComp = dateTime.toString().subSequence(0, 10) + " " + dateTime.toString().subSequence(11, 19);
+            System.out.println(fechaComp);
+
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat date2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+            boolean noValido = false;
+            try {
+                Date fechaCompDate = date.parse(fechaComp);
+                Date fechaDB = date2.parse(fecha);
+                if (fechaCompDate.after(fechaDB)) {
+                    noValido = true;
                 }
+            } catch (ParseException e) {
+
             }
+
+            if(noValido){
+                redAt.addFlashAttribute("urlInvalido", true);
+            }else{
+                Usuario usuario = validarcorreo.getUsuario();
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String nuevaContra = passwordEncoder.encode(contra1);
+                usuario.setContrasenia(nuevaContra);
+                usuarioRepository.save(usuario);
+                redAt.addFlashAttribute("contraseniaAct", true);
+            }
+            validarCorreoRepository.delete(validarcorreo);
             return "redirect:/login";
         }
     }
@@ -766,9 +844,9 @@ public class LoginController {
     }
 
 
-
-
-    /** ESTO ES DE RESTAURANTE LOGIN**/
+    /**
+     * ESTO ES DE RESTAURANTE LOGIN
+     **/
     @GetMapping("/registro")
     public String nuevoAdminRest(@ModelAttribute("adminRest") Usuario adminRest, Model model) {
         model.addAttribute("adminRest", new Usuario());
@@ -845,50 +923,50 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if(udto.getSuccess().equals("true")){
-            if(adminRest.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (adminRest.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
+                    if ((cleanString(adminRest.getNombres()) + " " + cleanString(adminRest.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(adminRest.getNombres().toUpperCase()))){
+                    } else {
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(adminRest.getNombres().toUpperCase()))) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
-                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
+                        if (cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno())) ||
+                                cleanString(adminRest.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
         if (bindingResult.hasErrors() || !contra2.equalsIgnoreCase(adminRest.getContrasenia()) || fecha_naci || !validarFoto
                 || dni_val || usuario_val || usuario_null || apellido_val || nombre_val) {
-            if(dni_val) {
-                model.addAttribute("msg8","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg8", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg10","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg10", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg9","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg9", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg11","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg11", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg12","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg12", "El apellido del usuario no coincide con el propietario del DNI");
             }
             if (fecha_naci) {
                 model.addAttribute("msg7", "Solo pueden registrarse mayores de edad");
@@ -921,36 +999,36 @@ public class LoginController {
     public String guardarRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante,
                                      BindingResult bindingResult, HttpSession session, Model model, @RequestParam("photo") MultipartFile file) {
 
-        boolean v2=true;
+        boolean v2 = true;
         List<Restaurante> restauranteByNombre = restauranteRepository.findRestauranteByNombre(restaurante.getNombre());
         if (!restauranteByNombre.isEmpty()) {
             model.addAttribute("nombreResta", "El nombre ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
         List<Restaurante> restauranteByDireccion = restauranteRepository.findRestauranteByDireccion(restaurante.getDireccion());
         if (!restauranteByDireccion.isEmpty()) {
             model.addAttribute("direccionResta", "La dirección ingresada ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
 
         List<Restaurante> restauranteByTelefono = restauranteRepository.findRestauranteByTelefono(restaurante.getTelefono());
         if (!restauranteByTelefono.isEmpty()) {
             model.addAttribute("telefonoResta", "El telefono ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
 
         List<Restaurante> restauranteByRuc = restauranteRepository.findRestauranteByRuc(restaurante.getRuc());
         if (!restauranteByRuc.isEmpty()) {
             model.addAttribute("rucResta", "El RUC ingresado ya se encuentra en la base de datos");
-            v2=false;
+            v2 = false;
         }
-        RestauranteDao rd= new RestauranteDao();
-        String success= rd.validarRuc(restaurante.getRuc());
+        RestauranteDao rd = new RestauranteDao();
+        String success = rd.validarRuc(restaurante.getRuc());
 
-        boolean v3=true;
-        if(success.equals("false")){
+        boolean v3 = true;
+        if (success.equals("false")) {
             model.addAttribute("validarApi", "El RUC ingresado no es correcto");
-            v3=false;
+            v3 = false;
         }
 
         String fileName = "";
@@ -999,7 +1077,7 @@ public class LoginController {
         }
 
 
-        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto||!v2||!v3) {
+        if (bindingResult.hasErrors() || listaCategorias.size() != 4 || file == null || dist_u_val || !validarFoto || !v2 || !v3) {
 
             if (dist_u_val) {
                 model.addAttribute("msg3", "Seleccione una de las opciones");
@@ -1042,15 +1120,16 @@ public class LoginController {
         } catch (NullPointerException e) {
 
         }
-        if(restaurant==null){
+        if (restaurant == null) {
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             model.addAttribute("listaCategorias", categoriasRestauranteRepository.findAll());
             return "AdminRestaurante/registroResturante";
-        }else{
+        } else {
             return "redirect:/paginabienvenida";
         }
 
     }
+
     @GetMapping("/paginabienvenida")
     public String paginaBienvenida(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -1097,55 +1176,56 @@ public class LoginController {
     }
 
     @PostMapping("/guardarRepartidor")
-    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario ,
+    public String guardarRepartidor(@ModelAttribute("usuario") @Valid Usuario usuario,
                                     BindingResult bindingResult,
                                     @RequestParam("photo") MultipartFile file,
-                                    Movilidad movilidad ,
+                                    Movilidad movilidad,
                                     Model model,
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
-                                    @RequestParam(value="distritos", required = false) ArrayList<Distrito> distritos) {
+                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos,
+                                    RedirectAttributes redAt) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
-        String correo =  usuario.getCorreo();
-        Usuario usuario1 =usuarioRepository.findByDni(dni);
-        Usuario usuario2 =usuarioRepository.findByTelefono(telefono);
-        Usuario usuario3 =usuarioRepository.findByCorreo(correo);
+        String correo = usuario.getCorreo();
+        Usuario usuario1 = usuarioRepository.findByDni(dni);
+        Usuario usuario2 = usuarioRepository.findByTelefono(telefono);
+        Usuario usuario3 = usuarioRepository.findByCorreo(correo);
 
         Movilidad movilidad1;
         Movilidad movilidad2;
-        if(licencia.equals("") || placa.equals("")){
+        if (licencia.equals("") || placa.equals("")) {
             movilidad1 = null;
             movilidad2 = null;
-        }else{
+        } else {
             movilidad1 = movilidadRepository.findByLicencia(licencia);
             movilidad2 = movilidadRepository.findByPlaca(placa);
         }
 
         Boolean errorMov = false;
-        Boolean errorDist=false;
-        Boolean errorSexo= false;
+        Boolean errorDist = false;
+        Boolean errorSexo = false;
         Boolean validarFoto = true;
         String fileName = "";
         Boolean noHayMov = false;
 
-        if (movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
-            errorMov= true;
-            if(movilidad.getTipoMovilidad()==null){
-                noHayMov= true;
+        if (movilidad.getTipoMovilidad() == null || (movilidad.getTipoMovilidad().getIdtipomovilidad() == 7 && (!movilidad.getLicencia().equals("") || !movilidad.getPlaca().equals("")))) {
+            errorMov = true;
+            if (movilidad.getTipoMovilidad() == null) {
+                noHayMov = true;
             }
         }
-        if(movilidad.getTipoMovilidad()==null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("")||movilidad.getPlaca().equals("")))){
-            errorMov= true;
-            if(movilidad.getTipoMovilidad()==null){
-                noHayMov= true;
+        if (movilidad.getTipoMovilidad() == null || (movilidad.getTipoMovilidad().getIdtipomovilidad() != 7 && (movilidad.getLicencia().equals("") || movilidad.getPlaca().equals("")))) {
+            errorMov = true;
+            if (movilidad.getTipoMovilidad() == null) {
+                noHayMov = true;
             }
         }
         Boolean errorLicencia = false;
         Boolean errorPlaca = false;
 
-        if(movilidad.getTipoMovilidad()!=null) {
+        if (movilidad.getTipoMovilidad() != null) {
 
             if ((movilidad.getTipoMovilidad().getIdtipomovilidad() == 5 || movilidad.getTipoMovilidad().getIdtipomovilidad() == 6) && !movilidad.getLicencia().equals("")) {
                 Pattern pat = Pattern.compile("^([A-Z]{1}\\d{8})$");
@@ -1164,37 +1244,37 @@ public class LoginController {
                 }
             }
         }
-        if(distritos!=null){
-            if(distritos.size()>5 || distritos.isEmpty()){
-                errorDist=true;
+        if (distritos != null) {
+            if (distritos.size() > 5 || distritos.isEmpty()) {
+                errorDist = true;
             }
-            for(Distrito d : distritos){
-                if(d==null){
-                    errorDist=true;
+            for (Distrito d : distritos) {
+                if (d == null) {
+                    errorDist = true;
                 }
             }
 
         }
-        if(distritos==null){
-            errorDist=true;
+        if (distritos == null) {
+            errorDist = true;
         }
 
 
         Boolean errorFecha = true;
         try {
             String[] parts = usuario.getFechanacimiento().split("-");
-            System.out.println(parts[0]+"Año");
+            System.out.println(parts[0] + "Año");
             int naci = Integer.parseInt(parts[0]);
             Calendar fecha = new GregorianCalendar();
             int anio = fecha.get(Calendar.YEAR);
-            if (anio - naci >18) {
+            if (anio - naci > 18) {
                 errorFecha = false;
             }
         } catch (NumberFormatException n) {
             errorFecha = true;
         }
-        if(usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))){
-            errorSexo=true;
+        if (usuario.getSexo().equals("") || (!usuario.getSexo().equals("Femenino") && !usuario.getSexo().equals("Masculino"))) {
+            errorSexo = true;
         }
         if (file != null) {
 
@@ -1223,90 +1303,90 @@ public class LoginController {
         boolean apellido_val = true;
         boolean nombre_val = true;
 
-        if(udto.getSuccess().equals("true")){
-            if(usuario.getDni().equals(udto.getRuc())){
+        if (udto.getSuccess().equals("true")) {
+            if (usuario.getDni().equals(udto.getRuc())) {
                 dni_val = false;
                 // se uso contains para validar 3 nombres
-                if(udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null){
+                if (udto.getApellido_materno() != null && udto.getApellido_paterno() != null && udto.getNombres() != null) {
                     usuario_null = false;
-                    if((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))){
+                    if ((cleanString(usuario.getNombres()) + " " + cleanString(usuario.getApellidos())).equalsIgnoreCase(cleanString(udto.getNombres()) + " " + cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno()))) {
                         usuario_val = false;
                         nombre_val = false;
                         apellido_val = false;
-                    }else{
-                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(usuario.getNombres().toUpperCase()))){
+                    } else {
+                        if (cleanString(udto.getNombres().toUpperCase()).contains(cleanString(usuario.getNombres().toUpperCase()))) {
                             usuario_val = false;
                             nombre_val = false;
                         }
-                        if(cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno()))  ||
-                                cleanString(usuario.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))){
+                        if (cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_paterno())) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase(cleanString(udto.getApellido_materno())) ||
+                                cleanString(usuario.getApellidos()).equalsIgnoreCase((cleanString(udto.getApellido_paterno()) + " " + cleanString(udto.getApellido_materno())))) {
                             usuario_val = false;
                             apellido_val = false;
                         }
                     }
                 }
             }
-        }else{
+        } else {
             System.out.println("No encontro nada, sea xq no había nadie o xq ingreso cualquier ocsa");
         }
 
-        if(bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1!= null || usuario2!= null|| usuario3!= null  || errorMov || movilidad1!=null || movilidad2!=null ||
-                errorDist || errorFecha || errorSexo || !validarFoto  || dni_val || usuario_val || usuario_null || apellido_val || nombre_val ||errorPlaca || errorLicencia || noHayMov){
+        if (bindingResult.hasErrors() || !contrasenia2.equals(usuario.getContrasenia()) || usuario1 != null || usuario2 != null || usuario3 != null || errorMov || movilidad1 != null || movilidad2 != null ||
+                errorDist || errorFecha || errorSexo || !validarFoto || dni_val || usuario_val || usuario_null || apellido_val || nombre_val || errorPlaca || errorLicencia || noHayMov) {
 
-            if(dni_val) {
-                model.addAttribute("msg11","El DNI ingresado no es válido");
+            if (dni_val) {
+                model.addAttribute("msg11", "El DNI ingresado no es válido");
             }
-            if(usuario_null){
-                model.addAttribute("msg12","No hay persona registrado para este DNI");
+            if (usuario_null) {
+                model.addAttribute("msg12", "No hay persona registrado para este DNI");
             }
-            if(usuario_val){
-                model.addAttribute("msg13","El usuario no coincide con el propietario del DNI");
+            if (usuario_val) {
+                model.addAttribute("msg13", "El usuario no coincide con el propietario del DNI");
             }
-            if(nombre_val){
-                model.addAttribute("msg14","El nombre del usuario no coincide con el propietario del DNI");
+            if (nombre_val) {
+                model.addAttribute("msg14", "El nombre del usuario no coincide con el propietario del DNI");
             }
-            if(apellido_val){
-                model.addAttribute("msg15","El apellido del usuario no coincide con el propietario del DNI");
+            if (apellido_val) {
+                model.addAttribute("msg15", "El apellido del usuario no coincide con el propietario del DNI");
             }
-            if(!contrasenia2.equals(usuario.getContrasenia())){
+            if (!contrasenia2.equals(usuario.getContrasenia())) {
                 model.addAttribute("msg", "Las contraseñas no coinciden");
             }
-            if(usuario1!=null){
+            if (usuario1 != null) {
                 model.addAttribute("msg2", "El DNI ingresado ya se encuentra en la base de datos");
             }
-            if(usuario2!=null){
+            if (usuario2 != null) {
                 model.addAttribute("msg3", "El telefono ingresado ya se encuentra en la base de datos");
             }
-            if(usuario3!=null){
+            if (usuario3 != null) {
                 model.addAttribute("msg4", "El correo ingresado ya se encuentra en la base de datos");
             }
-            if(errorDist){
+            if (errorDist) {
                 model.addAttribute("msg5", "Debe escoger entre 1 y 5 distritos válidos.");
             }
-            if(errorMov){
+            if (errorMov) {
                 model.addAttribute("msg6", "Si eligió bicicleta como medio de transporte, no puede ingresar placa ni licencia. En caso contrario, dichos campos son obligatorios.");
             }
-            if(errorFecha){
+            if (errorFecha) {
                 model.addAttribute("msg7", "Debe ser mayor de edad para poder registrarse");
             }
-            if(errorSexo){
+            if (errorSexo) {
                 model.addAttribute("msg8", "Seleccione una opción");
             }
-            if(movilidad1!=null){
+            if (movilidad1 != null) {
                 model.addAttribute("msg9", "La licencia ingresada ya se encuentra en la base de datos");
             }
-            if(movilidad2!=null){
+            if (movilidad2 != null) {
                 model.addAttribute("msg10", "La placa ingresada ya se encuentra en la base de datos");
             }
-            if(errorPlaca){
-                model.addAttribute("msg16",  "Ingrese una placa en el formato correcto. Ej: AAA111, ABC123");
+            if (errorPlaca) {
+                model.addAttribute("msg16", "Ingrese una placa en el formato correcto. Ej: AAA111, ABC123");
             }
-            if(errorLicencia){
-                model.addAttribute("msg17",  "Ingrese una licencia en el formato correcto. Ej: Q12345678, R23432245");
+            if (errorLicencia) {
+                model.addAttribute("msg17", "Ingrese una licencia en el formato correcto. Ej: Q12345678, R23432245");
             }
-            if(noHayMov){
-                model.addAttribute("msg18",  "Debe seleccionar una movilidad.");
+            if (noHayMov) {
+                model.addAttribute("msg18", "Debe seleccionar una movilidad.");
             }
 
             model.addAttribute("usuario", usuario);
@@ -1316,7 +1396,7 @@ public class LoginController {
             model.addAttribute("listatipoMovilidad", tipoMovilidadRepository.findAll());
             model.addAttribute("listaDistritos", distritosRepository.findAll());
             return "Repartidor/registro";
-        }else {
+        } else {
 
             try {
                 usuario.setFoto(file.getBytes());
@@ -1337,8 +1417,8 @@ public class LoginController {
             movilidad = movilidadRepository.save(movilidad);
             usuario.setMovilidad(movilidad);
 
-            //OBS: ------
-            usuario.setEstado(2);
+            //OBS: se cambia a 2 cuando valide su correo
+            usuario.setEstado(-1);
 
             //Fecha de registro:
             Date date = new Date();
@@ -1358,10 +1438,59 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            return "redirect:/cliente/login";
+            //enviarCorreoValidacion(usuario.getCorreo());
+            redAt.addFlashAttribute("usuarioCreado", true);
+
+            return "redirect:/login";
         }
 
     }
+
+    @GetMapping("/validarCuenta")
+    public String validarCuenta(@RequestParam(value = "correo", required = false) String correo,
+                                @RequestParam(value = "value", required = false) String codigoHash,
+                                Model model) {
+        if (correo != null && codigoHash != null) {
+            Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, codigoHash);
+            if (validarcorreo != null) {
+//                validarCorreoRepository.delete(validarcorreo);
+                Usuario usuario = usuarioRepository.findByCorreo(correo);
+                usuario.setEstado(2);
+                usuarioRepository.save(usuario);
+                model.addAttribute("rol", usuario.getRol().getIdrol());
+                return "cuentaValidada";
+            } else {
+                return "redirect:/cliente/login";
+            }
+        } else {
+            return "redirect:/cliente/login";
+        }
+    }
+
+    public void enviarCorreoValidacion(String correo) {
+        String codigoHash = "";
+        while (true) {
+            codigoHash = cipherPassword(generarCodigAleatorio());
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(codigoHash);
+            if (validarcorreo == null) {
+                break;
+            }
+        }
+        Validarcorreo validarcorreo = new Validarcorreo();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        validarcorreo.setUsuario(usuario);
+        validarcorreo.setHash(codigoHash);
+        validarCorreoRepository.save(validarcorreo);
+
+        String url = "http://" + ip + ":" + puerto + "/foodDelivery/validarCuenta?correo="
+                + correo + "&value=" + codigoHash;
+        String content = "Su cuenta ha sido creada exitosamente." +
+                "Debe validar su correo para empezar a usar su cuenta.\n"
+                + "Para validar su correo electrónico ingrese al siguiente link:\n" + url;
+        String subject = "Bienvenido a Food Delivery!";
+        sendEmail(correo, subject, content);
+    }
+
 
     public String cleanString(String texto) {
         texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
@@ -1369,4 +1498,29 @@ public class LoginController {
         return texto;
     }
 
+
+    public String cipherPassword(String text) {
+        String hashedPassword = "";
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < encodedhash.length; i++) {
+                String hex = Integer.toHexString(0xff & encodedhash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException ex) {
+
+        }
+
+        return hashedPassword;
+    }
+
 }
+
+
+

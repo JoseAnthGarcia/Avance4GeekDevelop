@@ -92,6 +92,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     List<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor);
 
+    Page<Pedido> findByEstadoAndRepartidor(int estado, Usuario repartidor, Pageable pageable);
+
     List<Pedido> findByEstadoAndUbicacion_Distrito(int estado, Distrito distrito);
 
 
@@ -359,4 +361,15 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "(SELECT count(*) as cancela FROM pedido where idrestaurante=?1 and estado=2) cancela,\n" +
             "(SELECT count(*) as total FROM pedido where idrestaurante=?1) total",nativeQuery = true)
     List<CredencialPedidosDTO> pedidosCredencia(int idrest);
+
+    //REPORTE DELIVERY
+
+    Page<Pedido> findByEstadoAndRepartidorAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor, String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+    Page<Pedido> findByEstadoAndRepartidorAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+    Page<Pedido> findByEstadoAndRepartidorAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,int valMin, int valMax,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+    Page<Pedido> findByEstadoAndRepartidorAndUbicacion_DistritoAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,Distrito distrito,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+    Page<Pedido> findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorIsNullAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,Distrito distrito,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+    Page<Pedido> findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,Distrito distrito,int valMin, int valMax,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
+
+
 }

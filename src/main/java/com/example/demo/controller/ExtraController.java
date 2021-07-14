@@ -337,10 +337,11 @@ public class ExtraController {
     }
 
     @GetMapping("/editar")
-    public String editarExtra(@RequestParam("id") int id,
+    public String editarExtra(@RequestParam("id") String id,
                               Model model,
-                              @ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int idc, HttpSession session) {
-        Optional<Extra> extraOptional = extraRepository.findById(id);
+                              @ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") String idc, HttpSession session) {
+
+
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idadmin = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
@@ -354,13 +355,22 @@ public class ExtraController {
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
-        model.addAttribute("idcategoria", idc);
-        if (extraOptional.isPresent()) {
-            extra = extraOptional.get();
-            model.addAttribute("extra", extra);
-            return "AdminRestaurante/nuevoExtra";
-        } else {
-            return "redirect:/extra/lista";
+        int idextra;
+        try {
+            idextra=Integer.parseInt(id);
+            model.addAttribute("idcategoria", idc);
+            Optional<Extra> extraOptional = extraRepository.findById(idextra);
+            Extra extra2=extraRepository.findByIdextraAndIdrestauranteAndIdcategoriaextra(idextra,restaurante.getIdrestaurante(),Integer.parseInt(idc));
+            if (extraOptional.isPresent() && extra2!=null) {
+                extra = extraOptional.get();
+                model.addAttribute("extra", extra);
+                return "AdminRestaurante/nuevoExtra";
+            } else {
+                return "redirect:/extra/lista?idcategoria="+idc;
+            }
+        }catch(NumberFormatException e){
+            System.out.println("Falló");
+            return "redirect:/extra/lista?idcategoria="+idc;
         }
     }
 

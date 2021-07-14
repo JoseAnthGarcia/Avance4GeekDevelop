@@ -20,7 +20,7 @@
         <div id="content">
 
             <!-- Begin of Topbar -->
-            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar"></nav>
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
 
             <!-- End of Topbar -->
 
@@ -36,50 +36,43 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="column">
-                                <div class="col-sm-6">
-                                    <div class="col-sm-6 mb-4"
-                                         style="margin-left: 270px; margin-top: 30px">
+
+                                    <div class="col-lg-4 mb-5 mt-5">
                                         <div class="container2">
                                             <img src="https://rgprincipal.com/es/wp-content/uploads/2016/11/Administrador-Restaurant.jpg" alt="admR"
                                                  class="image2 shadow"
-                                                 style="height: 300px; width: 400px">
-                                            <a class="overlay2" style="height: 300px; width: 400px"th:href="@{'/admin/solicitudes?tipo=adminRest'}">
+                                                 style="height: 250px; width: 300px;margin-right: auto; margin-left: auto">
+                                            <a class="overlay2" style="height: 250px; width: 300px;margin-right: auto; margin-left: auto"th:href="@{'/admin/solicitudes?tipo=adminRest'}">
                                                 <H1 class="text2 font-weight-bolder">ADMINISTRADOR DE RESTAURANTE</H1>
                                             </a>
                                         </div>
 
+
                                     </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="col-sm-6">
-                                    <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
+
+                                    <div class="col-lg-4 mb-5 mt-5" >
                                         <div class="container2">
                                             <img src="https://image.freepik.com/vector-gratis/repartidor-moto-mascara_23-2148498576.jpg" alt="repartidor"
                                                  class="image2 shadow"
-                                                 style="height: 300px; width: 400px">
-                                            <a class="overlay2" style="height: 300px; width: 400px"  th:href="@{'/admin/solicitudes?tipo=repartidor'}">
+                                                 style="height: 250px; width: 300px;margin-right: auto; margin-left: auto">
+                                            <a class="overlay2" style="height: 250px; width: 300px;margin-right: auto; margin-left: auto"  th:href="@{'/admin/solicitudes?tipo=repartidor'}">
                                                 <H1 class="text2 font-weight-bolder">REPARTIDOR</H1>
                                             </a>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="col-sm-6">
-                                    <div class="col-sm-6 mb-4" style="margin-left: 260px; margin-top: 30px">
+
+                                    <div class="col-lg-4 mb-5 mt-5" >
                                         <div class="container2">
                                             <img src="https://www.semana.com/resizer/_bpQyli33yut_6S_MjSOFS2tyK8=/1200x675/filters:format(jpg):quality(70)//cloudfront-us-east-1.images.arcpublishing.com/semana/VNSQA6I7DJDVXD5LWSSL5PBXQI.jpg" alt="restaurante"
                                                  class="image2 shadow"
-                                                 style="height: 300px; width: 400px">
-                                            <a class="overlay2" style="height: 300px; width: 400px" th:href="@{'/admin/solicitudes?tipo=restaurante'}">
+                                                 style="height: 250px; width: 300px;margin-right: auto; margin-left: auto">
+                                            <a class="overlay2" style="height: 250px; width: 300px;margin-right: auto; margin-left: auto" th:href="@{'/admin/solicitudes?tipo=restaurante'}">
                                                 <H1 class="text2 font-weight-bolder">RESTAURANTE</H1>
                                             </a>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+
+
                         </div>
                     </div>
                 </div>

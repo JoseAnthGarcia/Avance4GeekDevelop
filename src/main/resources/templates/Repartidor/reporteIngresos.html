@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
 <head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reporte ingresos')"></head>
 
 <body id="page-top">
@@ -28,7 +28,7 @@
                 <!-- DataTales Example -->
                 <form th:action="@{/repartidor/reporteIngresos}" method="get">
                     <div class=" form-group row" >
-                        <div class="col-sm-4 mb-2 " style="position: relative; left: 33.5%" th:text="|Ingreso total : S/. ${precioTotal}|">
+                        <div class="col-sm-4 mb-2 " style="position: relative; left: 33.5%" th:text="|Ingreso total del año: S/. ${precioTotal}|">
                            Ingreso total : S/. 1176.00
                         </div>
                     </div>

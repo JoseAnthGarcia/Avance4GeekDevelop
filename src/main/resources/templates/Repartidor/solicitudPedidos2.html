@@ -10,7 +10,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar"></ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -28,29 +28,29 @@
 
                 <form th:action="@{'/repartidor/cambiarDistrito'}" method="post" class="mb-3">
                     <div class=" row">
-                        <div class="col-lg-2"  >
+                        <div class="col-lg-2">
                             <span style="position:relative; top:10% ">Distrito actual:</span>
 
                         </div>
-                        <div class="col-lg-2" >
+                        <div class="col-lg-2">
 
-                            <select class="form-control" style="border-color:lightgray; position: relative; right: 40%" name="idubicacion">
+                            <select class="form-control" style="border-color:lightgray; position: relative; right: 40%"
+                                    name="idubicacion">
                                 <option th:each="dir: ${direcciones}" th:value="${dir.idubicacion}"
-                                        th:text="${dir.distrito.nombre}" th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
+                                        th:text="${dir.distrito.nombre}"
+                                        th:selected="${session.ubicacionActual.distrito.nombre==dir.distrito.nombre}"></option>
                             </select>
 
 
                         </div>
                         <div class="col-lg-2" style="position:relative; right: 6%">
-                            <button type="submit"  class="btn btn-dark">Seleccionar distrito</button>
+                            <button type="submit" class="btn btn-dark">Seleccionar distrito</button>
                         </div>
 
-                        <div th:if="${msg != null}" th:text="${msg}" class="col-3 alert alert-danger" ></div>
+                        <div th:if="${msg != null}" th:text="${msg}" class="col-3 alert alert-danger"></div>
 
                     </div>
                 </form>
-
-
 
 
                 <div class="card shadow mb-4">
@@ -71,7 +71,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Pedido</th>
-                                    <th scope="col">Hora de registro </th>
+                                    <th scope="col">Hora de registro</th>
                                     <th scope="col">Aceptar</th>
                                     <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
@@ -80,17 +80,22 @@
                                 <tbody>
 
                                 <tr th:each="pedido, i : ${listaPedidos}">
-                                    <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}" >1</th>
-                                    <td >
-                                        <a th:href="@{'/repartidor/listaPedidos?numPag=' + ${currentPage}+'&idPedido='+${pedido.codigo}}"
-                                           th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}" class="btn">
-                                        </a>
-                                        </td>
-                                    <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">17:49</td>
+                                    <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}">1</th>
                                     <td>
-                                       <a style="color: #dce3f9" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}" class="btn btn-success btn-circle align">
-                                           <i class="fas fa-check text-white"></i>
-                                       </a>
+                                        <a data-toggle="modal" th:data-target="'#modal'+${pedido.codigo}"
+                                           th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}"
+                                           class="btn" th:id="${pedido.codigo}">
+                                        </a>
+                                    </td>
+                                    <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">
+                                        17:49
+                                    </td>
+                                    <td>
+                                        <a style="color: #dce3f9"
+                                           th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}"
+                                           class="btn btn-success btn-circle align">
+                                            <i class="fas fa-check text-white"></i>
+                                        </a>
                                     </td>
                                     <!-- <td>
                                         <a th:href="@{/repartidor/rechazarPedido}" class="btn">
@@ -111,9 +116,10 @@
                                     <a th:if="${currentPage != i}"
                                        th:href="@{'/repartidor/listaPedidos?numPag=' + ${i}}"
                                        th:utext="${i}"
-                                       class="active page-link "  ></a>
+                                       class="active page-link "></a>
                                     <a th:unless="${currentPage != i}"
-                                       th:utext="${i}" class=" page-link "  style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
+                                       th:utext="${i}" class=" page-link "
+                                       style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
 
                                 </div>
                             </div>
@@ -126,55 +132,6 @@
                     </div>
                 </div>
 
-
-
-                <div class="container-fluid" th:if="${pedidoDetalle != null}">
-
-                    <div class="card">
-
-                        <div class="card-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="row">
-                                            <h1 class="card-title" style="color: black" th:text="${pedidoDetalle.getRestaurante().nombre}+' - '+${pedidoDetalle.codigo}">Ceviche - Restaurante Marino</h1>
-                                            <p class="card-text" th:utext="'Dirección de restaurante: '+${pedidoDetalle.restaurante.direccion}
-                                            +'<br>Direción de envio: '+${pedidoDetalle.cliente.direccionactual}
-                                             +'<br>Cliente: '+${pedidoDetalle.cliente.nombres +' '+ pedidoDetalle.cliente.apellidos }
-                                            +'<br>Teléfono de cliente: '+${pedidoDetalle.cliente.telefono}
-                                            +'<br>Hora de registro de pedido: '+${pedidoDetalle.fechapedido}
-                                            +'<br>Método de pago : '+${pedidoDetalle.metodopago.tipo}+'-S/.'+${pedidoDetalle.preciototal}">Dirección de restaurante: Av. Universitaria 345<br>
-                                                Direción de cliente: Av. Universitaria 987<br>
-                                                Producto: Ceviche<br>
-                                                Hora de registro de pedido:   17:49<br>
-                                                Método de pago : Efectivo</p><br>
-
-                                        </div>
-                                        <div style="position: relative; bottom: 4%; right: 3%"  class="mt-0 ml-0">
-                                            <p class="card-text mt-0 mb-0">Platos:</p>
-                                            <p  class="card-text mb-0" th:each="plato : ${platosPorPedido}"th:utext="'-'+${plato.nombre}"></p>
-
-                                        </div>
-
-                                        <div class="row mt-3">
-                                            <div class="col-sm-6">
-                                                <a style="color: #dce3f9" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedidoDetalle.codigo}}" class="btn btn-success btn-circle align">
-                                                    <i class="fas fa-check text-white"></i></i>
-                                                </a>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <img  th:src="@{'/repartidor/images?id='+${pedidoDetalle.restaurante.idrestaurante}}" class="img-fluid">
-                                        <!-- <img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid">-->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <!-- /.container-fluid -->
 
@@ -223,6 +180,42 @@
         </div>
     </div>
 </div>
+
+<div>
+    <div th:each="pedido:${listaPedidos}" class="modal fade" th:id="'modal'+${pedido.codigo}" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header notificacion">
+                    <h4 class="modal-title" style="color:white;"
+                        th:utext="'Restaurante: '+${pedido.getRestaurante().nombre}+'<br>'+'Codigo de pedido: ' + ${pedido.codigo}">
+                        Modal
+                        Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="card-text" th:utext="'Dirección de restaurante: '+${pedido.restaurante.direccion}
+                                            +'<br>Direción de envio: '+${pedido.cliente.direccionactual}
+                                             +'<br>Cliente: '+${pedidoDetalle.cliente.nombres +' '+ pedido.cliente.apellidos }
+                                            +'<br>Teléfono de cliente: '+${pedido.cliente.telefono}
+                                            +'<br>Hora de registro de pedido: '+${pedido.fechapedido}
+                                            +'<br>Método de pago : '+${pedido.metodopago.tipo}+' - S/.'+${pedido.preciototal}">
+                    </p>
+                    <p class="card-text mt-0 mb-0">Platos:</p>
+                    <p class="card-text mb-0" th:each="plato : ${pedido.listaPlatos}"
+                       th:utext="'-'+${plato.nombre}"></p>
+                    <a class="btn btn-success " style="position: relative; left: 36%" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}">Aceptar pedido</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript" th:if="${codigoMostrar!=null}">
+    var codigoPedido = [[${codigoMostrar}]];
+    document.getElementById(codigoPedido).click();
+</script>
 
 <div th:replace="Repartidor/fragments/generalRepartidor.html :: libs">
 </div>

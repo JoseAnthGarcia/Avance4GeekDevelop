@@ -15,6 +15,7 @@ public class Validarcorreo {
     private Usuario usuario;
     @Column(nullable = false)
     private String hash;
+    private String fecha;
 
     public int getIdvalidarcorreo() {
         return idvalidarcorreo;
@@ -38,5 +39,13 @@ public class Validarcorreo {
 
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

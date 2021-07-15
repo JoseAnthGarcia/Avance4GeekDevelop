@@ -216,18 +216,23 @@ public class AdminController  {
                 model.addAttribute("totalPages", pagina1.getTotalPages());
                 model.addAttribute("totalItems", pagina1.getTotalElements());
                 model.addAttribute("listaAdminRestSolicitudes", listaAdminRest);
-
-
                 return "AdminGen/solicitudAR";
             case "repartidor":
 
                 Page<Usuario> pagina;
+                if(nombreUsuario1!=null && nombreUsuario1.trim().equals("")){
+                    nombreUsuario1 = "";
+                }
+                model.addAttribute("nombreUsuario1", nombreUsuario1);
 
                 if((nombreUsuario1==null || nombreUsuario1.equals(""))
                         && tipoMovilidad1==null && fechaRegistro1==null){
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
-                    model.addAttribute("nombreUsuario1", nombreUsuario1);
+
+                    if(nombreUsuario1==null){
+                        nombreUsuario1="";
+                    }
                     if(fechaRegistro1==null){
                         fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }else{

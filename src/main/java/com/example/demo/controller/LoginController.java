@@ -47,6 +47,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,7 +60,8 @@ import java.util.regex.Pattern;
 
 public class LoginController {
 
-    public String ip = "54.175.37.128.nip.io";
+    //public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -592,10 +594,11 @@ public class LoginController {
     }
 
     @PostMapping("/enviarCorreoOlvidoContra")
-    public String envioCorreo(@RequestParam("correo") String correo, Model model) {
+    public String envioCorreo(@RequestParam("correo") String correo,
+                              Model model, RedirectAttributes redAt) {
 
         boolean valcorreo = false;
-        Usuario clientesxcorreo = clienteRepository.findByCorreo(correo);
+        Usuario clientesxcorreo = clienteRepository.findByCorreoAndEstado(correo, 1);
         if (clientesxcorreo == null) {
             valcorreo = true;
         }
@@ -609,47 +612,51 @@ public class LoginController {
         if (valVacio || valcorreo) {
             if (valcorreo) {
                 System.out.println("validacion correo");
-                model.addAttribute("msg1", "El correo no está registrado");
+                model.addAttribute("msg1", "El correo no está registrado o la cuenta no está activa.");
             }
             if (valVacio) {
-                model.addAttribute("msg2", "Ingrese su correo");
+                model.addAttribute("msg2", "Ingrese su correo.");
             }
 
             return "olvidoContrasenia";
 
         } else {
-            if (clientesxcorreo.getRol().getIdrol() == 1 || clientesxcorreo.getRol().getIdrol() == 3 || clientesxcorreo.getRol().getIdrol() == 4) {
+            if (clientesxcorreo.getRol().getIdrol() == 1 || clientesxcorreo.getRol().getIdrol() == 3
+                    || clientesxcorreo.getRol().getIdrol() == 4 || clientesxcorreo.getRol().getIdrol() == 5) {
                 Usuario cliente = usuarioRepository.findByCorreoAndRol(correo, clientesxcorreo.getRol());
                 if (cliente != null) {
-                    Urlcorreo urlcorreo1 = urlCorreoRepository.findByUsuario(cliente);
-                    if (urlcorreo1 != null) {
-                        urlCorreoRepository.delete(urlcorreo1);
+                    Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario(cliente);
+                    if (validarcorreo != null) {
+                        validarCorreoRepository.delete(validarcorreo);
                     }
                     String codigoAleatorio = "";
                     while (true) {
-                        codigoAleatorio = generarCodigAleatorio();
-                        Urlcorreo urlcorreo2 = urlCorreoRepository.findByCodigo(codigoAleatorio);
-                        if (urlcorreo2 == null) {
+                        codigoAleatorio = cipherPassword(generarCodigAleatorio());
+                        Validarcorreo validarcorreo1 = validarCorreoRepository.findByHash(codigoAleatorio);
+                        if (validarcorreo1 == null) {
                             break;
                         }
                     }
-                    Urlcorreo urlcorreo3 = new Urlcorreo();
-                    urlcorreo3.setCodigo(codigoAleatorio);
-                    urlcorreo3.setUsuario(cliente);
+
+                    Validarcorreo validarcorreo2 = new Validarcorreo();
+                    validarcorreo2.setUsuario(cliente);
+                    validarcorreo2.setHash(codigoAleatorio);
 
                     //genero fecha:
                     Date date = new Date();
                     DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    urlcorreo3.setFecha(hourdateFormat.format(date));
-                    urlCorreoRepository.save(urlcorreo3);
+                    validarcorreo2.setFecha(hourdateFormat.format(date));
+                    validarCorreoRepository.save(validarcorreo2);
 
                     //genero url:
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    String urlPart = passwordEncoder.encode(cliente.getDni() + codigoAleatorio);
-                    String url = "http://"+ip+":"+puerto+"/foodDelivery/cambioContra?id=" + urlPart;
-                    String content = "Para cambio de contraseña:\n" + url;
-                    String subject = "OLVIDE MI CONTRASEÑA";
+                    String url = "http://" + ip + ":" + puerto + "/foodDelivery/cambioContra?correo=" +
+                            cliente.getCorreo() + "&id=" + codigoAleatorio;
+                    String content = "Hemos recibido una solicitud de cambio de contraseña.\n"
+                            + "Para cambiar su contraseña ingrese al siguiene enlace:\n" + url
+                            + "\nEnlace valido por 10 min.\n(Si no ha solicitado el cambio de contraseña omita este correo)";
+                    String subject = "OLVIDO DE CONTRASEÑA";
                     sendEmail(correo, subject, content);
+                    redAt.addFlashAttribute("correoEnviado", true);
                 }
             }
             return "redirect:/login";
@@ -659,32 +666,56 @@ public class LoginController {
     }
 
     @GetMapping("/cambioContra")
-    public String cambiarContra(@RequestParam("id") String id, Model model) {
-        List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
-        Boolean redireccionar = false;
-        for (Urlcorreo urlcorreo : listaUrlCorreo) {
-            String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
-            if (BCrypt.checkpw(comparar, id)) {
-                redireccionar = true;
-
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                id = passwordEncoder.encode(comparar);
-
-                model.addAttribute("id", id);
-            }
-        }
-
-        if (redireccionar) {
-            return "recuperarContra";
-        } else {
+    public String cambiarContra(@RequestParam(value = "id", required = false) String id,
+                                @RequestParam(value = "correo", required = false) String correo,
+                                RedirectAttributes redAt,Model model) {
+        if (id == null || correo == null) {
             return "redirect:/login";
+        } else {
+            Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, id);
+            if (validarcorreo != null) {
+                String fecha = validarcorreo.getFecha();
+
+                LocalDateTime dateTime = LocalDateTime.now();
+                dateTime = dateTime.minusMinutes(10);
+                String fechaComp = dateTime.toString().subSequence(0, 10) + " " + dateTime.toString().subSequence(11, 19);
+                System.out.println(fechaComp);
+
+                model.addAttribute("correo", correo);
+
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat date2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+                boolean noValido = false;
+                try {
+                    Date fechaCompDate = date.parse(fechaComp);
+                    Date fechaDB = date2.parse(fecha);
+                    if (fechaCompDate.after(fechaDB)) {
+                        noValido = true;
+                    }
+                } catch (ParseException e) {
+
+                }
+
+                if(noValido){
+                    validarCorreoRepository.delete(validarcorreo);
+                    redAt.addFlashAttribute("urlInvalido", true);
+                    return "redirect:/login";
+                }else{
+                    model.addAttribute("id", id);
+                    return "recuperarContra";
+                }
+            } else {
+                return "redirect:/login";
+            }
         }
     }
 
     @PostMapping("/actualizarContraOlvidada")
     public String actualizarContraOlvidada(@RequestParam("id") String id,
                                            @RequestParam("contra1") String contra1,
-                                           @RequestParam("contra2") String contra2, Model model) {
+                                           @RequestParam("contra2") String contra2,
+                                           Model model, RedirectAttributes redAt) {
 
         boolean valLong1 = false;
         boolean valLong2 = false;
@@ -729,19 +760,40 @@ public class LoginController {
 
             return "recuperarContra";
         } else {
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(id);
 
-            List<Urlcorreo> listaUrlCorreo = urlCorreoRepository.findAll();
-            for (Urlcorreo urlcorreo : listaUrlCorreo) {
-                String comparar = urlcorreo.getUsuario().getDni() + urlcorreo.getCodigo();
-                if (BCrypt.checkpw(comparar, id)) {
-                    //TODO: MANDAR CODIGO EXPIRADO Y BORRAR SI YA ESTA EXPIRADO
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    String nuevaContra = passwordEncoder.encode(contra1);
-                    urlcorreo.getUsuario().setContrasenia(nuevaContra);
-                    usuarioRepository.save(urlcorreo.getUsuario());
-                    urlCorreoRepository.delete(urlcorreo);
+            String fecha = validarcorreo.getFecha();
+
+            LocalDateTime dateTime = LocalDateTime.now();
+            dateTime = dateTime.minusMinutes(10);
+            String fechaComp = dateTime.toString().subSequence(0, 10) + " " + dateTime.toString().subSequence(11, 19);
+            System.out.println(fechaComp);
+
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat date2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+            boolean noValido = false;
+            try {
+                Date fechaCompDate = date.parse(fechaComp);
+                Date fechaDB = date2.parse(fecha);
+                if (fechaCompDate.after(fechaDB)) {
+                    noValido = true;
                 }
+            } catch (ParseException e) {
+
             }
+
+            if(noValido){
+                redAt.addFlashAttribute("urlInvalido", true);
+            }else{
+                Usuario usuario = validarcorreo.getUsuario();
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String nuevaContra = passwordEncoder.encode(contra1);
+                usuario.setContrasenia(nuevaContra);
+                usuarioRepository.save(usuario);
+                redAt.addFlashAttribute("contraseniaAct", true);
+            }
+            validarCorreoRepository.delete(validarcorreo);
             return "redirect:/login";
         }
     }
@@ -1132,7 +1184,8 @@ public class LoginController {
                                     @RequestParam("contrasenia2") String contrasenia2,
                                     @RequestParam("licencia") String licencia,
                                     @RequestParam("placa") String placa,
-                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos) {
+                                    @RequestParam(value = "distritos", required = false) ArrayList<Distrito> distritos,
+                                    RedirectAttributes redAt) {
         String dni = usuario.getDni();
         String telefono = usuario.getTelefono();
         String correo = usuario.getCorreo();
@@ -1385,9 +1438,10 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            enviarCorreoValidacion(usuario.getCorreo());
+            //enviarCorreoValidacion(usuario.getCorreo());
+            redAt.addFlashAttribute("usuarioCreado", true);
 
-            return "redirect:/cliente/login";
+            return "redirect:/login";
         }
 
     }
@@ -1395,25 +1449,25 @@ public class LoginController {
     @GetMapping("/validarCuenta")
     public String validarCuenta(@RequestParam(value = "correo", required = false) String correo,
                                 @RequestParam(value = "value", required = false) String codigoHash,
-                                Model model){
-        if(correo != null && codigoHash!=null){
+                                Model model) {
+        if (correo != null && codigoHash != null) {
             Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, codigoHash);
-            if(validarcorreo!= null){
+            if (validarcorreo != null) {
 //                validarCorreoRepository.delete(validarcorreo);
                 Usuario usuario = usuarioRepository.findByCorreo(correo);
                 usuario.setEstado(2);
                 usuarioRepository.save(usuario);
                 model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";
-            }else{
+            } else {
                 return "redirect:/cliente/login";
             }
-        }else{
+        } else {
             return "redirect:/cliente/login";
         }
     }
 
-    public void  enviarCorreoValidacion(String correo){
+    public void enviarCorreoValidacion(String correo) {
         String codigoHash = "";
         while (true) {
             codigoHash = cipherPassword(generarCodigAleatorio());
@@ -1428,15 +1482,14 @@ public class LoginController {
         validarcorreo.setHash(codigoHash);
         validarCorreoRepository.save(validarcorreo);
 
-        String url = "http://"+ip+":"+puerto+"/foodDelivery/validarCuenta?correo="
-                +correo+"&value="+codigoHash;
-        String content = "Su cuenta ha sido creada exitosamente."+
+        String url = "http://" + ip + ":" + puerto + "/foodDelivery/validarCuenta?correo="
+                + correo + "&value=" + codigoHash;
+        String content = "Su cuenta ha sido creada exitosamente." +
                 "Debe validar su correo para empezar a usar su cuenta.\n"
-                +"Para validar su correo electrónico ingrese al siguiente link:\n" + url;
+                + "Para validar su correo electrónico ingrese al siguiente link:\n" + url;
         String subject = "Bienvenido a Food Delivery!";
         sendEmail(correo, subject, content);
     }
-
 
 
     public String cleanString(String texto) {

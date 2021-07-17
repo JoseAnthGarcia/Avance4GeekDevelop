@@ -399,7 +399,7 @@
 				<div style="text-align:center">
 					<a  class="btn btn-primary" th:href="@{/cliente/pedidoActual}" type="submit">Regresar</a>
                     <a th:if="${listapedido1.get(0).getEstado()==0}" type="button" class="btn btn-danger" data-toggle="modal"
-                       th:data-target="${'#myModal1'}" th:href="${'#myModal1'}">Cancelar</a>
+                       th:data-target="${'#myModal1'}" th:href="${'#myModal1'}">Cancelar Pedido</a>
 
                     <div class="modal" th:id="${'myModal1'}">
                         <div class="modal-dialog">

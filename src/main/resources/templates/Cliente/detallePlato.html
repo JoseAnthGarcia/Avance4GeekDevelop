@@ -44,7 +44,7 @@
                              aria-labelledby="searchDropdown">
                             <form class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
+                                    <input type="text" class="form-control bg-white border-0 small"
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
@@ -245,6 +245,7 @@
                 <form method="get" th:action="@{'/cliente/detallePlato'}"> <!--  th:action="@{'/cliente/buscadorCliente'}" method="get" -->
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
+                            <input name="idPlato" th:value="${plato.getIdplato()}" type="hidden">
                             <input id="texto" name="texto"  type="text" class="form-control bg-light small"
                                    th:placeholder="${texto.equals('') ? 'Búsqueda por extra...' : texto}"
                                    th:value="${texto.equals('') ? '' : texto}"
@@ -334,13 +335,20 @@
                                 </table>
                             </div>
 
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}}"></a> <!-- +'&idPlato='+${plato.getIdplato()} -->
-                                    </li>
-                                </ul>
-                            </nav>
+
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}+'&idPlato='+${plato.getIdplato()}}"></a> <!-- +'&idPlato='+${plato.getIdplato()} -->
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
 
                         </div>
                     </div>

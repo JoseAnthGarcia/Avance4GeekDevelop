@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Lista de platos')"></head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Lista de platos')">
+
+    </head>
 
     <body id="page-top">
 
@@ -257,7 +259,7 @@
                                                 <td th:text="${(v.index+1)+(pageSize*(currentPage - 1))}"></td>
                                                 <td th:text="${platos.nombre}"></td>
                                                 <td th:text="${'S/. '+platos.precio}"></td>
-                                                <td th:text="${platos.descripcion}"></td>
+                                                <td style="width: 500px; text-align: left"><div class="comentarioplatos" th:text="${platos.descripcion}"></div></td>
                                                 <td style="width: 160px"><a style="color: #dce3f9"
                                                                             class="btn btn-warning btn-circle align"
                                                                             th:href="@{'/plato/editar?idcategoria='+${idcategoria}+'&id='+ ${platos.idplato}}"><i
@@ -272,13 +274,13 @@
                                 <div th:if="${totalItems==0 && (texto.isEmpty() && textoP.equalsIgnoreCase('0'))}">
                                     <h3 class="text-lg-center text-danger">No hay platos registrados.</h3>
                                 </div>
-                                <div th:if="${totalPages >= 1}" class="pagination text-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                <div th:if="${totalPages >= 1}" class="pagination text-center justify-content-center">
+                                    <div class="page-item" th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active mt-2 no"></a>
+                                           class="active"></a>
                                         <a th:unless="${currentPage != i}"
                                            th:utext="${i}" class="text-white" style="pointer-events: none"></a>
 
@@ -338,6 +340,7 @@
         <!-- Begin Scripts -->
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
+
 
     </body>
 

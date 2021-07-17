@@ -1010,6 +1010,7 @@ public class ClienteController {
             model.addAttribute("idPrecio",idPrecio);
             model.addAttribute("idCategoria",idCategoria);
             model.addAttribute("texto",texto);
+            model.addAttribute("current",page+1);
             model.addAttribute("nombreRest",restaurante.getNombre());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "Cliente/detallePlato";

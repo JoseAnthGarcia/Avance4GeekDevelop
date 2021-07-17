@@ -62,6 +62,18 @@
               <div class="p-5">
                 <div class="text-center">
                   <h1 class="h4 text-white mb-4">¡Bienvenido!</h1>
+                  <div class="alert alert-success" role="alert" th:if="${usuarioCreado!=null}">
+                    Su registro fue exitoso. Proceda a confirmar su correo electronico.
+                  </div>
+                  <div class="alert alert-danger" role="alert" th:if="${urlInvalido!=null}">
+                    Enlace no valido.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${contraseniaAct!=null}">
+                    La contraseña fue actualizada.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${correoEnviado!=null}">
+                    Ingrese a su correo para cambiar su contraseña.
+                  </div>
                 </div>
                 <form class="user" th:action="@{/processLogin}" method="post" >
                   <div class="form-group">
@@ -83,7 +95,7 @@
                        th:if="${noExisteCuentaGoogle!=null}">Acceso denegado</div>
                   <hr>
                   <a th:href="@{/oauth2/authorization/google}" class="btn btn-google btn-user btn-block">
-                    <i class="fab fa-google fa-fw"></i> Login with Google
+                    <i class="fab fa-google fa-fw"></i> Ingresar con Google
                   </a>
                 </form>
                 <hr>

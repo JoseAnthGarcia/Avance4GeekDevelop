@@ -16,6 +16,7 @@ Correo:
 -RESTAURANTE:
     usuario: hector.ventura@pucp.edu.pe
     clave: hector123
+
 -REPARTIDOR:
     6.- garcia.jose@pucp.edu.pe
     joseGarcia123 - Amauta, Lince, Los Olivos, Jesus Maria, Santiago de Surco
@@ -34,6 +35,13 @@ Correo:
 
     rubi.flores23@gmail.com
     rubiFlores23
+
+Roles:
+1 - cliente
+2 - adminGeneral
+3 - adminRest
+4 - repartidor
+5 - adminitrador
 
 Pedido:
 0 - Pendiente - verde limon pastel

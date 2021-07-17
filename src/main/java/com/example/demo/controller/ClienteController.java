@@ -881,6 +881,7 @@ public class ClienteController {
         }
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
+        model.addAttribute("current", page + 1);
         model.addAttribute("listaPlato",listaPlato.getContent());
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
@@ -1559,10 +1560,10 @@ public class ClienteController {
                                // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
                                 @RequestParam(value = "tarjeta", required = false) String tarjeta,
                                 @RequestParam(value = "newTarjeta", required = false) String tipoTarjeta,
-                               @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
-                               @RequestParam(value = "mes", required = false) String mes,
-                               @RequestParam(value = "year", required = false) String year,
-                               @RequestParam(value = "cvv", required = false) String cvv,
+                                @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
+                                @RequestParam(value = "mes", required = false) String mes,
+                                @RequestParam(value = "year", required = false) String year,
+                                @RequestParam(value = "cvv", required = false) String cvv,
                                // @RequestParam(value = "delivery", required = false) String precioDelivery,
                                 @RequestParam(value = "efectivoPagar",required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,

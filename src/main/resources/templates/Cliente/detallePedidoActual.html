@@ -233,7 +233,7 @@
                                         </thead>
                                         <tbody class="justify-content-center" >
                                             <tr th:each="p2, info:${listapedido2}">
-                                                <td th:text="${(current -1)*5 +info.index +1}">1</td>
+                                                <td th:text="${info.index +1}"></td>
                                                 <td th:text="${p2.getNombreplato()}"></td>
                                                 <td th:text="${p2.getCantidad()}"></td>
                                                 <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
@@ -275,7 +275,8 @@
                                 </div>
 
 
-                            <div class="row">
+
+                         <!--   <div class="row">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
@@ -291,7 +292,8 @@
                                     </nav>
                                 </div>
                                 <div class="col-md-2"></div>
-                            </div>
+                            </div> -->
+
                 <!--------------------------------Extras----------------------------------------------------------------->
                             <div class="card-body" th:if="${listaExtra.size!=0}">
                                 <label>Extras:</label>

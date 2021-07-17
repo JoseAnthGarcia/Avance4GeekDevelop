@@ -201,7 +201,7 @@
                     </div>
                 </form>
 
-                <div class="card shadow">
+                <div class="card shadow mb-4">
                     <!-- DataTales Example -->
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -289,7 +289,7 @@
     <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
                                         <!-- -------------------------------------1 ) LLAMADO AL MODAL CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
                                         <div  class="row mb-2" >
-                                            <div  class="col-6" th:if="${pedido.getValoracionrestaurante() == null}"  >
+                                            <div  class="col-6" th:if="${pedido.getValoracionrestaurante() == null && pedido.getEstado()==6}"  >
                                                 <h6 class="mb-2" style="color:black">Valora a tu restaurante</h6>
                                                 <a data-toggle="modal"
                                                    th:data-target="${'#valoraRest'+pedido.getCodigo()}"
@@ -301,7 +301,7 @@
 
                                             <!---------------------------------------2 ) LLAMADO  AL MODAL CUANDO YA SE VALORO O SE HIZO UNA OBSERVACION ------------------------------------------>
 
-                                            <div class="col-6" th:if="${pedido.getValoracionrestaurante() != null}">
+                                            <div class="col-6" th:if="${pedido.getValoracionrestaurante() != null && pedido.getEstado()==6}">
                                                 <h6 class="mb-2" style="color:black">Valoración de tu restaurante</h6>
                                                 <a data-toggle="modal"
                                                    th:data-target="${'#valoraRest2'+pedido.getCodigo()}"
@@ -311,10 +311,19 @@
                                                 </a>
                                             </div>
 
+                                            <div class="col-6" th:if="${pedido.getEstado()==2}">
+                                                <h6 class="mb-2" style="color:black">Valoración de tu restaurante</h6>
+                                                <a data-toggle="modal"
+                                                   >
+                                                    <i class="fas fa-utensils ml-2"
+                                                       style="font-size:2em; color:gray"></i>
+                                                </a>
+                                            </div>
+
 
                                             <!-- ------------------------------------- 3 ) LLAMADO AL MODAL REPARTIDOR CUANDO NO HAY VALORACION NI OBSERVACION ------------------------------------------------------------------>
 
-                                            <div class="col-6"  th:if="${pedido.getValoracionrepartidor()== null}">
+                                            <div class="col-6"  th:if="${pedido.getValoracionrepartidor()== null && pedido.getEstado()==6}">
                                                 <h6 class="mb-2" style="color:black">Valora a tu repartidor</h6>
                                                 <a  data-toggle="modal" th:data-target="${'#valoraRep'+pedido.getCodigo()}"
                                                     th:href="${'#valoraRep'+pedido.getCodigo()}">
@@ -324,10 +333,18 @@
 
                                             <!-- ------------------------------------- 4 ) LLAMADO AL MODAL CUANDO El REAPRTIDOR YA FUE VALORADO ------------------------------------------------------------------>
 
-                                            <div class="col-6" th:if="${pedido.getValoracionrepartidor()!= null}">
+                                            <div class="col-6" th:if="${pedido.getValoracionrepartidor()!= null && pedido.getEstado()==6}">
                                                 <h6 class="mb-2" style="color:black">Valoración de tu repartidor</h6>
                                                 <a data-toggle="modal" th:data-target="${'#valoraRep2'+pedido.getCodigo()}"
                                                    th:href="${'#valoraRep2'+pedido.getCodigo()}">
+                                                    <i class="fas fa-motorcycle ml-2"
+                                                       style="font-size:2em; color:gray"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-6" th:if="${pedido.getEstado()==2}">
+                                                <h6 class="mb-2" style="color:black">Valoración de tu repartidor</h6>
+                                                <a data-toggle="modal" >
                                                     <i class="fas fa-motorcycle ml-2"
                                                        style="font-size:2em; color:gray"></i>
                                                 </a>
@@ -572,43 +589,38 @@
 
                             </table>
                         </div>
-                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination text-center justify-content-center">
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a class="page-link" th:href="@{'/cliente/paginacionHistPed?page='+${page}}" th:text="${page}"></a>
+                                        </li>
+
+                                    </ul>
+                                </nav>
+                            </div>
+
+                        </div>
+    <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
 
                     </div>
-                </div>
 
-
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <nav aria-label="pagination">
-                            <ul class="pagination justify-content-center">
-
-                                <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                    <a th:unless="${texto == null && estado == null}" class="page-link active text-white"  style="background-color: #701111"
-                                       th:text="${page}"
-                                       th:href="@{'/cliente/paginacionHistPed?page='+${page}}"></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="col-md-2"></div>
                 </div>
 
             </div>
 
-            <!-- /.container-fluid -->
 
         </div>
-
-        <!-- End of Main Content -->
 
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+                    <span>Geek Developers &copy; 2021-1</span>
                 </div>
             </div>
         </footer>

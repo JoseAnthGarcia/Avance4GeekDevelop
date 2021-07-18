@@ -224,31 +224,50 @@
 
                         <div class="row mb-5">
                             <div th:if="${listaPlato.size() != 0}" class="col text-center" th:each="plato : ${listaPlato}">
-                                    <div style="color:#000000;" class="ml-3 mt-1 text-left">
-                                        <strong th:text="|Precio:  |"></strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
-                                    </div>
-                                    <div class="container2">
-                                        <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
-                                             class="image2 shadow"  style="height: 200px; width: 300px">
-                                        <a class="overlay2" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
-                                            <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
-                                        </a>
+                                   <div class="col align-content-center justify-content-center">
+                                       <div class="row align-content-center justify-content-center">
+                                           <div style="color:#000000;" class="text-center">
+                                                   <strong th:text="|Precio:  |"></strong>
+                                                   <h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
+                                           </div>
+                                       </div>
+                                       <div class="row align-content-center justify-content-center">
+                                           <div class="center-block">
+                                               <div class="container2">
+                                                   <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" alt="Avatar"
+                                                        class="image2 shadow"  style="height: 200px; width: 300px">
+                                                   <a class="overlay2" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}"  style="height: 200px; width: 300px">
+                                                       <h1 class="text2 font-weight-bolder text-left" th:text="${plato.getNombre()}"></h1>
+                                                   </a>
 
-                                        <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
-                                            <div class="form-check-inline">
-                                                <div class="form-check-inline">
-                                                    <input type="hidden" name="idPlato" th:value="${plato.getIdplato()}">
-                                                    <input type="hidden" name="idPage" value="0">
-                                                    <input id="cantidadPlato" class="form-control mr-1 mb-3 mt-3" type="text" size="1%"
-                                                           style="border-color: lightgray" name="cantidadPlato">
-                                                    <button class="btn btn-cielito mr-3" style="color: #ffffff; background-color: #701111" type="submit"><i
-                                                            class="fas fa-plus"></i></button>
+                                               </div>
+                                           </div>
 
-                                                </div>
-                                            </div>
-                                        </form>
 
-                                    </div>
+                                       </div>
+                                       <div class="row align-content-center justify-content-center">
+
+                                           <form  th:action="@{'/cliente/aniadirCarrito'}" method="post">
+                                                   <div class="form-check-inline">
+                                                       <input type="hidden" name="idPlato" th:value="${plato.getIdplato()}">
+                                                       <input type="hidden" name="idPage" value="0">
+                                                       <a class="btn btn-cielito mr-3" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}" style="color: #ffffff; background-color: #eea236" type="button"><i
+                                                               class="fas fa-eye"></i></a>
+                                                       <input id="cantidadPlato" class="form-control mr-3 mb-3 mt-3" type="text" size="1%"
+                                                              style="border-color: lightgray" name="cantidadPlato">
+                                                       <button class="btn btn-cielito mr-3" style="color: #ffffff; background-color: #701111" type="submit"><i
+                                                               class="fas fa-plus"></i></button>
+
+                                                   </div>
+
+                                           </form>
+
+                                       </div>
+
+                                   </div>
+
+
+
 
                             </div>
 
@@ -259,28 +278,25 @@
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaRestaurantes'}"><i
                                             class="fas fa-arrow-left"></i> Regresar
                                     </a>
-                                  <a th:if="${session.carrito != null}" class="btn btn-info mr-3" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
+                                  <!--<a th:if="${session.carrito != null}" class="btn btn-info mr-3" style="background-color: #2d4a8d; border-color: #2d4a8d"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
                                             class="fas fa-cart-plus"></i> Ir al carrito
-                                    </a>
+                                    </a>-->
                                 </div>
                             </div>
 
-                            <!--<div class="pagination" style=" margin-left: 30% ;align-content: center">
-                                <a href="#" class="active" style="background-color: #701111">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                            </div>-->
-
-                            <nav aria-label="Pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:each="page : ${pages}">
-                                        <a th:unless="${texto == null && idPrecio == null}" style="background-color: #701111" class="page-link" th:text="${page}" th:href="@{'/cliente/listaPlatos?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}}"></a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && idPrecio == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/listaPlatos?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}}"></a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
 
                         </div>
 

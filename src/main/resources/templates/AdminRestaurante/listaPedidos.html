@@ -213,16 +213,16 @@
                                 <div class="col-sm-auto" style="display: flex; justify-content: center; align-content: center; flex-direction: column">
                                     <label>Desde: </label>
                                 </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input placeholder="Desde" class="form-control" name="fechainicio"
-                                           type="date" th:value="${fechainicio}">
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechainicio" id="fechainicio"
+                                           type="date" th:value="${fechainicio}"  onfocus="(this.type='date')">
                                 </div>
                                 <div class="col-sm-auto" style="display: flex; justify-content: center; align-content: center; flex-direction: column">
                                     <label>Hasta: </label>
                                 </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input class="form-control" name="fechafin"
-                                           type="text" th:value="${fechafin}" onfocus="(this.type='date')">
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechafin" id="fechafin"
+                                           type="date" th:value="${fechafin}" onfocus="(this.type='date')">
                                 </div>
                                 <div class="input-group-append col-sm-auto mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
@@ -503,6 +503,30 @@
         </div>
 
         <!-- Begin Scripts -->
+        <script type="text/javascript">
+            $document.ready(function () {
+                var fechainicio = $("#fechainicio").text();
+                var fechafin = $("#fechafin").text();
+                var date= new Date();
+                if(fechainicio == date){
+                    console.log("entrada 1");
+                    $("#fechainicio").attr('class', 'date');
+                }else if (fechainicio != date){
+                    console.log("entrada 2");
+                    $("#fechainicio").attr('class', 'text')
+                }
+                if (fechafin == '3000-05-21 00:00:00'){
+                    console.log("entrada 3");
+                    $("#fechafin").attr('class', 'date');
+                }else if (fechainicio != '3000-05-21 00:00:00'){
+                    console.log("entrada 4");
+                    $("#fechafin").attr('class', 'text')
+                }
+            })
+        </script>
+        <script>
+            console.log('hola');
+        </script>
         <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
         <!-- End Scripts -->
 

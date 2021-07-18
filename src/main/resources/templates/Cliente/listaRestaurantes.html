@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-
 <head th:replace="Cliente/fragments/general.html :: header( title = 'Lista Restaurantes')"></head>
 
 <body id="page-top">
@@ -202,6 +201,7 @@
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
                                 <option value="7" th:selected="${val.equals('7')}">Valoración</option>
+                                <option value="0" th:selected="${val.equals('0')}">0</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>
@@ -209,16 +209,54 @@
                                 <option value="5" th:selected="${val.equals('5')}">5</option>
                             </select>
                         </div>
+                        <!--
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${idCategoria.equals('')}">Categorias</option>
+                                <option value="0" disabled>Categorias</option>
                                 <option th:each="categoria : ${categorias}"
+                                        th:selected="${idCategoria}"
                                         th:value="${categoria.getIdcategoria()}"
                                         th:text="${categoria.getNombre()}"
-                                        th:selected="${idCategoria.equals(categoria.getIdcategoria())}"></option>
+                                        ></option>
                             </select>
                         </div>
-                        <!-- TODO BUSCADOR DE CATEGORÍAS -->
+                    -->
+                        <!-- -------------------------------------------------------------------------------------- -->
+                        <div class="col-sm-2 mb-2 ">
+                            <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value="" th:selected="${idCategoria.equals('')}">Categorías</option>
+                                <option value="1" th:selected="${idCategoria.equals('1')}">Árabe</option>
+                                <option value="2" th:selected="${idCategoria.equals('2')}">Asiática</option>
+                                <option value="3" th:selected="${idCategoria.equals('3')}">Café</option>
+                                <option value="4" th:selected="${idCategoria.equals('4')}">Carnes</option>
+                                <option value="5" th:selected="${idCategoria.equals('5')}">Chifa</option>
+                                <option value="7" th:selected="${idCategoria.equals('7')}">Criolla</option>
+                                <option value="8" th:selected="${idCategoria.equals('8')}">Desayunos</option>
+                                <option value="9" th:selected="${idCategoria.equals('9')}">Fusión</option>
+                                <option value="10" th:selected="${idCategoria.equals('10')}">Hamburguesas</option>
+                                <option value="11" th:selected="${idCategoria.equals('11')}">Helados</option>
+                                <option value="12" th:selected="${idCategoria.equals('12')}">India</option>
+                                <option value="13" th:selected="${idCategoria.equals('13')}">Internacional</option>
+                                <option value="14" th:selected="${idCategoria.equals('14')}">Jugos y batidos</option>
+                                <option value="15" th:selected="${idCategoria.equals('15')}">Mexicana</option>
+                                <option value="16" th:selected="${idCategoria.equals('16')}">Panadería</option>
+                                <option value="17" th:selected="${idCategoria.equals('17')}">Pastas</option>
+                                <option value="18" th:selected="${idCategoria.equals('18')}">Pescados y mariscos</option>
+                                <option value="19" th:selected="${idCategoria.equals('19')}">Pizzas</option>
+                                <option value="20" th:selected="${idCategoria.equals('20')}">Poke</option>
+                                <option value="21" th:selected="${idCategoria.equals('21')}">Pollería</option>
+                                <option value="22" th:selected="${idCategoria.equals('22')}">Postres</option>
+                                <option value="23" th:selected="${idCategoria.equals('23')}">Sandwiches</option>
+                                <option value="24" th:selected="${idCategoria.equals('24')}">Sopas y cremas</option>
+                                <option value="25" th:selected="${idCategoria.equals('25')}">Sushi</option>
+                                <option value="26" th:selected="${idCategoria.equals('26')}">Vegetariana</option>
+                                <option value="27" th:selected="${idCategoria.equals('27')}">Saludable</option>
+                            </select>
+                        </div>
+
+
+
+           <!-- ------------------------------------------------------------------------------------------------------------- -->
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
@@ -231,14 +269,19 @@
                     </div>
                 </form>
 
+
+
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
-                        <h6 class="font-weight-bold text-white text-center mb-0">LISTA DE RESTAURANTES</h6>
+                        <h4 class="font-weight-bold text-white text-center mb-0">LISTA DE RESTAURANTES</h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
+                        <div class="text-center" >
+                            <h5 th:if="${listaRestaurante.size()==0}" th:text="|No se encontraron resultados|"></h5>
+                        </div>
+                        <div class="table-responsive"  >
+                            <table class="table table-bordered" th:if="${listaRestaurante.size()>0}">
                                 <thead>
                                 <tr>
                                     <th class="w-5"> N° </th>
@@ -312,10 +355,7 @@
                             </table>
                         </div>
 
-
-
-
-
+    <!-- ------------------------------------------------------------------------------------ -->
                         <div class="row">
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
@@ -329,40 +369,42 @@
                                     </ul>
                                 </nav>
                             </div>
-                            <div class="col-md-2"></div>
                         </div>
-
-
-
-
-            </div>
-                    </div>
-
-                    <!-- /.container-fluid -->
-                    <!-- End of Main Content -->
-                </div>
-                <!-- End of Content Wrapper -->
-
-            </div>
-            <!-- End of Page Wrapper -->
-            <!-- Modal advertencia eliminar -->
-            <div class="modal fade" id="lModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel2">Está seguro que desea eliminar producto?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Sí</button>
-                        </div>
+   <!-- ------------------------------------------------------------------------------------ -->
+                     </div>
                     </div>
                 </div>
             </div>
+
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</div>
+
+
+    <div class="modal fade" id="lModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Está seguro que desea eliminar producto?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Sí</button>
+                </div>
+            </div>
+        </div>
+    </div>
             <!-- Scroll to Top Button-->
             <a class="scroll-to-top rounded" href="#page-top">
                 <i class="fas fa-angle-up"></i>
@@ -391,9 +433,7 @@
                 </div>
             </div>
 
-        </div>
 
-</div>
 
 </body>
 

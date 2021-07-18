@@ -19,7 +19,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="Avance4GeekDevelop" value="4b031c3c-e132-43f7-a238-00f657030edd" />
-          <factory-entry name="entityManagerFactory" value="ed72097c-681d-452c-b357-465c82ef5a10" />
+          <factory-entry name="entityManagerFactory" value="7aeac770-a0f4-4344-a0a0-6e45d1efbdb8" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
@@ -32,6 +32,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/${project.build.directory}/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/${project.build.directory}/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />

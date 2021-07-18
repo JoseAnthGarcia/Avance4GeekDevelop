@@ -183,13 +183,19 @@
                                            name="textBuscador">
                                 </div>
 
-                                <div class="col-sm-2 mb-1">
-                                    <input placeholder="Desde" class="form-control" name="fechainicio"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                <div class="col-sm-auto" style="display: flex; justify-content: center; align-content: center; flex-direction: column">
+                                    <label>Desde: </label>
                                 </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input placeholder="Caducidad" class="form-control" name="fechafin"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechainicio" id="fechainicio"
+                                           type="date" th:value="${fechainicio}"  onfocus="(this.type='date')">
+                                </div>
+                                <div class="col-sm-auto" style="display: flex; justify-content: center; align-content: center; flex-direction: column">
+                                    <label>Hasta: </label>
+                                </div>
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechafin" id="fechafin"
+                                           type="date" th:value="${fechafin}" onfocus="(this.type='date')">
                                 </div>
 
                                 <div class="col-sm-2 mb-1">
@@ -201,13 +207,13 @@
                                         <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
                                     </select>
                                 </div>
-                                <div class="input-group-append col-sm-1 mb-3 ml-0">
+                                <div class="input-group-append col-sm-auto mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-auto mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{/cupon/lista}">Quitar filtros</a>
                                 </div>

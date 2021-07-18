@@ -371,7 +371,7 @@
                                     </th>
                                 </tr>
                                 <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${(current -1)*2 +info.index+1}"></td>
+                                    <td th:text="${(current -1)*10 +info.index+1}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getNumPedidos()}">10</td>
                                     <td th:text="|S/. ${ped.getTotal()}|"></td>

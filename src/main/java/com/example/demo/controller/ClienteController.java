@@ -229,7 +229,7 @@ public class ClienteController {
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
 
 
@@ -424,7 +424,7 @@ public class ClienteController {
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
 
 
@@ -2475,7 +2475,6 @@ public String detalleHistorialPedido(
     }
 
 
-
     /********************************* REPORTEDINERO *******************************************************************************************************************++*/
     @GetMapping("/reporteDinero")
     public String pedidoActual3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
@@ -2494,7 +2493,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         if (texto == null) {
@@ -2655,7 +2654,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -2766,9 +2765,6 @@ public String detalleHistorialPedido(
         return "Cliente/reporteDineroCliente";
     }
 
-
-
-
 /****************************************************************REPORTE PEDIDO****************************************************************************/
     @GetMapping("/reportePedido")
     public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
@@ -2788,7 +2784,7 @@ public String detalleHistorialPedido(
             page =0;
         }
         //int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         if (texto == null) {
@@ -2986,7 +2982,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -3162,7 +3158,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         if (texto == null) {
@@ -3238,10 +3234,6 @@ public String detalleHistorialPedido(
             limitInf = 0;
         }
 
-
-
-
-
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
 
         numpedidos= httpSession.getAttribute("numpedidos") == null ? numpedidos :  (String) httpSession.getAttribute("numpedidos");
@@ -3276,9 +3268,6 @@ public String detalleHistorialPedido(
                 limit1cant = 0;
                 limit2cant = 40;
         }
-
-
-
 
         Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, limit1cant,limit2cant, pageRequest);
         int totalPage = listapedidos.getTotalPages();
@@ -3346,7 +3335,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -3378,10 +3367,6 @@ public String detalleHistorialPedido(
             anio = anio1;
 
         }
-
-
-
-
 
 
         int limitSup = 0;
@@ -3439,8 +3424,6 @@ public String detalleHistorialPedido(
                 limit1cant = 0;
                 limit2cant = 40;
         }
-
-
 
 
         Page<ReportePedidoCDTO> listapedidos = reporteTiempoService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, limit1cant,limit2cant, pageRequest);

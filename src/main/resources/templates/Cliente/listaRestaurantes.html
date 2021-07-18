@@ -309,7 +309,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="rest, v : ${listaRestaurante}">
-                                    <td th:text="${(current -1)*2 + v.index +1}"></td>
+                                    <td th:text="${(current -1)*5 + v.index +1}"></td>
                                     <td>
                                         <div style=text-align:center>
                                             <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">

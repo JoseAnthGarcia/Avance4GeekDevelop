@@ -152,7 +152,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
             "where php.codigo = ?1", nativeQuery = true)
-    Page<Plato_has_PedidoDTO> detalle2(String codigo, Pageable pageable);
+    List<Plato_has_PedidoDTO> detalle2(String codigo);
 
 
 

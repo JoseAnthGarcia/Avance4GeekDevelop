@@ -106,8 +106,7 @@ public class ClienteController {
     @Autowired
     ReporteDineroService reporteDineroService;
 
-    @Autowired
-    Detalle2Service detalle2Service;
+
 
     @Autowired
     CuponClienteService cuponClienteService;
@@ -242,9 +241,6 @@ public class ClienteController {
         Integer limitInfVal = 0;
         Integer limitSupVal = 6; //TODO 5
 
-
-
-
         List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
 
         for (ClienteDTO cl : listadirecc) {
@@ -309,7 +305,6 @@ public class ClienteController {
         val= httpSession.getAttribute("val") == null ? val :  (String) httpSession.getAttribute("val");
         idCategoria= httpSession.getAttribute("idCategoria") == null ? idCategoria :  (String) httpSession.getAttribute("idCategoria");
         idPrecio= httpSession.getAttribute("idPrecio") == null ? idPrecio :  (String) httpSession.getAttribute("idPrecio");
-
 
         switch (idPrecio){
             case "1":
@@ -453,8 +448,6 @@ public class ClienteController {
         String id2="-";
         String id3="-";
 
-
-
         System.out.println("id1 :"+id1);
         System.out.println("id12 :"+id2);
         System.out.println("id3 :"+id3   );
@@ -573,26 +566,7 @@ public class ClienteController {
 
 
 
-
-
-
-
-
-
 /************************************************************************************************************************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -2176,9 +2150,6 @@ public String pedidoActual23(@RequestParam Map<String, Object> params, Model mod
         return "Cliente/listaPedidoActual";
     }
 /*************************************************************************************************************************************************/
-
-
-
 @GetMapping("/cancelarPedido")
 public String cancelarPedido(@RequestParam("id") String id,
                             RedirectAttributes attr,
@@ -2202,7 +2173,7 @@ public String cancelarPedido(@RequestParam("id") String id,
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(@RequestParam Map<String, Object> params,
+    public String detallePedidoActual(
                                       @RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
         List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
@@ -2224,26 +2195,12 @@ public String cancelarPedido(@RequestParam("id") String id,
                 int estadop= pedido.getEstado();
                 if(estadop==0 || estadop==1 || estadop==3 || estadop==4 || estadop==5){
                     model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
-                    int page;
-                    try{
-                        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-                    }catch(NumberFormatException nfe){
-                        page =0;
-                    }
-
-                    Pageable pageRequest = PageRequest.of(page, 7);
 
 
-
-                    Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
-                    int totalPage = listaPedidos.getTotalPages();
-                    if (totalPage > 0) {
-                        List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                        model.addAttribute("pages", pages);
-                    }
+                    List<Plato_has_PedidoDTO> listaPedidos = pedidoRepository.detalle2(codigo);
 
                     model.addAttribute("listapedido2", listaPedidos);
-                    model.addAttribute("current", page + 1);
+
                     model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
 
 
@@ -2271,9 +2228,6 @@ public String cancelarPedido(@RequestParam("id") String id,
     public String historialPedidos(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                  @RequestParam(value = "texto", required = false) String texto,
                                  @RequestParam(value = "estado", required = false) String estado) {
-
-
-
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page;
@@ -2397,7 +2351,7 @@ public String cancelarPedido(@RequestParam("id") String id,
 /************************************************************************************************************************************************************************************************************/
 
 @GetMapping("/detalleHistorialPedido")
-public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
+public String detalleHistorialPedido(
                                    @RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
     Usuario usuario1 = (Usuario) session.getAttribute("usuario");
@@ -2420,21 +2374,16 @@ public String detalleHistorialPedido(@RequestParam Map<String, Object> params,
             int estadop= pedido.getEstado();
             if(estadop==2 || estadop==6 ){
                 model.addAttribute("listapedido1", pedidoRepository.detalle1(codigo));
-                int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-                Pageable pageRequest = PageRequest.of(page, 5);
 
 
-                Page<Plato_has_PedidoDTO> listaPedidos = detalle2Service.findPaginated2(codigo, pageRequest);
-                int totalPage = listaPedidos.getTotalPages();
-                if (totalPage > 0) {
-                    List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                    model.addAttribute("pages", pages);
-                }
+
+                List<Plato_has_PedidoDTO> listaPedidos = pedidoRepository.detalle2(codigo);
+
 
                 model.addAttribute("listapedido2", listaPedidos);
                 model.addAttribute("codigo",codigo);
                 model.addAttribute("listaRepartidor",pedidoRepository.detalleRepartidor(codigo));
-                model.addAttribute("current", page + 1);
+
 
 
                 model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));

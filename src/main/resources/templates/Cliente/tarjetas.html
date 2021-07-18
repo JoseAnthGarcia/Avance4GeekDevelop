@@ -224,7 +224,7 @@
                                             <div class="row">
                                                 <div class="col">
                                                     <select class="form-control" id="mes" name="mes">
-                                                        <option th:selected="${mes.equals('0')}" value="0" disabled>mes</option>
+                                                        <option th:selected="${mes.equals('39')}" value="39">mes</option>
                                                         <option th:selected="${mes.equals('1')}" value="1">1</option>
                                                         <option th:selected="${mes.equals('2')}" value="2">2</option>
                                                         <option th:selected="${mes.equals('3')}" value="3">3</option>
@@ -241,9 +241,7 @@
                                                     <div th:if="${mdg6 != null}" th:text="${mdg6}"
                                                          style="color: red; font-size: small; text-align: left"></div>
                                                 </div>
-
                                                 <div class="col">
-
                                                     <input type="text" class="form-control " id="year" name="year"
                                                            th:value="${year}" placeholder="año">
                                                     <div th:if="${msg5 != null}" th:text="${msg5}"

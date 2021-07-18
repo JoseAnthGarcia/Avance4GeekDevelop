@@ -240,7 +240,8 @@
                         <div class="card-header py-3 " style="background-color: #701111;">
 						<div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h4 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE DINERO DEL AÑO 2021</h4>
+                                <h4 class="font-weight-bold text-white" id="nombre_pagina"
+                                th:text="|REPORTES DE DINERO DEL AÑO ${anio}|"></h4>
                             </div>
 							<div class="col-1 d-sm-flex justify-content-center"  th:if="${total>0}">
                                 <button  id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
@@ -253,6 +254,7 @@
 							<h3  style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
                             <h5 th:if="${total==0}" th:text="|No se encontraron resultados|"></h5>
 						</div>
+                        <br th:if="${total>0}">
                         <div class="card-body"  th:if="${total>0}" >
                             <div class="table-responsive">
                              <table id="tabla" class="table table-bordered">
@@ -294,27 +296,25 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <nav aria-label="pagination">
-                                        <ul class="pagination justify-content-center">
-
+                                        <ul class="pagination text-center justify-content-center">
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a th:unless="${texto == null && nombrec == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
-                                                   th:text="${page}"
-                                                   th:href="@{'/cliente/reportedineropage?page='+${page}}"></a>
+                                                <a class="page-link" th:href="@{'/cliente/reportedineropage?page='+${page}}" th:text="${page}"></a>
                                             </li>
+
                                         </ul>
                                     </nav>
                                 </div>
-                                <div class="col-md-2"></div>
+
                             </div>
 
 
-
-
                         </div>
+                        <div style="text-align:center" >
+                            <a  class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
+                        </div>
+                        <br>
                     </div>
-					<div style="text-align:center" >
-                        <a  class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
-					</div>
+
                 </div>
                 <!-- /.container-fluid -->
 

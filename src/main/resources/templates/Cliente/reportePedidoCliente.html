@@ -81,7 +81,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                   th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
@@ -90,7 +91,8 @@
                             <h6 class="notificacion">
                                 Pedido actual
                             </h6>
-                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos cancelados o entregados</p>
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos
+                                cancelados o entregados</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                class="dropdown-item d-flex align-items-center"
                                th:each="noti,in:${notificaciones}"
@@ -101,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div  class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
+                                    <div class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
                                     <span class="font-weight-bold" th:text="${noti.getNombre()}"></span>
                                     <span class="font-weight-bold" th:if="${noti.estado==2}"> - Cancelado</span>
                                     <span class="font-weight-bold" th:if="${noti.estado==6}"> - Entregado</span>
@@ -147,7 +149,8 @@
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
                                </span>
-                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
+                            <img class="img-profile rounded-circle"
+                                 th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -176,10 +179,10 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto"  type="text" class="form-control small"
+                                <input id="texto" name="texto" type="text" class="form-control small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
-                                       >
+                                >
                             </div>
                         </div>
                         <div class="col-sm-3 mb-1 ">
@@ -194,7 +197,7 @@
                         </div>
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="mes">
-                                <option value="13"   th:selected="${mes.equals('13')}">Mes</option>
+                                <option value="13" th:selected="${mes.equals('13')}">Mes</option>
                                 <option value="1" th:selected="${mes.equals('1')}">Enero</option>
                                 <option value="2" th:selected="${mes.equals('2')}">Febrero</option>
                                 <option value="3" th:selected="${mes.equals('3')}">Marzo</option>
@@ -210,7 +213,7 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-2 mb-2" th:if="${tam.equals('0')}" >
+                        <div class="col-sm-2 mb-2" th:if="${tam.equals('0')}">
                             <select id="anio" name="anio" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${anio.equals('')}">Año</option>
                                 <option th:each=" an : ${listanios}"
@@ -245,134 +248,180 @@
                     </div>
                 </form>
 
+                <!-- -------------------------------------------------------------------------------------------------------------------------------------- -->
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
                         <div class="row">
                             <div class="col-11 d-sm-flex justify-content-center">
-                                <h4 class="font-weight-bold text-white" id="nombre_pagina">REPORTES DE PEDIDOS DEL AÑO 2021</h4>
+                                <h4 class="font-weight-bold text-white" id="nombre_pagina"
+                                    th:text="|REPORTES DE PEDIDOS DEL AÑO ${anio}|"></h4>
                             </div>
-                            <button th:if="${listarestTop.size()>0 && listarestPl.size()>0 }" id="btnExportar" class="btn btn-warning mr-1" >Exportar</button>
+                            <button th:if="${listarestTop.size()>0 && listarestPl.size()>0 }" id="btnExportar"
+                                    class="btn btn-warning mr-1">Exportar
+                            </button>
 
                         </div>
                     </div>
                     <br>
 
-                <div class="text-center"  >
-                    <h5 class="justify-content-center"
-                        th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
-                        th:text="|No se encontraron resultados|"></h5>
-
-                </div>
-
-
-
-
-
-                <div class="justify-content-center row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                    <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
-                    <span><h2 style="color:black">Top 3</h2></span>
-                </div>
-                <br>
-
-                <div class="justify-content-center row">
-
-                    <div class="col-3" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                        <div style="color:black; text-align:center">Restaurantes</div>
-                        <h6 style="color: black" th:each="ped,info: ${listarestTop}"
-                            th:text="${ped.getNombrerest()}"></h6>
+                    <div class="text-center">
+                        <h5 class="justify-content-center"
+                            th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
+                            th:text="|No se encontraron resultados|"></h5>
 
                     </div>
-                    <br>
-                    <div class="col-3 offset-md-1" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                        <div style="color:black; text-align:center">Platos más pedidos</div>
-                        <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
+                    <div class="text-center" >
+                        <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
+                            th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
+                        <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
+                        <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
+
                     </div>
-                </div>
+                    <!--
+                        <div class="justify-content-center row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
+                            <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
+                            <span><h2 style="color:black">Top 3</h2></span>
+                        </div>
+                        <br>
 
-                <br>
-                <div class="text-center" >
-                    <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
-                        th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                    <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
-                    <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
+                        <div class="justify-content-center row">
 
-                </div>
+                            <div class="col-3" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
+                                <div style="color:black; text-align:center">Restaurantes</div>
+                                <h6 style="color: black" th:each="ped,info: ${listarestTop}"
+                                    th:text="${ped.getNombrerest()}"></h6>
 
-                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total!=null)}">
-                    <div class="table-responsive">
-                        <table id="tabla" class="table table-bordered">
+                            </div>
+                            <br>
+                            <div class="col-3 offset-md-1" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
+                                <div style="color:black; text-align:center">Platos más pedidos</div>
+                                <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
+                            </div>
+                        </div>
 
+                        <br>
+                        <div class="text-center" >
+                            <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
+                                th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
+                            <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
+                            <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
+
+                        </div>
+                            -->
+
+
+                    <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+                    <div class="card-body" id='tabla' th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
+                        <table class="table "
+                               style="background-color:#F2E2AA; border-color:#F2E2AA ">
+                            <thead>
                             <tr>
-                                <th>
-                                    N°
+                                <th style="color:black">
+                                    TOP 3 RESTAURANTES
                                 </th>
-                                <th>
-                                    Restaurantes
-                                </th>
-                                <th>
-                                    N° Pedidos
-                                </th>
-                                <th>
-                                    Consumo Total
-                                </th>
-                                <th>
-                                    Mes
+                                <th style="color:black">
+                                    TOP 3 PLATOS MÁS VENDIDOS
                                 </th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="ped,info:${listapedidos}">
-                                <td th:text="${(current -1)*5 +info.index+1}"></td>
-                                <td th:text="${ped.getNombrerest()}"></td>
-                                <td th:text="${ped.getNumPedidos()}">10</td>
-                                <td th:text="|S/. ${ped.getTotal()}|"></td>
-                                <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
-                                <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
-                                <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
-                                <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
-                                <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
-                                <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
-                                <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
-                                <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
-                                <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
-                                <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
-                                <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
-                                <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
+                            <tbody >
+
+                            <tr>
+                                <td th:if="${listarestTop.get(0).getNombrerest()!= null}"
+                                    style="color:black"  th:text="${listarestTop.get(0).getNombrerest()}"></td>
+
+                                <td th:if="${listarestPl.get(0).getNombre()!=null}" style="color:black"  th:text="${listarestPl.get(0).getNombre()}"></td>
+                            </tr>
+                            <tr>
+                                <td th:if="${listarestTop.size()>=2}" style="color:black" th:text="${listarestTop.get(1).getNombrerest()}"></td>
+                                <td th:if="${listarestTop.size()<2}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestPl.size()>=2}" style="color:black" th:text="${listarestPl.get(1).getNombre()}"></td>
+                                <td th:if="${listarestPl.size()<2}" style="color:black" th:text="|-|" >-</td>
+                            </tr>
+                            <tr>
+                                <td  th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestTop.get(2).getNombrerest()}"></td>
+                                <td  th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestPl.get(2).getNombre()}"></td>
+                                <td th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
                             </tr>
                             </tbody>
 
                         </table>
+                            <table class="table table-bordered">
+                                <thead>
 
-                    </div>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>
+                                        N°
+                                    </th>
+                                    <th>
+                                        Restaurantes
+                                    </th>
+                                    <th>
+                                        N° Pedidos
+                                    </th>
+                                    <th>
+                                        Consumo Total
+                                    </th>
+                                    <th>
+                                        Mes
+                                    </th>
+                                </tr>
+                                <tr th:each="ped,info:${listapedidos}">
+                                    <td th:text="${(current -1)*2 +info.index+1}"></td>
+                                    <td th:text="${ped.getNombrerest()}"></td>
+                                    <td th:text="${ped.getNumPedidos()}">10</td>
+                                    <td th:text="|S/. ${ped.getTotal()}|"></td>
+                                    <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
+                                    <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
+                                    <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
+                                    <td th:if="${ped.getMes()==4}" th:text="|Abril|"></td>
+                                    <td th:if="${ped.getMes()==5}" th:text="|Mayo|"></td>
+                                    <td th:if="${ped.getMes()==6}" th:text="|Junio|"></td>
+                                    <td th:if="${ped.getMes()==7}" th:text="|Julio|"></td>
+                                    <td th:if="${ped.getMes()==8}" th:text="|Agosto|"></td>
+                                    <td th:if="${ped.getMes()==9}" th:text="|Septiembre|"></td>
+                                    <td th:if="${ped.getMes()==10}" th:text="|Octubre|"></td>
+                                    <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
+                                    <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
+                                </tr>
+                                </tbody>
 
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8">
-                            <nav aria-label="pagination">
-                                <ul class="pagination justify-content-center">
+                            </table>
 
-                                    <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                        <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
-                                           th:text="${page}"
-                                           th:href="@{'/cliente/reportepedidopage?page='+${page}}"></a>
-                                    </li>
-                                </ul>
-                            </nav>
+
+
+
+                        <div class="row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0 } ">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination text-center justify-content-center">
+                                        <li class="page-item" th:each="page : ${pages}"
+                                            th:classappend="${current == page ? 'active': ''}">
+                                            <a class="page-link" th:href="@{'/cliente/reportepedidopage?page='+${page}}"
+                                               th:text="${page}"></a>
+                                        </li>
+
+                                    </ul>
+                                </nav>
+                            </div>
+
                         </div>
-                        <div class="col-md-2"></div>
-                    </div>
 
-                </div>
+                    </div>
+                    <div style="text-align:center">
+                        <a class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
+                    </div>
+                    <br>
                 </div>
                 <!-- -->
 
             </div>
 
-
-            <div style="text-align:center">
-                <a class="btn btn-primary" th:href="@{/cliente/listaReportes}" type="submit">Regresar</a>
-            </div>
 
             <!-- /.container-fluid-->
 
@@ -391,9 +440,9 @@
 
     </div>
     <!-- End of Content Wrapper -->
+
+
 </div>
-
-
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -425,9 +474,25 @@
 </div>
 
 
-
-
 </body>
+
+
+<script th:src="@{/js/exportar.js}"></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/vendor/bootstrap/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/datatables-demo.js"></script>
 <!--<script>
     function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
@@ -460,25 +525,23 @@
         }
     }
 </script>-->
-
-<script th:src="@{/js/exportar.js}"></script>
-
-<!--  Bootstrap core JavaScript
+<!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
- Core plugin JavaScript
+<!-- Core plugin JavaScript-->
 <script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
- Custom scripts for all pages
+<!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
- Page level plugins
+<!-- Page level plugins -->
 <script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
- Page level custom scripts
+<!-- Page level custom scripts -->
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
-<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>-->
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+
 
 </html>

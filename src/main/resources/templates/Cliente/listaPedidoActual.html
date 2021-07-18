@@ -179,7 +179,7 @@
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input id="texto" name="texto" type="text" class="form-control bg-light small"
+                                <input id="texto" name="texto" type="text" class="form-control small"
                                        th:placeholder="${texto.equals('') ? 'Búsqueda por restaurante...' : texto}"
                                        th:value="${texto.equals('') ? '' : texto}"
                                        style="border-color: lightgray">
@@ -207,13 +207,12 @@
                     </div>
                 </form>
 
-                <div class="card shadow">
+                <div class="card shadow mb-4">
                     <!-- DataTales Example -->
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">
-
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto ">PEDIDOS ACTUALES</h5>
+                            <h4 class="font-weight-bold text-white text-lg-center mx-auto ">PEDIDOS ACTUALES</h4>
                         </div>
                     </div>
                     <div class="card-body">
@@ -347,7 +346,7 @@
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <nav aria-label="pagination">
-                                <ul class="pagination justify-content-center">
+                                <ul class="pagination text-center justify-content-center">
 
                                     <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                         <a class="page-link" th:href="@{'/cliente/pedidoActualPagina?page='+${page}}" th:text="${page}"></a>
@@ -356,30 +355,28 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-md-2"></div>
+
                     </div>
                     <!------------------------------------------------------------>
-
-
 
                 </div>
                 </div>
                 <!-- /.container-fluid -->
 
             </div>
-
+        </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Geek Developers &copy; 2021-1</span>
-                    </div>
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
                 </div>
-            </footer>
+            </div>
+        </footer>
             <!-- End of Footer -->
-        </div>
+
     </div>
     <!-- End of Content Wrapper -->
 

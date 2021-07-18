@@ -748,7 +748,11 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechafin2 = simpleDateFormat.parse(fechafin);
-                model.addAttribute("fechafin", fechafin);
+                if(fechafin.equalsIgnoreCase("3000-05-21")){
+                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                }else {
+                    model.addAttribute("fechafin", fechafin);
+                }
             } catch (ParseException e) {
                 return "redirect:/restaurante/reporteValoracion";
             }
@@ -762,7 +766,11 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio2 = simpleDateFormat.parse(fechainicio);
-                model.addAttribute("fechainicio", fechainicio);
+                if(fechainicio.equalsIgnoreCase("1980-05-21")){
+                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                }else {
+                    model.addAttribute("fechainicio", fechainicio);
+                }
             } catch (ParseException e) {
                 return "redirect:/restaurante/reporteValoracion";
             }

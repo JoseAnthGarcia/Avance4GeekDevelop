@@ -2933,6 +2933,7 @@ public String detalleHistorialPedido(
         model.addAttribute("mes", mes);
         model.addAttribute("total", totalPage);
         model.addAttribute("numpedidos", numpedidos);
+        System.out.println("IMPRIMIEDNO");
         if(listanios.isEmpty()){
             ArrayList<String> lista = new ArrayList<>();
             lista.add(anio1);

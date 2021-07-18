@@ -209,6 +209,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Page<ReportePedido> reportexmes(int idcliente, int limit1mes, int limit2mes,String texto,String anio,int limit1cant,int limit2cant,Pageable pageable);
 
+    @Query(value ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +
+            "from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
+            "where p.idcliente=?1 and (p.estado = 6) and (EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido)<=?3 )\n" +
+            "and lower(r.nombre) like %?4% and (EXTRACT(YEAR from p.fechapedido) like ?5)\n" +
+            "group by p.idrestaurante  having ( count(r.idrestaurante)>?6 and count(r.idrestaurante)<= ?7)",nativeQuery = true)
+    List<ReportePedido> reportexmes2(Integer idcliente, Integer limit1mes, Integer limit2mes,String texto,String anio,Integer limit1cant,Integer limit2cant);
 
     @Query(value ="select r.nombre , count(p.idrestaurante) as 'cantidad'\n" +
             ",EXTRACT(MONTH from p.fechapedido) as 'mes' , round(avg(p.tiempoentrega)) as \"tiempoentrega\"\n" +
@@ -253,6 +261,22 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "group by r.idrestaurante\n", nativeQuery = true)
 
     Page<ReporteDineroDTO> reportedinero(int idcliente, int limit1mes, int limit2mes,String anio,String nombre,String nombrec,Pageable pageable );
+
+
+    @Query(value = "select  r.nombre as \"nombrerest\"\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as \"mes\" ,p.fechapedido\n" +
+            ",c.nombre as \"nombrecupon\", c.descuento\n" +
+            "from pedido p \n" +
+            "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
+            "left join cliente_has_cupon clhp on p.idcupon = clhp.idcupon\n" +
+            "inner join cupon c on c.idcupon = clhp.idcupon\n" +
+            "where p.idcliente=?1 and (p.estado = 6) and clhp.utilizado=1 and\n" +
+            "(EXTRACT(MONTH from p.fechapedido) > ?2  and  EXTRACT(MONTH from p.fechapedido)<=?3)\n" +
+            "and (EXTRACT(YEAR from p.fechapedido)like %?4%)\n"+
+            "and lower(r.nombre) like %?5% and lower(c.nombre) like %?6%\n" +
+            "group by r.idrestaurante\n", nativeQuery = true)
+
+    List<ReporteDineroDTO> reportedinero2(Integer idcliente, Integer limit1mes, Integer limit2mes,String anio,String nombre,String nombrec );
 
 
     @Query(value="select pe.codigo as 'codigo', pe.valoracionrestaurante as 'valoracion', date_format(pe.fechapedido,'%Y-%m-%d') as 'fecha', pe.comentariorestaurante as 'comentario' \n" +

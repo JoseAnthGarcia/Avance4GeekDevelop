@@ -2589,10 +2589,15 @@ public String detalleHistorialPedido(
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+
+
+        List<ReporteDineroDTO> listapedidos2 = pedidoRepository.reportedinero2(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, nombrec);
         BigDecimal totalsuma1 = new BigDecimal(0);
-        for (ReporteDineroDTO rep : listapedidos) {
-            System.out.println(rep.getDescuento());
-            totalsuma1 = totalsuma1.add(rep.getDescuento());
+        if(listapedidos2.size()>0) {
+            for (ReporteDineroDTO rep : listapedidos2) {
+                System.out.println(rep.getDescuento());
+                totalsuma1 = totalsuma1.add(rep.getDescuento());
+            }
         }
         model.addAttribute("current", page + 1);
 
@@ -2723,11 +2728,13 @@ public String detalleHistorialPedido(
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+        List<ReporteDineroDTO> listapedidos2 = pedidoRepository.reportedinero2(usuario1.getIdusuario(), limitInf, limitSup,anio, texto, nombrec);
         BigDecimal totalsuma1 = new BigDecimal(0);
-        for (ReporteDineroDTO rep : listapedidos) {
+        if(listapedidos2.size()>0){
+        for (ReporteDineroDTO rep : listapedidos2) {
             System.out.println(rep.getDescuento());
             totalsuma1 = totalsuma1.add(rep.getDescuento());
-        }
+        }}
         model.addAttribute("current", page + 1);
 
         model.addAttribute("total", totalPage);
@@ -2908,10 +2915,13 @@ public String detalleHistorialPedido(
 
         }
 
+        List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant);
         BigDecimal totalsuma = new BigDecimal(0);
-        for (ReportePedido rep : listapedidos) {
-            System.out.println(rep.getTotal());
-            totalsuma = totalsuma.add(rep.getTotal());
+        if(listapedidos2.size()>0) {
+            for (ReportePedido rep : listapedidos) {
+                System.out.println(rep.getTotal());
+                totalsuma = totalsuma.add(rep.getTotal());
+            }
         }
 
 
@@ -3089,10 +3099,13 @@ public String detalleHistorialPedido(
 
         }
 
+        List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant);
         BigDecimal totalsuma = new BigDecimal(0);
-        for (ReportePedido rep : listapedidos) {
-            System.out.println(rep.getTotal());
-            totalsuma = totalsuma.add(rep.getTotal());
+        if(listapedidos2.size()>0) {
+            for (ReportePedido rep : listapedidos) {
+                System.out.println(rep.getTotal());
+                totalsuma = totalsuma.add(rep.getTotal());
+            }
         }
 
         System.out.println(totalsuma);

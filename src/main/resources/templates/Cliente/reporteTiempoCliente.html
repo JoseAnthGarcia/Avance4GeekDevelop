@@ -312,7 +312,7 @@
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a th:unless="${texto == null && numpedidos == null && mes==null}" class="page-link active text-white"  style="background-color: #701111"
                                                    th:text="${page}"
-                                                   th:href="@{'/cliente/reportetiempopage ?page='+${page}}"></a>
+                                                   th:href="@{'/cliente/reportetiempopage?page='+${page}}"></a>
                                             </li>
                                         </ul>
                                     </nav>

@@ -134,7 +134,7 @@ public class AdminController  {
             numPag= 1;
         }
 
-        int tamPag = 3;
+        int tamPag = 5;
 
         //-------
         Integer fechaRegistro = 1;
@@ -169,7 +169,6 @@ public class AdminController  {
                         }
                     }
 
-                    System.out.println(nombreRest1 +" "+ ruc1+" " +fechaRegistro1+"AAAAA");
 
                     pagina2=restauranteService.restBusqueda(numPag,tamPag,nombreRest1,ruc1, fechaRegistro*-1);
                 }
@@ -217,18 +216,23 @@ public class AdminController  {
                 model.addAttribute("totalPages", pagina1.getTotalPages());
                 model.addAttribute("totalItems", pagina1.getTotalElements());
                 model.addAttribute("listaAdminRestSolicitudes", listaAdminRest);
-
-
                 return "AdminGen/solicitudAR";
             case "repartidor":
 
                 Page<Usuario> pagina;
+                if(nombreUsuario1!=null && nombreUsuario1.trim().equals("")){
+                    nombreUsuario1 = "";
+                }
+                model.addAttribute("nombreUsuario1", nombreUsuario1);
 
                 if((nombreUsuario1==null || nombreUsuario1.equals(""))
                         && tipoMovilidad1==null && fechaRegistro1==null){
                     pagina = repartidorService.repartidorPaginacion(numPag, tamPag);
                 }else{
-                    model.addAttribute("nombreUsuario1", nombreUsuario1);
+
+                    if(nombreUsuario1==null){
+                        nombreUsuario1="";
+                    }
                     if(fechaRegistro1==null){
                         fechaRegistro = usuarioRepository.buscarFechaMinimaRepartidor()+1;
                     }else{
@@ -288,7 +292,7 @@ public class AdminController  {
                 //        usuarioRepository.findByEstadoAndRolOrderByFecharegistroAsc(2, rolRepository.findById(4).get()));
                 return "AdminGen/solicitudRepartidor";
             default:
-                return "";
+                return  "redirect:/admin/tipoSolicitud";
                 //mandar a la vista principal
         }
     }

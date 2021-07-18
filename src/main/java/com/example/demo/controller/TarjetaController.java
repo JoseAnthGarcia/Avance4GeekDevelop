@@ -45,7 +45,7 @@ public class TarjetaController {
 
     @PostMapping("/guardar")
     public String guardarTarjeta(@RequestParam("numeroTarjeta") String numeroTarjeta, @RequestParam("nombreC") String nombreC, @RequestParam("apellidoC") String apellidoC,
-                                 @RequestParam("idcvv") String idcvv, @RequestParam("mes") String mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
+                                 @RequestParam("idcvv") String idcvv, @RequestParam(value="mes",required = false) String mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
                                  RedirectAttributes attr) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
 
@@ -87,7 +87,7 @@ public class TarjetaController {
                     mes_u = false;
                 }
             }
-        } catch (NullPointerException n) {
+        } catch (Exception n) {
             mes_u = true;
         }
         //VALIDACIÓN NOMBRES

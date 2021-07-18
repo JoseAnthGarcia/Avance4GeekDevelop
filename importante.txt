@@ -38,7 +38,7 @@ Correo:
 
 Roles:
 1 - cliente
-2 - adminGenera
+2 - adminGeneral
 3 - adminRest
 4 - repartidor
 5 - adminitrador

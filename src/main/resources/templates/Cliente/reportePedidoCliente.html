@@ -245,6 +245,7 @@
                     </div>
                 </form>
 
+<!-- -------------------------------------------------------------------------------------------------------------------------------------- -->
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
@@ -264,10 +265,6 @@
                         th:text="|No se encontraron resultados|"></h5>
 
                 </div>
-
-
-
-
 
                 <div class="justify-content-center row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
                     <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
@@ -298,10 +295,84 @@
                     <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
 
                 </div>
+                <!--
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+                        <div class="d-sm-flex align-items-center justify-content-between">
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOP VENTAS POR RESTAURANTES</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
 
-                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && (total>0 || total!=null)}">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <hr/>
+                                        <div class="review-block">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <img src="http://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
+                                                    <div class="review-block-name"><b href="#">TOP #1 <br/> Más Ventas</b></div>
+
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <div class="review-block-rate">
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+
+
+                                                    </div>
+                                                    <div class="review-block-title"><b>Mi Barrunto</b> </div>
+                                                    <div class="review-block-name"><b>
+                                                        <span class="fa fa-user" style=" margin-right:5px;"></span> Cantidad de ventas: </b>
+                                                        1,050,008
+                                                    </div>
+                                                    <div class="review-block-name"><b>
+                                                        <span class="fa fa-coins" style=" margin-right:5px;"></span> Monto total: </b>
+                                                        S/ 1,050,008
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <img src="http://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
+                                                    <div class="review-block-name"><b href="#">TOP #1</b></div>
+                                                    <div class="review-block-name">Menos Ventas<br/>
+                                                        <span class="fa fa-user" style=" margin-right:5px;"></span> 1,050,008 total de ventas
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <div class="review-block-rate">
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star " style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                    </div>
+                                                    <div class="review-block-title"><b>Leñas y carbon</b> </div>
+                                                    <div class="review-block-description">this was nice in buy. this was nice in buy. this was nice in buy. this was nice in buy this was nice in buy this was nice in buy this was nice in buy this was nice in buy</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+
+    <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0} ">
                     <div class="table-responsive">
-                        <table id="tabla" class="table table-bordered">
+                        <table class="table table-bordered">
 
                             <tr>
                                 <th>
@@ -364,6 +435,8 @@
                     </div>
 
                 </div>
+
+
                 </div>
                 <!-- -->
 
@@ -379,6 +452,7 @@
         </div>
 
 
+
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -391,9 +465,9 @@
 
     </div>
     <!-- End of Content Wrapper -->
+
+
 </div>
-
-
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -428,57 +502,10 @@
 
 
 </body>
-<!--<script>
-    function exportTableToExcel(tableID, filename = ''){
-        var downloadLink;
-        var dataType = 'application/vnd.ms-excel';
-        var tableSelect = document.getElementById(tableID);
-        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
 
-        // Specify file name
-        filename = filename?filename+'.xls':'excel_data.xls';
-
-        // Create download link element
-        downloadLink = document.createElement("a");
-
-        document.body.appendChild(downloadLink);
-
-        if(navigator.msSaveOrOpenBlob){
-            var blob = new Blob(['ufeff', tableHTML], {
-                type: dataType
-            });
-            navigator.msSaveOrOpenBlob( blob, filename);
-        }else{
-            // Create a link to the file
-            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-            // Setting the file name
-            downloadLink.download = filename;
-
-            //triggering the function
-            downloadLink.click();
-        }
-    }
-</script>-->
 
 <script th:src="@{/js/exportar.js}"></script>
 
-<!--  Bootstrap core JavaScript
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
- Core plugin JavaScript
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
-
- Custom scripts for all pages
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
- Page level plugins
-<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
-
- Page level custom scripts
-<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
-<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
-<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>-->
 
 </html>

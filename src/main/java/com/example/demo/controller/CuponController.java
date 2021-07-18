@@ -107,9 +107,15 @@ public class CuponController {
         LocalDate fechafin2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin2 = LocalDate.parse("3000-05-21");
+            model.addAttribute("fechafin", "dd/mm/aaaa");
         } else {
             try {
                 fechafin2 = LocalDate.parse(fechafin);
+                if(fechafin.equalsIgnoreCase("3000-05-21")){
+                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                }else {
+                    model.addAttribute("fechafin", fechafin2);
+                }
             } catch (DateTimeParseException e) {
                 return "redirect:/cupon/lista";
             }
@@ -117,9 +123,19 @@ public class CuponController {
         LocalDate fechainicio2;
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio2 = LocalDate.now();
+            model.addAttribute("fechainicio", "dd/mm/aaaa");
         } else {
             try {
                 fechainicio2 = LocalDate.parse(fechainicio);
+                String pattern = "yyyy-MM-dd";
+                DateFormat df = new SimpleDateFormat(pattern);
+                Date today = Calendar.getInstance().getTime();
+                String todayAsString = df.format(today);
+                if(fechainicio.equalsIgnoreCase(todayAsString)){
+                    model.addAttribute("fechainicio", "dd/mm/aaaa");
+                }else {
+                    model.addAttribute("fechainicio", fechainicio2);
+                }
             } catch (DateTimeParseException e) {
                 return "redirect:/cupon/lista";
             }
@@ -158,8 +174,7 @@ public class CuponController {
 
         model.addAttribute("texto", textBuscador);
         model.addAttribute("textoP", inputPrecio);
-        model.addAttribute("fechainicio", fechainicio2);
-        model.addAttribute("fechafin", fechafin2);
+
 
         System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + fechainicio2 + "\n" + fechafin2);
 

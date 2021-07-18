@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 
 public class LoginController {
 
-    //public String ip = "54.175.37.128.nip.io";
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
     public String ip = "localhost";
     public String puerto = "8080";
 
@@ -546,8 +546,8 @@ public class LoginController {
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
                 return "Cliente/registro";
             }
-            //
-            cliente.setEstado(1);
+            // sin validar
+            cliente.setEstado(-1);
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
             cliente.setFecharegistro(fechanacimiento);
@@ -571,16 +571,11 @@ public class LoginController {
 
             ubicacion.setUsuario(cliente);
 
-
             ubicacionRepository.save(ubicacion);
 
-            /////----------------Envio Correo--------------------/////
+            /////----------------Envio Correo Validación--------------------/////
 
-            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado html", cliente);
-
-
-            /////-----------------------------------------  ------/////
-
+            enviarCorreoValidacion(cliente.getCorreo());
 
             return "redirect:/cliente/login";
 
@@ -877,7 +872,8 @@ public class LoginController {
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
-        adminRest.setEstado(2);
+        //todo cambio para validar correo
+        adminRest.setEstado(-1);
         Date date = new Date();
         DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
         String fecharegistro = LocalDate.now().toString();
@@ -903,7 +899,6 @@ public class LoginController {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
@@ -984,6 +979,8 @@ public class LoginController {
                 adminRest.setFotonombre(fileName);
                 adminRest.setFotocontenttype(file.getContentType());
                 adminRestRepository.save(adminRest);
+                //TODO envia el correo de validación
+                enviarCorreoValidacion(adminRest.getCorreo());
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
@@ -1418,6 +1415,7 @@ public class LoginController {
             usuario.setMovilidad(movilidad);
 
             //OBS: se cambia a 2 cuando valide su correo
+            // -1 antes de validar correo
             usuario.setEstado(-1);
 
             //Fecha de registro:
@@ -1438,7 +1436,8 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            //enviarCorreoValidacion(usuario.getCorreo());
+            // envia el correo de validación
+            enviarCorreoValidacion(usuario.getCorreo());
             redAt.addFlashAttribute("usuarioCreado", true);
 
             return "redirect:/login";
@@ -1449,14 +1448,23 @@ public class LoginController {
     @GetMapping("/validarCuenta")
     public String validarCuenta(@RequestParam(value = "correo", required = false) String correo,
                                 @RequestParam(value = "value", required = false) String codigoHash,
-                                Model model) {
+                                Model model) throws MessagingException{ //con esto cae la app
         if (correo != null && codigoHash != null) {
             Validarcorreo validarcorreo = validarCorreoRepository.findByUsuario_CorreoAndHash(correo, codigoHash);
             if (validarcorreo != null) {
-//                validarCorreoRepository.delete(validarcorreo);
+                validarCorreoRepository.delete(validarcorreo);
                 Usuario usuario = usuarioRepository.findByCorreo(correo);
-                usuario.setEstado(2);
+                if(usuario.getRol().getIdrol() == 1){
+                    usuario.setEstado(1);
+                }else{
+                    usuario.setEstado(2);
+                }
                 usuarioRepository.save(usuario);
+
+                if(usuario.getRol().getIdrol() == 1){
+                    sendHtmlMailREgistrado(usuario.getCorreo(), "Cliente registrado html", usuario);
+                }
+
                 model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";
             } else {

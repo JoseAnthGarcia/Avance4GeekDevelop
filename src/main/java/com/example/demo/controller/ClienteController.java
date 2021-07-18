@@ -387,6 +387,7 @@ public class ClienteController {
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
+        System.out.println("IDCATEGORIA3:  "+ idCategoria);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
@@ -558,6 +559,7 @@ public class ClienteController {
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
+        System.out.println("IDCATEGORIA3:  "+ idCategoria);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
@@ -2772,7 +2774,7 @@ public String detalleHistorialPedido(
             page =0;
         }
         //int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 2);
 
 
         if (texto == null) {
@@ -2966,7 +2968,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 2);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -3139,7 +3141,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 2);
 
 
         if (texto == null) {
@@ -3323,7 +3325,7 @@ public String detalleHistorialPedido(
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 2);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");

@@ -210,14 +210,14 @@
                         </div>
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled th:selected="${idCategoria.equals('')}">Categorias</option>
+                                <option value="" disabled>Categorias</option> <!--  th:selected="${idCategoria.equals('')}" -->
                                 <option th:each="categoria : ${categorias}"
+                                        th:selected="${idCategoria.equals(categoria.getIdcategoria())}"
                                         th:value="${categoria.getIdcategoria()}"
                                         th:text="${categoria.getNombre()}"
-                                        th:selected="${idCategoria.equals(categoria.getIdcategoria())}"></option>
+                                        ></option>
                             </select>
                         </div>
-                        <!-- TODO BUSCADOR DE CATEGORÍAS -->
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
@@ -230,14 +230,19 @@
                     </div>
                 </form>
 
+
+
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
-                        <h6 class="font-weight-bold text-white text-center mb-0">LISTA DE RESTAURANTES</h6>
+                        <h4 class="font-weight-bold text-white text-center mb-0">LISTA DE RESTAURANTES</h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
+                        <div class="text-center" >
+                            <h5 th:if="${listaRestaurante.size()==0}" th:text="|No se encontraron resultados|"></h5>
+                        </div>
+                        <div class="table-responsive"  >
+                            <table class="table table-bordered" th:if="${listaRestaurante.size()>0}">
                                 <thead>
                                 <tr>
                                     <th class="w-5"> N° </th>

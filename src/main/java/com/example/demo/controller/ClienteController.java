@@ -1422,7 +1422,6 @@ public class ClienteController {
                                  HttpSession session){
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
-        //TODO ver validacion en caso ca
         //CUPONES
         List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
         //  List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");

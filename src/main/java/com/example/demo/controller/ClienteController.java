@@ -299,7 +299,7 @@ public class ClienteController {
         System.out.println("id1 :"+id1);
         System.out.println("id12 :"+id2);
         System.out.println("id3 :"+id3   );
-        System.out.println("valoracion :"+val   );
+        System.out.println("valoracion :"+val );
 
         texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
         val= httpSession.getAttribute("val") == null ? val :  (String) httpSession.getAttribute("val");
@@ -330,6 +330,10 @@ public class ClienteController {
         }
 
         switch (val){
+            case "0":
+                limitInfVal = -1;
+                limitSupVal = 0;
+                break;
             case "1":
                 limitInfVal = 0;
                 limitSupVal = 1;
@@ -456,7 +460,7 @@ public class ClienteController {
 
         texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
         val= httpSession.getAttribute("val") == null ? "7" :  (String) httpSession.getAttribute("val");
-        idCategoria= httpSession.getAttribute("idCategoria") == null ? "" :  (String) httpSession.getAttribute("idCategoria");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? "" : (String) httpSession.getAttribute("idCategoria");
         idPrecio= httpSession.getAttribute("idPrecio") == null ? "6" :  (String) httpSession.getAttribute("idPrecio");
 
         if(idCategoria == null){
@@ -502,6 +506,10 @@ public class ClienteController {
         }
 
         switch (val){
+            case "0":
+                limitInfVal = -1;
+                limitSupVal = 0;
+                break;
             case "1":
                 limitInfVal = 0;
                 limitSupVal = 1;
@@ -564,8 +572,8 @@ public class ClienteController {
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/listaRestaurantes";
-    }
 
+    }
 
 
 /************************************************************************************************************************************************************/

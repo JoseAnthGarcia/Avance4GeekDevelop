@@ -370,7 +370,7 @@
 
 
     <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0} ">
+                <div class="card-body"  th:if="${listarestTop.size()>0 && listarestPl.size()>0 && current>0}">
                     <div class="table-responsive">
                         <table class="table table-bordered">
 
@@ -418,7 +418,7 @@
                     </div>
 
 
-                    <div class="row">
+                    <div class="row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && current>1 } ">
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <nav aria-label="pagination">

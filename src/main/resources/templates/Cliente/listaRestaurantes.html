@@ -201,6 +201,7 @@
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorValoracion" name="val" class="form-control" style="border-color: lightgray">
                                 <option value="7" th:selected="${val.equals('7')}">Valoración</option>
+                                <option value="0" th:selected="${val.equals('0')}">0</option>
                                 <option value="1" th:selected="${val.equals('1')}">1</option>
                                 <option value="2" th:selected="${val.equals('2')}">2</option>
                                 <option value="3" th:selected="${val.equals('3')}">3</option>
@@ -208,16 +209,54 @@
                                 <option value="5" th:selected="${val.equals('5')}">5</option>
                             </select>
                         </div>
+                        <!--
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
-                                <option value="" disabled>Categorias</option> <!--  th:selected="${idCategoria.equals('')}" -->
+                                <option value="0" disabled>Categorias</option>
                                 <option th:each="categoria : ${categorias}"
-                                        th:selected="${idCategoria.equals(categoria.getIdcategoria())}"
+                                        th:selected="${idCategoria}"
                                         th:value="${categoria.getIdcategoria()}"
                                         th:text="${categoria.getNombre()}"
                                         ></option>
                             </select>
                         </div>
+                    -->
+                        <!-- -------------------------------------------------------------------------------------- -->
+                        <div class="col-sm-2 mb-2 ">
+                            <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value="" th:selected="${idCategoria.equals('')}">Categorías</option>
+                                <option value="1" th:selected="${idCategoria.equals('1')}">Árabe</option>
+                                <option value="2" th:selected="${idCategoria.equals('2')}">Asiática</option>
+                                <option value="3" th:selected="${idCategoria.equals('3')}">Café</option>
+                                <option value="4" th:selected="${idCategoria.equals('4')}">Carnes</option>
+                                <option value="5" th:selected="${idCategoria.equals('5')}">Chifa</option>
+                                <option value="7" th:selected="${idCategoria.equals('7')}">Criolla</option>
+                                <option value="8" th:selected="${idCategoria.equals('8')}">Desayunos</option>
+                                <option value="9" th:selected="${idCategoria.equals('9')}">Fusión</option>
+                                <option value="10" th:selected="${idCategoria.equals('10')}">Hamburguesas</option>
+                                <option value="11" th:selected="${idCategoria.equals('11')}">Helados</option>
+                                <option value="12" th:selected="${idCategoria.equals('12')}">India</option>
+                                <option value="13" th:selected="${idCategoria.equals('13')}">Internacional</option>
+                                <option value="14" th:selected="${idCategoria.equals('14')}">Jugos y batidos</option>
+                                <option value="15" th:selected="${idCategoria.equals('15')}">Mexicana</option>
+                                <option value="16" th:selected="${idCategoria.equals('16')}">Panadería</option>
+                                <option value="17" th:selected="${idCategoria.equals('17')}">Pastas</option>
+                                <option value="18" th:selected="${idCategoria.equals('18')}">Pescados y mariscos</option>
+                                <option value="19" th:selected="${idCategoria.equals('19')}">Pizzas</option>
+                                <option value="20" th:selected="${idCategoria.equals('20')}">Poke</option>
+                                <option value="21" th:selected="${idCategoria.equals('21')}">Pollería</option>
+                                <option value="22" th:selected="${idCategoria.equals('22')}">Postres</option>
+                                <option value="23" th:selected="${idCategoria.equals('23')}">Sandwiches</option>
+                                <option value="24" th:selected="${idCategoria.equals('24')}">Sopas y cremas</option>
+                                <option value="25" th:selected="${idCategoria.equals('25')}">Sushi</option>
+                                <option value="26" th:selected="${idCategoria.equals('26')}">Vegetariana</option>
+                                <option value="27" th:selected="${idCategoria.equals('27')}">Saludable</option>
+                            </select>
+                        </div>
+
+
+
+           <!-- ------------------------------------------------------------------------------------------------------------- -->
                         <div class="input-group-append col-sm-1 mb-2 ">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>

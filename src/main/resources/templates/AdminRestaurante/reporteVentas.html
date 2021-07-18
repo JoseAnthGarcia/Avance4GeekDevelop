@@ -30,50 +30,79 @@
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle"  data-toggle="modal"
+                                <a class="nav-link dropdown-toggle" data-toggle="modal"
                                    href="#Credencial" data-target="#Credencial"
-                                   aria-haspopup="true" aria-expanded="false" >
+                                   aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-info-circle fa-fw"
                                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Credenciales"></i>
                                 </a>
-                                <div class="modal fade" id="Credencial" tabindex="-1" role="dialog" aria-labelledby="exampleCredencial"
+                                <div class="modal fade" id="Credencial" tabindex="-1" role="dialog"
+                                     aria-labelledby="exampleCredencial"
                                      aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <!-- bg-gradient-light static-top shadow-->
-                                            <div class="modal-header bg-primary mb-4 static-top shadow text-light text-justify" >
-                                                <h3 class="modal-title " id="exampleCredencial" ><strong th:text="${credencial1.get(0).getNombre()+' - '+credencial1.get(0).getRuc()}"></strong></h3>
-                                                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                                            <div class="modal-header bg-primary mb-4 static-top shadow text-light text-justify">
+                                                <h3 class="modal-title " id="exampleCredencial"><strong
+                                                        th:text="${credencial1.get(0).getNombre()+' - '+credencial1.get(0).getRuc()}"></strong>
+                                                </h3>
+                                                <button class="close" type="button" data-dismiss="modal"
+                                                        aria-label="Cerrar">
                                                     <span aria-hidden="true" style="color: #ffffff">×</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getTelefono()}"></strong></h5>
-                                                <h5><strong th:text="${'Dirección:  '+credencial1.get(0).getDireccion()}"></strong></h5>
+                                                <h5><strong
+                                                        th:text="${'Celular:  '+credencial1.get(0).getTelefono()}"></strong>
+                                                </h5>
+                                                <h5><strong
+                                                        th:text="${'Dirección:  '+credencial1.get(0).getDireccion()}"></strong>
+                                                </h5>
 
-                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Totales:  '+pedidosCredenciales.get(0).getTotal()}"></strong></h5>
-                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Aceptados:  '+pedidosCredenciales.get(0).getEntrega()}"></strong></h5>
-                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Pedidos Cancelados:  '+pedidosCredenciales.get(0).getCancela()}"></strong></h5>
-                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Otros Pedidos:  '+(pedidosCredenciales.get(0).getTotal()-pedidosCredenciales.get(0).getEntrega()-pedidosCredenciales.get(0).getCancela())}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"
+                                                            th:text="${'Pedidos Totales:  '+pedidosCredenciales.get(0).getTotal()}"></strong>
+                                                </h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"
+                                                            th:text="${'Pedidos Aceptados:  '+pedidosCredenciales.get(0).getEntrega()}"></strong>
+                                                </h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"
+                                                            th:text="${'Pedidos Cancelados:  '+pedidosCredenciales.get(0).getCancela()}"></strong>
+                                                </h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"
+                                                            th:text="${'Otros Pedidos:  '+(pedidosCredenciales.get(0).getTotal()-pedidosCredenciales.get(0).getEntrega()-pedidosCredenciales.get(0).getCancela())}"></strong>
+                                                </h5>
 
                                                 <h3 style="color: black"><strong>Administrador</strong></h3>
-                                                <h5 style="text-transform: capitalize;"><strong  th:text="${'Nombre:  '+credencial1.get(0).getAdministrador().split(' ')[0]+' '+credencial1.get(0).getAdministrador().split(' ')[2] }"></strong></h5>
-                                                <h5><strong th:text="${'Correo:  '+credencial1.get(0).getCorreo()}"></strong></h5>
-                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getCelular}"></strong></h5>
-                                                <h5><strong th:text="${'DNI:  '+credencial1.get(0).getDni}"></strong></h5>
+                                                <h5 style="text-transform: capitalize;"><strong
+                                                        th:text="${'Nombre:  '+credencial1.get(0).getAdministrador().split(' ')[0]+' '+credencial1.get(0).getAdministrador().split(' ')[2] }"></strong>
+                                                </h5>
+                                                <h5><strong
+                                                        th:text="${'Correo:  '+credencial1.get(0).getCorreo()}"></strong>
+                                                </h5>
+                                                <h5><strong
+                                                        th:text="${'Celular:  '+credencial1.get(0).getCelular}"></strong>
+                                                </h5>
+                                                <h5><strong th:text="${'DNI:  '+credencial1.get(0).getDni}"></strong>
+                                                </h5>
 
-                                                <h5 th:if="${!platoMasVendido.isEmpty()}" style="color: black"> <strong>Platos:</strong></h5>
+                                                <h5 th:if="${!platoMasVendido.isEmpty()}" style="color: black"><strong>Platos:</strong>
+                                                </h5>
                                                 <div th:if="${!platoMasVendido.isEmpty()}" class="container ml-5 mt-1">
-                                                    <div  class="row">
+                                                    <div class="row">
                                                         <div class="col-6">
                                                             <div class="card">
                                                                 <div class="card-block">
-                                                                    <label class="card-title" th:text="${'Más vendido('+platoMasVendido.get(0).getCantidad()+')'}"></label>
-                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                    <label class="card-title"
+                                                                           th:text="${'Más vendido('+platoMasVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center"
+                                                                         style="height: 150px;width:150px">
                                                                         <img th:src="@{|/plato/imagen/${platoMasVendido.get(0).getIdplato()}|}"
-                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
-                                                                        <a class="overlay2" style="height: 150px;width:150px">
-                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                             alt="Avatar" class="image2 shadow"
+                                                                             style="height: 150px;width:150px">
+                                                                        <a class="overlay2"
+                                                                           style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify"
+                                                                                style="font-weight: bolder">
                                                                                 <div style="text-transform: uppercase;height: 150px;width:150px"
                                                                                      class="text2 font-weight-bolder mt-lg-5"
                                                                                      th:text="${platoMasVendido.get(0).getNombre()}"></div>
@@ -87,12 +116,17 @@
                                                         <div class="col-6">
                                                             <div class="card">
                                                                 <div class="card-block">
-                                                                    <label class="card-title" th:text="${'Menos vendido('+platoMenosVendido.get(0).getCantidad()+')'}"></label>
-                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                    <label class="card-title"
+                                                                           th:text="${'Menos vendido('+platoMenosVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center"
+                                                                         style="height: 150px;width:150px">
                                                                         <img th:src="@{|/plato/imagen/${platoMenosVendido.get(0).getIdplato()}|}"
-                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
-                                                                        <a class="overlay2" style="height: 150px;width:150px">
-                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                             alt="Avatar" class="image2 shadow"
+                                                                             style="height: 150px;width:150px">
+                                                                        <a class="overlay2"
+                                                                           style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify"
+                                                                                style="font-weight: bolder">
                                                                                 <div style="text-transform: uppercase; height: 150px;width:150px"
                                                                                      class="text2 font-weight-bolder mt-lg-5"
                                                                                      th:text="${platoMenosVendido.get(0).getNombre()}"></div>
@@ -106,10 +140,10 @@
                                                 </div>
 
 
-
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                                                <button class="btn btn-primary" type="button" data-dismiss="modal">OK
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -182,15 +216,6 @@
                                            name="textCodigo">
                                 </div>
                                 <div class="col-sm-2 mb-2">
-                                    <input placeholder="Desde" class="form-control" name="fechainicio"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')">
-                                </div>
-                                <div class="col-sm-2 mb-2">
-                                    <input placeholder="Hasta" class="form-control" name="fechafin"
-                                           onfocus="(this.type='date')" onblur="(this.type='text')">
-                                </div>
-
-                                <div class="col-sm-2 mb-2">
                                     <select class="form-control" id="inputPrecio" name="inputPrecio">
                                         <option value="0" th:selected="${inputPrecio==0}">Monto total</option>
                                         <option value="1" th:selected="${inputPrecio==1}">S/.0.00 hasta S/.20.00
@@ -202,13 +227,31 @@
                                         <option value="4" th:selected="${inputPrecio==4}">S/.60.00 a más</option>
                                     </select>
                                 </div>
-                                <div class="input-group-append col-sm-1 mb-3 ml-0">
+                                <div class="col-sm-auto"
+                                     style="display: flex; justify-content: center; align-content: center; flex-direction: column">
+                                    <label>Desde: </label>
+                                </div>
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechainicio" id="fechainicio"
+                                           type="date" th:value="${fechainicio}" onfocus="(this.type='date')">
+                                </div>
+                                <div class="col-sm-auto"
+                                     style="display: flex; justify-content: center; align-content: center; flex-direction: column">
+                                    <label>Hasta: </label>
+                                </div>
+                                <div class="col-sm-auto mb-1">
+                                    <input class="form-control" name="fechafin" id="fechafin"
+                                           type="date" th:value="${fechafin}" onfocus="(this.type='date')">
+                                </div>
+
+
+                                <div class="input-group-append col-sm-auto mb-3 ml-0">
                                     <button class="btn" style="background-color:#701111; color:white; border:#701111"
                                             type="submit">
                                         <i class="fas fa-filter"></i>
                                     </button>
                                 </div>
-                                <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
+                                <div class="col-sm-auto mb-1 ml-0" style="text-align: right">
                                     <a class="btn btn-secondary"
                                        th:href="@{'/restaurante/reporteVentas'}">Quitar filtros</a>
                                 </div>
@@ -220,9 +263,10 @@
 
                                 <div class="d-sm-flex align-items-center justify-content-between">
 
-                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE VENTAS</h5>
+                                    <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">
+                                        REPORTE DE VENTAS</h5>
                                     <button th:if="${totalItems!=0}" class="btn btn-warning mr-1"
-                                            id="btnExportar" >Exportar
+                                            id="btnExportar">Exportar
                                     </button>
                                 </div>
 
@@ -289,7 +333,8 @@
                             </div>
                         </div>
                         <div style="text-align:center">
-                            <a class="btn btn-primary" th:href="@{/restaurante/elegirReporte}" type="submit">Regresar</a>
+                            <a class="btn btn-primary" th:href="@{/restaurante/elegirReporte}"
+                               type="submit">Regresar</a>
                         </div>
 
                     </div>

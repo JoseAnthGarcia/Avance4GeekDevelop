@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/repartidor")
@@ -358,6 +359,30 @@ public class RepartidorController {
                     pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())) {
                 Pedido pedido = pedidoOpt.get();
                 pedido.setEstado(6);
+
+                Date date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date fechPedido = new Date();
+
+                String dateS =  hourdateFormat.format(date);
+                String fechaPedidoS =pedido.getFechapedido();
+                try {
+                    fechPedido=hourdateFormat.parse(fechaPedidoS);
+
+                    date= hourdateFormat.parse(dateS);
+                } catch (ParseException e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+
+
+
+                long diff =date.getTime() -fechPedido.getTime();
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+                System.out.println(minutes);
+
+                int tiempo = (int) minutes;
+                pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
             }
         }

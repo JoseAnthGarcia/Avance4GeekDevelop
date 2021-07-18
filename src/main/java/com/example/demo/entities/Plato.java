@@ -25,7 +25,7 @@ public class Plato implements Serializable {
     private String descripcion;
     @Column(name="precio", nullable = false)
     @Positive(message = "Ingrese una cantidad positiva")
-    @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
+    @Digits(integer=10, fraction = 2, message = "Ingrese un precio válido")
     @NotNull(message = "Este campo es obligatorio")
     private double precio;
     @Column(name="idcategoriarestaurante", nullable = false)

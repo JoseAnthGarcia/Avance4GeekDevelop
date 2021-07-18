@@ -208,7 +208,7 @@
                                 <option value="5" th:selected="${val.equals('5')}">5</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 mb-2 ">
+                        <div class="col-sm-2 mb-2">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
                                 <option value="" disabled th:selected="${idCategoria.equals('')}">Categorias</option>
                                 <option th:each="categoria : ${categorias}"

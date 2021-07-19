@@ -376,6 +376,7 @@ public class RepartidorController {
         }else{
             return "redirect:/repartidor/listaPedidos";
         }
+        return "redirect:/repartidor/pedidoActual";
     }
 
     @GetMapping("/pedidoEntregado")
@@ -421,6 +422,12 @@ public class RepartidorController {
         }else{
             return "redirect:/repartidor/pedidoActual";
         }
+    }
+
+    @PostMapping("/seleccionarDistrito")
+    public String distritoActual(HttpSession session) {
+        session.setAttribute("ubicacionActual", new Ubicacion());
+        return "redirect:/repartidor/listaPedido";
     }
 
 
@@ -490,7 +497,7 @@ public class RepartidorController {
                                   @RequestParam(value = "valoracion", required = false) String valoracion,
                                   @RequestParam(value = "pag", required = false) String pag) {
 
-        int tamPag = 5;
+        int tamPag = 10;
         int numeroPag = -1;
         if (pag == null) {
             numeroPag = 1;

@@ -387,19 +387,25 @@ public class ExtraController {
         model.addAttribute("idcategoria", idc);
         return "redirect:/extra/lista?idcategoria=" + idc;
     }
-/*
     @InitBinder("extra")
     public void validatorDataBinding(WebDataBinder binder) {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
-            public void setAsDouble(String preciounitario) throws IllegalArgumentException {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                System.out.println("----------------------------Precio-----------------------------"+text);
                 try {
-                    this.setValue(Double.parseDouble(preciounitario));
+                    System.out.println("xd1");
+                    this.setValue(Double.parseDouble(text));
+                    System.out.println("xddddddddddddddddddddddd2 "+this.getValue());
+                    if(text.contains("E308")){
+                        this.setValue(0.0);
+                    }
                 } catch (NumberFormatException e) {
-                    this.setValue(0);
+                    System.out.println("xd2");
+                    this.setValue(0.0);
                 }
             }
         };
         binder.registerCustomEditor(Double.class, "preciounitario", integerValidator);
     }
- */
 }

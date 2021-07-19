@@ -876,6 +876,7 @@ public class ClienteController {
             model.addAttribute("pages", pages);
         }
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        //a
 
         model.addAttribute("current", page + 1);
         model.addAttribute("listaPlato",listaPlato.getContent());

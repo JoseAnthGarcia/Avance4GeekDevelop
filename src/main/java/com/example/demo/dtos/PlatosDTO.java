@@ -10,5 +10,6 @@ public interface PlatosDTO {
     byte[] getFoto();
     String getFotocontenttype();
     String getFotonombre();
+    String getCategoria();
 
 }

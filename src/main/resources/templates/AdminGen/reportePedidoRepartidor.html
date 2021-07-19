@@ -111,6 +111,44 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+                            <table class="table "
+                                   style="background-color:#F2E2AA; border-color:#F2E2AA ">
+                                <thead>
+                                <tr>
+                                    <th style="color:black">
+                                        TOP 1 REPARTIDOR CON MAS PEDIDOS
+                                    </th>
+                                    <th style="color:black">
+                                        TOP 1 REPARITDOR CON MENOS PEDIDOS
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody >
+
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="${topMas.getRepartidor()}"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="${topMenos.getRepartidor()}"></td>
+                                </tr>
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="|Cantidad de Pedidos:  ${topMas.getCantidad()}|"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
+                                </tr>
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="|Monto Total: S/ ${topMas.getGananciarepartidor()}|"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Monto Total: S/ ${topMenos.getGananciarepartidor()}|"></td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+
                             <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <thead>
                                 <tr>

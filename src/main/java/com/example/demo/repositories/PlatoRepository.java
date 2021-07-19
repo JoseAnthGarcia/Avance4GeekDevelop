@@ -22,11 +22,16 @@ public interface PlatoRepository extends JpaRepository<Plato, Integer> {
 
     Page<Plato> findByIdrestauranteAndIdcategoriaplatoAndDisponibleAndNombreIsContainingAndPrecioGreaterThanEqualAndPrecioLessThanEqual(int idrestaurante,int idcategoriaplato,boolean disponible, String nombre, Pageable pageable, double inputPMin, double inputPMax);
 
-    @Query(value = "select  p.idplato, p.nombre, p.precio, p.foto, p.fotocontenttype, p.fotonombre \n" +
-            "from plato p where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
-            "and (p.precio >= ?3 and p.precio < ?4 )", nativeQuery = true , countQuery = "select count(*) \n" +
-            "            from plato p where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
-            "           and (p.precio >= ?3 and p.precio < ?4 ) ")
-    Page<PlatosDTO> listaPlato(int idRest, String texto, Integer limitInf, Integer limitSup, Pageable pageable);
+    @Query(value = "select  p.idplato, p.nombre, p.precio, \n" +
+            "p.foto, p.fotocontenttype, p.fotonombre, c.nombre as 'categoria' \n" +
+            "from plato p\n" +
+            "inner join categoriarestaurante c on c.idcategoria = p.idcategoriarestaurante\n" +
+            "where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
+            "and (p.precio >= ?3 and p.precio < ?4) and (c.idcategoria >=?5 and c.idcategoria < ?6) ",
+             nativeQuery = true , countQuery = "select count(*) from plato p\n" +
+            "inner join categoriarestaurante c on c.idcategoria = p.idcategoriarestaurante\n" +
+            "where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
+            "and (p.precio >= ?3 and p.precio < ?4) and (c.idcategoria >= ?5 and c.idcategoria < ?6) ")
+    Page<PlatosDTO> listaPlato(int idRest, String texto, Integer limitInf, Integer limitSup, Integer limitInfC, Integer limitSupC,Pageable pageable);
 
 }

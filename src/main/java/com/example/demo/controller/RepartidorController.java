@@ -109,7 +109,7 @@ public class RepartidorController {
             }
         }
 
-        int tamPag = 10;
+        int tamPag = 5;
         if (pedidoAct.size() == 0) {
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
@@ -358,15 +358,17 @@ public class RepartidorController {
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
                                 HttpSession session) {
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
         if (codigo != null) {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             if (pedidoOpt.isPresent()) {
-
                 Pedido pedido = pedidoOpt.get();
                 pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
                 pedido.setEstado(5);
                 //TODO: TIEMPO DE ENTREGA??
                 pedidoRepository.save(pedido);
+            }else{
+                return "redirect:/repartidor/listaPedidos";
             }
         }
         return "redirect:/repartidor/pedidoActual";
@@ -376,11 +378,9 @@ public class RepartidorController {
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
         if (codigo != null) {
-            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
-            if (pedidoOpt.isPresent() &&
-                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())) {
-                Pedido pedido = pedidoOpt.get();
+            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(5, repartidor, codigo);
+            if (pedido!=null) {
                 pedido.setEstado(6);
 
                 Date date = new Date();
@@ -407,10 +407,13 @@ public class RepartidorController {
                 int tiempo = (int) minutes;
                 pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
+                return "redirect:/repartidor/listaPedidos";
+            }else{
+                return "redirect:/repartidor/pedidoActual";
             }
+        }else{
+            return "redirect:/repartidor/pedidoActual";
         }
-        return "redirect:/repartidor/listaPedidos";
-
     }
 
     @PostMapping("/seleccionarDistrito")

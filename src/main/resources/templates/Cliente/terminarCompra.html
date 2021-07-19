@@ -422,7 +422,7 @@
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-3"><strong th:text="|S/. ${#numbers.formatDecimal(montoCarrito,1,2)}|"></strong></h6>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${#numbers.formatDecimal(montoExtras,1,2)}|"></strong></h6>
                                         <h6 style="color:#000000;" class="mr-3 mt-sm-4"><strong th:text="|S/. ${#numbers.formatDecimal(session.delivery,1,2)}|"></strong></h6>
-<!--
+                                        <!--
                                         <input name="delivery" form="generarPedido" th:value="${delivery}" hidden>
 -->
                                     </div>
@@ -599,7 +599,7 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                    <div class="row" th:each="plato : ${session.carrito}">
+                    <div class="row mt-2 mb-2" th:each="plato : ${session.carrito}">
                         <div class="col-3">
                             <img class="img-profile rounded-circle" alt="list-style-image"
                                  style="width: 35px; height: 35px"
@@ -629,7 +629,7 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                      <div class="row" th:if="${session.extrasCarrito != null}" th:each="extras : ${session.extrasCarrito}">
+                      <div class="row mt-2 mb-2" th:if="${session.extrasCarrito != null}" th:each="extras : ${session.extrasCarrito}">
                             <div class="col-3">
                                 <img class="img-profile rounded-circle" alt="list-style-image"
                                      style="width: 35px; height: 35px"

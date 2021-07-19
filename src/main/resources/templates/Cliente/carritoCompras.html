@@ -224,11 +224,13 @@
 
                         <div class="row">
                             <div class="col-1" th:if="${session.extrasCarrito != null}">
-                                <a class="btn" th:href="@{'/cliente/mostrarExtrasCarrito'}"><i class="fas fa-shopping-basket" style="color: white"></i></a>
+                                <a class="btn" th:href="@{'/cliente/mostrarExtrasCarrito'}"><i
+                                        class="fas fa-shopping-basket" style="color: white"></i></a>
                             </div>
                             <div class="col-9 mt-2">
                                 <!-- <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>-->
-                                <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE COMPRAS</h5>
+                                <h5 class="font-weight-bold text-white text-lg-center" align="center">CARRITO DE
+                                    COMPRAS</h5>
                             </div>
                         </div>
                     </div>
@@ -239,17 +241,20 @@
                             </div> -->
 
                         <div class="table-responsive">
-                            <div th:if="${msgExtra}" class="alert alert-success mb-2" th:text="${msgExtra}" role="alert"></div>
+                            <div th:if="${msgExtra}" class="alert alert-success mb-2" th:text="${msgExtra}"
+                                 role="alert"></div>
                             <h6 th:if="${msgLen != null}" class="mb-2" style="color: red" th:text="${msgLen}"></h6>
                             <h6 th:if="${msgInt != null}" class="mb-2" style="color: red" th:text="${msgInt}"></h6>
-                            <h6 th:if="${msgIntMay != null}" class="mb-2" style="color: red" th:text="${msgIntMay}"></h6>
-                            <h6 th:unless="${session.carrito != null}" class="mb-2" style="color: red">NO AGREGÓ ELEMENTOS AL CARRITO</h6>
+                            <h6 th:if="${msgIntMay != null}" class="mb-2" style="color: red"
+                                th:text="${msgIntMay}"></h6>
+                            <h6 th:unless="${session.carrito != null}" class="mb-2" style="color: red">NO AGREGÓ
+                                ELEMENTOS AL CARRITO</h6>
                             <table th:if="${session.carrito != null}" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="text-center ">
                                         <div class="ml-sm-4 mb-4">
-                                            <input class="form-check-input"  type="checkbox" id="master_checkbox">
+                                            <input class="form-check-input" type="checkbox" id="master_checkbox">
                                         </div>
                                     </th>
                                     <th class="text-center">
@@ -270,13 +275,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                   <tr th:each="plato : ${session.carrito}">
-                                       <td style="width: 100px">
-                                           <div class="ml-sm-4 mb-4">
-                                               <input class="form-check-input single_check" type="checkbox" th:value="${plato.getIdplatohaspedido().getIdplato()}" name="platoEliminar" form="eliminar">
-                                               <input class="form-check-input" type="text" th:value="${plato.getIdplatohaspedido().getIdplato()}" name="platoGuardar" form="terminarCompra" hidden>
-                                           </div>
-                                       </td>
+                                <tr th:each="plato : ${session.carrito}">
+                                    <td style="width: 100px">
+                                        <div class="ml-sm-4 mb-4">
+                                            <input class="form-check-input single_check" type="checkbox"
+                                                   th:value="${plato.getIdplatohaspedido().getIdplato()}"
+                                                   name="platoEliminar" form="eliminar">
+                                            <input class="form-check-input" type="text"
+                                                   th:value="${plato.getIdplatohaspedido().getIdplato()}"
+                                                   name="platoGuardar" form="terminarCompra" hidden>
+                                        </div>
+                                    </td>
                                     <td style="width: 500px">
                                         <div class="form-check-inline">
                                             <img class="img-profile rounded-circle" alt="list-style-image"
@@ -285,23 +294,41 @@
                                             <div class="ml-3" th:text="${plato.getPlato().getNombre()}"></div>
                                         </div>
                                     </td>
-                                    <td style="width: 250px" th:text="|S/. ${plato.getPreciounitario()}|"></td>
+                                    <td style="width: 250px">
+                                        <span th:text="|S/. ${plato.getPreciounitario()}|"
+                                              class="precioUnitario"></span>
+                                    </td>
                                     <td style="width: 250px">
                                         <div class="form-check-inline">
-                                            <button class="btn btn-cerrito mr-3 sumar" th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}"  style="color: #ffffff; background-color: #701111"><i
+                                            <button class="btn btn-cerrito mr-3 sumar"
+                                                    th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}"
+                                                    style="color: #ffffff; background-color: #701111"><i
                                                     class="fas fa-plus"></i></button>
-                                            <input class="form-control mr-3 mb-3 mt-3 cantidad" th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}"  type="text" size="5%" name="cantidad" th:value="${plato.getCantidad()}" form="terminarCompra"
+                                            <input class="form-control mr-3 mb-3 mt-3 cantidad"
+                                                   th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}"
+                                                   type="text" size="5%" name="cantidad"
+                                                   th:value="${plato.getCantidad()}" form="terminarCompra"
                                                    style="background: #ededed">
-                                            <button class="btn btn-cielito restar" th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}" style="color: #FFFFFF; background-color: #2d4a8d"><i
+                                            <button class="btn btn-cielito restar"
+                                                    th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}"
+                                                    style="color: #FFFFFF; background-color: #2d4a8d"><i
                                                     class="fas fa-minus"></i></button>
                                         </div>
                                     </td>
-                                    <td style="width: 250px" id="precio">
-                                        <input class="form-control mr-3 mb-3 mt-3 precio" th:data-pedido="${plato.getIdplatohaspedido().getIdplato()}" th:value="|S/. ${plato.getPreciounitario() * plato.getCantidad()}|"  type="text" size="5%" name="precio" disabled>
+                                    <td style="width: 250px">
+                                        <!--
+                                                                                <input class="form-control mr-3 mb-3 mt-3 precio" th:data-precio="${plato.getIdplatohaspedido().getIdplato()}" th:value="${plato.getPreciounitario() * plato.getCantidad()}"  type="text" size="5%" name="precio" disabled>
+                                        -->
+                                        <span th:text="|S/. ${plato.getPreciounitario() * plato.getCantidad()}|"
+                                              class="precio"></span>
                                     </td>
-                                    <td style="width: 700px"><textarea class="form-control" aria-label="With textarea" name="observacion" form="terminarCompra"
+                                    <td style="width: 700px"><textarea class="form-control"
+                                                                       th:value="${plato.getObservacionplatillo()}"
+                                                                       onkeyup="replaceComaDynamic(event);"
+                                                                       aria-label="With textarea" name="observacion"
+                                                                       form="terminarCompra"
                                                                        style="background: #ededed"></textarea></td>
-                                    </tr>
+                                </tr>
                                 </tbody>
 
                             </table>
@@ -312,50 +339,52 @@
                         <div class="container">
                             <div class="row justify-content-between mb-3">
                                 <div class="col justify-content-start">
-                                    <button class="btn btn-trash mr-3" style="color: #FFFFFF; background-color: #701111" data-toggle="modal" data-target="#vaciarCarrito"><i class="fas fa-trash"></i></button>
-                                    <button class="btn btn-eliminar mr-3" style="color: #FFFFFF; background-color: #e08a3d" data-toggle="modal" data-target="#eliminarPlato"><i class="fas fa-times"></i></button>
+                                    <button class="btn btn-trash mr-3" style="color: #FFFFFF; background-color: #701111"
+                                            data-toggle="modal" data-target="#vaciarCarrito"><i
+                                            class="fas fa-trash"></i></button>
+                                    <button class="btn btn-eliminar mr-3"
+                                            style="color: #FFFFFF; background-color: #e08a3d" data-toggle="modal"
+                                            data-target="#eliminarPlato"><i class="fas fa-times"></i></button>
                                 </div>
                                 <div class="col text-right">
                                     <!-- TODO VALIDAR LA REDIRECCION -->
-                                    <a th:if="${idPage.equals('0')}" class="btn btn-back mr-3" style="color: #FFFFFF;background-color: #d6bd1d" th:href="@{'/cliente/listaPlatos'}"><i class="fas fa-arrow-left"></i> Regresar</a>
-                                    <a th:if="${idPage.equals('1')}" class="btn btn-back mr-3" style="color: #FFFFFF;background-color: #d6bd1d" th:href="@{'/cliente/detallePlato?idPlato='+${idPlato}}"><i class="fas fa-arrow-left"></i> Regresar</a>
+                                    <a th:if="${idPage.equals('0')}" class="btn btn-back mr-3"
+                                       style="color: #FFFFFF;background-color: #d6bd1d"
+                                       th:href="@{'/cliente/listaPlatos'}"><i class="fas fa-arrow-left"></i>
+                                        Regresar</a>
+                                    <a th:if="${idPage.equals('1')}" class="btn btn-back mr-3"
+                                       style="color: #FFFFFF;background-color: #d6bd1d"
+                                       th:href="@{'/cliente/detallePlato?idPlato='+${idPlato}}"><i
+                                            class="fas fa-arrow-left"></i> Regresar</a>
 
-                                    <button class="btn btn-pay mr-3" style="color: #FFFFFF; background-color: #64a94d" type="button"
+                                    <button class="btn btn-pay mr-3" style="color: #FFFFFF; background-color: #64a94d"
+                                            type="button"
                                             data-toggle="modal" data-target="#irAPagar">
-                                        <i class="fas fa-arrow-right"></i> Ir a Pagar</button>
+                                        <i class="fas fa-arrow-right"></i> Ir a Pagar
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="pagination" style=" margin-left: 30% ;align-content: center">
-                            <a href="#">&laquo;</a>
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
-                        </div>
-                    </div>-->
+
+                    </div>
+
                 </div>
+                <!-- /.container-fluid -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Geek Developers &copy; 2021-1</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
 
     </div>
     <!-- End of Content Wrapper -->
@@ -370,24 +399,25 @@
 
 <!-- Ir a Pagar Modal -->
 <div class="modal fade" id="irAPagar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel2  ">¿Desea ir a pagar?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                    <button class="btn btn-primary"
-                            style="color: #FFFFFF; background-color: #64a94d; border: #701111"
-                            type="submit" form="terminarCompra">Sí</button>
-                </div>
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2  ">¿Desea ir a pagar?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
+                <button class="btn btn-primary"
+                        style="color: #FFFFFF; background-color: #64a94d; border: #701111"
+                        type="submit" form="terminarCompra">Sí
+                </button>
             </div>
         </div>
     </div>
+</div>
 
 <!-- Delete Modal-->
 <div class="modal fade" id="eliminarPlato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
@@ -405,7 +435,9 @@
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <!--<input type="hidden" name="idRest" th:value="${idRest}" form="eliminar">-->
                 <input type="hidden" name="idPage" th:value="${idPage}" form="eliminar">
-                    <button class="btn btn-eliminar mr-3" style="color: #000000; background-color: #FFD02A" type="submit" form="eliminar">Eliminar</button>
+                <button class="btn btn-eliminar mr-3" style="color: #000000; background-color: #FFD02A" type="submit"
+                        form="eliminar">Eliminar
+                </button>
             </div>
         </div>
     </div>
@@ -425,7 +457,8 @@
             <div class="modal-body">Al selecionar el botón de vaciar, usted vaciará el carrito.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-cerrito" style="background-color: #FFD02A; color: #000000" th:href="@{'/cliente/vaciarCarrito'}">Vaciar</a>
+                <a class="btn btn-cerrito" style="background-color: #FFD02A; color: #000000"
+                   th:href="@{'/cliente/vaciarCarrito'}">Vaciar</a>
             </div>
         </div>
     </div>
@@ -474,32 +507,59 @@
 <script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 <script>
+
+    function replaceComaDynamic(event) {
+        var codigo = event.which || event.keyCode;
+        // console.log("Presionada: " + codigo);
+
+        // código de la ,
+        if (codigo === 188) {
+            let observaciones = document.getElementsByName("observacion")
+            let i = 0
+            for (let obs of observaciones) {
+                console.log(obs.value)
+                obs.value = obs.value.replaceAll(",", " ")
+                console.log(obs.value)
+                document.getElementsByName("observacion")[i].value = obs.value
+                i++
+            }
+        }
+
+    }
+
+
     let maximo = 20
-    $('.sumar').on('click',function(){
+    $('.sumar').on('click', function () {
         let pedido = $(this).data('pedido')
-        let $cantidad_input=$(".cantidad[data-pedido='" + pedido +"']").first()
+        //    let precio = $(this).data('precio')
+
+        console.log(pedido)
+        //  console.log(precio)
+        let $cantidad_input = $(".cantidad[data-pedido='" + pedido + "']").first()
+        console.log($cantidad_input)
+        console.log($cantidad_input.val())
         let cantidad = parseInt($cantidad_input.val());
-        //TODO
-        let $precio_td=$("#precio[text='" + pedido * cantidad + "']").first()
-        let precio = parseInt($precio_td.val())
-        console.log(precio)
-        if(cantidad!==maximo){
-            $cantidad_input.val(cantidad+ 1)
+        // let $precio_input=$(".precio[data-precio='" + precio * cantidad + "']").first()
+        // let precio_val = parseInt($precio_input.val())
+        // console.log($precio_input)
+        // console.log($precio_input.val())
+        if (cantidad !== maximo) {
+            $cantidad_input.val(cantidad + 1)
         }
     })
 
-    $('.restar').on('click',function(){
+    $('.restar').on('click', function () {
         let pedido = $(this).data('pedido')
-        let $cantidad_input=$(".cantidad[data-pedido='" + pedido +"']").first()
+        let $cantidad_input = $(".cantidad[data-pedido='" + pedido + "']").first()
         let cantidad = parseInt($cantidad_input.val());
-        if(cantidad!==0){
+        if (cantidad !== 0) {
             $cantidad_input.val(cantidad - 1)
         }
     })
-    $('#master_checkbox').on('change',function(){
-        if(this.checked) {
+    $('#master_checkbox').on('change', function () {
+        if (this.checked) {
             $(".single_check").prop('checked', true);
-        }else{
+        } else {
             $(".single_check").prop('checked', false);
         }
     })

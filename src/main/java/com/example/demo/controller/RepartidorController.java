@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/repartidor")
@@ -87,14 +88,25 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model, HttpSession session,
                                   @RequestParam(value = "idPedido", required = false) String codigoPedido,
-                                  @RequestParam(value = "numPag", required = false) Integer numPag,
+                                  @RequestParam(value = "numPag", required = false) String pag,
                                   @RequestParam(value = "codigoMostrar", required = false) String codigoMostrar,
                                   RedirectAttributes attr) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         Page<Pedido> pagina;
-        if (numPag == null) {
+
+        int numPag = -1;
+        if (pag == null) {
             numPag = 1;
+        } else {
+            try {
+                numPag = Integer.parseInt(pag);
+                if(numPag<=0){
+                    numPag = 1;
+                }
+            } catch (NumberFormatException e) {
+                numPag = 1;
+            }
         }
 
         int tamPag = 5;
@@ -261,11 +273,22 @@ public class RepartidorController {
 
     @GetMapping("/estadisticas")
     public String estadisticas(Model model, HttpSession session,
-                               @RequestParam(value = "numPag", required = false) Integer numPag) {
+                               @RequestParam(value = "numPag", required = false) String pag) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Page<Pedido> pagina;
-        if (numPag == null) {
+
+        int numPag = -1;
+        if (pag == null) {
             numPag = 1;
+        } else {
+            try {
+                numPag = Integer.parseInt(pag);
+                if(numPag<=0){
+                    numPag = 1;
+                }
+            } catch (NumberFormatException e) {
+                numPag = 1;
+            }
         }
 
         int tamPag = 5;
@@ -358,6 +381,30 @@ public class RepartidorController {
                     pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())) {
                 Pedido pedido = pedidoOpt.get();
                 pedido.setEstado(6);
+
+                Date date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date fechPedido = new Date();
+
+                String dateS =  hourdateFormat.format(date);
+                String fechaPedidoS =pedido.getFechapedido();
+                try {
+                    fechPedido=hourdateFormat.parse(fechaPedidoS);
+
+                    date= hourdateFormat.parse(dateS);
+                } catch (ParseException e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+
+
+
+                long diff =date.getTime() -fechPedido.getTime();
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+                System.out.println(minutes);
+
+                int tiempo = (int) minutes;
+                pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
             }
         }
@@ -445,6 +492,9 @@ public class RepartidorController {
         } else {
             try {
                 numeroPag = Integer.parseInt(pag);
+                if(numeroPag<=0){
+                    numeroPag = 1;
+                }
             } catch (NumberFormatException e) {
                 numeroPag = 1;
             }
@@ -606,6 +656,7 @@ public class RepartidorController {
                 nombreRest=null;
             }
         }
+
         model.addAttribute("listaPedidoReporte", pagina.getContent());
 
         //Busque:

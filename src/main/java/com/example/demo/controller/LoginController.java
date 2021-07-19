@@ -60,8 +60,8 @@ import java.util.regex.Pattern;
 
 public class LoginController {
 
-    //public String ip = "54.175.37.128.nip.io";
-    public String ip = "localhost";
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "107.20.88.235.nip.io";
     public String puerto = "8080";
 
     @Autowired
@@ -1438,7 +1438,7 @@ public class LoginController {
                 ubicacion.setDistrito(distrito);
                 ubicacionRepository.save(ubicacion);
             }
-            //enviarCorreoValidacion(usuario.getCorreo());
+            enviarCorreoValidacion(usuario.getCorreo());
             redAt.addFlashAttribute("usuarioCreado", true);
 
             return "redirect:/login";

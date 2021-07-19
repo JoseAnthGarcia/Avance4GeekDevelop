@@ -276,6 +276,13 @@
                             th:text="|No se encontraron resultados|"></h5>
 
                     </div>
+                    <div class="text-center" >
+                        <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
+                            th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
+                        <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
+                        <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
+
+                    </div>
                     <!--
                         <div class="justify-content-center row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
                             <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
@@ -311,29 +318,37 @@
 
                     <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <div class="card-body" id='tabla' th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
-                        <table class="table table-bordered">
+                        <table class="table "
+                               style="background-color:#F2E2AA; border-color:#F2E2AA ">
                             <thead>
                             <tr>
-                                <th>
+                                <th style="color:black">
                                     TOP 3 RESTAURANTES
                                 </th>
-                                <th>
+                                <th style="color:black">
                                     TOP 3 PLATOS MÁS VENDIDOS
                                 </th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
+
                             <tr>
-                                <td  th:text="${listarestTop.get(0).getNombrerest()}"></td>
-                                <td  th:text="${listarestPl.get(0).getNombre()}"></td>
+                                <td th:if="${listarestTop.get(0).getNombrerest()!= null}"
+                                    style="color:black"  th:text="${listarestTop.get(0).getNombrerest()}"></td>
+
+                                <td th:if="${listarestPl.get(0).getNombre()!=null}" style="color:black"  th:text="${listarestPl.get(0).getNombre()}"></td>
                             </tr>
                             <tr>
-                                <td  th:text="${listarestTop.get(1).getNombrerest()}"></td>
-                                <td  th:text="${listarestPl.get(1).getNombre()}"></td>
+                                <td th:if="${listarestTop.size()>=2}" style="color:black" th:text="${listarestTop.get(1).getNombrerest()}"></td>
+                                <td th:if="${listarestTop.size()<2}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestPl.size()>=2}" style="color:black" th:text="${listarestPl.get(1).getNombre()}"></td>
+                                <td th:if="${listarestPl.size()<2}" style="color:black" th:text="|-|" >-</td>
                             </tr>
                             <tr>
-                                <td  th:text="${listarestTop.get(2).getNombrerest()}"></td>
-                                <td  th:text="${listarestPl.get(2).getNombre()}"></td>
+                                <td  th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestTop.get(2).getNombrerest()}"></td>
+                                <td  th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestPl.get(2).getNombre()}"></td>
+                                <td th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
                             </tr>
                             </tbody>
 

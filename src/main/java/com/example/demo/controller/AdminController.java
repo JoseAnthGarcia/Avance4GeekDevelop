@@ -1543,9 +1543,15 @@ public class AdminController  {
         model.addAttribute("notificaciones", notificaciones);
         // TODO: 19/07/2021
         List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
-        model.addAttribute("topMas", topMas.get(0));
         List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
-        model.addAttribute("topMenos", topMenos.get(0));
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
 
 
         return "AdminGen/reportePedidoRepartidor";
@@ -1715,10 +1721,20 @@ public class AdminController  {
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
 // TODO: 19/07/2021
+
+
         List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
-        model.addAttribute("topMas", topMas.get(0));
         List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
-        model.addAttribute("topMenos", topMenos.get(0));
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
+
+
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021
@@ -1923,6 +1939,18 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
     List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
     model.addAttribute("notificaciones", notificaciones);
+    // TODO: 19/07/2021
+    List<UsuarioDtoReporteVentas> topMas = usuarioRepository.listaUsuariosDtoReporteVentasMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+    List<UsuarioDtoReporteVentas> topMenos = usuarioRepository.listaUsuariosDtoReporteVentasMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+    try {
+        model.addAttribute("topMas", topMas.get(0));
+        model.addAttribute("topMenos", topMenos.get(0));
+    }catch (IndexOutOfBoundsException i){
+        model.addAttribute("topMas", topMas);
+        model.addAttribute("topMenos", topMenos);
+    }
+
     return "AdminGen/reporteVentas";
 }
     @GetMapping(value ="/ReporteVentasPagina")//lista de reporte de Repartidor pedido
@@ -2093,6 +2121,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+        // TODO: 19/07/2021
+        List<UsuarioDtoReporteVentas> topMas = usuarioRepository.listaUsuariosDtoReporteVentasMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        List<UsuarioDtoReporteVentas> topMenos = usuarioRepository.listaUsuariosDtoReporteVentasMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
+
+
         return "AdminGen/reporteVentas";
     }
     @GetMapping(value ="/ReporteIngresos")//lista de reporte de ingresos pedido

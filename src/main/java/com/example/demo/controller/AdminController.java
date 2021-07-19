@@ -9,6 +9,7 @@ import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +35,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -47,8 +51,15 @@ import java.util.stream.IntStream;
 @RequestMapping("/admin")
 public class AdminController  {
 
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
+    public String puerto = "8080";
+
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    ValidarCorreoRepository validarCorreoRepository;
 
     @Autowired
     MovilidadRepository movilidadRepository;
@@ -1530,6 +1541,12 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+        // TODO: 19/07/2021
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMas", topMas.get(0));
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMenos", topMenos.get(0));
+
 
         return "AdminGen/reportePedidoRepartidor";
     }
@@ -1697,7 +1714,11 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-
+// TODO: 19/07/2021
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMas", topMas.get(0));
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMenos", topMenos.get(0));
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021
@@ -2100,7 +2121,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             page =0;
         }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        Pageable pageRequest = PageRequest.of(page, 10);
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -2233,19 +2254,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         switch (estado){
             case "3":
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             case "0":
                 miFestado2=-1;
-                maXestado2=0;
+                maXestado2=1;
                 break;
             case "1":
                 miFestado2=0;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             default:
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
 
 
         }
@@ -2802,6 +2823,61 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
     }
 
+    public String cipherPassword(String text) {
+        String hashedPassword = "";
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < encodedhash.length; i++) {
+                String hex = Integer.toHexString(0xff & encodedhash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException ex) {
+
+        }
+
+        return hashedPassword;
+    }
+    //generar codigo aleatorio:
+    public String generarCodigAleatorio() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        int charsLength = chars.length;
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int tamCodigo = 5;
+        for (int i = 0; i < tamCodigo; i++) {
+            buffer.append(chars[random.nextInt(charsLength)]);
+        }
+        return buffer.toString();
+    }
+    public void enviarCorreoValidacion(String correo) {
+        String codigoHash = "";
+        while (true) {
+            codigoHash = cipherPassword(generarCodigAleatorio());
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(codigoHash);
+            if (validarcorreo == null) {
+                break;
+            }
+        }
+        Validarcorreo validarcorreo = new Validarcorreo();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        validarcorreo.setUsuario(usuario);
+        validarcorreo.setHash(codigoHash);
+        validarCorreoRepository.save(validarcorreo);
+
+        String url = "http://" + ip + ":" + puerto + "/foodDelivery/validarCuenta?correo="
+                + correo + "&value=" + codigoHash;
+        String content = "Su cuenta ha sido creada exitosamente." +
+                "Debe validar su correo para empezar a usar su cuenta.\n"
+                + "Para validar su correo electrónico ingrese al siguiente link:\n" + url;
+        String subject = "Bienvenido a Food Delivery!";
+        sendEmail(correo, subject, content);
+    }
     //Pasamos por parametro: destinatario, asunto y el mensaje
     public void sendEmail(String to, String subject, String content) {
 

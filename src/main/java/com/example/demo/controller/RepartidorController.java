@@ -109,7 +109,7 @@ public class RepartidorController {
             }
         }
 
-        int tamPag = 5;
+        int tamPag = 10;
         if (pedidoAct.size() == 0) {
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
@@ -361,6 +361,7 @@ public class RepartidorController {
         if (codigo != null) {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             if (pedidoOpt.isPresent()) {
+
                 Pedido pedido = pedidoOpt.get();
                 pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
                 pedido.setEstado(5);
@@ -485,7 +486,7 @@ public class RepartidorController {
                                   @RequestParam(value = "valoracion", required = false) String valoracion,
                                   @RequestParam(value = "pag", required = false) String pag) {
 
-        int tamPag = 5;
+        int tamPag = 10;
         int numeroPag = -1;
         if (pag == null) {
             numeroPag = 1;

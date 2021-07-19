@@ -422,5 +422,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
     //aceptar pedido:
-    Pedido findByEstadoAndRepartidorAndCodigo(int estado, Usuario repartidor, String codigo);
+    Pedido findByEstadoAndRepartidorAndCodigoAndUbicacion(int estado, Usuario repartidor, String codigo, Ubicacion ubicacion);
+    Pedido findByEstadoAndCodigoAndUbicacion(int estado, String codigo, Ubicacion ubicacion);
 }

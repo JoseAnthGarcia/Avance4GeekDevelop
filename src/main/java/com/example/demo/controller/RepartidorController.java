@@ -358,9 +358,10 @@ public class RepartidorController {
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
                                 HttpSession session) {
-        Usuario repartidor = (Usuario) session.getAttribute("usuario");
         if (codigo != null) {
-            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(4, repartidor, codigo);
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
+            Pedido pedido = pedidoRepository.findByEstadoAndCodigoAndUbicacion(4, codigo, ubicacion);
             if (pedido!=null) {
                 pedido.setRepartidor(repartidor);
                 pedido.setEstado(5);
@@ -375,9 +376,11 @@ public class RepartidorController {
     @GetMapping("/pedidoEntregado")
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
+
         if (codigo != null) {
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
-            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(5, repartidor, codigo);
+            Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
+            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigoAndUbicacion(5, repartidor, codigo, ubicacion);
             if (pedido!=null) {
                 pedido.setEstado(6);
 
@@ -410,12 +413,6 @@ public class RepartidorController {
         }else{
             return "redirect:/repartidor/pedidoActual";
         }
-    }
-
-    @PostMapping("/seleccionarDistrito")
-    public String distritoActual(HttpSession session) {
-        session.setAttribute("ubicacionActual", new Ubicacion());
-        return "redirect:/repartidor/listaPedido";
     }
 
 

@@ -66,8 +66,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "where  concat(lower(nombres),lower(apellidos)) like %?1% \n" +
                     "and idrol != 2 \n" +
                     "and ( `idrol` > ?2 and `idrol` <= ?3 ) \n" +
-                    "and ( `estado` > ?4 and `estado` <= ?5 ) ")
+                    "and ( `estado` > ?4 and `estado` <= ?5 )")
     Page<Usuario> listaUsuarios(String texto, Integer inFrol, Integer maXrol, Integer miFestado, Integer maXestado, Pageable pageable);
+
 
 
     @Query(value ="select u.nombres as 'nombrecliente' ,u.apellidos as 'apellidocliente', r.nombre as 'nombrerest', \n" +

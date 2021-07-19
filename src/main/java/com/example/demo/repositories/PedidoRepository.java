@@ -420,4 +420,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     Page<Pedido> findByEstadoAndRepartidorAndUbicacion_DistritoAndValoracionrepartidorBetweenAndRestaurante_NombreContainingAndFechapedidoBetweenAndPreciototalBetween(int estado, Usuario repartidor,Distrito distrito,int valMin, int valMax,String nombreRest, String fechaMin, String fechaMax, double precioMin, double precioMax, Pageable pageable);
 
 
+
+    //aceptar pedido:
+    Pedido findByEstadoAndRepartidorAndCodigo(int estado, Usuario repartidor, String codigo);
+    Pedido findByEstadoAndCodigo(int estado, String codigo);
 }

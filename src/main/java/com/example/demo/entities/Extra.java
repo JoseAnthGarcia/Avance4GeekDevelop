@@ -28,9 +28,9 @@ public class Extra  implements Serializable {
 
     //Considerando un precio máximo de extra de 200 - superior a esto se considera String <- Se puede cambiar
     @Column(nullable = false, name = "preciounitario")
-    @Digits(integer = 1000, fraction = 2, message = "Ingresar un precio válido")
+    @Digits(integer = 1000, fraction = 1, message = "Ingresar un precio válido")
     @Max(value = 50 , message = "No puede ingresar más de 50 soles")
-    @Min(value = 2, message = "No puede ingresar menos de 1 sol")
+    @Min(value = 1, message = "No puede ingresar menos de 1 sol")
     @NotNull(message = "Este campo no puede estar vacío")
     private double preciounitario;
 

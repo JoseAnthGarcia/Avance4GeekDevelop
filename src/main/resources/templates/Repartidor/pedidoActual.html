@@ -27,7 +27,7 @@
             <div class="container-fluid">
 
                 <!-- DataTales Example -->
-                <div th:if="${msg != null}" th:text="${msg}" class="col-lg-3 alert alert-danger" ></div>
+                <div th:if="${msg != null}" th:text="${msg}" class="col-lg-12 alert alert-danger" ></div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
@@ -47,6 +47,9 @@
                                             <h1 class="card-title"
                                                 style="color: black"
                                                 th:text="|${pedidoAct.getRestaurante().nombre} - ${pedidoAct.ubicacion.distrito.nombre}|">Ceviche - Restaurante Marino</h1>
+                                            <h3 class="card-title"
+                                                style="color: black; position: relative; bottom: 10px"
+                                                th:text="|${pedidoAct.codigo}|">Ceviche - Restaurante Marino</h3>
                                             <p class="card-text"
                                                th:utext="'Dirección de restaurante: '+${pedidoAct.restaurante.direccion}
                                             +'<br>Direción de envio: '+${pedidoAct.cliente.direccionactual}

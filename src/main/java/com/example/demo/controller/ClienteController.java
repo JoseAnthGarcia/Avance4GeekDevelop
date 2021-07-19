@@ -107,7 +107,6 @@ public class ClienteController {
     ReporteDineroService reporteDineroService;
 
 
-
     @Autowired
     CuponClienteService cuponClienteService;
 
@@ -203,7 +202,8 @@ public class ClienteController {
 
 
     }
-/*********************************************************  LISTA RESTAURANTE***************************************************************************************/
+
+    /*********************************************************  LISTA RESTAURANTE***************************************************************************************/
     @GetMapping("/listaRestaurantes")
     public String listaRestaurantes(Model model, HttpSession httpSession,
                                     @RequestParam Map<String, Object> params,
@@ -424,7 +424,7 @@ public class ClienteController {
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 2);
         String direccionactual = usuario.getDireccionactual();
 
 
@@ -602,8 +602,8 @@ public class ClienteController {
     public String guardarDirecciones(HttpSession httpSession, @RequestParam("direccionactual") String direccionActual, Model model) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
-        for (Ubicacion direc: listaDirecciones) {
-            if(direccionActual.trim().equalsIgnoreCase(direc.getDireccion())){
+        for (Ubicacion direc : listaDirecciones) {
+            if (direccionActual.trim().equalsIgnoreCase(direc.getDireccion())) {
                 usuario.setDireccionactual(direccionActual);
                 httpSession.setAttribute("usuario", usuario);
                 model.addAttribute("listaDistritos", distritosRepository.findAll());
@@ -612,7 +612,7 @@ public class ClienteController {
             }
         }
 
-        httpSession.setAttribute("distritoActual", distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(),usuario.getDireccionactual()));
+        httpSession.setAttribute("distritoActual", distritosRepository.findByUsuarioAndDireccion(usuario.getIdusuario(), usuario.getDireccionactual()));
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "redirect:/cliente/listaDirecciones";
     }
@@ -785,9 +785,9 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam Map<String, Object> params,
-                              @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
-                              @RequestParam(value = "texto",required = false) String texto,
-                              @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                              @RequestParam(value = "idRest", required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
+                              @RequestParam(value = "texto", required = false) String texto,
+                              @RequestParam(value = "idPrecio", required = false) String idPrecio,
                               Model model, HttpSession session) {
 
         Integer limitInf = 0;
@@ -800,38 +800,38 @@ public class ClienteController {
         } else {
             try {
                 idRest = Integer.parseInt(idRestS);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return "redirect:/cliente/listaRestaurantes";
             }
             //PROBAR
-            if(session.getAttribute("idRest") != null){
+            if (session.getAttribute("idRest") != null) {
                 session.removeAttribute("idRest");
             }
             session.setAttribute("idRest", idRest);
         }
 
-        if(session.getAttribute("idPlato") != null){
+        if (session.getAttribute("idPlato") != null) {
             session.removeAttribute("idPlato");
         }
 
         Optional<Restaurante> restauranteOpt = restauranteRepository.findById(idRest);
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 6);
 
-        if(idPrecio == null || idPrecio.equals("")){
+        if (idPrecio == null || idPrecio.equals("")) {
             idPrecio = "6";
         }
 
-        if(texto == null){
+        if (texto == null) {
             texto = "";
         }
 
-        if(restauranteOpt.isPresent()){
-           Restaurante restaurante = restauranteOpt.get();
+        if (restauranteOpt.isPresent()) {
+            Restaurante restaurante = restauranteOpt.get();
             model.addAttribute("nombreRest", restaurante.getNombre());
         }
 
-        switch (idPrecio){
+        switch (idPrecio) {
             case "1":
                 limitInf = 0;
                 limitSup = 10;
@@ -859,50 +859,49 @@ public class ClienteController {
 
         Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, pageRequest);
         int totalPage = listaPlato.getTotalPages();
-        if(totalPage > 0){
-            List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages",pages);
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
         }
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPlato",listaPlato.getContent());
-        model.addAttribute("texto",texto);
-        model.addAttribute("idPrecio",idPrecio);
+        model.addAttribute("listaPlato", listaPlato.getContent());
+        model.addAttribute("texto", texto);
+        model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-         return "Cliente/listaProductos";
+        return "Cliente/listaProductos";
     }
 
     @GetMapping("/detallePlato")
     public String detallePlato(@RequestParam Map<String, Object> params,
-                                @RequestParam(value = "texto",required = false) String texto,
-                                @RequestParam(value = "idPrecio",required = false) String idPrecio,
-                                @RequestParam(value = "idCategoria",required = false) String idCategoria,
-                                @RequestParam(value = "idPlato",required = false) String idPlatoS, HttpSession session,
-                                Model model) {
+                               @RequestParam(value = "texto", required = false) String texto,
+                               @RequestParam(value = "idPrecio", required = false) String idPrecio,
+                               @RequestParam(value = "idCategoria", required = false) String idCategoria,
+                               @RequestParam(value = "idPlato", required = false) String idPlatoS, HttpSession session,
+                               Model model) {
         Integer idRest = (Integer) session.getAttribute("idRest");
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         Integer idPlato;
         // <--
-        try{
+        try {
             idPlato = Integer.parseInt(idPlatoS);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return "redirect:/cliente/listaPlatos";
         }
 
-        if(idPlato == null){
+        if (idPlato == null) {
             idPlato = (Integer) session.getAttribute("idPlato");
         }
 
-        if(session.getAttribute("idPlato") == null){
+        if (session.getAttribute("idPlato") == null) {
             //session.removeAttribute("idPlato");
-            session.setAttribute("idPlato",idPlato);
+            session.setAttribute("idPlato", idPlato);
         }
 
 
-
         Plato platoObs = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
-        if (platoObs == null){
+        if (platoObs == null) {
             return "redirect:/cliente/listaPlatos";
         }
 
@@ -916,26 +915,26 @@ public class ClienteController {
         int limitSupPe = 0;
         int limitInfCa = 0;
         int limitSupCa = 0;
-        int page  = params.get("page") != null ? Integer.valueOf(params.get("page").toString())-1 : 0;
+        int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 5);
 
-        if(platoOpt.isPresent() && restauranteOpt.isPresent()){
+        if (platoOpt.isPresent() && restauranteOpt.isPresent()) {
             Plato plato = platoOpt.get();
             Restaurante restaurante = restauranteOpt.get();
 
-            if(idPrecio == null || idPrecio.equals("")){
+            if (idPrecio == null || idPrecio.equals("")) {
                 idPrecio = "6";
             }
 
-            if(idCategoria == null || idCategoria.equals("")){
+            if (idCategoria == null || idCategoria.equals("")) {
                 idCategoria = "5";
             }
 
-            if(texto == null){
+            if (texto == null) {
                 texto = "";
             }
 
-            switch (idCategoria){
+            switch (idCategoria) {
                 case "1":
                     limitInfCa = 0;
                     limitSupCa = 1;
@@ -958,7 +957,7 @@ public class ClienteController {
 
             }
 
-            switch (idPrecio){
+            switch (idPrecio) {
                 case "1":
                     limitInfPe = 0;
                     limitSupPe = 5;
@@ -981,54 +980,54 @@ public class ClienteController {
             }
 
 
-            Page<ExtraDTO> listaExtras = extrasClienteService.listaExtrasDisponiblesPaginada(idRest, idPlato,texto, limitInfCa,limitSupCa, limitInfPe, limitSupPe,1,pageRequest);
+            Page<ExtraDTO> listaExtras = extrasClienteService.listaExtrasDisponiblesPaginada(idRest, idPlato, texto, limitInfCa, limitSupCa, limitInfPe, limitSupPe, 1, pageRequest);
             int totalPage = listaExtras.getTotalPages();
-            if(totalPage > 0){
-                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages",pages);
+            if (totalPage > 0) {
+                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages", pages);
             }
 
-            model.addAttribute("plato",plato);
-            model.addAttribute("listaExtras",listaExtras.getContent());
-          //  model.addAttribute("idRest",idRest);
-            model.addAttribute("idPrecio",idPrecio);
-            model.addAttribute("idCategoria",idCategoria);
-            model.addAttribute("texto",texto);
-            model.addAttribute("current",page+1);
-            model.addAttribute("nombreRest",restaurante.getNombre());
+            model.addAttribute("plato", plato);
+            model.addAttribute("listaExtras", listaExtras.getContent());
+            //  model.addAttribute("idRest",idRest);
+            model.addAttribute("idPrecio", idPrecio);
+            model.addAttribute("idCategoria", idCategoria);
+            model.addAttribute("texto", texto);
+            model.addAttribute("current", page + 1);
+            model.addAttribute("nombreRest", restaurante.getNombre());
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
             return "Cliente/detallePlato";
-        }else{
+        } else {
             //model.addAttribute("idRest",idRest);
             //model.addAttribute("idPlato",idPlato);
             model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-            return "redirect: cliente/listaPlatos?idRest="+idRest+"&idPlato="+idPlato;
+            return "redirect: cliente/listaPlatos?idRest=" + idRest + "&idPlato=" + idPlato;
         }
     }
 
     @GetMapping("/mostrarCarrito")
-    public String mostrarCarrito(@RequestParam(value = "idPlato",required = false) Integer idPlato,
+    public String mostrarCarrito(@RequestParam(value = "idPlato", required = false) Integer idPlato,
                                  @RequestParam(value = "idPage", required = false) String idPage,
                                  HttpSession session, RedirectAttributes attr,
-                                 Model model){
+                                 Model model) {
         //ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         //List<Plato_has_pedido> carritoL = (List<Plato_has_pedido>) session.getAttribute("carrito");
 
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         //en caso le cambie el html el disbled lo redireccionará al mismo sitio si no hay sesión de carrito
-        if(session.getAttribute("carrito") == null){
-            attr.addFlashAttribute("msgCarritoNull","Añada un plato al carrito para continuar.");
-            return "redirect:/cliente/listaPlatos?idRest="+idRest;
+        if (session.getAttribute("carrito") == null) {
+            attr.addFlashAttribute("msgCarritoNull", "Añada un plato al carrito para continuar.");
+            return "redirect:/cliente/listaPlatos?idRest=" + idRest;
         }
 
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         //model.addAttribute("carrito",carritoL);
         //model.addAttribute("idRest",idRest);
-        model.addAttribute("idPlato",idPlato);
-        model.addAttribute("idPage",idPage);
+        model.addAttribute("idPlato", idPlato);
+        model.addAttribute("idPage", idPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        model.addAttribute("idRest",idRest);
+        model.addAttribute("idRest", idRest);
         return "Cliente/carritoCompras";
     }
 
@@ -1037,7 +1036,7 @@ public class ClienteController {
                                  @RequestParam(value = "idPage", required = false) String idPage,
                                  @RequestParam("cantidadPlato") String cantidadPlato,
                                  HttpSession session,
-                                 RedirectAttributes attr, Model model){
+                                 RedirectAttributes attr, Model model) {
 
         String url = "";
         String params = "";
@@ -1054,64 +1053,63 @@ public class ClienteController {
         Plato_has_pedido php = new Plato_has_pedido();
         //TODO validar plato
         Plato platoOther = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
-        if(platoOther == null){
+        if (platoOther == null) {
             return "redirect:/cliente/listaPlatos/";
         }
 
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
 
 
-
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
             //TODO creo q se puede elimnar - evaluarlo después de la presentación
-            if(cantint <= 0 || cantint > 20){
-                if(idPage.equals("1")){
+            if (cantint <= 0 || cantint > 20) {
+                if (idPage.equals("1")) {
                     url = "detallePlato";
-                    params = "?idRest="+idRest+"&idPlato="+idPlato;
-                }else if(idPage.equals("0")){
+                    params = "?idRest=" + idRest + "&idPlato=" + idPlato;
+                } else if (idPage.equals("0")) {
                     url = "listaPlatos";
-                    params = "?idRest="+idRest;
-                }else{
+                    params = "?idRest=" + idRest;
+                } else {
                     url = "listaRestaurantes";
                 }
-                attr.addFlashAttribute("msgVal","Ingrese un número mayor a 0 y menor a 20");
-                return "redirect:/cliente/"+url+params;
+                attr.addFlashAttribute("msgVal", "Ingrese un número mayor a 0 y menor a 20");
+                return "redirect:/cliente/" + url + params;
             }
 
-        }catch (NumberFormatException e){
-            if(idPage.equals("1")){
+        } catch (NumberFormatException e) {
+            if (idPage.equals("1")) {
                 url = "detallePlato";
-                params = "?idRest="+idRest+"&idPlato="+idPlato;
-            }else if(idPage.equals("0")){
+                params = "?idRest=" + idRest + "&idPlato=" + idPlato;
+            } else if (idPage.equals("0")) {
                 url = "listaPlatos";
-                params = "?idRest="+idRest;
-            }else{
+                params = "?idRest=" + idRest;
+            } else {
                 url = "listaRestaurantes";
             }
-            attr.addFlashAttribute("msgValCant","Ingrese un número");
-            return "redirect:/cliente/"+url+params;
+            attr.addFlashAttribute("msgValCant", "Ingrese un número");
+            return "redirect:/cliente/" + url + params;
         }
 
-        if(platoOptional.isPresent()){
+        if (platoOptional.isPresent()) {
             //GUARDANDO TODOS LOS ATRIBUTOS NECESARIOS A CARRITO
             Plato plato = platoOptional.get();
             Plato_has_pedidoKey idComPlato = new Plato_has_pedidoKey();
             //SE GUARDARÁ TEMPORALMENTE EN SESIÓN CON UN CÓDIGO TEMPORAL QUE SE ACTUALIZARÁ
             String codigo = "CODIGOTEMPORAL";
             int puntero = 0;
-            if(carrito.size() > 0){
+            if (carrito.size() > 0) {
                 //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
                 for (int i = 0; i < carrito.size(); i++) {
-                    if(idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()){
+                    if (idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()) {
                         puntero = i;
                         break;
                     }
                 }
-                if(idPlato == carrito.get(puntero).getIdplatohaspedido().getIdplato()){
-                    carrito.get(puntero).setCantidad(carrito.get(puntero).getCantidad()+cantint);
-                }else {
+                if (idPlato == carrito.get(puntero).getIdplatohaspedido().getIdplato()) {
+                    carrito.get(puntero).setCantidad(carrito.get(puntero).getCantidad() + cantint);
+                } else {
                     idComPlato.setIdplato(idPlato);
                     idComPlato.setCodigo(codigo);
                     php.setPlato(plato);
@@ -1121,7 +1119,7 @@ public class ClienteController {
                     carrito.add(php);
                 }
 
-            }else{
+            } else {
                 //TODO HAY QUE VALIDAR DE QUE VISTA SE ESTÁ AÑADIENDO AL CARRITO - XQ DE ESO DEPENDE EL COMENTARIO
                 idComPlato.setIdplato(idPlato);
                 idComPlato.setCodigo(codigo);
@@ -1135,51 +1133,51 @@ public class ClienteController {
                 php.setIdplatohaspedido(idComPlato);
                 carrito.add(php);
             }
-            session.setAttribute("carrito",carrito);
+            session.setAttribute("carrito", carrito);
             attr.addFlashAttribute("msgAdd", "Se agregó un plato al carrito");
-        }else{
+        } else {
             attr.addFlashAttribute("msgNotFound", "No se encontro el plato");
         }
         //TODO por ahora solo funcionará si el flujo es LISTA DE PLATOS - DETALLE - VER CARRITO
-        if(idPage.equals("1")){
+        if (idPage.equals("1")) {
             url = "detallePlato";
-            params = "?idRest="+idRest+"&idPlato="+idPlato;
-        }else if(idPage.equals("0")){
+            params = "?idRest=" + idRest + "&idPlato=" + idPlato;
+        } else if (idPage.equals("0")) {
             url = "listaPlatos";
-            params = "?idRest="+idRest;
-        }else{
+            params = "?idRest=" + idRest;
+        } else {
             session.removeAttribute("carrito");
             url = "listaRestaurantes";
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-        return "redirect:/cliente/"+url+params;
+        return "redirect:/cliente/" + url + params;
     }
 
 
     @GetMapping("/vaciarCarrito")
-    public String vaciarCarrito(RedirectAttributes attr, HttpSession session){
+    public String vaciarCarrito(RedirectAttributes attr, HttpSession session) {
         session.removeAttribute("carrito");
         return "redirect:/cliente/listaPlatos";
     }
 
     @GetMapping("/vaciarExtras")
-    public String vaciarExtras(RedirectAttributes attr, HttpSession session){
+    public String vaciarExtras(RedirectAttributes attr, HttpSession session) {
         session.removeAttribute("extrasCarrito");
         return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
     @PostMapping("/eliminar")
-    public String eliminarPlatos(@RequestParam(value = "platoEliminar",required = false) List<Integer> platoEliminar, HttpSession session,
+    public String eliminarPlatos(@RequestParam(value = "platoEliminar", required = false) List<Integer> platoEliminar, HttpSession session,
                                  Model model, @RequestParam(value = "idPage", required = false) String idPage,
-                                 RedirectAttributes attr){
+                                 RedirectAttributes attr) {
         System.out.println(platoEliminar);
         // 3 elementos
         // 1 elemento - idPlato
         //en caso no seleccione nada
 
 
-        if(platoEliminar == null){
-            attr.addFlashAttribute("msgNotNull","Tiene que seleccionar un plato para borrar");
+        if (platoEliminar == null) {
+            attr.addFlashAttribute("msgNotNull", "Tiene que seleccionar un plato para borrar");
             return "redirect:/cliente/mostrarCarrito?idPage=0";
         }
 
@@ -1187,8 +1185,8 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         for (Integer idPlato : platoEliminar) {
-            for(int i = 0; i < carrito.size(); i++){
-                if(idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()){
+            for (int i = 0; i < carrito.size(); i++) {
+                if (idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()) {
                     carrito.remove(i);
                     break;
                 }
@@ -1197,18 +1195,18 @@ public class ClienteController {
 
 
         //en caso elimine el carrito quitar la sesión se debe
-        if(carrito.size()==0){
+        if (carrito.size() == 0) {
             session.removeAttribute("carrito");
             return "redirect:/cliente/listaPlatos";
         }
         //Actualizando el carrito
-        session.setAttribute("carrito",carrito);
+        session.setAttribute("carrito", carrito);
         return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
     @PostMapping("/eliminarExtras")
-    public String eliminarExtras(@RequestParam(value = "extraEliminar",required = false) List<Integer> extraEliminar, HttpSession session,
-                                 Model model){
+    public String eliminarExtras(@RequestParam(value = "extraEliminar", required = false) List<Integer> extraEliminar, HttpSession session,
+                                 Model model) {
         System.out.println(extraEliminar);
         // 3 elementos
         // 1 elemento - idPlato
@@ -1216,15 +1214,15 @@ public class ClienteController {
 
         Integer idRest = (Integer) session.getAttribute("idRest");
 
-        if(extraEliminar == null){
+        if (extraEliminar == null) {
             return "redirect:/cliente/mostrarExtrasCarrito";
         }
 
         List<Extra_has_pedido> carritoExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
         for (Integer idExtra : extraEliminar) {
-            for(int i = 0; i < carritoExtra.size(); i++){
-                if(idExtra == carritoExtra.get(i).getIdextra().getIdextra()){
+            for (int i = 0; i < carritoExtra.size(); i++) {
+                if (idExtra == carritoExtra.get(i).getIdextra().getIdextra()) {
                     carritoExtra.remove(i);
                     break;
                 }
@@ -1233,20 +1231,20 @@ public class ClienteController {
 
 
         //en caso elimine el carrito quitar la sesión se debe
-        if(carritoExtra.size()==0){
+        if (carritoExtra.size() == 0) {
             session.removeAttribute("extrasCarrito");
-            return "redirect:/cliente/listaPlatos?idRest="+idRest;
+            return "redirect:/cliente/listaPlatos?idRest=" + idRest;
         }
         //Actualizando el carrito
-        session.setAttribute("extrasCarrito",carritoExtra);
-        return "redirect:/cliente/mostrarExtrasCarrito?idRest="+idRest;
+        session.setAttribute("extrasCarrito", carritoExtra);
+        return "redirect:/cliente/mostrarExtrasCarrito?idRest=" + idRest;
     }
 
     @GetMapping("/mostrarExtrasCarrito")
     public String mostrarExtrasCarrito(HttpSession session,
-                                       Model model){
+                                       Model model) {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
-        if(session.getAttribute("extrasCarrito") == null){
+        if (session.getAttribute("extrasCarrito") == null) {
             return "redirect:/cliente/motrarCarrito";
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
@@ -1256,32 +1254,32 @@ public class ClienteController {
 
     @PostMapping("/aniadirExtras")
     public String aniadirExtras(@RequestParam("idExtra") Integer idExtra,
-                                @RequestParam(value = "idPlato",required = false) Integer idPlato,
+                                @RequestParam(value = "idPlato", required = false) Integer idPlato,
                                 @RequestParam(value = "cantidadExtra") String cantidadExtra,
                                 HttpSession session,
-                                RedirectAttributes attr, Model model){
+                                RedirectAttributes attr, Model model) {
         //extras de carrito
         ArrayList<Extra_has_pedido> extrasCarrito = null;
         String urlDetalle = "";
         String params = "";
-       // todo verificar noti
+        // todo verificar noti
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
 
-        if(idPlato == null){
+        if (idPlato == null) {
             idPlato = (Integer) session.getAttribute("idPlato");
         }
 
         Integer idRest = (Integer) session.getAttribute("idRest");
 
-        Extra extraOther = extraRepository.findByIdextraAndIdrestaurante(idExtra,idRest);
-        if(extraOther == null){
+        Extra extraOther = extraRepository.findByIdextraAndIdrestaurante(idExtra, idRest);
+        if (extraOther == null) {
             return "redirect:/cliente/listaPlatos";
         }
 
-        if(session.getAttribute("extrasCarrito")==null){
+        if (session.getAttribute("extrasCarrito") == null) {
             extrasCarrito = new ArrayList<>();
-        }else{
+        } else {
             extrasCarrito = (ArrayList<Extra_has_pedido>) session.getAttribute("extrasCarrito");
         }
 
@@ -1289,42 +1287,42 @@ public class ClienteController {
         try {
             cantint = Integer.parseInt(cantidadExtra);
 
-            if(cantint <= 0 || cantint > 20){
+            if (cantint <= 0 || cantint > 20) {
                 urlDetalle = "detallePlato";
-                params = "?idRest="+idRest+"&idPlato="+idPlato;
+                params = "?idRest=" + idRest + "&idPlato=" + idPlato;
 
-                attr.addFlashAttribute("msgValExt","Ingrese un número mayor a 0 y menor a 20");
-                return "redirect:/cliente/"+urlDetalle+params;
+                attr.addFlashAttribute("msgValExt", "Ingrese un número mayor a 0 y menor a 20");
+                return "redirect:/cliente/" + urlDetalle + params;
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             urlDetalle = "detallePlato";
-            params = "?idRest="+idRest+"&idPlato="+idPlato;
+            params = "?idRest=" + idRest + "&idPlato=" + idPlato;
 
-            attr.addFlashAttribute("msgValCantExt","Ingrese un número");
-            return "redirect:/cliente/"+urlDetalle+params;
+            attr.addFlashAttribute("msgValCantExt", "Ingrese un número");
+            return "redirect:/cliente/" + urlDetalle + params;
         }
 
 
         Extra_has_pedido ehp = new Extra_has_pedido();
         Optional<Extra> extraOptional = extraRepository.findById(idExtra);
 
-        if(extraOptional.isPresent()){
+        if (extraOptional.isPresent()) {
             Extra extra = extraOptional.get();
             Extra_has_pedidoKey idComExtra = new Extra_has_pedidoKey();
             String codigo = "CODIGOTEMPORAL";
 
             int puntero = 0;
-            if(extrasCarrito.size() > 0){
+            if (extrasCarrito.size() > 0) {
                 //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
                 for (int i = 0; i < extrasCarrito.size(); i++) {
-                    if(idExtra == extrasCarrito.get(i).getIdextra().getIdextra()){
+                    if (idExtra == extrasCarrito.get(i).getIdextra().getIdextra()) {
                         puntero = i;
                         break;
                     }
                 }
-                if(idExtra == extrasCarrito.get(puntero).getIdextra().getIdextra()){
-                    extrasCarrito.get(puntero).setCantidad(extrasCarrito.get(puntero).getCantidad()+cantint);
-                }else {
+                if (idExtra == extrasCarrito.get(puntero).getIdextra().getIdextra()) {
+                    extrasCarrito.get(puntero).setCantidad(extrasCarrito.get(puntero).getCantidad() + cantint);
+                } else {
                     idComExtra.setIdextra(idExtra);
                     idComExtra.setCodigo(codigo);
                     ehp.setExtra(extra);
@@ -1334,7 +1332,7 @@ public class ClienteController {
                     extrasCarrito.add(ehp);
                 }
 
-            }else{
+            } else {
                 //TODO HAY QUE VALIDAR DE QUE VISTA SE ESTÁ AÑADIENDO AL CARRITO - XQ DE ESO DEPENDE EL COMENTARIO
                 idComExtra.setIdextra(idExtra);
                 idComExtra.setCodigo(codigo);
@@ -1348,42 +1346,42 @@ public class ClienteController {
                 ehp.setIdextra(idComExtra);
                 extrasCarrito.add(ehp);
             }
-            session.setAttribute("extrasCarrito",extrasCarrito);
+            session.setAttribute("extrasCarrito", extrasCarrito);
             attr.addFlashAttribute("msgAddExtra", "Se agregó un extra al carrito");
-        }else{
+        } else {
             attr.addFlashAttribute("msgNotFound", "No se encontró el extra");
         }
 
         urlDetalle = "detallePlato";
-        params = "?idRest="+idRest+"&idPlato="+idPlato;
-        return "redirect:/cliente/"+urlDetalle+params;
+        params = "?idRest=" + idRest + "&idPlato=" + idPlato;
+        return "redirect:/cliente/" + urlDetalle + params;
     }
 
     @PostMapping("/modificarExtra")
     public String modificarExtra(@RequestParam(value = "cantidad", required = false) List<String> cantidad,
                                  @RequestParam(value = "extraGuardar", required = false) List<Integer> extraGuardar,
                                  RedirectAttributes attr, Model model,
-                                 HttpSession session){
+                                 HttpSession session) {
         Extra extra = new Extra();
         List<Extra_has_pedido> carritoExtra = (List<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
         int cantVal = 0;
 
         // LOS TAMAÑOS DE LOS ARREGLOS DEBEN SER IGUALES - INCLUSO SI NO INGRESA UNO ESTE SERÁ ""
-       if (cantidad.size() != extraGuardar.size() ||
-                extraGuardar.size() != carritoExtra.size()){
+        if (cantidad.size() != extraGuardar.size() ||
+                extraGuardar.size() != carritoExtra.size()) {
             return "redirect:/cliente/mostrarExtrasCarrito"; //TODO redireccionar al mismo sitio
         }
 
         for (int i = 0; i < cantidad.size(); i++) {
-            try{
+            try {
                 cantVal = Integer.parseInt(cantidad.get(i));
-                if(cantVal <= 0 || cantVal > 20){
-                    attr.addFlashAttribute("msgIntMayExt","Ingrese una cantidad entre 0 y 20");
+                if (cantVal <= 0 || cantVal > 20) {
+                    attr.addFlashAttribute("msgIntMayExt", "Ingrese una cantidad entre 0 y 20");
                     return "redirect:/cliente/mostrarExtrasCarrito";
                 }
-            }catch (NumberFormatException e){
-                attr.addFlashAttribute("msgIntExt","Ingrese un número entero");
+            } catch (NumberFormatException e) {
+                attr.addFlashAttribute("msgIntExt", "Ingrese un número entero");
                 return "redirect:/cliente/mostrarExtrasCarrito";
             }
         }
@@ -1392,22 +1390,22 @@ public class ClienteController {
             carritoExtra.get(i).getIdextra().setIdextra(extraGuardar.get(i));
             carritoExtra.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
         }
-        session.setAttribute("extrasCarrito",carritoExtra);
+        session.setAttribute("extrasCarrito", carritoExtra);
         attr.addFlashAttribute("msgExtra", "Se actualizaron los datos correctamente");
         return "redirect:/cliente/mostrarCarrito?idPage=0";
     }
 
 
     @PostMapping("/terminarCompra")
-    public String terminarCompra(@RequestParam(value = "cantidad",required = false) List<String> cantidad,
-                                 @RequestParam(value = "platoGuardar",required = false) List<Integer> platoGuardar,
-                                 @RequestParam(value = "observacion",required = false) List<String> observacion,
+    public String terminarCompra(@RequestParam(value = "cantidad", required = false) List<String> cantidad,
+                                 @RequestParam(value = "platoGuardar", required = false) List<Integer> platoGuardar,
+                                 @RequestParam(value = "observacion", required = false) List<String> observacion,
                                  RedirectAttributes attr, Model model,
-                                 HttpSession session){
+                                 HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         //CUPONES
-        List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
+        List<CuponClienteDTO> listaCupones1 = pedidoRepository.listaCupones1(usuario.getIdusuario());
         //  List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
@@ -1429,23 +1427,23 @@ public class ClienteController {
         System.out.println(cantidad);
         System.out.println(carrito);
 
-        if(observacion.size() != 0){
+        if (observacion.size() != 0) {
             obsVal = true;
         }
 
-        if(cantidad.size() != 0 && platoGuardar.size() != 0) {
+        if (cantidad.size() != 0 && platoGuardar.size() != 0) {
             System.out.println("ENTRO DESDE MODIFICAR CARRITO A TERMINAR COMPRA");
-            if(carrito.size() == 0){
+            if (carrito.size() == 0) {
                 return "redirect:/cliente/listaPlatos";
             }
-            if(obsVal) {
+            if (obsVal) {
                 if (cantidad.size() != observacion.size() ||
                         observacion.size() != platoGuardar.size() ||
                         platoGuardar.size() != carrito.size()) {
                     System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
                     return "redirect:/cliente/mostrarCarrito?idPage=0";
                 }
-            }else{
+            } else {
                 if (cantidad.size() != platoGuardar.size() ||
                         platoGuardar.size() != carrito.size()) {
                     System.out.println("LOS TAMAÑOS NO SON DIFERENTES");
@@ -1454,30 +1452,30 @@ public class ClienteController {
             }
 
             for (int i = 0; i < cantidad.size(); i++) {
-                try{
-                     cantVal = Integer.parseInt(cantidad.get(i));
-                     if(cantVal <= 0 || cantVal > 20){
-                         System.out.println("LAS CANTIDADES NO SON LAS MISMAS");
-                         attr.addFlashAttribute("msgIntMay","Ingrese una cantidad entre 0 y 20");
-                         return "redirect:/cliente/mostrarCarrito?idPage=0";
-                     }
-                }catch (NumberFormatException e){
+                try {
+                    cantVal = Integer.parseInt(cantidad.get(i));
+                    if (cantVal <= 0 || cantVal > 20) {
+                        System.out.println("LAS CANTIDADES NO SON LAS MISMAS");
+                        attr.addFlashAttribute("msgIntMay", "Ingrese una cantidad entre 0 y 20");
+                        return "redirect:/cliente/mostrarCarrito?idPage=0";
+                    }
+                } catch (NumberFormatException e) {
                     System.out.println("UNA DE LAS CANTIDADES ES UNA LETRA");
-                    attr.addFlashAttribute("msgInt","Ingrese un número entero");
+                    attr.addFlashAttribute("msgInt", "Ingrese un número entero");
                     return "redirect:/cliente/mostrarCarrito?idPage=0";
                 }
             }
 
-            if(obsVal){
-                for(int i = 0; i < observacion.size(); i++){
-                    if(observacion.get(i).length() > 256){
-                        attr.addFlashAttribute("msgLen","Ingrese un comentario menor a 256 carácteres");
+            if (obsVal) {
+                for (int i = 0; i < observacion.size(); i++) {
+                    if (observacion.get(i).length() > 256) {
+                        attr.addFlashAttribute("msgLen", "Ingrese un comentario menor a 256 carácteres");
                         return "redirect:/cliente/mostrarCarrito?idPage=0";
                     }
                 }
             }
 
-            for(int i = 0; i < carrito.size(); i++){
+            for (int i = 0; i < carrito.size(); i++) {
 
                 if (obsVal) {
                     carrito.get(i).setObservacionplatillo(observacion.get(i));
@@ -1488,29 +1486,31 @@ public class ClienteController {
                 carrito.get(i).setCantidad(Integer.parseInt(cantidad.get(i)));
                 subTotalCarrito = subTotalCarrito + carrito.get(i).getCantidad() * doubleValue(carrito.get(i).getPreciounitario());
             }
-            if(carritoExtra != null) {
+            if (carritoExtra != null) {
                 for (int i = 0; i < carritoExtra.size(); i++) {
                     subTotalExtras = subTotalExtras + carritoExtra.get(i).getCantidad() * doubleValue(carritoExtra.get(i).getPreciounitario());
                 }
-            }else{
+            } else {
                 subTotalExtras = 0.00;
             }
             for (Ubicacion u : listaDirecciones) {
-                if(u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())){
+                if (u.getDireccion().equalsIgnoreCase(usuario.getDireccionactual())) {
                     distritoActual = u;
-                    if(u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()){
+                    if (u.getDistrito().getIddistrito() == distritoRestaurante.getIddistrito()) {
                         delivery = 5.00;
                         break;
                     }
                 }
             }
-            if(delivery == 0.00){ delivery = 8.00; }
+            if (delivery == 0.00) {
+                delivery = 8.00;
+            }
 
             //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
             System.out.println(carrito);
-            session.setAttribute("carrito",carrito);
-            session.setAttribute("delivery",delivery);
-        }else{
+            session.setAttribute("carrito", carrito);
+            session.setAttribute("delivery", delivery);
+        } else {
             System.out.println("SOY LA REDIRECCICIÓN POR VALIDACIÓN");
 
             // SI ENTRO EN ESTA CONDICIONAL QUIERE DECIR QUE VIENE DE LA SEGUNDA VISTA
@@ -1525,14 +1525,14 @@ public class ClienteController {
         }
 
 
-        model.addAttribute("montoCarrito",subTotalCarrito);
-        model.addAttribute("listaCupones",listaCupones1);
-        model.addAttribute("montoExtras",subTotalExtras);
+        model.addAttribute("montoCarrito", subTotalCarrito);
+        model.addAttribute("listaCupones", listaCupones1);
+        model.addAttribute("montoExtras", subTotalExtras);
 //        model.addAttribute("delivery",delivery);
 
-        model.addAttribute("listaTarjetas",tarjetaRepository.findByUsuario(usuario));
-        model.addAttribute("listaDirecciones",listaDirecciones);
-     // model.addAttribute("distritoActual",distritoActual);
+        model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(usuario));
+        model.addAttribute("listaDirecciones", listaDirecciones);
+        // model.addAttribute("distritoActual",distritoActual);
 
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
         return "Cliente/terminarCompra";
@@ -1541,26 +1541,26 @@ public class ClienteController {
     @PostMapping("/generarPedido")
     public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
                                 @RequestParam(value = "ubicacion", required = false) String idUbicacion,
-                               // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
+                                // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
                                 @RequestParam(value = "tarjeta", required = false) String tarjeta,
                                 @RequestParam(value = "newTarjeta", required = false) String tipoTarjeta,
                                 @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
                                 @RequestParam(value = "mes", required = false) String mes,
                                 @RequestParam(value = "year", required = false) String year,
                                 @RequestParam(value = "cvv", required = false) String cvv,
-                               // @RequestParam(value = "delivery", required = false) String precioDelivery,
-                                @RequestParam(value = "efectivoPagar",required = false) String efectivoPagar,
+                                // @RequestParam(value = "delivery", required = false) String precioDelivery,
+                                @RequestParam(value = "efectivoPagar", required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
                                 Model model, RedirectAttributes attr,
-                                HttpSession session){
+                                HttpSession session) {
         /*
-        * THINGS TODO:
-        * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
-        * Validar que solo se reciba un idMetodo de pago
-        * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
-        * */
+         * THINGS TODO:
+         * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
+         * Validar que solo se reciba un idMetodo de pago
+         * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
+         * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
-     //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
+        //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(cliente);
         int idRest = (int) session.getAttribute("idRest");
         Optional<Restaurante> restOpt = restauranteRepository.findById(idRest);
@@ -1574,7 +1574,7 @@ public class ClienteController {
             idCuponVal = true;
         }*/
 
-        if(efectivoPagar == null){
+        if (efectivoPagar == null) {
             efectivoPagar = "";
         }
 
@@ -1583,39 +1583,37 @@ public class ClienteController {
 /*
             if(!idCupon.equals("")) {
 */
-                int idCuponInt = Integer.parseInt(idCupon);
-                Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
-                if (cuponOpt.isPresent()) {
-                    cupon = cuponOpt.get();
-                    idCuponVal = true;
-                }
+            int idCuponInt = Integer.parseInt(idCupon);
+            Optional<Cupon> cuponOpt = cuponRepository.findById(idCuponInt);
+            if (cuponOpt.isPresent()) {
+                cupon = cuponOpt.get();
+                idCuponVal = true;
+            }
             /*}else{
                 idCuponVal = false;
             }*/
-        } catch (NumberFormatException e){
-            if(idCupon == null || idCupon.trim().equals("")){
+        } catch (NumberFormatException e) {
+            if (idCupon == null || idCupon.trim().equals("")) {
                 idCuponVal = true;
             }
         }
 
 
-
-
         //Obteniendo Ubicacion
         Ubicacion ubicacion = null;
-        boolean idUbicVal= false;
-        try{
-            int idUbicInt= Integer.parseInt(idUbicacion);
-            Optional<Ubicacion> ubiOpt = ubicacionRepository.findByIdusuarioAndIdubicacionVal(idUbicInt,cliente.getIdusuario());
-            if(ubiOpt.isPresent()){
+        boolean idUbicVal = false;
+        try {
+            int idUbicInt = Integer.parseInt(idUbicacion);
+            Optional<Ubicacion> ubiOpt = ubicacionRepository.findByIdusuarioAndIdubicacionVal(idUbicInt, cliente.getIdusuario());
+            if (ubiOpt.isPresent()) {
                 ubicacion = ubiOpt.get();
                 idUbicVal = true;
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
         }
 
         MetodoDePago metodoDePago = null;
-        boolean idMetPaVal= false;
+        boolean idMetPaVal = false;
         boolean idTarjetaVal = false;
         boolean cvvVal = false;
         boolean numTarjetaVal = false;
@@ -1626,17 +1624,17 @@ public class ClienteController {
         boolean numTarjetaValNull = false;
         boolean mesValNull = false;
         boolean anioValNull = false;
-        try{
-            int idMePaInt= Integer.parseInt(idmp);
+        try {
+            int idMePaInt = Integer.parseInt(idmp);
             Optional<MetodoDePago> metPagOpt = metodoPagoRepository.findById(idMePaInt);
-            if(metPagOpt.isPresent()){
+            if (metPagOpt.isPresent()) {
                 metodoDePago = metPagOpt.get();
                 idMetPaVal = true;
 
-                if(metodoDePago.getIdmetodopago() == 2) {
+                if (metodoDePago.getIdmetodopago() == 2) {
                     //en caso seleccione una
-                    if(tarjeta != null){
-                        if(!tarjeta.equals("")) {
+                    if (tarjeta != null) {
+                        if (!tarjeta.equals("")) {
                             try {
                                 int idTarjeta = Integer.parseInt(tarjeta);
                                 Optional<Tarjeta> tarjetaOpt = tarjetaRepository.findById(String.valueOf(idTarjeta));
@@ -1658,7 +1656,7 @@ public class ClienteController {
                                 }
                             } catch (NumberFormatException e) {
                             }
-                        }else{
+                        } else {
                             //VALIDANDO EL CVV
                             if(cvv != null){
                                 cvvValNull = true;
@@ -3373,6 +3371,10 @@ public String detalleHistorialPedido(
             anio = anio1;
 
         }
+
+
+
+
 
 
         int limitSup = 0;

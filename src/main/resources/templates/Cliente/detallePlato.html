@@ -224,20 +224,23 @@
                                         <input size="2%" class="form-control ml-3 mr-sm-1 mb-3" type="text" name="cantidadPlato" id="cantidad"
                                                style="border-color: lightgray">
                                         <span>uni.</span>
+                                        <button class="btn btn-cerrito ml-3 mb-3" style="background-color: #701111; color: white" type="submit"><i
+                                                class="fas fa-plus"></i>
+                                        </button>
                                     </div>
                                  <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCant != null}" th:text="${msgValCant}"></div>
                                 </div>
                                 <br>
-                                <div class="form-check-inline align-content-xl-end mb-5">
-                                    <button class="btn btn-cielito mr-3" style="background-color: #2d4a8d; color: #FFFFFF" type="submit"><i
-                                            class="fas fa-cart-plus mr-2"></i>Añadir al carrito
-                                    </button>
+                                <div class="form-check-inline">
+                                    <a class="btn btn-cielito mr-3" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPlato='+${plato.getIdplato()}+'&idPage=1'}"><i
+                                            class="fas fa-cart-plus mr-2"></i>Ir al carrito
+                                    </a>
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos'}"><i
-                                            class="fas fa-arrow-left"></i> Regresar</a>
+                                            class="fas fa-arrow-left"></i> Ver platos</a>
                                     <!--<a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="terminarCompra.html"><i
                                             class="fas fa-arrow-right"></i> Ir a Pagar</a>-->
-                                </div>
 
+                                </div>
                             </form>
                         </div>
 

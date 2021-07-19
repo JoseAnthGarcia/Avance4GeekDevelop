@@ -109,7 +109,7 @@ public class RepartidorController {
             }
         }
 
-        int tamPag = 5;
+        int tamPag = 10;
         if (pedidoAct.size() == 0) {
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();
@@ -358,27 +358,35 @@ public class RepartidorController {
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
                                 HttpSession session) {
-        Usuario repartidor = (Usuario) session.getAttribute("usuario");
-        if (codigo != null) {
-            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
-            if (pedidoOpt.isPresent()) {
-                Pedido pedido = pedidoOpt.get();
-                pedido.setRepartidor((Usuario) session.getAttribute("usuario"));
+
+        if (codigo!=null && session.getAttribute("pedidoActual")==null) {
+            Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
+            Pedido pedido = pedidoRepository.findByEstadoAndCodigo(4, codigo);
+
+            if (pedido!=null && pedido.getUbicacion().getDistrito().getIddistrito()==ubicacion.getDistrito().getIddistrito()) {
+                pedido.setRepartidor(repartidor);
                 pedido.setEstado(5);
-                //TODO: TIEMPO DE ENTREGA??
                 pedidoRepository.save(pedido);
+                session.setAttribute("pedidoActual", pedido.getCodigo());
+                return "redirect:/repartidor/pedidoActual";
             }else{
                 return "redirect:/repartidor/listaPedidos";
             }
+        }else{
+            return "redirect:/repartidor/listaPedidos";
         }
-        return "redirect:/repartidor/pedidoActual";
     }
 
     @GetMapping("/pedidoEntregado")
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
-        if (codigo != null) {
+
+        if (codigo!=null &&
+                session.getAttribute("pedidoActual")!=null &&
+                ((String)session.getAttribute("pedidoActual")).equals(codigo))  {
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
+            Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
             Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(5, repartidor, codigo);
             if (pedido!=null) {
                 pedido.setEstado(6);
@@ -398,8 +406,6 @@ public class RepartidorController {
                     e.printStackTrace();
                 }
 
-
-
                 long diff =date.getTime() -fechPedido.getTime();
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
                 System.out.println(minutes);
@@ -407,6 +413,7 @@ public class RepartidorController {
                 int tiempo = (int) minutes;
                 pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
+                session.removeAttribute("pedidoActual");
                 return "redirect:/repartidor/listaPedidos";
             }else{
                 return "redirect:/repartidor/pedidoActual";

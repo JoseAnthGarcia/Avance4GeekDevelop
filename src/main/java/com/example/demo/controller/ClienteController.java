@@ -107,6 +107,7 @@ public class ClienteController {
     ReporteDineroService reporteDineroService;
 
 
+
     @Autowired
     CuponClienteService cuponClienteService;
 
@@ -202,8 +203,7 @@ public class ClienteController {
 
 
     }
-
-    /*********************************************************  LISTA RESTAURANTE***************************************************************************************/
+/*********************************************************  LISTA RESTAURANTE***************************************************************************************/
     @GetMapping("/listaRestaurantes")
     public String listaRestaurantes(Model model, HttpSession httpSession,
                                     @RequestParam Map<String, Object> params,
@@ -231,6 +231,8 @@ public class ClienteController {
         }
         Pageable pageRequest = PageRequest.of(page, 2);
         String direccionactual = usuario.getDireccionactual();
+
+
 
 
         int iddistritoactual = 1;
@@ -294,17 +296,17 @@ public class ClienteController {
         }
 
 
-        System.out.println("id1 :" + id1);
-        System.out.println("id12 :" + id2);
-        System.out.println("id3 :" + id3);
-        System.out.println("valoracion :" + val);
+        System.out.println("id1 :"+id1);
+        System.out.println("id12 :"+id2);
+        System.out.println("id3 :"+id3   );
+        System.out.println("valoracion :"+val );
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
-        val = httpSession.getAttribute("val") == null ? val : (String) httpSession.getAttribute("val");
-        idCategoria = httpSession.getAttribute("idCategoria") == null ? idCategoria : (String) httpSession.getAttribute("idCategoria");
-        idPrecio = httpSession.getAttribute("idPrecio") == null ? idPrecio : (String) httpSession.getAttribute("idPrecio");
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        val= httpSession.getAttribute("val") == null ? val :  (String) httpSession.getAttribute("val");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? idCategoria :  (String) httpSession.getAttribute("idCategoria");
+        idPrecio= httpSession.getAttribute("idPrecio") == null ? idPrecio :  (String) httpSession.getAttribute("idPrecio");
 
-        switch (idPrecio) {
+        switch (idPrecio){
             case "1":
                 limitInfP = 0;
                 limitSupP = 15;
@@ -389,7 +391,7 @@ public class ClienteController {
         model.addAttribute("categorias", categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
-        System.out.println("IDCATEGORIA3:  " + idCategoria);
+        System.out.println("IDCATEGORIA3:  "+ idCategoria);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
@@ -433,6 +435,8 @@ public class ClienteController {
         Integer limitSupP = 5000;
         Integer limitInfVal = 0;
         Integer limitSupVal = 6; //TODO 5
+
+
 
 
         List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
@@ -782,13 +786,16 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam Map<String, Object> params,
-                              @RequestParam(value = "idRest", required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
-                              @RequestParam(value = "texto", required = false) String texto,
-                              @RequestParam(value = "idPrecio", required = false) String idPrecio,
+                              @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
+                              @RequestParam(value = "texto",required = false) String texto,
+                              @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                              @RequestParam(value = "idCategoria",required = false) String idCategoriaS,
                               Model model, HttpSession session) {
 
         Integer limitInf = 0;
         Integer limitSup = 5000;
+        Integer limitInfC = 0;
+        Integer limitSupC = 28;
         Integer idRest;
 
 
@@ -815,11 +822,15 @@ public class ClienteController {
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 6);
 
-        if (idPrecio == null || idPrecio.equals("")) {
+        if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
         }
 
-        if (texto == null) {
+        if(idCategoriaS == null || idCategoriaS.equals("")){
+            idCategoriaS = "0-28";
+        }
+
+        if(texto == null){
             texto = "";
         }
 
@@ -853,8 +864,13 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
-
-        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, pageRequest);
+        try {
+            limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
+            limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
+        }catch (NumberFormatException e){
+            idCategoriaS = "0-28";
+        }
+        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, limitInfC, limitSupC,pageRequest);
         int totalPage = listaPlato.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
@@ -863,9 +879,11 @@ public class ClienteController {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
 
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPlato", listaPlato.getContent());
-        model.addAttribute("texto", texto);
-        model.addAttribute("idPrecio", idPrecio);
+        model.addAttribute("listaPlato",listaPlato.getContent());
+        model.addAttribute("texto",texto);
+        model.addAttribute("idPrecio",idPrecio);
+        model.addAttribute("idCategoria",idCategoriaS);
+        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaProductos";
     }
@@ -895,6 +913,7 @@ public class ClienteController {
             //session.removeAttribute("idPlato");
             session.setAttribute("idPlato", idPlato);
         }
+
 
 
         Plato platoObs = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
@@ -1055,6 +1074,7 @@ public class ClienteController {
         }
 
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
+
 
 
         int cantint = 0;
@@ -1538,7 +1558,7 @@ public class ClienteController {
     @PostMapping("/generarPedido")
     public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
                                 @RequestParam(value = "ubicacion", required = false) String idUbicacion,
-                                // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
+                               // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
                                 @RequestParam(value = "tarjeta", required = false) String tarjeta,
                                 @RequestParam(value = "newTarjeta", required = false) String tipoTarjeta,
                                 @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
@@ -1551,11 +1571,9 @@ public class ClienteController {
                                 Model model, RedirectAttributes attr,
                                 HttpSession session) {
         /*
-         * THINGS TODO:
-         * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
-         * Validar que solo se reciba un idMetodo de pago
-         * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
-         * */
+        * THINGS TODO:
+        * ENVIAR CORREO
+        * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
         //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(cliente);
@@ -1594,6 +1612,8 @@ public class ClienteController {
                 idCuponVal = true;
             }
         }
+
+
 
 
         //Obteniendo Ubicacion
@@ -2181,8 +2201,7 @@ public class ClienteController {
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(
-            @RequestParam("codigo") String codigo, Model model, HttpSession session) {
+    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
         List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
         if (pedido1DTOS.isEmpty()) {
@@ -2473,6 +2492,7 @@ public class ClienteController {
     }
 
 
+
     /********************************* REPORTEDINERO *******************************************************************************************************************++*/
     @GetMapping("/reporteDinero")
     public String pedidoActual3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
@@ -2480,6 +2500,7 @@ public class ClienteController {
                                 @RequestParam(value = "nombrec", required = false) String nombrec
             , @RequestParam(value = "mes", required = false) String mes,
                                 @RequestParam(value = "anio", required = false) String anio) {
+
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -2638,8 +2659,8 @@ public class ClienteController {
     @GetMapping("/reportedineropage")
     public String pedidoActualPagina3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
-                                      @RequestParam(value = "nombrec", required = false) String nombrec
-            , @RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "nombrec", required = false) String nombrec,
+                                      @RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
@@ -2661,6 +2682,7 @@ public class ClienteController {
         Calendar c1 = GregorianCalendar.getInstance();
         int m = c1.get(Calendar.MONTH) + 1;
         mes = httpSession.getAttribute("mes") == null ? Integer.toString(m) : (String) httpSession.getAttribute("mes");
+
 
 
         Calendar c2 = GregorianCalendar.getInstance();
@@ -2761,13 +2783,16 @@ public class ClienteController {
     }
 
 
-    /****************************************************************REPORTE PEDIDO****************************************************************************/
+
+
+/****************************************************************REPORTE PEDIDO****************************************************************************/
     @GetMapping("/reportePedido")
     public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
-                                @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+                                @RequestParam(value = "numpedidos", required = false) String numpedidos,
+                                @RequestParam(value = "mes", required = false) String mes,
                                 @RequestParam(value = "anio", required = false) String anio) {
+
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -2819,6 +2844,7 @@ public class ClienteController {
             anio = anio1;
 
         }
+
 
 
         int limitSup = 0;
@@ -2954,16 +2980,18 @@ public class ClienteController {
     }
 
 
+
     //Reporte Pedido
     @GetMapping("/reportepedidopage")
     public String pedidoActualPagina5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
-                                      @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "numpedidos", required = false) String numpedidos,
+                                      @RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
+
 
 
         int page;
@@ -3034,6 +3062,7 @@ public class ClienteController {
             limitSup = 12;
             limitInf = 0;
         }
+
 
 
         int limit1cant;
@@ -3126,7 +3155,9 @@ public class ClienteController {
     }
 
 
+
     /************************************************************************************************************************************************************************************************************/
+
 
 
     /*******************************************REPORTE TIEMPO**************************************************/
@@ -3164,6 +3195,7 @@ public class ClienteController {
         } else {
             httpSession.setAttribute("numpedidos", numpedidos);
         }
+
 
 
         /*********************************************++AÑO *************************************/
@@ -3309,8 +3341,8 @@ public class ClienteController {
     @GetMapping("/reportetiempopage")
     public String pedidoActualPagina4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
-                                      @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+                                      @RequestParam(value = "numpedidos", required = false) String numpedidos,
+                                      @RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
@@ -3460,6 +3492,7 @@ public class ClienteController {
     public String pedidoActual6(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "descuento", required = false) String descuento) {
+
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");

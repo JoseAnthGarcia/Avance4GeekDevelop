@@ -317,7 +317,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +
             "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-            "\t\t\tand r.estado >= ?2 and r.estado < ?3 and\n" +
+            "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
             "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
             "group by p.idrestaurante\n" +
             "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +
@@ -328,7 +328,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
                     "inner join distrito d on r.iddistrito = d.iddistrito\n" +
                     "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-                    "\t\t\tand r.estado >= ?2 and r.estado < ?3 and\n" +
+                    "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
                     "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
                     "group by p.idrestaurante\n" +
                     "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +

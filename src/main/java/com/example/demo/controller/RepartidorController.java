@@ -109,7 +109,7 @@ public class RepartidorController {
             }
         }
 
-        int tamPag = 5;
+        int tamPag = 10;
         if (pedidoAct.size() == 0) {
             //Ubicacion ubicacionActual = (Ubicacion) session.getAttribute("ubicacionActual");
             List<Distrito> listaDistritos = distritosRepository.findAll();

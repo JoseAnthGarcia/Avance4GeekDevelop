@@ -73,6 +73,8 @@
                                     <th scope="col">Pedido</th>
                                     <th scope="col">Hora de registro</th>
                                     <th scope="col">Aceptar</th>
+                                    <th scope="col">Detalle</th>
+
                                     <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
                                 </thead>
@@ -81,11 +83,8 @@
 
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}">1</th>
-                                    <td>
-                                        <a data-toggle="modal" th:data-target="'#modal'+${pedido.codigo}"
-                                           th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}"
-                                           class="btn" th:id="${pedido.codigo}">
-                                        </a>
+                                    <td th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}">
+
                                     </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">
                                         17:49
@@ -95,6 +94,13 @@
                                            th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}"
                                            class="btn btn-success btn-circle align">
                                             <i class="fas fa-check text-white"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a data-toggle="modal" th:data-target="'#modal'+${pedido.codigo}"
+                                           th:id="${pedido.codigo}"
+                                           class="btn btn-warning btn-circle align">
+                                            <i class="fas fa-info text-white"></i>
                                         </a>
                                     </td>
                                     <!-- <td>

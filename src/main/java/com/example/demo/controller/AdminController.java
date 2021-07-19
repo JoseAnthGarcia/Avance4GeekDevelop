@@ -9,6 +9,7 @@ import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -2110,7 +2111,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             page =0;
         }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        Pageable pageRequest = PageRequest.of(page, 10);
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -2243,19 +2244,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         switch (estado){
             case "3":
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             case "0":
                 miFestado2=-1;
-                maXestado2=0;
+                maXestado2=1;
                 break;
             case "1":
                 miFestado2=0;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             default:
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
 
 
         }

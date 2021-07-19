@@ -1530,6 +1530,12 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+        // TODO: 19/07/2021
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMas", topMas.get(0));
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMenos", topMenos.get(0));
+
 
         return "AdminGen/reportePedidoRepartidor";
     }
@@ -1697,7 +1703,11 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-
+// TODO: 19/07/2021
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMas", topMas.get(0));
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        model.addAttribute("topMenos", topMenos.get(0));
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021

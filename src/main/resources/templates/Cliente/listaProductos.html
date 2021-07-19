@@ -196,6 +196,13 @@
                                 <option value="5" th:selected="${idPrecio.equals('5')}">S./50.00 a más</option>
                             </select>
                         </div>
+                        <div class="col-sm-3 mb-1">
+                            <select id="buscadorCategorias" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idCategoria.equals('0-28')}">Categoría</option>
+                                <option  th:each="categoria : ${categorias}" th:selected="${idCategoria.equals(categoria.getIdcategoria()+'-'+(categoria.getIdcategoria()+1))}"
+                                        th:text="${categoria.getNombre()}" th:value="|${categoria.getIdcategoria()}-${categoria.getIdcategoria()+1}|"></option>
+                           </select>
+                        </div>
                         <div class="col-sm-3 mb-1 mt-md-auto">
                             <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
@@ -278,9 +285,9 @@
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaRestaurantes'}"><i
                                             class="fas fa-arrow-left"></i> Regresar
                                     </a>
-                                  <!--<a th:if="${session.carrito != null}" class="btn btn-info mr-3" style="background-color: #2d4a8d; border-color: #2d4a8d"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
+                                  <a th:if="${session.carrito != null}" class="btn btn-info mr-3" style="background-color: #2d4a8d; border-color: #2d4a8d"  th:href="@{'/cliente/mostrarCarrito?idPage=0'}"><i
                                             class="fas fa-cart-plus"></i> Ir al carrito
-                                    </a>-->
+                                    </a>
                                 </div>
                             </div>
 
@@ -290,7 +297,7 @@
                                     <nav aria-label="pagination">
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a th:unless="${texto == null && idPrecio == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/listaPlatos?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}}"></a>
+                                                <a th:unless="${texto == null && idPrecio == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/listaPlatos?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}}"></a>
                                             </li>
                                         </ul>
                                     </nav>

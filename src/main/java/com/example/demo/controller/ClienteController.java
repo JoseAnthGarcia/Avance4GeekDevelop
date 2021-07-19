@@ -788,12 +788,14 @@ public class ClienteController {
                               @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
                               @RequestParam(value = "texto",required = false) String texto,
                               @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                              @RequestParam(value = "idCategoria",required = false) String idCategoriaS,
                               Model model, HttpSession session) {
 
         Integer limitInf = 0;
         Integer limitSup = 5000;
+        Integer limitInfC = 0;
+        Integer limitSupC = 28;
         Integer idRest;
-
 
         if (idRestS == null) {
             idRest = (Integer) session.getAttribute("idRest");
@@ -820,6 +822,10 @@ public class ClienteController {
 
         if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
+        }
+
+        if(idCategoriaS == null || idCategoriaS.equals("")){
+            idCategoriaS = "0-28";
         }
 
         if(texto == null){
@@ -856,8 +862,13 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
-
-        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, pageRequest);
+        try {
+            limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
+            limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
+        }catch (NumberFormatException e){
+            idCategoriaS = "0-28";
+        }
+        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, limitInfC, limitSupC,pageRequest);
         int totalPage = listaPlato.getTotalPages();
         if(totalPage > 0){
             List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
@@ -869,6 +880,8 @@ public class ClienteController {
         model.addAttribute("listaPlato",listaPlato.getContent());
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
+        model.addAttribute("idCategoria",idCategoriaS);
+        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
          return "Cliente/listaProductos";
     }
@@ -1555,9 +1568,7 @@ public class ClienteController {
                                 HttpSession session){
         /*
         * THINGS TODO:
-        * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
-        * Validar que solo se reciba un idMetodo de pago
-        * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
+        * ENVIAR CORREO
         * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
      //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");

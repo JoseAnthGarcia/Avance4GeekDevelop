@@ -287,7 +287,9 @@
                                             <img class="img-profile rounded-circle" alt="list-style-image"
                                                  style="width: 35px; height: 35px"
                                                  th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplatohaspedido().getIdplato()}}">
-                                            <div class="ml-3" th:text="${plato.getPlato().getNombre()}"></div>
+                                            <div class="ml-3">
+                                                <a th:text="${plato.getPlato().getNombre()}" th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplatohaspedido().getIdplato()}}" style="color: gray"></a>
+                                            </div>
                                         </div>
                                     </td>
                                     <td style="width: 250px">
@@ -403,6 +405,9 @@
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
+            </div>
+            <div class="modal-body">
+                <h5> Siempre es bueno que falte antes que sobre, puede agregar extras en el detalle de cada plato. </h5>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>

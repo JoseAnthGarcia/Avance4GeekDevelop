@@ -14,7 +14,7 @@ public class PlatoClienteServiceImpl implements PlatoClienteService{
     PlatoRepository platoRepository;
 
     @Override
-    public Page<PlatosDTO> listaPlatoPaginada(int idRest, String texto, Integer limitInf, Integer limitSup, Pageable pageable) {
-        return this.platoRepository.listaPlato(idRest,texto,limitInf,limitSup,pageable);
+    public Page<PlatosDTO> listaPlatoPaginada(int idRest, String texto, Integer limitInf, Integer limitSup, Integer limitInfC, Integer limitSupC, Pageable pageable) {
+        return this.platoRepository.listaPlato(idRest,texto,limitInf,limitSup,limitInfC,limitSupC,pageable);
     }
 }

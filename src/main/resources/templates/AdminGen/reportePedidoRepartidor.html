@@ -109,9 +109,44 @@
                         </div>
 
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+
+
+
+
+                    <div class="card-body"  id='tabla'>
+                        <table class="table "
+                               style="background-color:#F2E2AA; border-color:#F2E2AA ">
+                            <thead>
+                            <tr>
+                                <th style="color:black">
+                                    TOP 3 RESTAURANTES
+                                </th>
+                                <th style="color:black">
+                                    TOP 3 PLATOS MÁS VENDIDOS
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody >
+
+                            <tr>
+                                <td th:if="${listarestTop.get(0).getNombrerest()!= null}"
+                                    style="color:black"  th:text="${listarestTop.get(0).getNombrerest()}"></td>
+
+                                <td th:if="${listarestPl.get(0).getNombre()!=null}" style="color:black"  th:text="${listarestPl.get(0).getNombre()}"></td>
+                            </tr>
+                            <tr>
+                                <td th:if="${listarestTop.size()>=2}" style="color:black" th:text="${listarestTop.get(1).getNombrerest()}"></td>
+                                <td th:if="${listarestTop.size()<2}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestPl.size()>=2}" style="color:black" th:text="${listarestPl.get(1).getNombre()}"></td>
+                                <td th:if="${listarestPl.size()<2}" style="color:black" th:text="|-|" >-</td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+
+                            <table  class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -160,7 +195,9 @@
                                 </tbody>
                             </table>
 
-                        </div>
+
+
+
                         <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
                             <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
                         </div>

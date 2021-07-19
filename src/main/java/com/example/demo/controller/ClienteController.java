@@ -2215,6 +2215,9 @@ public String cancelarPedido(@RequestParam("id") String id,
 
                     model.addAttribute("listaExtra",pedidoRepository.extrasPorPedido(codigo));
                     System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
+                    System.out.println("SIZE TOTAL  "+ pedidoRepository.detalle1(codigo).size());
+                    System.out.println("PAGO TOTAL0 "+ pedidoRepository.detalle1(codigo).get(0).getPreciototal());
+                    System.out.println("PAGO TOTAL1 "+ pedidoRepository.detalle1(codigo).get(1).getPreciototal());
                     model.addAttribute("codigo", codigo);
 
                     model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
@@ -2957,6 +2960,9 @@ public String detalleHistorialPedido(
         model.addAttribute("tam",tam);
 
         model.addAttribute("anio",anio);
+        System.out.println("SIZE TOP3 TOP:"+ listarestTop.size());
+        System.out.println("SIZE TOP3 TOP PL:"+ listaPl.size());
+
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/reportePedidoCliente";
     }

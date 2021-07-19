@@ -342,8 +342,8 @@
                             <tr>
                                 <td  th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestTop.get(2).getNombrerest()}"></td>
                                 <td  th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
-                                <td th:if="${listarestTop.size()>=3}" style="color:black" th:text="${listarestPl.get(2).getNombre()}"></td>
-                                <td th:if="${listarestTop.size()<3}" style="color:black" th:text="|-|" ></td>
+                                <td th:if="${listarestPl.size()>=3}" style="color:black" th:text="${listarestPl.get(2).getNombre()}"></td>
+                                <td th:if="${listarestPl.size()<3}" style="color:black" th:text="|-|" ></td>
                             </tr>
                             </tbody>
 
@@ -371,7 +371,7 @@
                                     </th>
                                 </tr>
                                 <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${(current -1)*10 +info.index+1}"></td>
+                                    <td th:text="${(current - 1)*10 +info.index+1}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getNumPedidos()}">10</td>
                                     <td th:text="|S/. ${ped.getTotal()}|"></td>

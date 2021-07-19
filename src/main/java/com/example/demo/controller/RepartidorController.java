@@ -376,7 +376,6 @@ public class RepartidorController {
         }else{
             return "redirect:/repartidor/listaPedidos";
         }
-        return "redirect:/repartidor/pedidoActual";
     }
 
     @GetMapping("/pedidoEntregado")

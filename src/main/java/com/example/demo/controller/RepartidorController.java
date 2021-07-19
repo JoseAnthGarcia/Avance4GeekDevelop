@@ -358,29 +358,36 @@ public class RepartidorController {
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
                                 HttpSession session) {
-        if (codigo != null) {
+
+        if (codigo!=null && session.getAttribute("pedidoActual")==null) {
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
             Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
-            Pedido pedido = pedidoRepository.findByEstadoAndCodigoAndUbicacion(4, codigo, ubicacion);
-            if (pedido!=null) {
+            Pedido pedido = pedidoRepository.findByEstadoAndCodigo(4, codigo);
+
+            if (pedido!=null && pedido.getUbicacion().getDistrito().getIddistrito()==ubicacion.getDistrito().getIddistrito()) {
                 pedido.setRepartidor(repartidor);
                 pedido.setEstado(5);
                 pedidoRepository.save(pedido);
+                session.setAttribute("pedidoActual", pedido.getCodigo());
+                return "redirect:/repartidor/pedidoActual";
             }else{
                 return "redirect:/repartidor/listaPedidos";
             }
+        }else{
+            return "redirect:/repartidor/listaPedidos";
         }
-        return "redirect:/repartidor/pedidoActual";
     }
 
     @GetMapping("/pedidoEntregado")
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
 
-        if (codigo != null) {
+        if (codigo!=null &&
+                session.getAttribute("pedidoActual")!=null &&
+                ((String)session.getAttribute("pedidoActual")).equals(codigo))  {
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
             Ubicacion ubicacion = (Ubicacion) session.getAttribute("ubicacionActual");
-            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigoAndUbicacion(5, repartidor, codigo, ubicacion);
+            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(5, repartidor, codigo);
             if (pedido!=null) {
                 pedido.setEstado(6);
 
@@ -406,6 +413,7 @@ public class RepartidorController {
                 int tiempo = (int) minutes;
                 pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
+                session.removeAttribute("pedidoActual");
                 return "redirect:/repartidor/listaPedidos";
             }else{
                 return "redirect:/repartidor/pedidoActual";

@@ -183,6 +183,60 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "order by count(p.codigo) desc")
     Page<UsuarioDtoRepartidor> listaUsuariosDtoRepartidor(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
+    @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
+            "\t\tcount(p.codigo) as `cantidad`,\n" +
+            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
+            "from pedido p\n" +
+            "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+            "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+            "group by p.idrepartidor\n" +
+            "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+            "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+            "order by count(p.codigo) desc",nativeQuery = true,
+            countQuery = "select count(*) \n" +
+                    "from pedido p\n" +
+                    "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+                    "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+                    "group by p.idrepartidor\n" +
+                    "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "order by count(p.codigo) desc")
+    List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+
+    @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
+            "\t\tcount(p.codigo) as `cantidad`,\n" +
+            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
+            "from pedido p\n" +
+            "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+            "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+            "group by p.idrepartidor\n" +
+            "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+            "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+            "order by count(p.codigo) asc ",nativeQuery = true,
+            countQuery = "select count(*) \n" +
+                    "from pedido p\n" +
+                    "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+                    "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+                    "group by p.idrepartidor\n" +
+                    "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "order by count(p.codigo) asc ")
+    List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+
     // TODO: 26/06/2021
     /*@Query(value ="select r.nombre, r.ruc, r.estado, pe.mismodistrito1, pe.mismodistrito0 ,pe.valoracionrestaurante , \n" +
             "pe.cantpedidos, pe.montototal \n" +

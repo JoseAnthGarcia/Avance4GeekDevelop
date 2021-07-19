@@ -3,7 +3,7 @@
 
 <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
 <link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
-<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Estadísticas')"></head>
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Página personal')"></head>
 
 <body id="page-top">
 
@@ -42,8 +42,9 @@
                             <div class="row ">
                                 <div class="col-lg-6 justify-content-center mt-4" >
 
-                                    <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Apellidos: '+${session.usuario.nombres}"></h5>
+                                    <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Nombres: '+${session.usuario.nombres}"></h5>
                                     <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Apellidos: '+${session.usuario.apellidos}"></h5>
+                                    <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Correo: '+${session.usuario.correo}"></h5>
                                     <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Celular: '+${session.usuario.telefono}"></h5>
                                     <h5  class="card-text" style="color: black;  position: relative; left: 30%" th:text="'Movilidad: '+${session.usuario.movilidad.tipoMovilidad.tipo}"></h5>
 

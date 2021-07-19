@@ -76,42 +76,48 @@
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
+                    <!-- Nav Item - Alerts campanita Notificaciones -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
+                            <i class="fas fa-bell fa-fw"
+                               data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                   th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
-                                Pedido actual
+                             aria-labelledby="alertsDropdown" id="notifi">
+                            <h6 style="background-color: #701111; border: 1px solid #701111; padding-top: .75rem; padding-bottom: .75rem; color: #fff;
+                             display: block; padding: .5rem 1.5rem; margin-bottom: 0; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                Nuevos Pedidos
                             </h6>
-                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos cancelados o entregados</p>
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}" class="mt-3 ml-4"> No
+                                tiene pedidos
+                                pendientes</p>
                             <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
                                class="dropdown-item d-flex align-items-center"
-                               th:each="noti,in:${notificaciones}"
-                               th:href="@{'/cliente/detallePedidoActual?codigo='+${noti.getCodigo()}}">
+                               th:each="p,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigo='+${p.getCodigo()}}">
                                 <div class="mr-3">
-                                    <div class="icon-circle notificacion">
+                                    <div class="icon-circle" style="background-color: #701111; border: 1px solid #701111; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
                                         <i class="fas fa-file-alt text-white"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <div  class="small text-gray-500" th:text="${noti.getCodigo()}"></div>
-                                    <span class="font-weight-bold" th:text="${noti.getNombre()}"></span>
-                                    <span class="font-weight-bold" th:if="${noti.estado==2}"> - Cancelado</span>
-                                    <span class="font-weight-bold" th:if="${noti.estado==6}"> - Entregado</span>
+                                    <div class="small text-gray-500"
+                                         th:text="${'Pendiente - S/.'+p.getPrecioTotal()}">Los Olivos - 12:45 pm
+                                    </div>
+                                    <span class="font-weight-bold"
+                                          th:text="${p.getNombre()}"></span>
                                 </div>
                             </a>
-                            <a class="dropdown-item text-center small text-gray-500" th:href="@{/cliente/pedidoActual}">
-                                Mostrar todos mis pedidos</a>
+                            <a class="dropdown-item text-center small text-gray-500"
+                               th:href="@{/cliente/pedidoActual}">Ver todos los pedidos</a>
                         </div>
                     </li>
-
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"

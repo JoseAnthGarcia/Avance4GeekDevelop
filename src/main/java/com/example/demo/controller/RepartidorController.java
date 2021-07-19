@@ -88,14 +88,25 @@ public class RepartidorController {
     @GetMapping("/listaPedidos")
     public String verListaPedidos(Model model, HttpSession session,
                                   @RequestParam(value = "idPedido", required = false) String codigoPedido,
-                                  @RequestParam(value = "numPag", required = false) Integer numPag,
+                                  @RequestParam(value = "numPag", required = false) String pag,
                                   @RequestParam(value = "codigoMostrar", required = false) String codigoMostrar,
                                   RedirectAttributes attr) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         List<Pedido> pedidoAct = pedidoRepository.findByEstadoAndRepartidor(5, repartidor);
         Page<Pedido> pagina;
-        if (numPag == null) {
+
+        int numPag = -1;
+        if (pag == null) {
             numPag = 1;
+        } else {
+            try {
+                numPag = Integer.parseInt(pag);
+                if(numPag<=0){
+                    numPag = 1;
+                }
+            } catch (NumberFormatException e) {
+                numPag = 1;
+            }
         }
 
         int tamPag = 5;
@@ -262,11 +273,22 @@ public class RepartidorController {
 
     @GetMapping("/estadisticas")
     public String estadisticas(Model model, HttpSession session,
-                               @RequestParam(value = "numPag", required = false) Integer numPag) {
+                               @RequestParam(value = "numPag", required = false) String pag) {
         Usuario repartidor = (Usuario) session.getAttribute("usuario");
         Page<Pedido> pagina;
-        if (numPag == null) {
+
+        int numPag = -1;
+        if (pag == null) {
             numPag = 1;
+        } else {
+            try {
+                numPag = Integer.parseInt(pag);
+                if(numPag<=0){
+                    numPag = 1;
+                }
+            } catch (NumberFormatException e) {
+                numPag = 1;
+            }
         }
 
         int tamPag = 5;
@@ -336,6 +358,7 @@ public class RepartidorController {
     @GetMapping("/aceptarPedido")
     public String aceptarPedido(@RequestParam(value = "codigo", required = false) String codigo,
                                 HttpSession session) {
+        Usuario repartidor = (Usuario) session.getAttribute("usuario");
         if (codigo != null) {
             Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             if (pedidoOpt.isPresent()) {
@@ -344,6 +367,8 @@ public class RepartidorController {
                 pedido.setEstado(5);
                 //TODO: TIEMPO DE ENTREGA??
                 pedidoRepository.save(pedido);
+            }else{
+                return "redirect:/repartidor/listaPedidos";
             }
         }
         return "redirect:/repartidor/pedidoActual";
@@ -353,11 +378,9 @@ public class RepartidorController {
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
         if (codigo != null) {
-            Optional<Pedido> pedidoOpt = pedidoRepository.findById(codigo);
             Usuario repartidor = (Usuario) session.getAttribute("usuario");
-            if (pedidoOpt.isPresent() &&
-                    pedidoRepository.findByEstadoAndRepartidor(5, repartidor).get(0).getCodigo().equals(pedidoOpt.get().getCodigo())) {
-                Pedido pedido = pedidoOpt.get();
+            Pedido pedido = pedidoRepository.findByEstadoAndRepartidorAndCodigo(5, repartidor, codigo);
+            if (pedido!=null) {
                 pedido.setEstado(6);
 
                 Date date = new Date();
@@ -384,10 +407,13 @@ public class RepartidorController {
                 int tiempo = (int) minutes;
                 pedido.setTiempoentrega(tiempo);
                 pedidoRepository.save(pedido);
+                return "redirect:/repartidor/listaPedidos";
+            }else{
+                return "redirect:/repartidor/pedidoActual";
             }
+        }else{
+            return "redirect:/repartidor/pedidoActual";
         }
-        return "redirect:/repartidor/listaPedidos";
-
     }
 
     @PostMapping("/seleccionarDistrito")
@@ -463,13 +489,16 @@ public class RepartidorController {
                                   @RequestParam(value = "valoracion", required = false) String valoracion,
                                   @RequestParam(value = "pag", required = false) String pag) {
 
-        int tamPag = 5;
+        int tamPag = 10;
         int numeroPag = -1;
         if (pag == null) {
             numeroPag = 1;
         } else {
             try {
                 numeroPag = Integer.parseInt(pag);
+                if(numeroPag<=0){
+                    numeroPag = 1;
+                }
             } catch (NumberFormatException e) {
                 numeroPag = 1;
             }
@@ -631,6 +660,7 @@ public class RepartidorController {
                 nombreRest=null;
             }
         }
+
         model.addAttribute("listaPedidoReporte", pagina.getContent());
 
         //Busque:

@@ -13,8 +13,9 @@ public class Validarcorreo {
     @OneToOne
     @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
-    @Column(nullable = false)
+    @Column(nullable = false, name="hash")
     private String hash;
+    @Column(name="fecha")
     private String fecha;
 
     public int getIdvalidarcorreo() {

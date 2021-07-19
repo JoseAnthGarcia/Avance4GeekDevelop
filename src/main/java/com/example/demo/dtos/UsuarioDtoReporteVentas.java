@@ -3,13 +3,12 @@ package com.example.demo.dtos;
 import java.math.BigDecimal;
 
 public interface UsuarioDtoReporteVentas {
-
+    Integer getIdrestaurante();
     String getNombre();
     String getRuc();
-    Integer getEstado();
-    BigDecimal getMismodistrito1();
-    BigDecimal getMismodistrito0();
-    Integer getValoracionrestaurante();
-    Integer getCantpedidos();
-    BigDecimal getMontototal();
+    Integer getCantidadpedidos();
+    BigDecimal getTotal();
+    Integer getValoracion();
+
+
 }

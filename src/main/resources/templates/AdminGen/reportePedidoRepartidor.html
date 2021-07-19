@@ -146,14 +146,14 @@
                                     <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 60px">1</td>
 
 
-                                    <td th:text="${usuario.getApellidos()+','+usuario.getNombres()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getRepartidor()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getDni()}" class="text-center" style="width: 260px"></td>
                                     <td th:text="${usuario.getCorreo()}" class="text-center" style="width: 200px"></td>
                                     <td th:text="${usuario.getTelefono()}" class="text-center" style="width: 200px">
                                     </td>
-                                    <td th:text="${usuario.getCantpedidos()}" class="text-center" style="width: 240px"></td>
-                                    <td  th:text="|S/ ${usuario.getMontototal()}|" class="text-center" style="width: 160px"></td>
-                                    <td  th:text="${usuario.getValoracionrepartidor()==null ? 'Sin Valoración' : usuario.getValoracionrepartidor() }" class="text-center" style="width: 60px"></td>
+                                    <td th:text="${usuario.getCantidad()}" class="text-center" style="width: 240px"></td>
+                                    <td  th:text="|S/ ${usuario.getGananciarepartidor()}|" class="text-center" style="width: 160px"></td>
+                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
                                 </tr>
 
 

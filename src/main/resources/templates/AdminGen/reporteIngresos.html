@@ -1,286 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Reporte Ingresos')"></head>
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Reporte de Ingresos</title>
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../bootstrap/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <link href="cssAG/estilosAdmin.css" rel="stylesheet" type="text/css">
-
-    <link href="estilosAdminRest.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-</head>
 
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
 
+
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
-        <div class="">
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-shopping-basket"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Food Delivery </div>
-            </a>
-        </div>
-        <!-- Sidebar - Brand -->
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="lista.html">
-                <i class="fas fa-fw fa-list"></i>
-                <span>Listas</span></a>
-        </li>
-
-
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Solicitudes</span>
-
-            </a>
-            <div class="collapse" id="submenu2" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudAR.html"><span>Administrador Restaurante</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=solicitudRepartidor.html#"><span>Repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="solicitudRestaurante.html"><span>Restaurante</span></a></li>
-                </ul>
-
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="crearAdministrador.html">
-                <i class="fas fa-fw fa-user-edit"></i>
-                <span>Crear Administrador</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Reportes</span>
-
-            </a>
-            <div class="collapse" id="submenu1" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteUsuario.html"><span>Usuarios</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href=reportePedidoCliente.html#"><span>Pedidos por cliente</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reportePedidoRepartidor.html"><span>Pedidos por repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteVentas.html"><span>Ventas</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="reporteIngresos.html"><span>Ingresos</span></a></li>
-                </ul>
-            </div>
-        </li>
-
-
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
+    <ul th:replace="AdminGen/fragments/generalAdmin.html :: topbar" ></ul>
     <!-- End of Sidebar -->
+
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <!-- Begin of Topbar -->
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
 
-                <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
-
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
-                                Nuevas Solicitudes
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Repartidor - 12:45 pm</div>
-                                    <span class="font-weight-bold">Carlos Martinez</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">La mas brasa</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo administrador de restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">KArla Avellana</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las solicitudes</a>
-                        </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfilAG.html">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Editar Perfil
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cerrar Sesión
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
             <!-- End of Topbar -->
+
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form>
+                <form th:action="@{/admin/ReporteVentas}" method="get">
 
                     <div class="form-group row">
-                        <div class="col-sm-2 mb-1 ">
-                            <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Restaurante o Ruc">
+                        <div class="col-sm-3 mb-1" >
+                            <input type="text" class="form-control" name="texto"
+                                   th:value="${texto.equals('')?'':texto}"
+                                   th:placeholder="${texto.equals('')?'Búsqueda por Restaurante - RUC':texto}">
                         </div>
-
-                        <div class="col-sm-auto mb-1">
-                            <select class="form-control">
-                                <option value="">Distrito</option>
-                                <option value="">Molina</option>
-                                <option value="">Surco</option>
-                                <option value="">San juan</option>
-                                <option value="">Ate</option>
-                                <option value="">San miguel</option>
+                        <div class="col-sm-2 mb-1">
+                            <select class="form-control" name="cantidad">
+                                <option value="7" th:selected="${cantidad.equals('7')}">Cantidad</option>
+                                <option value="0" th:selected="${cantidad.equals('0')}">0 a 100</option>
+                                <option value="1" th:selected="${cantidad.equals('1')}">101 a 200</option>
+                                <option value="2" th:selected="${cantidad.equals('2')}">201 a 300</option>
+                                <option value="3" th:selected="${cantidad.equals('3')}">301 a 400</option>
+                                <option value="4" th:selected="${cantidad.equals('4')}">401 a 500</option>
+                                <option value="5" th:selected="${cantidad.equals('5')}">501 a 600</option>
+                                <option value="6" th:selected="${cantidad.equals('6')}">más de 600</option>
                             </select>
                         </div>
-                        <div class="col-sm-auto mb-1">
+
+                        <!--<div class="col-sm-auto mb-1">
                             <select class="form-control">
-                                <option value="">Estado</option>
-                                <option value="">Bloqueado</option>
-                                <option value="">Operativo</option>
+                                <option value="">Fecha</option>
+                                <option value="">Última Hora</option>
+                                <option value="">Hoy</option>
+                                <option value="">Esta semana</option>
+                                <option value="">Este mes</option>
+                                <option value="">Este año</option>
+                            </select>
+                        </div>-->
+
+                        <div class="col-sm-2 mb-1">
+                            <select class="form-control" name="monto">
+                                <option value="0" th:selected="${monto.equals('0')}">Monto</option>
+                                <option value="1" th:selected="${monto.equals('1')}">S/0 a S/2000</option>
+                                <option value="2" th:selected="${monto.equals('2')}">S/2001 a S/4000</option>
+                                <option value="3" th:selected="${monto.equals('3')}">S/4001 a S/6000</option>
+                                <option value="4" th:selected="${monto.equals('4')}">S/6001 a S/8000</option>
+                                <option value="5" th:selected="${monto.equals('5')}">S/8001 a S/10000</option>
+                                <option value="6" th:selected="${monto.equals('6')}">mayores a S/10000</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2 mb-1">
+                            <select class="form-control" name="idDistrito">
+                                <option value="0" th:selected="${idDistrito.equals('0')}">Distrito</option>
+                                <option value="15" th:selected="${idDistrito.equals('15')}">Amauta</option>
+                                <option value="1" th:selected="${idDistrito.equals('1')}">Ancón</option>
+                                <option value="2" th:selected="${idDistrito.equals('2')}">Ate</option>
+                                <option value="3" th:selected="${idDistrito.equals('3')}">Barranco</option>
+                                <option value="4" th:selected="${idDistrito.equals('4')}">Breña</option>
+                                <option value="5" th:selected="${idDistrito.equals('5')}">Carabayllo</option>
+                                <option value="6" th:selected="${idDistrito.equals('6')}">Chaclacayo</option>
+                                <option value="7" th:selected="${idDistrito.equals('7')}">Chorrillos</option>
+                                <option value="8" th:selected="${idDistrito.equals('8')}">Cieneguilla</option>
+                                <option value="9" th:selected="${idDistrito.equals('9')}">Comas</option>
+                                <option value="10" th:selected="${idDistrito.equals('10')}">El Agustino</option>
+                                <option value="11" th:selected="${idDistrito.equals('11')}">Independencia</option>
+                                <option value="12" th:selected="${idDistrito.equals('12')}">Jesús María</option>
+                                <option value="13" th:selected="${idDistrito.equals('13')}">La Molina</option>
+                                <option value="14" th:selected="${idDistrito.equals('14')}">La Victoria</option>
+                                <option value="16" th:selected="${idDistrito.equals('16')}">Lince</option>
+                                <option value="17" th:selected="${idDistrito.equals('17')}">Los Olivos</option>
+                                <option value="18" th:selected="${idDistrito.equals('18')}">Lurigancho</option>
+                                <option value="19" th:selected="${idDistrito.equals('19')}">Lurín</option>
+                                <option value="20" th:selected="${idDistrito.equals('20')}">Magadalena del Mar</option>
+                                <option value="21" th:selected="${idDistrito.equals('21')}">Miraflores</option>
+                                <option value="22" th:selected="${idDistrito.equals('22')}">Pachacamac</option>
+                                <option value="23" th:selected="${idDistrito.equals('23')}">Pucusana</option>
+                                <option value="24" th:selected="${idDistrito.equals('24')}">Pueblo Libre</option>
+                                <option value="25" th:selected="${idDistrito.equals('25')}">Puente Piedra</option>
+                                <option value="26" th:selected="${idDistrito.equals('26')}">Punta Hermosa</option>
+                                <option value="27" th:selected="${idDistrito.equals('27')}">Punta Negra</option>
+                                <option value="28" th:selected="${idDistrito.equals('28')}">Rímac</option>
+                                <option value="29" th:selected="${idDistrito.equals('29')}">San Bartolo</option>
+                                <option value="30" th:selected="${idDistrito.equals('30')}">San Borja</option>
+                                <option value="31" th:selected="${idDistrito.equals('31')}">San Insidro</option>
+                                <option value="32" th:selected="${idDistrito.equals('32')}">San Juan de Lurigancho</option>
+                                <option value="33" th:selected="${idDistrito.equals('33')}">San Luis</option>
+                                <option value="34" th:selected="${idDistrito.equals('34')}">San Martín de Porres</option>
+                                <option value="35" th:selected="${idDistrito.equals('35')}">San Miguel</option>
+                                <option value="36" th:selected="${idDistrito.equals('36')}">Santa Anita</option>
+                                <option value="37" th:selected="${idDistrito.equals('37')}">Santa María del Mar</option>
+                                <option value="38" th:selected="${idDistrito.equals('38')}">Santa Rosa</option>
+                                <option value="39" th:selected="${idDistrito.equals('39')}">Santiago de Surco</option>
+                                <option value="40" th:selected="${idDistrito.equals('40')}">Surquillo</option>
+                                <option value="41" th:selected="${idDistrito.equals('41')}">Vila María del Triunfo</option>
+                                <option value="42" th:selected="${idDistrito.equals('42')}">Villa El Salvador</option>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                             </select>
                         </div>
-                        <div class="col-sm-auto mb-1 ">
-                            <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Ingreso Mínimo">
-                        </div>
-                        <div class="col-sm-auto mb-1 ">
-                            <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Ingreso Máximo">
+                        <div class="col-sm-2 mb-1">
+
+                            <select class="form-control" name="estado">
+                                <option value="3" selected>Estado</option>
+                                <option value="0" th:selected="${estado.equals('0')}">Bloqueado</option>
+                                <option value="1" th:selected="${estado.equals('1')}">Activo</option>
+
+                            </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{/admin/ReporteVentas}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -294,14 +173,14 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h2 class="font-weight-bold text-white text-lg-center mx-auto ">REPORTE DE INGRESOS POR RESTAURANTE</h2>
-                            <a class="btn btn-warning mr-1">Exportar</a>
+                            <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE INGRESOS POR RESTAURANTE </h2>
+                            <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tabla" class="table table-image table-responsive">
+                            <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -314,138 +193,86 @@
                                         Ruc
                                     </th>
                                     <th class="text-center">
+                                        Distrito
+                                    </th>
+                                    <th class="text-center">
                                         Estado
                                     </th>
                                     <th class="text-center">
-                                        Mismo Distrito
+                                        Cantidad de ventas
                                     </th>
                                     <th class="text-center">
-                                        Diferente Distrito
+                                        Mismo Distrito (S/)
                                     </th>
                                     <th class="text-center">
-                                        Total
+                                        Diferente Distrito (S/)
                                     </th>
+                                    <th class="text-center">
+                                        Monto total (S/)
+                                    </th>
+
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 440px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Bloqueado</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 160px">3000</td>
+                                <tr th:each= "usuario, v : ${listaUsuarios}">
+                                    <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 60px">1</td>
 
 
+                                    <td th:text="${usuario.getNombre()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getRuc()}" class="text-center" style="width: 260px"></td>
+                                    <td th:text="${usuario.getDistrito()}" class="text-center" style="width: 260px"></td>
+                                    <td th:text="${usuario.getEstado()}" class="text-center" style="width: 260px"></td>
+
+
+
+                                    <td th:text="${usuario.getCantidadpedidos()}" class="text-center" style="width: 260px"></td>
+
+                                    <td th:text="${usuario.getIngresostotalesmismodistrito()}" class="text-center" style="width: 240px"></td>
+
+                                    <td th:text="${usuario.getIngresostotalesdiferentedistrito()}" class="text-center" style="width: 240px"></td>
+                                    <td  th:text="|S/ ${usuario.getIngresosTotales()}|" class="text-center" style="width: 160px"></td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr><tr>
-                                    <td class="text-center" style="width: 60px">1</td>
-                                    <td class="text-center" style="width: 240px">Lopez Martinez Melania</td>
-                                    <td  class="text-center" style="width: 260px">21568430</td>
-                                    <td  class="text-center" style="width: 200px">Operativo</td>
-                                    <td class="text-center" style="width: 240px">1500</td>
-                                    <td  class="text-center" style="width: 160px">1500</td>
-                                    <td  class="text-center" style="width: 60px">3000</td>
-
-
-                                </tr>
-
 
 
                                 </tbody>
                             </table>
-                            <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                <a  href="#">&laquo;</a>
-                                <a  href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="#">6</a>
-                                <a href="#">&raquo;</a>
-                            </div>
-                        </div>
 
+                        </div>
+                        <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                            <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                        </div>
+                        <div th:if="${estadoBuscador == 0 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                            <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                        </div>
+                        <div class="row" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+                                        <!--  <li class="page-item" th:classappend="${prev == 0 ? 'disabled': ''}">
+                                              <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${prev}|}">Anterior</a>
+                                          </li>-->
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${page}|}" th:text="${page}"></a>
+                                        </li>
+                                        <!--      <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
+                                                   <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${next}|}">Siguiente</a>
+                                               </li>-->
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">
 
-                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOTAL DE DINERO RECAUDADO</h5>
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOP VENTAS POR RESTAURANTES</h5>
 
                         </div>
 
@@ -453,54 +280,157 @@
                     <div class="card-body">
                         <div class="container-fluid">
                             <div class="container-fluid">
+
                                 <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="row">
-                                            <h4  style="color: black">PEDIDOS EN MISMO DISTRITO</h4>
-                                            <p >Si el delivery es en el mismo distrito, son 5 soles (4 para el repartidor, 1 para la aplicación/administrador).</p>
+                                    <div class="col-auto">
+                                        <hr/>
+                                        <div class="review-block">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <img src="http://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
+                                                    <div class="review-block-name"><b href="#">TOP #1 <br/> Más Ventas</b></div>
+
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <div class="review-block-rate">
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+
+
+                                                    </div>
+                                                    <div class="review-block-title"><b>Mi Barrunto</b> </div>
+                                                    <div class="review-block-name"><b>
+                                                        <span class="fa fa-user" style=" margin-right:5px;"></span> Cantidad de ventas: </b>
+                                                        1,050,008
+                                                    </div>
+                                                    <div class="review-block-name"><b>
+                                                        <span class="fa fa-coins" style=" margin-right:5px;"></span> Monto total: </b>
+                                                        S/ 1,050,008
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <img src="http://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
+                                                    <div class="review-block-name"><b href="#">TOP #1</b></div>
+                                                    <div class="review-block-name">Menos Ventas<br/>
+                                                        <span class="fa fa-user" style=" margin-right:5px;"></span> 1,050,008 total de ventas
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <div class="review-block-rate">
+                                                        <span class="fa fa-star text-warning" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star " style=" margin-right:5px;"></span>
+                                                        <span class="fa fa-star" style=" margin-right:5px;"></span>
+                                                    </div>
+                                                    <div class="review-block-title"><b>Leñas y carbon</b> </div>
+                                                    <div class="review-block-description">this was nice in buy. this was nice in buy. this was nice in buy. this was nice in buy this was nice in buy this was nice in buy this was nice in buy this was nice in buy</div>
+                                                </div>
+                                            </div>
                                         </div>
-
-
-                                    </div>
-                                    <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                        <h4  style="color: black">S/ 54341</h4>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="row">
-                                            <h4  style="color: black">PEDIDOS EN DIFERENTE DISTRITO</h4>
-                                            <p >Si el delivery es entre distritos (6 para el repartidor, 2 para la aplicación/administrador).
-                                            </p>
-                                        </div>
-
-
-                                    </div>
-                                    <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                        <h4  style="color: black">S/ 54341</h4>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="row">
-                                            <h4  style="color: black">TOTAL DE INGRESOS</h4>
-
-                                        </div>
-
-
-                                    </div>
-                                    <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
-                                        <h4  style="color: black">S/ 104341</h4>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
+
+
+                <!--  <div class="card shadow mb-4">
+                      <div class="card-header py-3 " style="background-color: #701111;">
+
+                          <div class="d-sm-flex align-items-center justify-content-between">
+
+                              <h5 class="font-weight-bold text-white text-lg-center mx-auto">TOP CLIENTES</h5>
+
+                          </div>
+
+                      </div>
+                      <div class="card-body">
+                          <div class="container-fluid">
+                              <div class="container-fluid">
+
+                                  <div class="row">
+                                      <div class="col-sm-6">
+                                          <div class="row">
+
+
+                                          </div>
+
+
+                                      </div>
+                                      <div class="col-sm-6 mx-auto " style="position: relative; left: 25%">
+                                          <h5  style="color: black">Total de pedidos</h5>
+                                      </div>
+                                  </div>
+
+
+                                  <div class="row">
+                                      <div class="col-sm-6">
+                                          <div class="row">
+                                              <div class="col">
+                                                  <div class="row">
+
+                                                      <h4  style="color: black">CLIENTE CON MÁS PEDIDOS</h4>
+                                                  </div>
+                                                  <div class="row">
+
+                                                      <div th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getApellidos() +','+listaClienteConMasPedidos.getNombres() }"> </div>
+
+                                                  </div>
+
+                                              </div>
+
+
+                                          </div>
+
+
+                                      </div>
+                                      <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                          <h4 th:text="${listaClienteConMasPedidos.getNombres() == null ? 'No hay': listaClienteConMasPedidos.getCantpedidos()}" style="color: black"> </h4>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-6">
+                                          <div class="row">
+
+                                              <div class="col">
+                                                  <div class="row">
+
+                                                      <h4  style="color: black">CLIENTE CON MENOS PEDIDOS</h4>
+                                                  </div>
+                                                  <div class="row">
+                                                      <div th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getApellidos() +','+listaClienteConMenosPedidos.getNombres() }"> </div>
+
+                                                  </div>
+
+                                              </div>
+
+
+
+
+                                          </div>
+
+
+                                      </div>
+                                      <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                          <h4 th:text="${listaClienteConMenosPedidos.getNombres() == null ? 'No hay': listaClienteConMenosPedidos.getCantpedidos() }" style="color: black"> </h4>
+                                      </div>
+                                  </div>
+
+                              </div>
+
+                          </div>
+                      </div>
+
+                  </div>-->
             </div>
-            <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
@@ -539,35 +469,34 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+
 </div>
 
-<!--
 <script th:src="@{/js/exportar.js}"></script>
--->
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
 </body>
 
 </html>
-

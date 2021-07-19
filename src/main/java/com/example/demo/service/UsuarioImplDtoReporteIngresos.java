@@ -17,7 +17,7 @@ public class UsuarioImplDtoReporteIngresos implements UsuarioServiceAPIDtoReport
 
 
     @Override
-    public Page<UsuarioDtoReporteIngresos> listaUsuariosDtoReporteIngresos(String texto, Integer miFestado2, Integer maXestado2, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Integer minDistrito, Integer maxDistrito, Pageable pageable) {
-        return usuarioRepository.listaUsuariosDtoReporteIngresos(texto,miFestado2,maXestado2, miFestado, maXestado,inFmont, maXmont,minDistrito,maxDistrito, pageable);
+    public Page<UsuarioDtoReporteIngresos> listaUsuariosDtoReporteIngresos(String texto, Integer miFestado2, Integer maXestado2, Integer cantidad, Integer maXestado, Integer inFmont, Integer maXmont, Integer minDistrito, Integer maxDistrito, Pageable pageable) {
+        return usuarioRepository.listaUsuariosDtoReporteIngresos(texto,miFestado2,maXestado2, cantidad, maXestado,inFmont, maXmont,minDistrito,maxDistrito, pageable);
     }
 }

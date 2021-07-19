@@ -126,22 +126,22 @@
                                 <tbody >
 
                                 <tr>
-                                    <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="${topMas.getRepartidor()}"></td>
+                                    <td
+                                        style="color:black"  th:text="${topMas== null  ? '-': topMas.getRepartidor()}"></td>
 
-                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="${topMenos.getRepartidor()}"></td>
+                                    <td  style="color:black"  th:text="${topMenos== null  ? '-': topMenos.getRepartidor()}"></td>
                                 </tr>
                                 <tr>
-                                    <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Cantidad de Pedidos:  ${topMas.getCantidad()}|"></td>
+                                    <td
+                                        style="color:black"  th:text="|Cantidad de Pedidos:  ${topMas== null  ? '-': topMas.getCantidad()}|"></td>
 
-                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
+                                    <td  style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos== null  ? '-': topMenos.getCantidad()}|"></td>
                                 </tr>
                                 <tr>
-                                    <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Monto Total: S/ ${topMas.getGananciarepartidor()}|"></td>
+                                    <td
+                                        style="color:black"  th:text="|Monto Total: S/ ${topMas== null  ? '-': topMas.getGananciarepartidor()}|"></td>
 
-                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Monto Total: S/ ${topMenos.getGananciarepartidor()}|"></td>
+                                    <td style="color:black"  th:text="|Monto Total: S/ ${topMenos== null  ? '-': topMenos.getGananciarepartidor()}|"></td>
                                 </tr>
 
                                 </tbody>

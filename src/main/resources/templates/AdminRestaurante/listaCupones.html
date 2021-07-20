@@ -320,14 +320,14 @@
                                     <h3 class="text-lg-center text-danger">No hay cupones registrados.</h3>
                                 </div>
                                 <div th:if="${totalPages >= 1}" class="pagination text-center justify-content-center">
-                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                    <div class="page-item" th:each="i: ${#numbers.sequence(1,totalPages)}">
 
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/cupon/page?pageNo=' + ${i} + '&textBuscador='+ ${texto}  +  '&inputPrecio='+ ${textoP} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
-                                           class="active"></a>
+                                           class="active page-link"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+                                           th:utext="${i}" class="text-white page-link" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

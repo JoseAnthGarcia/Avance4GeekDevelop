@@ -863,13 +863,26 @@ public class ClienteController {
                 limitInf = 0;
                 limitSup = 5000;
         }
+
+        List<Categorias> categoriasList = categoriasRestauranteRepository.findCategoriasByIdrestaurante(idRest);
         try {
             limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
             limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
+
+            for (Categorias c: categoriasList) {
+                if(c.getIdcategoria() != limitInfC){
+                    limitInfC = 0;
+                    limitSupC = 28;
+                    break;
+                }
+            }
+            
         }catch (NumberFormatException e){
-            idCategoriaS = "0-28";
+            limitInfC = 0;
+            limitSupC = 28;
         }
         Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, limitInfC, limitSupC,pageRequest);
+
         int totalPage = listaPlato.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
@@ -883,7 +896,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
         model.addAttribute("idCategoria",idCategoriaS);
-        model.addAttribute("categorias",categoriasRestauranteRepository.findCategoriasByIdrestaurante(idRest));
+        model.addAttribute("categorias",categoriasList);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaProductos";
     }
@@ -898,7 +911,6 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         Integer idPlato;
-        // <--
         try {
             idPlato = Integer.parseInt(idPlatoS);
         } catch (NumberFormatException e) {
@@ -1067,16 +1079,12 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         Plato_has_pedido php = new Plato_has_pedido();
-        //TODO validar plato
         Plato platoOther = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
         if (platoOther == null) {
             return "redirect:/cliente/listaPlatos/";
         }
 
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
-
-
-
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
@@ -1117,7 +1125,6 @@ public class ClienteController {
             String codigo = "CODIGOTEMPORAL";
             int puntero = 0;
             if (carrito.size() > 0) {
-                //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
                 for (int i = 0; i < carrito.size(); i++) {
                     if (idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()) {
                         puntero = i;
@@ -1141,11 +1148,8 @@ public class ClienteController {
                 idComPlato.setIdplato(idPlato);
                 idComPlato.setCodigo(codigo);
 
-                //RECORDAR VOLVERLO NULL Y AÑADIR EL PEDIDO AL FINAL
                 php.setPlato(plato);
                 php.setCantidad(cantint);
-
-                //TODO SI FUERA EL SUBTOTAL EN EL CARRITO SE GUARDARÍA PRECIO UNITARIO X CANTIDAD PLATO
                 php.setPreciounitario(BigDecimal.valueOf(plato.getPrecio()));
                 php.setIdplatohaspedido(idComPlato);
                 carrito.add(php);

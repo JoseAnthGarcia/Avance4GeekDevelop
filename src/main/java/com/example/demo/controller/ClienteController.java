@@ -883,7 +883,7 @@ public class ClienteController {
         model.addAttribute("texto",texto);
         model.addAttribute("idPrecio",idPrecio);
         model.addAttribute("idCategoria",idCategoriaS);
-        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
+        model.addAttribute("categorias",categoriasRestauranteRepository.findCategoriasByIdrestaurante(idRest));
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaProductos";
     }
@@ -1262,7 +1262,7 @@ public class ClienteController {
                                        Model model) {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         if (session.getAttribute("extrasCarrito") == null) {
-            return "redirect:/cliente/motrarCarrito";
+            return "redirect:/cliente/listaPlatos";
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         // model.addAttribute("idRest",idRest);

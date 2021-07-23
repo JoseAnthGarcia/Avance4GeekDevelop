@@ -9,6 +9,9 @@ import com.example.demo.service.PedidoActualService;
 import com.example.demo.service.PlatoClienteService;
 import com.example.demo.service.RestauranteClienteService;
 import com.example.demo.service.*;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import javax.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -38,6 +44,10 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 
 @RequestMapping("/cliente")
 public class ClienteController {
+
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
+    public String puerto = "8080";
 
     @Autowired
     TarjetaRepository tarjetaRepository;
@@ -59,6 +69,12 @@ public class ClienteController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Autowired
     PlatoRepository platoRepository;
@@ -1573,7 +1589,7 @@ public class ClienteController {
                                 @RequestParam(value = "efectivoPagar", required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
                                 Model model, RedirectAttributes attr,
-                                HttpSession session) {
+                                HttpSession session){
         /*
         * THINGS TODO:
         * ENVIAR CORREO
@@ -1999,6 +2015,9 @@ public class ClienteController {
                     extraHasPedidoRepository.save(extra_has_pedido);
                 }
             }
+            try {
+                sendHtmlMailPedidoGen(cliente.getCorreo(),"Pedido Generado Exitosamente",pedido, cliente.getNombres());
+            } catch (MessagingException e) { }
             session.removeAttribute("delivery");
             session.removeAttribute("idRest");
             session.removeAttribute("idPlato");
@@ -3673,6 +3692,22 @@ public class ClienteController {
         }
 
         return codigoPedido;
+    }
+
+    public void sendHtmlMailPedidoGen(String to, String subject, Pedido pedido, String cliente) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("pedidoCodigo", pedido.getCodigo());
+        context.setVariable("restaurante", pedido.getRestaurante().getNombre());
+        context.setVariable("user", cliente);
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        String emailContent = templateEngine.process("Correo/pedidoGenerado", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
     }
 
 }

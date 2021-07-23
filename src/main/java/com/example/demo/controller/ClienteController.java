@@ -1652,6 +1652,7 @@ public class ClienteController {
         MetodoDePago metodoDePago = null;
         boolean idMetPaVal = false;
         boolean idTarjetaVal = false;
+        boolean cantidadNullVal = false;
         boolean cvvVal = false;
         boolean numTarjetaVal = false;
         boolean mesVal = false;
@@ -1805,6 +1806,15 @@ public class ClienteController {
                     mesValNull = true;
                     anioValNull = true;
                     idTarjetaVal = true;
+
+                    if(metodoDePago.getIdmetodopago() == 1){
+                        if(!efectivoPagar.equals("")){
+                            // aquí hago la validación de que ingrese una cantidad a pagar
+                            // si el metodo de pago es efectivo, más adelante se validará que
+                            // la cantidad a pagar será mayor a la del monto Total
+                            cantidadNullVal = true;
+                        }
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -1850,7 +1860,7 @@ public class ClienteController {
         }
 
         //!precioDelVal ||
-        if (!idCuponVal || !idUbicVal || !idMetPaVal ||
+        if (!idCuponVal || !idUbicVal || !idMetPaVal || !cantidadNullVal ||
                 !numTarjetaVal || !mesVal || !anioVal || !cvvVal || !tipoVal ||
                 !cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull || !idTarjetaVal) {
             // si algunos de estos datos esta mal debería redireccionarte a la misma vista
@@ -1866,6 +1876,10 @@ public class ClienteController {
 
             if (!cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull) {
                 model.addAttribute("msgNullMdp", "Ingrese un dato válido.");
+            }
+
+            if(!cantidadNullVal){
+                model.addAttribute("msgCantidadNotNull", "Ingrese una cantidad a pagar mayor al monto total.");
             }
 
             if (!numTarjetaVal) {
@@ -1895,6 +1909,7 @@ public class ClienteController {
             model.addAttribute("montoExtras", precioTotalExtras);
             model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
             model.addAttribute("listaDirecciones", listaDirecciones);
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "Cliente/terminarCompra";
         } else {
 
@@ -1932,6 +1947,7 @@ public class ClienteController {
                         model.addAttribute("montoExtras", precioTotalExtras);
                         model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                         model.addAttribute("listaDirecciones", listaDirecciones);
+                        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                         return "Cliente/terminarCompra";
                     }
                 } catch (NumberFormatException e) {
@@ -1942,6 +1958,7 @@ public class ClienteController {
                     model.addAttribute("montoExtras", precioTotalExtras);
                     model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                     model.addAttribute("listaDirecciones", listaDirecciones);
+                    model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                     return "Cliente/terminarCompra";
                 }
             }
@@ -2025,6 +2042,8 @@ public class ClienteController {
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
             attr.addFlashAttribute("msgPedGen", "Se generó exitosamente un pedido con código: " + pedido.getCodigo());
+            // todo falta reenviar notis
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "redirect:/cliente/pedidoActual";
         }
 

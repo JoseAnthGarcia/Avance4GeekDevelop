@@ -2417,11 +2417,7 @@ public class ClienteController {
 
 
                     model.addAttribute("listaExtra", pedidoRepository.extrasPorPedido(codigo));
-
-                    System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
-
                     model.addAttribute("codigo", codigo);
-
                     model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
                     return "Cliente/detallePedido";
 

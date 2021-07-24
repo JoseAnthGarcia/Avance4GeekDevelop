@@ -221,9 +221,11 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <h5 class="font-weight-bold text-white text-center mb-0">CUPONES DISPONIBLES</h5>
                     </div>
-                    <h1 th:if="${total==0}"  th:text="| |"></h1>
-                    <div  class="text-center" >
-                      <h3 style="color: red;" th:if="${total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
+
+                    <div  class="text-center" th:if="${total==0}" >
+                        <br>
+                      <h3 style="color: red;"  th:text="|No hay resultados para su búsqueda|"></h3>
+                        <br>
                     </div>
 
                     <div class="card-body" th:if="${total> 0}">

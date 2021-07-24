@@ -370,7 +370,8 @@
 
                     <div class="row justify-content-center">
                         <h6 class="col-3" style="color:black">Método de Pago</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo: S/. ${p3.getCantp()}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1 && p3.getCantp()!=null }" th:text="|Efectivo: S/. ${p3.getCantp()}|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1 }" th:text="|Efectivo|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
 

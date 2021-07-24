@@ -200,11 +200,11 @@
 
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="inputPrecio" name="inputPrecio">
-                                        <option value="0" th:selected="${textoP==0}">Descuento</option>
-                                        <option value="1" th:selected="${textoP==1}">S./00.00 hasta S./5.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S./5.00 hasta S./10.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S./10.00 hasta S./15.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S./15.00 hasta S./20.00</option>
+                                        <option value="0" th:selected="${textoP.equals('0')}">Descuento</option>
+                                        <option value="1" th:selected="${textoP.equals('1')}">S./00.00 hasta S./5.00</option>
+                                        <option value="2" th:selected="${textoP.equals('2')}">S./5.00 hasta S./10.00</option>
+                                        <option value="3" th:selected="${textoP.equals('3')}">S./10.00 hasta S./15.00</option>
+                                        <option value="4" th:selected="${textoP.equals('4')}">S./15.00 hasta S./20.00</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-auto mb-3 ml-0">

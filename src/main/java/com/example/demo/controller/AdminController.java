@@ -52,7 +52,8 @@ import java.util.stream.IntStream;
 public class AdminController  {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    public String ip = "34.227.30.44.nip.io";
+    //public String ip = "34.227.30.44.nip.io";
+    public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -1788,7 +1789,7 @@ public class AdminController  {
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021
-@GetMapping(value ="/ReporteVentas")//lista de reporte de Repartidor pedido
+@GetMapping(value ="/ReporteVentas")//lista de reporte de ventas por restaurante
 public String listaReporteVentas(@RequestParam Map<String, Object> params, Model model,
                                            @RequestParam(value = "texto", required = false) String texto,
                                            @RequestParam(value = "cantidad", required = false) String cantidad,

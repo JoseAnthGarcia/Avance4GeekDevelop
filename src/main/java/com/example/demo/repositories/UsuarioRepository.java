@@ -296,7 +296,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
             "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
             "\t\t(avg(p.valoracionrestaurante) is null \n" +
-            "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+            "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
             "order by count(p.codigo) DESC",nativeQuery = true,
             countQuery = "select count(*) from pedido p\n" +
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
@@ -306,7 +306,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
                     "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
                     "\t\t(avg(p.valoracionrestaurante) is null \n" +
-                    "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+                    "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
                     "order by count(p.codigo) DESC")
     Page<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
@@ -320,7 +320,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
             "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
             "\t\t(avg(p.valoracionrestaurante) is null \n" +
-            "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+            "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
             "order by count(p.codigo) DESC",nativeQuery = true,
             countQuery = "select count(*) from pedido p\n" +
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
@@ -330,7 +330,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
                     "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
                     "\t\t(avg(p.valoracionrestaurante) is null \n" +
-                    "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+                    "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
                     "order by count(p.codigo) DESC")
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
     @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +

@@ -303,6 +303,7 @@ public class ClienteController {
                     id3 = idCategoria+"-";
                 }
                 httpSession.setAttribute("idCategoria",idCategoria);
+                //se deberia guardar si no esta en el rango????
             }catch (NumberFormatException e){
                 idCategoria="";
                 httpSession.removeAttribute("idCategoria");
@@ -378,6 +379,9 @@ public class ClienteController {
         System.out.println("preciol1: "+limitSupP);
         System.out.println("preciol2: "+limitInfP);
         System.out.println("IDCATEGORIA2: "+idCategoria);
+
+
+
 
 
         if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
@@ -1683,9 +1687,6 @@ public class ClienteController {
                                 Optional<Tarjeta> tarjetaOpt = tarjetaRepository.findById(String.valueOf(idTarjeta));
                                 if (tarjetaOpt.isPresent()) {
                                     idTarjetaVal = true;
-                                    //para que no me haga las validaciones al guardar
-                                    //TODO agregar un JavaScript para cuando seleccione un tarjeta,
-                                    //desabilite el formulario
                                     cvvVal = true;
                                     numTarjetaVal = true;
                                     mesVal = true;
@@ -1696,11 +1697,14 @@ public class ClienteController {
                                     numTarjetaValNull = true;
                                     mesValNull = true;
                                     anioValNull = true;
+                                    cantidadNullVal = true;
+
                                 }
                             } catch (NumberFormatException e) {
                             }
                         } else {
                             //VALIDANDO EL CVV
+                            cantidadNullVal = true;
                             if(cvv != null){
                                 cvvValNull = true;
                             }
@@ -1751,6 +1755,7 @@ public class ClienteController {
                         }
                         //caso contrario estará registrando una negistrando una nueva - pero no guardandola
                     } else {
+                        cantidadNullVal = true;
                         //VALIDANDO EL CVV
                         if (cvv != null) {
                             cvvValNull = true;

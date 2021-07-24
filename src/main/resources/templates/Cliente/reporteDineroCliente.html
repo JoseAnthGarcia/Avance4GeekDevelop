@@ -259,7 +259,7 @@
 						
 						<div class="text-center" >
 							<h3  style="color:#000000" th:if="${total>0}" th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
-                            <h5 th:if="${total==0}" th:text="|No se encontraron resultados|"></h5>
+                            <h3 style="color: red;" th:if="${total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
 						</div>
                         <br th:if="${total>0}">
                         <div class="card-body"  th:if="${total>0}" >

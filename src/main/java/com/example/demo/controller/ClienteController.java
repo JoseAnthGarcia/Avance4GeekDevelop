@@ -423,7 +423,7 @@ public class ClienteController {
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
 
 

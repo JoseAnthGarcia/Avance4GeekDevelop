@@ -22,7 +22,7 @@ public class Extra  implements Serializable {
     private int idextra;
 
     @Column(nullable = false, unique = true)
-    @Size(max = 45, message = "Ingrese como máximo 45 caractéres")
+    @Size(max = 40, message = "Ingrese como máximo 40 caractéres")
     @NotBlank(message = "El nombre del extra no puede estar vacío")
     private String nombre;
 

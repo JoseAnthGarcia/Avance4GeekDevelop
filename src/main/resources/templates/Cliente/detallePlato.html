@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Detalle de plato')"></head>
+
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-6 static-top shadow">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <form class="form-inline">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </form>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-white border-0 small"
+                                           placeholder="Buscar..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <!-- Al parecer no pasa nada si lo quitamos-->
+
+                    <!-- Nav Item - Alerts -->
+
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
+                            <i class="fas fa-tags"></i>
+                        </a>
+                    </li>
+                    <!-- Nav Item - Alerts campanita Notificaciones -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"
+                               data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown" id="notifi">
+                            <h6 style="background-color: #701111; border: 1px solid #701111; padding-top: .75rem; padding-bottom: .75rem; color: #fff;
+                             display: block; padding: .5rem 1.5rem; margin-bottom: 0; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                Nuevos Pedidos
+                            </h6>
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}" class="mt-3 ml-4"> No
+                                tiene pedidos
+                                pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                               class="dropdown-item d-flex align-items-center"
+                               th:each="p,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigo='+${p.getCodigo()}}">
+                                <div class="mr-3">
+                                    <div class="icon-circle" style="background-color: #701111; border: 1px solid #701111; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500"
+                                         th:text="${'Pendiente - S/.'+p.getPrecioTotal()}">Los Olivos - 12:45 pm
+                                    </div>
+                                    <span class="font-weight-bold"
+                                          th:text="${p.getNombre()}"></span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500"
+                               th:href="@{/cliente/pedidoActual}">Ver todos los pedidos</a>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Messages -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="messagesDropdown">
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-mobile"></i>
+                                </div>
+                                <div class="font-weight">
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
+                                    <div class="small text-gray-500">Teléfono</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Editar Perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- End of Topbar -->
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <div class="card shadow mb-4 mt-5">
+
+                    <div class="card-header py-3" style="background-color: #701111;">
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <h5 class="font-weight-bold text-white text-center" th:text="${nombreRest}"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${msgAdd != null}" th:text="${msgAdd}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
+                    <div class="row">
+
+                        <div class="col-4 align-content-center">
+                            <div align="center" class="mt-2 mb-5">
+                                <img th:src="@{'/cliente/imagesPlato?id='+${plato.getIdplato()}}" style="width: 90%; height: 90%">
+                            </div>
+
+                        </div>
+                        <div class="col-8">
+                            <div class="mt-2">
+                                <div class="form-check-inline">
+                                    <h2 style="color:#000000;"><strong th:text="${plato.getNombre()}"></strong></h2>
+                                </div>
+
+                                <hr width="75%" style="border-top: #000000 solid" align="left">
+                                <h6 style="color:#000000;"><strong>Detalle</strong></h6>
+                                <p th:text="${plato.getDescripcion()}"></p>
+                                <strong style="color:#000000;">Precio: </strong><h6 th:text="|S/. ${plato.getPrecio()}|"></h6>
+
+                            </div>
+                            <form th:action="@{'/cliente/aniadirCarrito'}" method="post">
+                                <div class="form-check-inline">
+                                    <div class="form-check-inline">
+                                        <label for="cantidad"><strong style="color:#000000;">Añadir: </strong></label>
+                                        <input name="idPlato" th:value="${plato.getIdplato()}" type="hidden">
+                                        <input name="idRest" th:value="${idRest}" type="hidden">
+                                        <input type="hidden" name="idPage" value="1">
+                                        <input size="2%" class="form-control ml-3 mr-sm-1 mb-3" type="text" name="cantidadPlato" id="cantidad"
+                                               style="border-color: lightgray">
+                                        <span>uni.</span>
+                                        <button class="btn btn-cerrito ml-3 mb-3" style="background-color: #701111; color: white" type="submit"><i
+                                                class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                 <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCant != null}" th:text="${msgValCant}"></div>
+                                </div>
+                                <br>
+                                <div class="form-check-inline mb-3">
+                                    <a class="btn btn-cielito mr-3" th:if="${session.carrito != null }" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPlato='+${plato.getIdplato()}+'&idPage=1'}"><i
+                                            class="fas fa-cart-plus mr-2"></i>Ir al carrito
+                                    </a>
+                                    <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos'}"><i
+                                            class="fas fa-arrow-left"></i> Ver platos</a>
+                                    <!--<a class="btn btn-pay mr-3" style="background-color: #64a94d; color: #FFFFFF" href="terminarCompra.html"><i
+                                            class="fas fa-arrow-right"></i> Ir a Pagar</a>-->
+
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div th:if="${session.carrito != null}">
+
+
+                <form method="get" th:action="@{'/cliente/detallePlato'}">
+                    <div class="form-group row">
+                        <div class="col-sm-3 mb-1 ">
+                            <input name="idPlato" th:value="${plato.getIdplato()}" type="hidden">
+                            <input id="texto" name="texto"  type="text" class="form-control bg-white small"
+                                   th:placeholder="${texto.equals('') ? 'Búsqueda por extra...' : texto}"
+                                   th:value="${texto.equals('') ? '' : texto}"
+                                   style="border-color: lightgray">
+                        </div>
+                        <div class="col-sm-2 mb-1 ">
+                            <select id="buscadorPrecios" name="idPrecio" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idPrecio.equals('6')}">Precio</option>
+                                <option value="1" th:selected="${idPrecio.equals('1')}">S./00.00 hasta S./5.00</option>
+                                <option value="2" th:selected="${idPrecio.equals('2')}">S./5.00 hasta S./10.00</option>
+                                <option value="3" th:selected="${idPrecio.equals('3')}">S./10.00 hasta S./15.00</option>
+                                <option value="4" th:selected="${idPrecio.equals('4')}">S./15.00 hasta S./20.00</option>
+                                <option value="5" th:selected="${idPrecio.equals('5')}">S./20.00 a más</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-1">
+                            <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value="" disabled th:selected="${idCategoria.equals('5')}">Categoría</option>
+                                <option value="1" th:selected="${idCategoria.equals('1')}">Bebidas</option>
+                                <option value="2" th:selected="${idCategoria.equals('2')}">Cubiertos</option>
+                                <option value="3" th:selected="${idCategoria.equals('3')}">Ensaladas</option>
+                                <option value="4" th:selected="${idCategoria.equals('4')}">Guarniciones</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group-append col-sm-1 mb-3 ml-0">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
+                            <a th:href="@{'/cliente/detallePlato?idPlato='+${plato.getIdplato()}}" class="btn btn-secondary">Quitar filtros</a>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- /.container-fluid -->
+                <div class="card shadow ">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+                        <div class="d-sm-flex align-items-center justify-content-between">
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">LISTA DE EXTRAS</h5>
+                        </div>
+                    </div>
+                    <div th:if="${msgAddExtra != null}" th:text="${msgAddExtra}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
+                    <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCantExt != null}" th:text="${msgValCantExt}"></div>
+                    <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValExt != null}" th:text="${msgValExt}"></div>
+                    <h3 th:if="${listaExtras.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h3>
+
+                    <div class="card-body" th:if="${listaExtras.size() != 0}">
+                        <div class="container-fluid">
+                            <div class="table-responsive">
+                                <table th:if="${listaExtras != null}" class="table table-bordered">
+                                    <thead>
+                                    <th class="text-center">Extras</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Precio</th>
+                                    <th class="text-center">Categoría</th>
+                                    <th class="text-center">Añadir</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="extra : ${listaExtras}">
+                                        <td class="text-center">
+                                            <div class="mb-2 mt-2">
+                                                <img th:src="@{'/cliente/imagenExtra?id='+${extra.getIdextra()}}" style="width: 100px; height: 100px">
+                                            </div>
+                                        </td>
+                                        <td class="text-center" th:text="${extra.getNombre()}"></td>
+                                        <td class="text-center" th:text="|S/. ${extra.getPreciounitario()}|"></td>
+                                        <td class="text-center" th:text="|${extra.getTipo().substring(0,1).toUpperCase()}${extra.getTipo().substring(1,extra.getTipo().length())}|"></td>
+                                        <td class="text-center ">
+                                            <div class="form-check-inline">
+                                                <form th:action="@{'/cliente/aniadirExtras'}" method="post">
+                                                    <div class="form-check-inline">
+                                                        <input name="idExtra" th:value="${extra.getIdextra()}" type="hidden">
+                                                        <input class="form-control ml-5 mr-2" name="cantidadExtra" type="text" size="2%" style="border-color: lightgray">uni.
+                                                        <button class="btn btn-cerrito ml-3" style="background-color: #701111" type="submit">
+                                                            <i class="fas fa-plus" style="color: #FFFFFF"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a th:unless="${texto == null && idPrecio == null && idCategoria == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/detallePlato?page='+${page}+'&texto='+${texto}+'&idPrecio='+${idPrecio}+'&idCategoria='+${idCategoria}+'&idPlato='+${plato.getIdplato()}}"></a> <!-- +'&idPlato='+${plato.getIdplato()} -->
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+            <!-- End of Page Content -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Geek Developers &copy; 2021-1</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-primary" type="submit">Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Bootstrap core JavaScript-->
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+
+
+</html>

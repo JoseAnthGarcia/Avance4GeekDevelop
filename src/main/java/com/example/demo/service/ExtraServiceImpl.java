@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExtraServiceImpl implements ExtraService{
 
-    int id=1;
 
     @Autowired
     private ExtraRepository extraRepository;
@@ -27,9 +26,9 @@ public class ExtraServiceImpl implements ExtraService{
     }
 
     @Override
-    public Page<Extra> findPaginated2(int pageNo, int pageSize, String nombre, double inputPMin, double inputPMax) {
+    public Page<Extra> findPaginated2(int pageNo, int pageSize,int idrestaurante, int idcategoria, String nombre, double inputPMin, double inputPMax) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.extraRepository.findByIdrestauranteAndIdcategoriaextraAndDisponibleAndNombreIsContainingAndPreciounitarioGreaterThanEqualAndPreciounitarioLessThanEqual(id,id, true, nombre, pageable, inputPMin, inputPMax);
+        return this.extraRepository.findByIdrestauranteAndIdcategoriaextraAndDisponibleAndNombreIsContainingAndPreciounitarioGreaterThanEqualAndPreciounitarioLessThanEqual(idrestaurante,idcategoria, true, nombre, pageable, inputPMin, inputPMax);
     }
 
 

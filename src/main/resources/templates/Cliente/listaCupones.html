@@ -1,102 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="../bootstrap/css/sb-admin-2.css" rel="stylesheet">
-    <link href="../Cliente/cssC/estilosCliente.css" rel="stylesheet" type="text/css">
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Lista de Cupones')"></head>
 
-    <!-- Custom styles for this page -->
-    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link href="cssC/estilosCliente.css" rel="stylesheet" type="text/css">
 
-    <title>Ver Cupones</title>
-</head>
 <body id="page-top">
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-utensils"></i>
-                <span>Nuevo Pedido</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaRestaurantes.html">Restaurantes</a>
-
-                    <a class="collapse-item" href="categorías.html">Categorías</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaPedidoActual.html">Pedido Actual</a>
-                    <a class="collapse-item" href="listaHistorialPedidos.html">Historial de Pedidos</a>
-                    <a class="collapse-item" href="listaReportes.html">Generar Reportes</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="editarPerfil.html">
-                <i class="fas fa-user-circle"></i>
-                <span>Editar Perfil</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " href="tarjetas.html">
-                <i class="fas fa-credit-card"></i>
-                <span>Tarjetas</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -133,7 +48,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -146,61 +62,60 @@
                     <!-- Nav Item - Alerts -->
 
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
-                            Los Eneldos 204
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
                             <i class="fas fa-map-marker-alt"></i>
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
+                    <!-- Nav Item - Alerts campanita Notificaciones -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
+                            <i class="fas fa-bell fa-fw"
+                               data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                             aria-labelledby="alertsDropdown" id="notifi">
+                            <h6 style="background-color: #701111; border: 1px solid #701111; padding-top: .75rem; padding-bottom: .75rem; color: #fff;
+                             display: block; padding: .5rem 1.5rem; margin-bottom: 0; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                Nuevos Pedidos
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}" class="mt-3 ml-4"> No
+                                tiene pedidos
+                                pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                               class="dropdown-item d-flex align-items-center"
+                               th:each="p,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigo='+${p.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle" style="background-color: #701111; border: 1px solid #701111; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500"
+                                         th:text="${'Pendiente - S/.'+p.getPrecioTotal()}">Los Olivos - 12:45 pm
+                                    </div>
+                                    <span class="font-weight-bold"
+                                          th:text="${p.getNombre()}"></span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="listaPedidoActual.html">Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500"
+                               th:href="@{/cliente/pedidoActual}">Ver todos los pedidos</a>
                         </div>
                     </li>
 
@@ -213,15 +128,17 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;">
-                                Joham Romucho
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
                                 <div class="mr-3">
                                     <i class="fas fa-mobile"></i>
                                 </div>
                                 <div class="font-weight">
-                                    <div class="text-truncate">999999999</div>
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
                                     <div class="small text-gray-500">Teléfono</div>
                                 </div>
                             </a>
@@ -234,13 +151,15 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfil.html">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
@@ -258,39 +177,43 @@
             </nav>
             <!-- End of Topbar -->
 
+            <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form>
+                <form method="get" th:action="@{'/cliente/listaCupones'}">
 
                     <div class="form-group row mt-3">
                         <div class="col-sm-3 mb-1 ">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Búsqueda por Restaurante...">
-                                <div class="input-group-append">
-                                    <button class="btn" style="background-color:#701111; color:white;" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
+                                <input type="busquedaNumeroPedidos" class="form-control small"
+                                       name="texto"
+                                       th:value="${texto.equals('')?'':texto}"
+                                       th:placeholder="${texto.equals('')?'Búsqueda por restaurante...':texto}" >
                             </div>
                         </div>
+
                         <div class="col-sm-3 mb-1">
-                            <select class="form-control">
-                                <option value="" selected>Descuento</option>
-                                <option value="">0% hasta 25%</option>
-                                <option value="">25% hasta 50%</option>
-                                <option value="">50% hasta 75%</option>
-                                <option value="">75% hasta 100%</option>
+                            <select class="form-control" name="descuento">
+                                <option value="7" th:selected="${descuento.equals('7')}">Descuento</option>
+                                <option value="1" th:selected="${descuento.equals('1')}">S./0.00 hasta S./10.00</option>
+                                <option value="2" th:selected="${descuento.equals('2')}">S/10.00 hasta S/20.00</option>
+                                <option value="3" th:selected="${descuento.equals('3')}">S/20.00 hasta S/30.00</option>
+                                <option value="4" th:selected="${descuento.equals('4')}">S/30.00 hasta S/40.00</option>
                             </select>
                         </div>
 
-                        <div class="col-sm-2 mb-1" style="margin-right: 10px" >
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                        <div class="input-group-append col-sm-1 mb-2 ">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111"
+                                    type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
-                            <a class="btn btn-secondary " >Quitar filtros</a>
+                        </div>
+                        <div class="col-sm-2" style="margin-right: 10px">
+                            <a class="btn btn-secondary" th:href="@{'/cliente/listaCupones'}">Quitar filtros</a>
                         </div>
                     </div>
+                </form>
                 </form>
 
 
@@ -298,224 +221,99 @@
                     <div class="card-header py-3" style="background-color: #701111;">
                         <h5 class="font-weight-bold text-white text-center mb-0">CUPONES DISPONIBLES</h5>
                     </div>
-                    <!--- TODO MENSAJE DE ALERTA AL NO ENCONTRAR NADA
-                    <div class="alert alert-danger ml-2 mr-2 mt-2" role="alert">
-                        No se encontraron resultados en la búsqueda
-                    </div> -->
+                    <h1 th:if="${total==0}"  th:text="| |"></h1>
+                    <div  class="text-center" >
+                      <h3 style="color: red;" th:if="${total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
+                    </div>
 
-                    <div class="container mt-4 mb-4">
-                        <div class="row mb-5 mr-xl-5">
+                    <div class="card-body" th:if="${total> 0}">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="10"> N° </th>
+                                    <th width="50" height="60">
+                                        <div style=text-align:center> Cupón</div>
+                                    </th>
+                                    <th >
+                                        <div style=text-align:center>
+                                            Descripción
+                                        </div>
+                                    </th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr  th:each=" cupon,info :${listaCuponesenviar}">
+                                        <td th:text="${(current -1)*5 + info.index +1}"></td>
+                <!--------------------------------------------------------------------------------------------------------------------->
+                            <td>
                             <div class="col-6">
                                 <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #1</h1>
+                                    <img src="https://kinsta.com/es/wp-content/uploads/sites/8/2018/05/kinsta-cupon-1.png" alt="Avatar"
+                                         class="image2 shadow" style="height: 200px; width: 300px">
+                                    <a class="overlay2" href="#" style="height: 200px; width: 300px">
+                                        <h1 class="text2 font-weight-bolder text-left" th:text="${cupon.getNombrecupon()}"></h1>
                                     </a>
                                 </div>
 
                             </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
+                            </td>
+                <!---------------------------------------------------------------------------------------------------------------------------------->
+                            <td>
+                            <div style=text-align:center>
 
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
+                                <div style=text-align:center>
+                                    <h5 class="mb-2" style="color:#701111;" th:text="${cupon.getNombrerestaurante()}"></h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Descuento : - S/. ${cupon.getDescuento()}|"></h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Caducidad: ${cupon.getFechafin()}|"></h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 type="text" th:text="|Política : ${cupon.getPolitica()}|"></h5>
+                                        </div>
                                     </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #2</h1>
-                                    </a>
                                 </div>
 
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
 
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #3</h1>
-                                    </a>
-                                </div>
 
                             </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
+                            </td>
 
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
+                            <!---------------------------------------------------------------------------------------------------------------------------------->
+                        </tr>
+                                </tbody>
 
-                                </form>
+                        </table>
+                    </div>
+
+
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a th:unless="${texto == null && descuento == null}" class="page-link active text-white"  style="background-color: #701111"
+                                               th:text="${page}"
+                                               th:href="@{'/cliente/cuponespage?page='+${page}}"></a>
+                                        </li>
+                                    </ul>
+                                </nav>
                             </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #4</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #5</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row mb-5 mr-xl-5">
-                            <div class="col-6">
-                                <div class="container2">
-                                    <img src="img/cupon1.jpg" alt="Avatar"
-                                         class="image2 shadow" style="height: 250px; width: 400px">
-                                    <a class="overlay2" href="#" style="height: 250px; width: 400px">
-                                        <h1 class="text2 font-weight-bolder text-left">CUPON #6</h1>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="col-6 text-left">
-                                <form>
-                                    <h6>Restaurante: </h6>
-                                    <input class="form-control" type="text" style="background: #ededed" value="La Rosa Nautica" disabled>
-
-                                    <div class="form-check-inline">
-                                        <label>
-                                            Descuento:
-                                            <input class="form-control mr-4" type="text" style="background: #ededed" value="-50%" disabled>
-                                        </label>
-                                        <label>
-                                            Caducidad:
-                                            <input class="form-control" type="text" style="background: #ededed" value="05/21" disabled>
-                                        </label>
-                                    </div>
-                                    <h6>Política: </h6>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              style="background: #ededed" disabled>Por su primera compra obten un 10% de descuento en la Rosa Nautica :o</textarea>
-
-                                </form>
-                            </div>
-                        </div>
-
-
-                        <div class="pagination" style=" margin-left: 30% ;align-content: center">
-                            <a href="#">&laquo;</a>
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
+                            <div class="col-md-2"></div>
                         </div>
 
                     </div>
+
+
+
 
                 </div>
 
@@ -542,6 +340,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Logout Modal-->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -552,21 +356,22 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111" href="/html/login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
 
 
+
+</body>
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -576,7 +381,5 @@
 
 <!-- Custom scripts for all pages-->
 <script src="../bootstrap/js/sb-admin-2.min.js"></script>
-
-</body>
 
 </html>

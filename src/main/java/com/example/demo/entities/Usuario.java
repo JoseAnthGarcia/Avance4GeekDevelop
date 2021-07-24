@@ -13,8 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="usuario")
 public class Usuario implements Serializable {
-    //tu misma eres mela :3
-    //nel mano
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario;
@@ -26,12 +25,13 @@ public class Usuario implements Serializable {
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @NotNull
+    @Pattern(regexp = "[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String nombres;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Pattern(regexp = "[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}",message = "Solo puede ingresar letras")
     private String apellidos;
 
     @Column(nullable = false)
@@ -56,10 +56,30 @@ public class Usuario implements Serializable {
 
 
     private byte[] foto;
+    private String fotonombre;
+    private String fotocontenttype;
+
+    public void setFotonombre(String fotonombre) {
+        this.fotonombre = fotonombre;
+    }
+
+    public String getFotocontenttype() {
+        return fotocontenttype;
+    }
+
+    public void setFotocontenttype(String fotocontenttype) {
+        this.fotocontenttype = fotocontenttype;
+    }
 
     private String fechaadmitido;
 
     private String ultimoingreso;
+
+    //@NotBlank(message = "ingrese su dirección")
+    //TODO: (melanie) una mejor validacion pls
+    //@Pattern(regexp = "[a-zA-Z ]{2,254}",message = "Solo puede ingresar letras")
+    @Column(name = "direccionactual")
+    private String direccionactual;
 
     @ManyToOne
     @JoinColumn(name = "idrol", nullable = false)
@@ -68,18 +88,15 @@ public class Usuario implements Serializable {
     //---credenciales-----
     @Column(nullable = false)
     @NotBlank(message = "Complete sus datos")
-    @Pattern(regexp = "[^@]+@[^\\.]+\\..+",message = "Debe tener el formato nombre@correo.com")
+    @Pattern(regexp = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",message = "Debe tener el formato nombre@correo.com")
     private String correo;
 
     @Column(nullable = false)
     @NotBlank(message = "Complete su contraseña")
+    @Size(min = 8, message = "Mínimo 8 caracteres")
     //@Pattern(regexp = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$",message = "Ingrese una contraseña válida.")
-
     private String contrasenia;
     //---------------------
-
-    @ManyToMany(mappedBy = "usuariosDistrito")
-    private List<Distrito> distritos;
 
     @OneToOne
     @JoinColumn(name = "idmovilidad")
@@ -88,12 +105,21 @@ public class Usuario implements Serializable {
     @OneToOne(mappedBy = "administrador")
     private Restaurante restaurante;
 
-    /*@OneToOne
-    @JoinColumn(name = "credencial", nullable = false)
-    private Credenciales credencial;*/
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> listaPedidosPorUsuario;
 
-    //private String addresselegido;
+    @OneToMany(mappedBy = "repartidor")
+    private List<Pedido> listaPedidosPorRepartidor;
 
+
+
+    public String getDireccionactual() {
+        return direccionactual;
+    }
+
+    public void setDireccionactual(String direccionactual) {
+        this.direccionactual = direccionactual;
+    }
 
     public Restaurante getRestaurante() {
         return restaurante;
@@ -102,12 +128,6 @@ public class Usuario implements Serializable {
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
-
-    @OneToMany(mappedBy = "cliente")
-    private List<Pedido> listaPedidosPorUsuario;
-
-    @OneToMany(mappedBy = "repartidor")
-    private List<Pedido> listaPedidosPorRepartidor;
 
 
     public List<Pedido> getListaPedidosPorUsuario() { return listaPedidosPorUsuario; }
@@ -122,18 +142,6 @@ public class Usuario implements Serializable {
         this.listaPedidosPorRepartidor = listaPedidosPorRepartidor;
     }
 
-    /*public String getAddresselegido() {
-        return addresselegido;
-    }
-
-    public void setAddresselegido(String addresselegido) {
-        this.addresselegido = addresselegido;
-    }*/
-    /*
-    public Credenciales getCredencial() { return credencial; }
-
-    public void setCredencial(Credenciales credenciales) { this.credencial = credenciales; }*/
-
     public Integer getIdusuario() {
         return idusuario;
     }
@@ -141,7 +149,6 @@ public class Usuario implements Serializable {
     public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
-
 
     public int getEstado() {
         return estado;
@@ -263,11 +270,9 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
-    public List<Distrito> getDistritos() {
-        return distritos;
+    public String getFotonombre() {
+        return fotonombre;
     }
 
-    public void setDistritos(List<Distrito> distritos) {
-        this.distritos = distritos;
-    }
+
 }

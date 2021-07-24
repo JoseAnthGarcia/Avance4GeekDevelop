@@ -45,7 +45,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="categorias.html">
+            <a class="nav-link" th:href="@{/plato}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>Categorias</span></a>
         </li>
@@ -98,7 +98,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <nav  class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                 <!-- Sidebar Toggle (Topbar) -->
                 <form class="form-inline">
@@ -108,8 +108,6 @@
                 </form>
 
                 <!-- Topbar Search -->
-                
-
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
 
@@ -121,54 +119,35 @@
                         </a>
                     </li>
 
-                    <!-- Nav Item - Alerts -->
+                    <!-- Nav Item - Alerts campanita Notificaciones -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter" th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" th:text="${listaNotiRest.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
                              aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
+                            <h6 class="notificacion">
                                 Nuevos Pedidos
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}"> No tiene pedidos pendientes</p>
+                            <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}" class="dropdown-item d-flex align-items-center"
+                               th:each="p,in:${listaNotiRest}" th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                 <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
+                                    <div class="icon-circle notificacion">
                                         <i class="fas fa-file-alt text-white"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
+                                    <div class="small text-gray-500" th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm</div>
+                                    <span class="font-weight-bold" th:text="${p.getCliente()}">Arroz con pollo</span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                    <span class="font-weight-bold">Arroz con pollo</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los pedidos</a>
+                            <a class="dropdown-item text-center small text-gray-500" th:href="@{/restaurante/listaPedidos}">Ver todos los
+                                pedidos</a>
                         </div>
                     </li>
 
@@ -178,21 +157,24 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                              th:text="|${session.usuario.nombres} ${session.usuario.apellidos}|"></span>
+                            <img class="img-profile rounded-circle" th:src="@{/img/perfildefecto.png}"
+                                 type="image/png" alt="avatar">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Salir
-                            </a>
+                            <form id="cerrar" th:action="@{/logout}" method="post">
+                                <a class="nav-link" data-toggle="modal"
+                                   href="#logoutModal" data-target="#logoutModal"><i
+                                        class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar Sesión
+                                </a>
+                            </form>
                         </div>
                     </li>
 
                 </ul>
-
             </nav>
             <!-- End of Topbar -->
 

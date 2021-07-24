@@ -1,30 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>REPORTES</title>
-
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-
-    </head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Reportes')"></head>
 
     <body id="page-top">
 
@@ -32,67 +9,7 @@
         <div id="wrapper">
 
             <!-- Sidebar -->
-            <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;"
-                id="accordionSidebar">
-
-                <!-- Sidebar - Brand -->
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15">
-                        <i class="fas fa-shopping-basket"></i>
-                    </div>
-                    <div class="sidebar-brand-text mx-3">Food Delivery</div>
-                </a>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
-
-                <!-- Nav Item - Dashboard -->
-                <li class="nav-item">
-                    <a class="nav-link" href="categorias.html">
-                        <i class="fas fa-fw fa-list"></i>
-                        <span>Categorias</span></a>
-                </li>
-
-
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="listaPedidos.html" >
-                        <i class="fas fas fa-book-open"></i>
-                        <span>Pedidos</span>
-                    </a>
-                </li>
-
-                <!-- Nav Item - Utilities Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="extras.html">
-                        <i class="fas fas fa-utensils"></i>
-                        <span>Extras</span>
-                    </a>
-                </li>
-
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link " href="eleccionReporte.html">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Reportes</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="listaCupones.html">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>Cupones</span>
-                    </a>
-                </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider d-none d-md-block">
-
-                <!-- Sidebar Toggler (Sidebar) -->
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-                </div>
-
-            </ul>
+            <ul th:replace="AdminRestaurante/fragments/adminRestFragment.html :: sidebar"></ul>
             <!-- End of Sidebar -->
 
             <!-- Content Wrapper -->
@@ -102,7 +19,7 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <nav  class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                         <!-- Sidebar Toggle (Topbar) -->
                         <form class="form-inline">
@@ -111,67 +28,138 @@
                             </button>
                         </form>
 
-                         
-
+                        <!-- Topbar Search -->
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle"  data-toggle="modal"
+                                   href="#Credencial" data-target="#Credencial"
+                                   aria-haspopup="true" aria-expanded="false" >
+                                    <i class="fas fa-info-circle fa-fw"
+                                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Credenciales"></i>
                                 </a>
+                                <div class="modal fade" id="Credencial" tabindex="-1" role="dialog" aria-labelledby="exampleCredencial"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <!-- bg-gradient-light static-top shadow-->
+                                            <div class="modal-header bg-primary mb-4 static-top shadow text-light text-justify" >
+                                                <h3 class="modal-title " id="exampleCredencial" ><strong th:text="${credencial1.get(0).getNombre()+' - '+credencial1.get(0).getRuc()}"></strong></h3>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                                                    <span aria-hidden="true" style="color: #ffffff">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getTelefono()}"></strong></h5>
+                                                <h5><strong th:text="${'Dirección:  '+credencial1.get(0).getDireccion()}"></strong></h5>
+
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Totales:  '+pedidosCredenciales.get(0).getTotal()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}" th:text="${'Pedidos Aceptados:  '+pedidosCredenciales.get(0).getEntrega()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Pedidos Cancelados:  '+pedidosCredenciales.get(0).getCancela()}"></strong></h5>
+                                                <h5><strong th:if="${pedidosCredenciales.get(0).getTotal()!=0}"  th:text="${'Otros Pedidos:  '+(pedidosCredenciales.get(0).getTotal()-pedidosCredenciales.get(0).getEntrega()-pedidosCredenciales.get(0).getCancela())}"></strong></h5>
+
+                                                <h3 style="color: black"><strong>Administrador</strong></h3>
+                                                <h5 style="text-transform: capitalize;"><strong  th:text="${'Nombre:  '+credencial1.get(0).getNombres()+' '+credencial1.get(0).getApellidos() }"></strong></h5>
+                                                <h5><strong th:text="${'Correo:  '+credencial1.get(0).getCorreo()}"></strong></h5>
+                                                <h5><strong th:text="${'Celular:  '+credencial1.get(0).getCelular}"></strong></h5>
+                                                <h5><strong th:text="${'DNI:  '+credencial1.get(0).getDni}"></strong></h5>
+
+                                                <h5 th:if="${!platoMasVendido.isEmpty()}" style="color: black"> <strong>Platos:</strong></h5>
+                                                <div th:if="${!platoMasVendido.isEmpty()}" class="container ml-5 mt-1">
+                                                    <div  class="row">
+                                                        <div class="col-6">
+                                                            <div class="card">
+                                                                <div class="card-block">
+                                                                    <label class="card-title" th:text="${'Más vendido('+platoMasVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                        <img th:src="@{|/plato/imagen/${platoMasVendido.get(0).getIdplato()}|}"
+                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                        <a class="overlay2" style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                                <div style="text-transform: uppercase;height: 150px;width:150px"
+                                                                                     class="text2 font-weight-bolder mt-lg-5"
+                                                                                     th:text="${platoMasVendido.get(0).getNombre()}"></div>
+                                                                            </h1>
+                                                                        </a>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="card">
+                                                                <div class="card-block">
+                                                                    <label class="card-title" th:text="${'Menos vendido('+platoMenosVendido.get(0).getCantidad()+')'}"></label>
+                                                                    <div class="container2 shadow text-center" style="height: 150px;width:150px">
+                                                                        <img th:src="@{|/plato/imagen/${platoMenosVendido.get(0).getIdplato()}|}"
+                                                                             alt="Avatar" class="image2 shadow" style="height: 150px;width:150px">
+                                                                        <a class="overlay2" style="height: 150px;width:150px">
+                                                                            <h1 class="text-justify" style="font-weight: bolder">
+                                                                                <div style="text-transform: uppercase; height: 150px;width:150px"
+                                                                                     class="text2 font-weight-bolder mt-lg-5"
+                                                                                     th:text="${platoMenosVendido.get(0).getNombre()}"></div>
+                                                                            </h1>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
 
-                            <!-- Nav Item - Alerts -->
+                            <!-- End information -->
+                            <!-- Nav Item - Alerts campanita Notificaciones -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
+                                    <i class="fas fa-bell fa-fw"
+                                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
                                     <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">3+</span>
+                                    <span class="badge badge-danger badge-counter"
+                                          th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                          th:text="${listaNotiRest.size()}"></span>
                                 </a>
                                 <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                                     aria-labelledby="alertsDropdown">
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="alertsDropdown" id="notifi">
                                     <h6 class="notificacion">
                                         Nuevos Pedidos
                                     </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <p th:if="${listaNotiRest.size()==0||listaNotiRest.isEmpty()}" class="mt-3 ml-4"> No
+                                        tiene pedidos
+                                        pendientes</p>
+                                    <a th:if="${listaNotiRest.size()>0||!listaNotiRest.isEmpty()}"
+                                       class="dropdown-item d-flex align-items-center"
+                                       th:each="p,in:${listaNotiRest}"
+                                       th:href="@{'/restaurante/detallePedido?v=0&codigoPedido='+${p.codigo}}">
                                         <div class="mr-3">
                                             <div class="icon-circle notificacion">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle notificacion">
-                                                <i class="fas fa-file-alt text-white"></i>
+                                            <div class="small text-gray-500"
+                                                 th:text="${p.getLugar()+' - '+p.getHora()}">Los Olivos - 12:45 pm
                                             </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
+                                            <span class="font-weight-bold"
+                                                  th:text="${p.getCliente()}">Arroz con pollo</span>
                                         </div>
                                     </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle notificacion">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">Los Olivos - 12:45 pm</div>
-                                            <span class="font-weight-bold">Arroz con pollo</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Ver todos los
+                                    <a class="dropdown-item text-center small text-gray-500"
+                                       th:href="@{/restaurante/listaPedidos}">Ver todos los
                                         pedidos</a>
                                 </div>
                             </li>
@@ -179,25 +167,9 @@
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                                    <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
-
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesión
-                                    </a>
-                                </div>
-                            </li>
+                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
 
                         </ul>
-
                     </nav>
                     <!-- End of Topbar -->
 
@@ -221,7 +193,7 @@
                                                             <div class="container-fluid">
                                                                 <h4><b>REPORTES DE PLATOS</b></h4><br>
                                                                 <div class="justify-content-center">
-                                                                    <img src="imagenesAR/peru.jpg" width="70%"
+                                                                    <img src="../../static/imagenesAR/peru.jpg" width="70%"
                                                                          class="mb-4 ml-5" alt=""><br>
                                                                     <a class="btn btn-success col-10 ml-4">Revisar</a>
 
@@ -242,7 +214,7 @@
                                                             <div class="container-fluid">
                                                                 <h4><b>REPORTES DE VENTAS</b></h4><br>
                                                                 <div class="justify-content-center">
-                                                                    <img src="imagenesAR/peru.jpg" width="70%"
+                                                                    <img src="../../static/imagenesAR/peru.jpg" width="70%"
                                                                          class="mb-4 ml-5" alt=""><br>
                                                                     <a class="btn btn-success col-10 ml-4">Revisar</a>
                                                                 </div>
@@ -261,7 +233,7 @@
                                                             <div class="container-fluid">
                                                                 <h4><b>REPORTES DE VALORACIÓN</b></h4><br>
                                                                 <div class="justify-content-center">
-                                                                    <img src="imagenesAR/peru.jpg" width="70%"
+                                                                    <img src="../../static/imagenesAR/peru.jpg" width="70%"
                                                                          class="mb-4 ml-5" alt=""><br>
                                                                     <a class="btn btn-success col-10 ml-4">Revisar</a>
                                                                 </div>
@@ -317,31 +289,18 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="loginAR.html">Cerrar Sesión</a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
-
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
 
     </body>
 

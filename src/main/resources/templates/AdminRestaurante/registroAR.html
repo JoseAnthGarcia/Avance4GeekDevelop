@@ -1,68 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>REGISTRO ADMINISTRADOR</title>
-
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-    </head>
-
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Registro de administrador de restaurante')"></head>
     <body id="page-top">
 
         <!-- Page Wrapper -->
         <div id="wrapper">
 
 
-
             <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column" >
+            <div id="content-wrapper" class="d-flex flex-column">
 
                 <!-- Main Content -->
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;" >
-                        <a class="navbar-brand d-flex align-items-center justify-content-center" href="#" >
+                    <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;">
+                        <div class="navbar-brand d-flex align-items-center justify-content-center">
                             <div class="navbar-brand rotate-n-15">
                                 <i class="fas fa-shopping-basket" style="color: white"></i>
                             </div>
                             <div class="navbar-brand-text mx-3" style="color: white">
-                                Food Delivery</div>
-                        </a>
+                                Food Delivery
+                            </div>
+                        </div>
                         <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
-
-
 
                         <!-- Topbar Navbar -->
-
-
                         <div class="topbar-divider d-none d-sm-block"></div>
-
-
-                        </ul>
 
                     </nav>
                     <!-- End of Topbar -->
@@ -70,13 +35,16 @@
                     <!-- Begin Page Content -->
                     <div class="container">
 
-                        <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal" style="position: relative; right:12%">
+                        <a class="user" data-toggle="modal" data-target="#volverModal" href="#"
+                           style="position: relative; right:12%; color: rgba(12,10,12,0.7)">
                             <i class="fas fa-chevron-circle-left"></i>
                             Volver
                         </a>
                         <h1 style="color: black">REGÍSTRESE</h1>
-                        <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de administrador.</p>
-                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}" th:object="${adminRest}">
+                        <p>Complete el siguiente formulario para que el administrador general acepte o rechace su
+                            solicitud de administrador.</p>
+                        <form id="nuevo" method="post" th:action="@{/guardarAdminR}"
+                              th:object="${adminRest}" enctype="multipart/form-data">
 
                             <div class="form-group row">
                                 <input th:field="*{idusuario}" type="hidden"/>
@@ -85,14 +53,21 @@
                                     <input type="text" class="form-control"
                                            th:field="*{nombres}"
                                            placeholder="Nombres">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombres')}"
                                          th:errors="*{nombres}"></div>
+                                    <div style="color: red; font-size: small; text-align: left"
+                                         th:if="${msg11 != null}"
+                                         th:text="${msg11}"></div>
                                 </div>
 
                                 <div class="col-sm-6 mb-0">
-                                    <input th:field="*{apellidos}" type="text" class="form-control" placeholder="Apellidos"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                                    <input th:field="*{apellidos}" type="text" class="form-control"
+                                           placeholder="Apellidos"/>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('apellidos')}"
                                          th:errors="*{apellidos}"></div>
+                                    <div style="color: red; font-size: small; text-align: left"
+                                         th:if="${msg12 != null}"
+                                         th:text="${msg12}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -100,78 +75,101 @@
                                     <input class="form-control"
                                            id="exampleCorreo"
                                            placeholder="Correo electrónico" th:field="*{correo}">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}"
                                          th:errors="*{correo}"></div>
                                 </div>
                                 <div class="col-sm-6 mb-0">
                                     <input th:field="*{fechanacimiento}" type="text" class="form-control"
                                            placeholder="Fecha de nacimiento"
                                            onfocus="(this.type='date')" onblur="(this.type='text')"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechanacimiento')}"
                                          th:errors="*{fechanacimiento}"></div>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${msg7!=null}" th:text="${msg7}"
+                                        ></div>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-0 mb-sm-0">
                                     <select class="form-control" th:field="*{sexo}">
-                                        <option value=""  selected>Sexo</option>
+                                        <option value="" selected>Sexo</option>
                                         <option th:value="Femenino">Femenino</option>
                                         <option th:value="Masculino">Masculino</option>
                                     </select>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('sexo')}"
+                                         th:errors="*{sexo}"></div>
                                 </div>
                                 <div class="col-sm-6  mb-0 mb-sm-0">
-                                    <input th:field="*{telefono}" type="text" class="form-control" placeholder="Teléfono"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                                    <input th:field="*{telefono}" type="text" class="form-control"
+                                           placeholder="Teléfono"/>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}"
                                          th:errors="*{telefono}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-0 mt-1 mb-sm-0">
+
                                     <input th:field="*{dni}" type="text" class="form-control" placeholder="DNI"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('dni')}"
                                          th:errors="*{dni}"></div>
+                                    <div style="color: red; font-size: small; text-align: left"
+                                         th:if="${msg8 != null}"
+                                         th:text="${msg8}"></div>
+                                    <div style="color: red; font-size: small; text-align: left"
+                                         th:if="${msg9 != null}"
+                                         th:text="${msg9}"></div>
+                                    <div style="color: red; font-size: small; text-align: left"
+                                         th:if="${msg10 != null}"
+                                         th:text="${msg10}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
-
-
                                 <div class="col-sm-6 mb-2 mb-sm-0">
 
                                     <h4 style="color: black">Contraseña</h4>
                                     <p>La contraseña debe contar con al menos 8 caracteres.</p>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
-                                            <input  type="password" class="form-control" th:field="*{contrasenia}"
-                                                   placeholder="Contraseña" >
-                                            <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
+                                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}"
+                                                 th:errors="*{contrasenia}"></div>
+                                            <input type="password" class="form-control" th:field="*{contrasenia}"
+                                                   placeholder="Contraseña">
+
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-2 mb-sm-0">
-                                            <input id="confcontra" name="confcontra" type="password" class="form-control" placeholder="Confirmar contraseña" >
+                                            <input id="confcontra" name="confcontra" type="password"
+                                                   class="form-control" placeholder="Confirmar contraseña">
+                                            <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left"></div>
                                         </div>
                                     </div>
                                     <div id="msg"></div>
 
 
-
-
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <h4 style="color: black">Foto de perfil</h4>
-                                    <p>Adjunte una foto de perfil para su cuenta.</p>
+                                    <p>Adjunte una foto de perfil para su cuenta. Esta debe ser una fotografía en la que
+                                        se visualice claramente su rostro. Este campo es obligatorio.</p>
+
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                        <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
+                                        <input type="file" name="photo"
+                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input"
+                                               id="customFile">
+                                        <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                        <div th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                             style="color: red; font-size: small; text-align: left"></div>
                                     </div>
+
 
                                 </div>
 
                             </div>
 
                             <hr>
-                            <a href="#" class="btn btn-primary btn-user btn-block mb-5 "  data-toggle="modal" data-target="#registrarModal">
+                            <a href="#registrarModal" class="btn btn-primary btn-user btn-block mb-5 "
+                               data-toggle="modal" data-target="#registrarModal">
                                 Registrar
                             </a>
                         </form>
@@ -215,10 +213,11 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.</div>
+                    <div class="modal-body">Al seleccionar el botón volver, no se guardará la información registrada.
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="../login.html">Volver</a>
+                        <a class="btn btn-primary" th:href="@{/login}">Volver</a>
                     </div>
                 </div>
             </div>
@@ -234,7 +233,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la  revisión por parte del administrador.</div>
+                    <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por
+                        parte del administrador.
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                         <button type="submit" form="nuevo" class="btn btn-primary">Enviar</button>
@@ -243,23 +244,18 @@
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
 
     </body>
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 
 </html>

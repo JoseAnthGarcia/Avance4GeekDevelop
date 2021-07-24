@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Lista  Reportes')"></head>
+
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="AdminGen/fragments/generalAdmin.html :: topbar" ></ul>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Begin of Topbar -->
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
+
+            <!-- End of Topbar -->
+
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid ">
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4" >
+                    <div class="card-header py-3" style="background-color: #701111;">
+                        <h5 class="font-weight-bold text-white text-center mb-0">REPORTES</h5>
+                    </div>
+                    <div class="row mb-2" style="padding-left:20em;">
+                        <div class="padre">
+                            <div class="hijo">
+                                <div class="container2">
+                                    <img src="https://conceptodefinicion.de/wp-content/uploads/2020/04/Cliente.jpg"
+                                         alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                    <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/admin/usuariosR}">
+                                        <h1 class="text2 font-weight-bolder">Usuarios</h1>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="hijo">
+                                <div class="container2">
+                                    <img
+                                            src="https://www.labiznagadigital.es/wp-content/uploads/2019/12/aumentar-ventas-online-1024x683-1.jpg"
+                                            alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                    <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/admin/reporteClientesPedido}">
+                                        <H1 class="text2 font-weight-bolder">Pedidos por cliente</H1>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2" style="padding-left:20em;">
+                        <div class="padre">
+                            <div class="hijo">
+                                <div class="container2">
+                                    <img
+                                            src="https://as01.epimg.net/peru/imagenes/2020/04/25/tikitakas/1587832638_989852_1587832767_noticia_normal_recorte1.jpg"
+                                         alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                    <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/admin/reporteRepartidorPedido}">
+                                        <h1 class="text2 font-weight-bolder">Pedidos por repartidor</h1>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="hijo">
+                                <div class="container2">
+                                    <img
+                                            src="https://previews.123rf.com/images/ginasanders/ginasanders1412/ginasanders141200345/34582942-billetes-en-euros-son-adyacentes-foto-simb%C3%B3lica-de-ganancias-ventas-y-dinero.jpg"
+                                            alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                    <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/admin/ReporteVentas}">
+                                        <H1 class="text2 font-weight-bolder">Ventas</H1>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="padding-left:20em;">
+                        <div class="padre">
+                            <div class="hijo">
+                                <div class="container2">
+                                    <img
+                                            src="https://www.zaplo.es/blog/wp-content/uploads/2019/01/ahorro.jpeg"
+                                            alt="Avatar" class="image2 shadow" style="height: 200px; width: 200px">
+                                    <a class="overlay2" style="height: 200px; width: 200px" th:href="@{/admin/ReporteIngresos}">
+                                        <H1 class="text2 font-weight-bolder">Ingresos</H1>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+        <style>
+            .padre {
+                /* IMPORTANTE */
+                text-align: center;
+            }
+
+            .hijo {
+                padding: 10px;
+                margin: 10px;
+
+                /* IMPORTANTE */
+                display: inline-block;
+            }
+        </style>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleccionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
+
+
+</html>

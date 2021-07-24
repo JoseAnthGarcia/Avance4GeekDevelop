@@ -1,15 +1,15 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.ExtraDTO;
-import com.example.demo.entities.Cupon;
-import com.example.demo.entities.Extra;
-import com.example.demo.entities.Plato;
-import com.example.demo.repositories.ExtraRepository;
+import com.example.demo.dtos.*;
+import com.example.demo.entities.*;
+import com.example.demo.repositories.*;
 import com.example.demo.service.ExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,277 +18,365 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/extra")
 public class ExtraController {
-    int idrestaurante = 1;
-    int idcategoriaextra = 1;
-    //ELIMINAR ESTO
+
     @Autowired
     ExtraRepository extraRepository;
-
+    @Autowired
+    UsuarioRepository usuarioRepository;
     @Autowired
     ExtraService extraService;
+    @Autowired
+    RestauranteRepository restauranteRepository;
+    @Autowired
+    CategoriaExtraRepository categoriaExtraRepository;
+    @Autowired
+    PedidoRepository pedidoRepository;
 
 
-    @GetMapping(value = {"/lista", ""})
-    public String listarExtra(Model model) {
-        //model.addAttribute("listaExtras", extraRepository.listarExtra(idrestaurante));
-        return findPaginated("", 0, 1, model);
-        /*
-        int precios = 0;
-        System.out.println(nombre);
-        try {
-            precios = Integer.parseInt(rango);
-        } catch (NumberFormatException e) {
-            System.out.println("Falló el rango de precios\n");
-        } catch (NullPointerException e) {
-            System.out.println("Mandaron null\n");
-        }
-        double precio1;
-        double precio2;
-        if (nombre != null & precios == 0) {
-            model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
-        } else if (nombre == null & precios != 0) {
-            switch (precios) {
-                case 1:
-                    precio1 = 0.0;
-                    precio2 = 15.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 2:
-                    precio1 = 15.0;
-                    precio2 = 35.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 3:
-                    precio1 = 35.0;
-                    precio2 = 60.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecio(precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 4:
-                    precio1 = 60.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPorPrecioAMAS(precio1, idrestaurante, categoria));
-                    break;
-                default:
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
-                    break;
+    @GetMapping(value = {"/categoria", ""})
+    public String listaCategorias(Model model, @RequestParam(value = "idcategoria", required = false) Integer id, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        return "AdminRestaurante/extras";
+    }
+
+    @GetMapping("/lista")
+    public String listarExtra(Model model, @RequestParam(value = "idcategoria", required = false) String id, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        int idcategoria;
+        if (id == null) {
+            return "redirect:/extra/categoria";
+        } else {
+            try {
+                idcategoria=Integer.parseInt(id);
+                return findPaginated("", "0", "1", id, model, session);
+            }catch(NumberFormatException e){
+                return "redirect:/extra/categoria";
             }
-        } else if (nombre != null & precios != 0) {
-            switch (precios) {
-                case 1:
-                    precio1 = 0.0;
-                    precio2 = 15.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 2:
-                    precio1 = 15.0;
-                    precio2 = 35.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 3:
-                    precio1 = 35.0;
-                    precio2 = 60.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecio(nombre, precio1, precio2, idrestaurante, categoria));
-                    break;
-                case 4:
-                    precio1 = 60.0;
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombreyPrecioAMAS(nombre, precio1, idrestaurante, categoria));
-                    break;
-                default:
-                    model.addAttribute("listaExtras", extraRepository.buscarExtraPornombre(nombre, idrestaurante, categoria));
-                    break;
-            }
-        } else if (nombre == null & precios == 0) {
-            model.addAttribute("listaExtras", extraRepository.lista(idrestaurante, categoria));
         }
-        model.addAttribute("texto", nombre);
-        model.addAttribute("textoP", precios);
-         */
-        //return "AdminRestaurante/listaExtras";
     }
 
 
     @GetMapping("/page")
     public String findPaginated(@ModelAttribute @RequestParam(value = "textBuscador", required = false) String textBuscador,
-                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) Integer inputPrecio,
-                                @RequestParam(value = "pageNo", required = false) Integer pageNo, Model model) {
-        System.out.println(pageNo);
-        if (pageNo == null || pageNo == 0) {
-            pageNo = 1;
-        }
-        int inputID = 1;
-        int pageSize = 1;
-        Page<Extra> page;
-        List<Extra> listaExtras;
-        System.out.println(textBuscador);
-        if (textBuscador == null) {
-            textBuscador = "";
-        }
-        System.out.println(inputPrecio);
-        if (inputPrecio == null) {
-            inputPrecio = 0;
-        }
-        int inputPMax;
-        int inputPMin;
-        if (inputPrecio == 0) {
-            inputPMin = 0;
-            inputPMax = 100;
+                                @ModelAttribute @RequestParam(value = "textPrecio", required = false) String inputPrecio,
+                                @RequestParam(value = "pageNo", required = false) String pageNo1,
+                                @RequestParam(value = "idcategoria", required = false) String idcategoria, Model model, HttpSession session) {
+        System.out.println(idcategoria);
+        int idcat;
+        if (idcategoria == null) {
+            return "redirect:/extra";
         } else {
-            inputPMax = inputPrecio;
-            inputPMin = inputPrecio;
+            try {
+                idcat = Integer.parseInt(idcategoria);
+                if (idcat >= 1 && idcat <= 4) {
+                    Usuario adminRest = (Usuario) session.getAttribute("usuario");
+                    int idadmin = adminRest.getIdusuario();
+                    Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+                    List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+                    model.addAttribute("listaNotiRest", listaNotificacion);
+                    List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+                    List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+                    List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+                    List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+                    model.addAttribute("credencial1", credencialRest1DTOS);
+                    model.addAttribute("platoMasVendido", platoTOP);
+                    model.addAttribute("platoMenosVendido", platoDOWN);
+                    model.addAttribute("pedidosCredenciales",pedidosDTOList);
+                    int idrestaurante = restaurante.getIdrestaurante();
+                    System.out.println(idcat);
+                    System.out.println(pageNo1);
+                    int pageNo = 0;
+                    if (pageNo1 == null) {
+                        pageNo = 1;
+                    }
+                    try {
+                        pageNo = Integer.parseInt(pageNo1);
+                        if (pageNo == 0) {
+                            pageNo = 1;
+                        }
+                    } catch (NumberFormatException e) {
+                        pageNo = 1;
+                    }
+                    int inputID = 1;
+                    int pageSize = 10;
+                    Page<Extra> page;
+                    List<Extra> listaExtras;
+                    System.out.println(textBuscador);
+                    if (textBuscador == null) {
+                        textBuscador = "";
+                    }
+                    System.out.println(inputPrecio);
+                    int inputPrecioInt;
+                    int inputPMax;
+                    int inputPMin;
+
+                    if (inputPrecio == null) {
+                        inputPrecioInt = 0;
+                    }
+
+                    try {
+                        inputPrecioInt = Integer.parseInt(inputPrecio);
+                        if (inputPrecioInt == 0) {
+                            inputPMin = 0;
+                            inputPMax = 1000;
+                        } else if (inputPrecioInt == 4) {
+                            inputPMin = inputPrecioInt;
+                            inputPMax = 1000;
+                        } else if (inputPrecioInt > 4) {
+                            return "redirect:/extra/lista";
+                        } else {
+                            inputPMin = inputPrecioInt;
+                            inputPMax = inputPrecioInt;
+                        }
+                    } catch (NumberFormatException e) {
+                        return "redirect:/extra/lista";
+                    }
+
+                    page = extraService.findPaginated2(pageNo, pageSize, idrestaurante, idcat, textBuscador, inputPMin * 5 - 5, inputPMax * 5);
+                    listaExtras = page.getContent();
+                    List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
+                    model.addAttribute("texto", textBuscador);
+                    model.addAttribute("textoP", inputPrecio);
+
+                    model.addAttribute("currentPage", pageNo);
+                    model.addAttribute("totalPages", page.getTotalPages());
+                    model.addAttribute("totalItems", page.getTotalElements());
+                    model.addAttribute("listaExtras", listaExtras);
+                    model.addAttribute("listaCategoria", listaCategoriaExtra);
+                    model.addAttribute("idcategoria", idcat);
+
+                    return "AdminRestaurante/listaExtras";
+                } else {
+                    return "redirect:/extra/categoria";
+                }
+            } catch (NumberFormatException | MethodArgumentTypeMismatchException e) {
+                return "redirect:/extra/categoria";
+            }
         }
-        page = extraService.findPaginated2(pageNo, pageSize, textBuscador, inputPMin * 5 - 5, inputPMax * 5);
-        listaExtras = page.getContent();
-
-        model.addAttribute("texto", textBuscador);
-        model.addAttribute("textoP", inputPrecio);
-
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listaExtras", listaExtras);
-
-        return "AdminRestaurante/listaExtras";
-
     }
 
     @GetMapping("/nuevo")
-    public String nuevoExtra(@ModelAttribute("extra") Extra extra) {
+    public String nuevoExtra(@ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") int id, Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("idcategoria", id);
         return "AdminRestaurante/nuevoExtra";
     }
 
     @PostMapping("/guardar")
     public String guardarExtra(@ModelAttribute("extra") @Valid Extra extra, BindingResult bindingResult,
                                RedirectAttributes attr,
-                               Model model,@RequestParam(value = "photo",required = false) MultipartFile file) {
-       /* Cupon cVal = extraRepository.buscarPorNombre(cupon.getNombre());
+                               Model model, @RequestParam(value = "photo", required = false) MultipartFile file
+            , HttpSession session, @RequestParam(value = "idcategoria") int idc) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        int idrestaurante = restaurante.getIdrestaurante();
 
-        if(cVal == null){
-            if(bindingResult.hasErrors()){
-                return "AdminRestaurante/nuevoCupon";
-            }
-
-            cupon.setIdrestaurante(2);
-
-            if (cupon.getIdcupon() == 0) {
-                cupon.setFechainicio(LocalDate.now());
-                cupon.setDisponible(true);
-                attributes.addFlashAttribute("creado", "Cupon creado exitosamente!");
-            } else {
-                attributes.addFlashAttribute("editado", "Cupon editado exitosamente!");
-            }
-
-            if(cupon.getFechainicio().isEqual(cupon.getFechafin())){
-                cupon.setDisponible(false);
-            }
-
-            extraRepository.save(cupon);
-            return "redirect:/cupon/lista";
-        }else{
-            model.addAttribute("val","Este nombre ya está registrado");
-            return "AdminRestaurante/nuevoCupon";
-        }*/
-        String fileName ="";
-        if (file!=null){
-            if(file.isEmpty()){
+        String fileName = "";
+        boolean validarFoto = true;
+        if (file != null) {
+            if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
-                return "/AdminRestaurante/nuevoPlato";
+                validarFoto = false;
+            } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
+                model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
+                validarFoto = false;
             }
             fileName = file.getOriginalFilename();
-            if (fileName.contains("..")){
-                model.addAttribute("mensajefoto","No se premite '..' een el archivo");
-                return "/AdminRestaurante/nuevoPlato";
+            if (fileName.contains("..")) {
+                model.addAttribute("idcategoria", idc);
+                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                return "AdminRestaurante/nuevoExtra";
             }
         }
 
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
-        extra.setIdcategoriaextra(idcategoriaextra);
+        extra.setIdcategoriaextra(idc);
         if (bindingResult.hasErrors()) {
+            if (extra.getIdextra() == 0 && !validarFoto) {
+                model.addAttribute("idcategoria", idc);
+                return "AdminRestaurante/nuevoExtra";
+            }
             if (extra.getIdextra() == 0) {
-                return "/AdminRestaurante/nuevoExtra";
+                model.addAttribute("idcategoria", idc);
+                return "AdminRestaurante/nuevoExtra";
             } else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
-                    return "/AdminRestaurante/nuevoExtra";
+                    model.addAttribute("idcategoria", idc);
+                    return "AdminRestaurante/nuevoExtra";
                 } else {
-                    return "redirect:/extra/lista";
+                    model.addAttribute("idcategoria", idc);
+                    return "redirect:/extra/lista?idcategoria=" + idc;
                 }
             }
-        } else {
+        } else if (validarFoto) {
             if (extra.getIdextra() == 0) {
-                try{
+                try {
                     extra.setFoto(file.getBytes());
                     extra.setFotonombre(fileName);
                     extra.setFotocontenttype(file.getContentType());
                     attr.addFlashAttribute("msg", "Extra creado exitosamente");
-                    attr.addFlashAttribute("msg2", "Extra editado exitosamente");
+                    model.addAttribute("idcategoria", idc);
                     extraRepository.save(extra);
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                    model.addAttribute("mensajefoto","Ocurrió un error al subir el archivo");
-                    return "/AdminRestaurante/nuevoExtra";
+                    model.addAttribute("idcategoria", idc);
+                    model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
+                    return "AdminRestaurante/nuevoExtra";
                 }
 
             } else {
                 Optional<Extra> optExtra = extraRepository.findById(extra.getIdextra());
                 if (optExtra.isPresent()) {
-                    Optional<Extra> extraOptional=extraRepository.findById(extra.getIdextra());
+                    Optional<Extra> extraOptional = extraRepository.findById(extra.getIdextra());
                     extra.setFoto(extraOptional.get().getFoto());
                     extra.setFotonombre(extraOptional.get().getFotonombre());
                     extra.setFotocontenttype(extraOptional.get().getFotocontenttype());
                     extraRepository.save(extra);
                     attr.addFlashAttribute("msg2", "Extra editado exitosamente");
-                    attr.addFlashAttribute("msg", "Extra creado exitosamente");
                 }
             }
-            return "redirect:/extra/lista";
+            model.addAttribute("idcategoria", idc);
+            return "redirect:/extra/lista?idcategoria=" + idc;
+        } else {
+            return "AdminRestaurante/nuevoExtra";
         }
     }
 
 
     @GetMapping("/imagen/{id}")
-    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id){
-        Optional<Extra> optionalExtra=extraRepository.findById(id);
-        if (optionalExtra.isPresent()){
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") int id) {
+        Optional<Extra> optionalExtra = extraRepository.findById(id);
+        if (optionalExtra.isPresent()) {
             Extra extra = optionalExtra.get();
-            byte[] imagenBytes=extra.getFoto();
-            HttpHeaders httpHeaders= new HttpHeaders();
+            byte[] imagenBytes = extra.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.parseMediaType(extra.getFotocontenttype()));
-            return new ResponseEntity<>(imagenBytes,httpHeaders, HttpStatus.OK);
-        }else {
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
+    @GetMapping("/imagenadmin/{id}")
+    public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByDni(id));
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            byte[] imagenBytes = usuario.getFoto();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.parseMediaType(usuario.getFotocontenttype()));
+            return new ResponseEntity<>(imagenBytes, httpHeaders, HttpStatus.OK);
+        } else {
             return null;
         }
     }
 
     @GetMapping("/editar")
-    public String editarExtra(@RequestParam("id") int id,
+    public String editarExtra(@RequestParam("id") String id,
                               Model model,
-                              @ModelAttribute("extra") Extra extra) {
-        Optional<Extra> extraOptional = extraRepository.findById(id);
-        if (extraOptional.isPresent()) {
-            extra = extraOptional.get();
-            model.addAttribute("extra", extra);
-            return "/AdminRestaurante/nuevoExtra";
-        } else {
-            return "redirect:/extra/lista";
+                              @ModelAttribute("extra") Extra extra, @RequestParam(value = "idcategoria") String idc, HttpSession session) {
+
+
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idadmin = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idadmin);
+        List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
+        model.addAttribute("listaNotiRest", listaNotificacion);
+        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        model.addAttribute("credencial1", credencialRest1DTOS);
+        model.addAttribute("platoMasVendido", platoTOP);
+        model.addAttribute("platoMenosVendido", platoDOWN);
+        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        int idextra;
+        try {
+            idextra=Integer.parseInt(id);
+            model.addAttribute("idcategoria", idc);
+            Optional<Extra> extraOptional = extraRepository.findById(idextra);
+            Extra extra2=extraRepository.findByIdextraAndIdrestauranteAndIdcategoriaextra(idextra,restaurante.getIdrestaurante(),Integer.parseInt(idc));
+            if (extraOptional.isPresent() && extra2!=null) {
+                extra = extraOptional.get();
+                model.addAttribute("extra", extra);
+                return "AdminRestaurante/nuevoExtra";
+            } else {
+                return "redirect:/extra/lista?idcategoria="+idc;
+            }
+        }catch(NumberFormatException e){
+            System.out.println("Falló");
+            return "redirect:/extra/lista?idcategoria="+idc;
         }
     }
 
     @GetMapping("/borrar")
-    public String borrarExtra(@RequestParam("id") int id, RedirectAttributes attr) {
+    public String borrarExtra(@RequestParam("id") int id, RedirectAttributes attr,
+                              @RequestParam(value = "idcategoria") int idc, Model model) {
         Optional<Extra> extraOptional = extraRepository.findById(id);
         if (extraOptional.isPresent()) {
             Extra extra = extraOptional.get();
@@ -296,7 +384,43 @@ public class ExtraController {
             extraRepository.save(extra);
             attr.addFlashAttribute("msg3", "Extra borrado exitosamente");
         }
-
-        return "redirect:/extra/lista";
+        model.addAttribute("idcategoria", idc);
+        return "redirect:/extra/lista?idcategoria=" + idc;
+    }
+    @InitBinder("extra")
+    public void validatorDataBinding(WebDataBinder binder) {
+        PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                System.out.println("----------------------------Precio-----------------------------"+text);
+                try {
+                    System.out.println("xd1");
+                    this.setValue(Double.parseDouble(text));
+                    System.out.println("xddddddddddddddddddddddd2 "+this.getValue());
+                    if(text.contains("E")){
+                        String[] parts = text.split("E");
+                        String part1 = parts[0];
+                        String part2 = parts[1];
+                        System.out.println(part1);
+                        System.out.println(part2);
+                        if((Double.parseDouble(part1)>=1.7) && (Double.parseDouble(part2)>=308)){
+                            System.out.println("El valor es mayor o igual a 8E308");
+                            this.setValue(0.0);
+                        }
+                        else if ((Double.parseDouble(part2)>308)){
+                            System.out.println("El valor es mayor a 1E309");
+                            this.setValue(0.0);
+                        }
+                        else{
+                            System.out.println("Válido");
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("xd2");
+                    this.setValue(text);
+                }
+            }
+        };
+        binder.registerCustomEditor(Object.class, "preciounitario", integerValidator);
     }
 }

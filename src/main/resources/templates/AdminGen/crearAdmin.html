@@ -1,32 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Crear Admin')"></head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Crear administrador</title>
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-    <link th:href="@{/cssAG/estilosAdmin.css}" rel="stylesheet" type="text/css">
-
-
-    <!-- Custom styles for this page -->
-    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-
-
-</head>
 
 <body id="page-top">
 
@@ -35,85 +11,7 @@
 
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
-        <div class="">
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-shopping-basket"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Food Delivery </div>
-            </a>
-        </div>
-        <!-- Sidebar - Brand -->
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="lista.html">
-                <i class="fas fa-fw fa-list"></i>
-                <span>Listas</span></a>
-        </li>
-
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="solicitudRepartidor.html" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Solicitudes</span>
-
-            </a>
-
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="crearAdministrador.html">
-                <i class="fas fa-fw fa-user-edit"></i>
-                <span>Crear Administrador</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Reportes</span>
-
-            </a>
-            <div class="collapse" id="submenu1" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
-                </ul>
-            </div>
-        </li>
-
-
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
+    <ul th:replace="AdminGen/fragments/generalAdmin.html :: topbar" ></ul>
     <!-- End of Sidebar -->
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -122,104 +20,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
-
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
-                                Nuevas Solicitudes
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Repartidor - 12:45 pm</div>
-                                    <span class="font-weight-bold">Carlos Martinez</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">La mas brasa</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo administrador de restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">KArla Avellana</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las solicitudes</a>
-                        </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../../static/bootstrap/img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfilAG.html">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Editar Perfil
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cerrar Sesión
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -232,12 +33,12 @@
 
                         <div class="d-sm-flex align-items-center justify-content-between">
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto "
-                                th:text="${usuario.getIdusuario() == 0? 'CREAR ADMINISTRADOR' : 'EDITAR ADMINISTRADOR'}"></h2>
+                                th:text="${usuario.getIdusuario() == 0? 'EDITAR ADMINISTRADOR' : 'CREAR ADMINISTRADOR'}"></h2>
                         </div>
                     </div>
                     <div class="card-body">
                         <form method="POST" id="nuevo" class="justify-content-left"
-                              th:action="@{/admin/guardar}" th:object="${usuario}">
+                              th:action="@{/admin/guardarAdmin}" th:object="${usuario}" enctype="multipart/form-data">
 
                             <input th:field="*{idusuario}" type="hidden"/>
 
@@ -248,12 +49,18 @@
                                     <input th:field="*{nombres}"  type="text" class="form-control border-secondary">
                                     <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
                                          th:errors="*{nombres}"></div>
+                                    <div class="text-danger"
+                                         th:if="${msg11 != null}"
+                                         th:text="${msg11}"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="form-label text-dark text-lg">Apellidos:</label>
                                     <input th:field="*{apellidos}"  type="text" class="form-control border-secondary">
                                     <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
                                          th:errors="*{apellidos}"></div>
+                                    <div class="text-danger"
+                                         th:if="${msg12 != null}"
+                                         th:text="${msg12}"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -270,6 +77,7 @@
                                            onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
                                     <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
                                          th:errors="*{fechanacimiento}"></div>
+                                    <div th:if="${msg7 != null}" th:text="${msg7}" class="text-danger" ></div>
                                 </div>
                             </div>
 
@@ -278,8 +86,8 @@
                                     <label class="form-label text-dark text-lg">Sexo:</label>
                                     <select class="form-control border-secondary" th:field="*{sexo}">
                                         <option value="" disabled selected>Sexo</option>
-                                        <option value="femenino">Femenino</option>
-                                        <option value="masculino">Masculino</option>
+                                        <option value="FEMENINO">FEMENINO</option>
+                                        <option value="MASCULINO">MASCULINO</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6  mb-2 mb-sm-0">
@@ -296,21 +104,34 @@
                                     <input th:field="*{dni}" type="text" class="form-control border-secondary">
                                     <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
                                          th:errors="*{dni}"></div>
+                                    <div class="text-danger"
+                                         th:if="${msg8 != null}"
+                                         th:text="${msg8}"></div>
+                                    <div class="text-danger"
+                                         th:if="${msg9 != null}"
+                                         th:text="${msg9}"></div>
+                                    <div class="text-danger"
+                                         th:if="${msg10 != null}"
+                                         th:text="${msg10}"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
 
                                 </div>
 
                             </div>
+                            <input name="contrasenia" type="hidden" value="12345678"/>
 
 
-                            <div class="form-group row">
+                           <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <h4 style="color: black">Foto de perfil</h4>
-                                    <p>Adjunte una foto de perfil para su cuenta. Esta debe ser una fotografía en la que se visualice claramente su rostro</p>
+                                    <p>Adjunte una foto de perfil para la cuenta. Esta debe ser una fotografía en la que se visualice claramente su rostro</p>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                        <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
+                                        <input type="file" name="photo"
+                                               accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                        <div th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                            class="text-danger"></div>
                                     </div>
                                 </div>
 
@@ -321,8 +142,8 @@
 
                             </div>
                             <hr>
-                            <a th:href="@{'/admin'}" class="btn btn-danger">Cancelar</a>
-                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0? 'Registrar' : 'Actualizar'}">Reg/act</button>
+                            <a th:href="@{'/admin/usuarios'}" class="btn btn-danger">Cancelar</a>
+                            <button type="submit" class="btn btn-primary" th:text="${usuario.getIdusuario() == 0?  'Actualizar' :'Registrar' }">Reg/act</button>
 
                         </form>
                     </div>
@@ -370,8 +191,10 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -393,6 +216,37 @@
 <!-- Page level custom scripts -->
 <script  th:src="@{/js/demo/datatables-demo.js}"></script>
 </body>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
 
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>
 </html>
 

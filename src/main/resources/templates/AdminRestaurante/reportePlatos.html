@@ -186,28 +186,28 @@
                                 </div>
                                 <div class="col-sm-2 mb-1">
                                     <select class="form-control" id="inputCategoria" name="inputCategoria">
-                                        <option th:value="0" th:selected="${textoC==0}">Categorías</option>
+                                        <option th:value="0" th:selected="${textoC.equals('0')}">Categorías</option>
                                         <option th:value="${listaCategorias.get(0).getIdcategoria()}"
-                                                th:selected="${textoC==listaCategorias.get(0).getIdcategoria()}"
+                                                th:selected="${textoC.equalsIgnoreCase(listaCategorias.get(0).getIdcategoria())}"
                                                 th:text="${listaCategorias.get(0).nombre}"></option>
                                         <option th:value="${listaCategorias.get(1).getIdcategoria()}"
-                                                th:selected="${textoC==listaCategorias.get(1).getIdcategoria()}"
+                                                th:selected="${textoC.equalsIgnoreCase(listaCategorias.get(1).getIdcategoria())}"
                                                 th:text="${listaCategorias.get(1).nombre}"></option>
                                         <option th:value="${listaCategorias.get(2).getIdcategoria()}"
-                                                th:selected="${textoC==listaCategorias.get(2).getIdcategoria()}"
+                                                th:selected="${textoC.equalsIgnoreCase(listaCategorias.get(2).getIdcategoria())}"
                                                 th:text="${listaCategorias.get(2).nombre}"></option>
                                         <option th:value="${listaCategorias.get(3).getIdcategoria()}"
-                                                th:selected="${textoC==listaCategorias.get(3).getIdcategoria()}"
+                                                th:selected="${textoC.equalsIgnoreCase(listaCategorias.get(3).getIdcategoria())}"
                                                 th:text="${listaCategorias.get(3).nombre}"></option>
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-2">
                                     <select class="form-control" id="inputCantidad" name="inputCantidad">
-                                        <option value="0" th:selected="${textoCant==0}">Cantidad Vendida</option>
-                                        <option value="1" th:selected="${textoCant==1}">0 uni. hasta 5 uni.</option>
-                                        <option value="2" th:selected="${textoCant==2}">5 uni. hasta 10 uni.</option>
-                                        <option value="3" th:selected="${textoCant==3}">10 uni. hasta 15 uni.</option>
-                                        <option value="4" th:selected="${textoCant==4}">20 uni. a más</option>
+                                        <option value="0" th:selected="${textoCant.equals('0')}">Cantidad Vendida</option>
+                                        <option value="1" th:selected="${textoCant.equals('1')}">0 uni. hasta 5 uni.</option>
+                                        <option value="2" th:selected="${textoCant.equals('2')}">5 uni. hasta 10 uni.</option>
+                                        <option value="3" th:selected="${textoCant.equals('3')}">10 uni. hasta 15 uni.</option>
+                                        <option value="4" th:selected="${textoCant.equals('4')}">20 uni. a más</option>
                                     </select>
                                 </div>
                                 <div class="input-group-append col-sm-auto mb-3 ml-0 mr-0">

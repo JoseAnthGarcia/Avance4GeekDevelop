@@ -454,7 +454,7 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(1);
@@ -499,7 +499,7 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(3);
@@ -533,7 +533,7 @@ public class AdminController  {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-        if (usuarioOpt.isPresent()) {
+        if (usuarioOpt.isPresent()  && idUsuario != 1 ) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
             return "AdminGen/detalleAdminR";
@@ -2483,7 +2483,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             double totalIngresos = 0.0;
 
 
-            if (usuarioOpt.isPresent()) {
+            if (usuarioOpt.isPresent()  && Integer.parseInt(idUsuario) != 1 ) {
                 Usuario usuario = usuarioOpt.get();
 
                 for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
@@ -2584,7 +2584,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         try {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(id));
 
-        if(usuarioOpt.isPresent()){
+        if(usuarioOpt.isPresent() && Integer.parseInt(id) != 1 ){
             Usuario usuario = usuarioOpt.get();
             // ESTADOS
             /*

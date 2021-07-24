@@ -390,7 +390,7 @@ public class ClienteController {
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
-
+            model.addAttribute("total", totalPage);
         }else{
             System.out.println(" ENTRO AL QUERY 2"  );
             Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
@@ -399,9 +399,10 @@ public class ClienteController {
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
             }
-
+            model.addAttribute("total", totalPage);
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
+
         model.addAttribute("current", page + 1);
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
@@ -563,9 +564,11 @@ public class ClienteController {
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
+
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
+            model.addAttribute("total", totalPage);
 
         }else{
             System.out.println(" ENTRO AL QUERY 2"  );
@@ -574,10 +577,12 @@ public class ClienteController {
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
+                //model.addAttribute("total", totalPage);
             }
-
+            model.addAttribute("total", totalPage);
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
+        //model.addAttribute();
         model.addAttribute("current", page + 1);
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
@@ -2139,7 +2144,7 @@ public class ClienteController {
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
-
+        model.addAttribute("total", totalPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaPedidoActual";
 
@@ -2204,6 +2209,7 @@ public class ClienteController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+        model.addAttribute("total", totalPage);
         model.addAttribute("current", page + 1);
         model.addAttribute("listaPedidos", listaPedidos.getContent());
         //mandar valores
@@ -2358,7 +2364,7 @@ public class ClienteController {
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
-
+        model.addAttribute("total", totalPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaHistorialPedidos";
     }
@@ -2411,6 +2417,7 @@ public class ClienteController {
         model.addAttribute("current", page + 1);
         model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
+        model.addAttribute("total", totalPage);
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
 

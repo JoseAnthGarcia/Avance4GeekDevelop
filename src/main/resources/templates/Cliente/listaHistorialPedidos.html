@@ -218,6 +218,9 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="text-center" >
+                            <h3 style="color: red;" th:if="${ total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
+                        </div>
 
                         <div style=text-align:center>
                             <h6>Solo pedidos  <font color="green"><b>entregados</b></font>  o <font color="red"><b>cancelados</b></font> </h6>

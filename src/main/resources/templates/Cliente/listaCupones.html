@@ -200,6 +200,7 @@
                                 <option value="2" th:selected="${descuento.equals('2')}">S/10.00 hasta S/20.00</option>
                                 <option value="3" th:selected="${descuento.equals('3')}">S/20.00 hasta S/30.00</option>
                                 <option value="4" th:selected="${descuento.equals('4')}">S/30.00 hasta S/40.00</option>
+                                <option value="5" th:selected="${descuento.equals('5')}">S/40.00 hasta S/50.00</option>
                             </select>
                         </div>
 
@@ -299,17 +300,16 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
-                                    <ul class="pagination justify-content-center">
+                                    <ul class="pagination text-center justify-content-center">
 
                                         <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a th:unless="${texto == null && descuento == null}" class="page-link active text-white"  style="background-color: #701111"
-                                               th:text="${page}"
-                                               th:href="@{'/cliente/cuponespage?page='+${page}}"></a>
+                                            <a class="page-link" th:href="@{'/cliente/cuponespage?page='+${page}}" th:text="${page}"></a>
                                         </li>
+
                                     </ul>
                                 </nav>
                             </div>
-                            <div class="col-md-2"></div>
+
                         </div>
 
                     </div>

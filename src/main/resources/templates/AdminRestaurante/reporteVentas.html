@@ -183,14 +183,14 @@
                                 </div>
                                 <div class="col-sm-2 mb-2">
                                     <select class="form-control" id="inputPrecio" name="inputPrecio">
-                                        <option value="0" th:selected="${inputPrecio==0}">Monto total</option>
-                                        <option value="1" th:selected="${inputPrecio==1}">S/.0.00 hasta S/.20.00
+                                        <option value="0" th:selected="${inputPrecio.equals('0')}">Monto total</option>
+                                        <option value="1" th:selected="${inputPrecio.equals('1')}">S/.0.00 hasta S/.20.00
                                         </option>
-                                        <option value="2" th:selected="${inputPrecio==2}">S/.20.00 hasta S/.40.00
+                                        <option value="2" th:selected="${inputPrecio.equals('2')}">S/.20.00 hasta S/.40.00
                                         </option>
-                                        <option value="3" th:selected="${inputPrecio==3}">S/.40.00 hasta S/.60.00
+                                        <option value="3" th:selected="${inputPrecio.equals('3')}">S/.40.00 hasta S/.60.00
                                         </option>
-                                        <option value="4" th:selected="${inputPrecio==4}">S/.60.00 a más</option>
+                                        <option value="4" th:selected="${inputPrecio.equals('4')}">S/.60.00 a más</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-auto"

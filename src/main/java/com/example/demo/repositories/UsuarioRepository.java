@@ -452,16 +452,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //muestra la ganancia de un repartidor - la ganancia de un repartidor depende del atributo mismo distrito, entonces la ganancia sería
     //la cantidad de pedidos que tiene en un distrito *4 + la cantidad de pedidos que tiene fuera *6
-    @Query(value = "SELECT ((select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 1 and u.idusuario = p.idrepartidor and u.idusuario = 3)*4 + (select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 0 and u.idusuario = p.idrepartidor and u.idusuario = 3)*6) as `ganancia` \n" +
+    @Query(value = "SELECT ((select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 1 and u.idusuario = p.idrepartidor and u.idusuario = ?1)*4 + (select count(p.codigo) from pedido p, usuario u where p.mismodistrito = 0 and u.idusuario = p.idrepartidor and u.idusuario = ?1)*6) as `ganancia` \n" +
             "FROM usuario u, rol r, pedido p \n" +
             "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = ?1 \n" +
-            "group by u.idusuario ", nativeQuery = true)
+            "group by u.idusuario", nativeQuery = true)
     BigDecimal gananciaRepartidor(int idrepartidor);
 
     //promedio de valoracion repartidor
     @Query(value = "select ceil(avg(p.valoracionrepartidor)) as `valoracion` from usuario u, pedido p, rol r\n" +
-            "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = 8 ", nativeQuery = true)
-    int valoracionRepartidor(int idrepartidor);
+            "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = ?1 ", nativeQuery = true)
+    Integer valoracionRepartidor(int idrepartidor);
 
 
     @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +

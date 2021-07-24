@@ -191,6 +191,19 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
+                                            <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
+                                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                                    <a th:if="${currentPage != i}"
+                                                       th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
+                   +${(nombreUsuario1==null || nombreUsuario1.equals(''))?'':'&nombreUsuario='+nombreUsuario1}
+                   +${tipoMovilidad1==null?'':'&tipoMovilidad='+tipoMovilidad1}
+                   +${fechaRegistro1==null?'':'&fechaRegistro=' +fechaRegistro1}}"
+                                                       th:utext="${i}"
+                                                       class="active page-link"></a>
+                                                    <a th:unless="${currentPage != i}"
+                                                       th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
+                                                </div>
+                                            </div>
                                         </div>
                                         </td>
                                     </tr>
@@ -205,19 +218,7 @@
             <div th:if="${listaRepartidorSolicitudes.size()==0}">
                 <h3 class="text-lg-center text-danger">No tiene solicitudes de repartidor.</h3>
             </div>
-            <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
-            <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
-                <a th:if="${currentPage != i}"
-                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
-                   +${(nombreUsuario1==null || nombreUsuario1.equals(''))?'':'&nombreUsuario='+nombreUsuario1}
-                   +${tipoMovilidad1==null?'':'&tipoMovilidad='+tipoMovilidad1}
-                   +${fechaRegistro1==null?'':'&fechaRegistro=' +fechaRegistro1}}"
-                   th:utext="${i}"
-                   class="active page-link"></a>
-                <a th:unless="${currentPage != i}"
-                   th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
-            </div>
-        </div>
+
             <!-- /.container-fluid -->
 
         </div>

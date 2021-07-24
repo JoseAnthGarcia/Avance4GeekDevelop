@@ -128,7 +128,7 @@ public class AdminController  {
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
-                                     @RequestParam(value = "numPag", required = false) Integer numPag,
+                                     @RequestParam(value = "numPag", required = false) String pag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
@@ -143,7 +143,13 @@ public class AdminController  {
         }
 
         //paginacion --------
-        if(numPag==null){
+        int numPag = -1;
+        try{
+            numPag = Integer.parseInt(pag);
+            if(numPag<=0){
+                numPag= 1;
+            }
+        }catch (NumberFormatException e){
             numPag= 1;
         }
 
@@ -448,7 +454,7 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(1);
@@ -493,7 +499,7 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(3);
@@ -527,7 +533,7 @@ public class AdminController  {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-        if (usuarioOpt.isPresent()) {
+        if (usuarioOpt.isPresent()  && idUsuario != 1 ) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
             return "AdminGen/detalleAdminR";
@@ -578,7 +584,7 @@ public class AdminController  {
         int estadoBuscador = 0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -703,7 +709,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -802,7 +808,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1004,7 +1010,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1154,7 +1160,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1279,7 +1285,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1376,7 +1382,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1592,7 +1598,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("valoracion") != null || session.getAttribute("cantidad") != null || session.getAttribute("valoracion") != null  ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1773,7 +1779,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     int page;
     int estadoBuscador = 0;
     try{
-        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
     }catch(NumberFormatException nfe){
         page =0;
     }
@@ -1989,7 +1995,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("cantidad") != null || session.getAttribute("monto") != null || session.getAttribute("valoracion") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -2181,7 +2187,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -2477,7 +2483,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             double totalIngresos = 0.0;
 
 
-            if (usuarioOpt.isPresent()) {
+            if (usuarioOpt.isPresent()  && Integer.parseInt(idUsuario) != 1 ) {
                 Usuario usuario = usuarioOpt.get();
 
                 for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
@@ -2492,7 +2498,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                     case "repartidor":
                         model.addAttribute("repartidor",usuario);
                         model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(Integer.parseInt(idUsuario)));
-                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario)));
+                        Integer valoracion = usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario));
+                        if(valoracion==null){
+                            valoracion = 0;
+                        }
+                        model.addAttribute("valoracion",valoracion);
                         model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
@@ -2574,7 +2584,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         try {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(id));
 
-        if(usuarioOpt.isPresent()){
+        if(usuarioOpt.isPresent() && Integer.parseInt(id) != 1 ){
             Usuario usuario = usuarioOpt.get();
             // ESTADOS
             /*
@@ -2980,6 +2990,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -2993,6 +3005,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3006,6 +3020,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3019,6 +3035,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3032,6 +3050,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3046,6 +3066,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3058,6 +3080,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);

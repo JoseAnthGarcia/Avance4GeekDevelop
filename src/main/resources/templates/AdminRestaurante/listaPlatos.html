@@ -187,11 +187,11 @@
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select class="form-control" id="inputPrecio" name="inputPrecio">
-                                        <option value="0" th:selected="${textoP==0}">Precio</option>
-                                        <option value="1" th:selected="${textoP==1}">S/.0.00 hasta S/.15.00</option>
-                                        <option value="2" th:selected="${textoP==2}">S/.15.00 hasta S/.30.00</option>
-                                        <option value="3" th:selected="${textoP==3}">S/.30.00 hasta S/.45.00</option>
-                                        <option value="4" th:selected="${textoP==4}">S/.45.00 a más</option>
+                                        <option value="0" th:selected="${textoP.equals('0')}">Precio</option>
+                                        <option value="1" th:selected="${textoP.equals('1')}">S/.0.00 hasta S/.15.00</option>
+                                        <option value="2" th:selected="${textoP.equals('2')}">S/.15.00 hasta S/.30.00</option>
+                                        <option value="3" th:selected="${textoP.equals('3')}">S/.30.00 hasta S/.45.00</option>
+                                        <option value="4" th:selected="${textoP.equals('4')}">S/.45.00 a más</option>
                                     </select>
                                 </div>
 

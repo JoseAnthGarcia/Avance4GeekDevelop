@@ -297,7 +297,7 @@
                         </div>
                     </div>
                     <div th:if="${msgAddExtra != null}" th:text="${msgAddExtra}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
-                    <h2 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
+                    <h3 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h3>
                     <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCantExt != null}" th:text="${msgValCantExt}"></div>
                     <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValExt != null}" th:text="${msgValExt}"></div>
 

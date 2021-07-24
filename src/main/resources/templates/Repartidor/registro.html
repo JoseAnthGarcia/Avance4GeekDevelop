@@ -21,9 +21,45 @@
     <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
     <link th:href="@{/cssAG/estilosAdminRest.css}" rel="stylesheet" type="text/css">
 
-
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
     <!-- Custom styles for this page -->
     <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            $("#placaInput").hide();
+            $("#licenciaInput").hide();
+            var idMovilidad = $("#selectMovilidad").val();
+
+            if(idMovilidad==5 || idMovilidad == 6){
+                $("#placaInput").show();
+                $("#licenciaInput").show();
+            }
+
+        });
+
+        function seleccionarMovilidad(){
+
+            $("#placaInput").hide();
+            $("#licenciaInput").hide();
+
+            var idMovilidad = $("#selectMovilidad").val();
+
+            if(idMovilidad==5 || idMovilidad == 6){
+                $("#placaInput").show();
+                $("#licenciaInput").show();
+            }
+            if(idMovilidad==7){
+                $("#placaInput").val("");
+                $("#licenciaInput").val("");
+            }
+        }
+    </script>
 
 </head>
 
@@ -63,30 +99,33 @@
 
             <!-- Begin Page Content -->
             <div class="container">
-                <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal"
-                   style="position: relative; right:12%">
-                    <i class="fas fa-chevron-circle-left "></i>
+                <a class="user" data-toggle="modal" data-target="#volverModal" href="#"
+                   style="position: relative; right: 10%; color: rgba(12,10,12,0.7)">
+                    <i class="fas fa-chevron-circle-left"></i>
                     Volver
                 </a>
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para que el administrador general acepte o rechace su solicitud de
                     repartidor.</p>
-                <form method="post" th:action="@{'/repartidor/guardarRepartidor'}" th:object="${usuario}">
+                <form id="nuevo" method="post" th:action="@{/guardarRepartidor}" th:object="${usuario}" enctype="multipart/form-data">
                     <input th:field="*{idusuario}" type="hidden"/>
                     <input th:field="*{rol}" th:value="repartidor" type="hidden"/>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-2 mb-sm-0">
-
-
                             <input th:field="*{nombres}" type="text" class="form-control" placeholder="Nombres"/>
-                            <div class="text-danger" th:if="${#fields.hasErrors('nombres')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg14 != null}"
+                                 th:text="${msg14}"></div>
                         </div>
                         <div class="col-sm-6 mb-2">
                             <input th:field="*{apellidos}" type="text" class="form-control" placeholder="Apellidos"/>
-                            <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
-
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg15 != null}"
+                                 th:text="${msg15}"></div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -94,8 +133,8 @@
                             <input type="email" class="form-control"
                                    id="exampleCorreo"
                                    placeholder="Correo electrónico" th:field="*{correo}">
-                            <div th:if="${msg4 != null}" th:text="${msg4}" class="text-danger" ></div>
-                            <div class="text-danger" th:if="${#fields.hasErrors('correo')}"
+                            <div th:if="${msg4 != null}" th:text="${msg4}" style="color: red; font-size: small; text-align: left" ></div>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('correo')}"
                                  th:errors="*{correo}"></div>
 
                         </div>
@@ -104,9 +143,9 @@
                             <input th:field="*{fechanacimiento}" type="text" class="form-control"
                                    placeholder="Fecha de nacimiento"
                                    onfocus="(this.type='date')" onblur="(this.type='text')"/>
-                            <div th:if="${msg7 != null}" th:text="${msg7}" class="text-danger" ></div>
+                            <div th:if="${msg7 != null}" th:text="${msg7}" style="color: red; font-size: small; text-align: left" ></div>
 
-                            <div class="text-danger" th:if="${#fields.hasErrors('fechanacimiento')}"
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('fechanacimiento')}"
                                  th:errors="*{fechanacimiento}"></div>
 
                         </div>
@@ -120,14 +159,14 @@
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
-                            <div th:if="${msg8 != null}" th:text="${msg8}" class="text-danger" ></div>
+                            <div th:if="${msg8 != null}" th:text="${msg8}" style="color: red; font-size: small; text-align: left" ></div>
 
                         </div>
                         <div class="col-sm-6  mb-2 mb-sm-0">
 
                             <input th:field="*{telefono}" type="text" class="form-control" placeholder="Teléfono"/>
-                            <div th:if="${msg3 != null}" th:text="${msg3}" class="text-danger" ></div>
-                            <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                            <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('telefono')}"
                                  th:errors="*{telefono}"></div>
 
                         </div>
@@ -136,10 +175,18 @@
                         <div class="col-sm-6  mb-2 mb-sm-0">
 
                             <input th:field="*{dni}" type="text" class="form-control" placeholder="DNI"/>
-                            <div th:if="${msg2 != null}" th:text="${msg2}" class="text-danger" ></div>
-                            <div class="text-danger" th:if="${#fields.hasErrors('dni')}"
+                            <div th:if="${msg2 != null}" th:text="${msg2}" style="color: red; font-size: small; text-align: left" ></div>
+                            <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
-
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg11 != null}"
+                                 th:text="${msg11}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg13 != null}"
+                                 th:text="${msg13}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg12 != null}"
+                                 th:text="${msg12}"></div>
                         </div>
 
 
@@ -151,12 +198,15 @@
 
 
                         <div class="col-sm-6 mb-2 mb-sm-0" th:object="${movilidad}">
-                            <h4 style="color: black">Transporte</h4>
+                            <h4 style="color: black">Movilidad</h4>
                             <p>Seleccione el tipo de transporte con el que realizará las entregas. Si selecciona bicicleta, omita los campos de placa y licencia.</p>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
-                                    <select class="form-control" style="border-color:lightgray" name="tipoMovilidad">
+                                    <select class="form-control" style="border-color:lightgray"
+                                            name="tipoMovilidad" id="selectMovilidad"
+                                            onchange="seleccionarMovilidad()">
+                                        <option value="" selected>Seleccionar movilidad</option>
                                         <option th:each="tipo : ${listatipoMovilidad}"
                                                 th:value="${tipo.getIdtipomovilidad()}"
                                                 th:text="${tipo.getTipo()}"></option>
@@ -168,20 +218,28 @@
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
 
-                                    <input th:field="*{placa}" type="text" class="form-control" placeholder="Placa"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('placa')}"
+                                    <input th:field="*{placa}" type="text"
+                                           class="form-control" placeholder="Placa"
+                                           id="placaInput"/>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('placa')}"
                                          th:errors="*{placa}"></div>
+                                    <div th:if="${msg10 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>
+                                    <div th:if="${msg16 != null}" th:text="${msg16}" style="color: red; font-size: small; text-align: left" ></div>
                                 </div>
 
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
 
-                                    <input th:field="*{licencia}" type="text" class="form-control"
+                                    <input th:field="*{licencia}" type="text"
+                                           class="form-control" id="licenciaInput"
                                            placeholder="Licencia de conducir"/>
-                                    <div th:if="${msg6 != null}" th:text="${msg6}" class="text-danger" ></div>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('licencia')}"
+                                    <div th:if="${msg18 != null}" th:text="${msg18}" style="color: red; font-size: small; text-align: left" ></div>
+                                    <div th:if="${msg6 != null}" th:text="${msg6}" style="color: red; font-size: small; text-align: left" ></div>
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('licencia')}"
                                          th:errors="*{licencia}"></div>
+                                    <div th:if="${msg9 != null}" th:text="${msg9}" style="color: red; font-size: small; text-align: left" ></div>
+                                    <div th:if="${msg17 != null}" th:text="${msg17}" style="color: red; font-size: small; text-align: left" ></div>
                                 </div>
                             </div>
                         </div>
@@ -192,9 +250,9 @@
                                 <div class="col-sm-12 mb-2 mb-sm-0">
                                     <input type="password" class="form-control" th:field="*{contrasenia}"
                                            placeholder="Contraseña">
-                                    <div class="text-danger" th:if="${#fields.hasErrors('contrasenia')}"
+                                    <div style="color: red; font-size: small; text-align: left" th:if="${#fields.hasErrors('contrasenia')}"
                                          th:errors="*{contrasenia}"></div>
-                                    <div th:if="${msg != null}" th:text="${msg}" class="text-danger"></div>
+                                    <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left"></div>
                                 </div>
 
 
@@ -202,7 +260,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-2 mb-sm-0">
                                     <input type="password" class="form-control" name="contrasenia2" placeholder="Confirmar contraseña">
-                                    <div th:if="${msg != null}" th:text="${msg}" class="text-danger" ></div>
+                                    <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-size: small; text-align: left" ></div>
                                 </div>
                             </div>
 
@@ -216,12 +274,12 @@
                             <p>Puede seleccionar hasta 5 distritos para la realización de los deliberys.</p>
 
 
-                            <select class="form-control" style="border-color:lightgray" th:field="*{distritos}" multiple>
+                            <select class="form-control" style="border-color:lightgray" name="distritos" multiple>
                                 <option value="-1" disabled selected>Distritos</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
                             </select>
-                            <div th:if="${msg5 != null}" th:text="${msg5}" class="text-danger" ></div>
+                            <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>
 
 
                         </div>
@@ -230,8 +288,11 @@
                             <p>Adjunte una foto de perfil para su cuenta(.jpg). Esta debe ser una fotografía en la que
                                 se visualice claramente su rostro. Este campo es obligatorio.</p>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
+                                <input type="file" name="photo"
+                                       accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                    style="color: red; font-size: small; text-align: left"></h1>
                             </div>
                         </div>
 
@@ -242,10 +303,10 @@
 
                     </div>
                     <hr>
-                    <button class="btn btn-primary btn-user btn-block"
-                            type="submit">
+                    <a href="#registrarModal" class="btn btn-primary btn-user btn-block mb-5 "
+                       data-toggle="modal" data-target="#registrarModal">
                         Registrar
-                    </button>
+                    </a>
                     <!--button class="btn btn-primary btn-user btn-block"
                             data-toggle="modal" data-target="#registrarModal">
                         Registrar
@@ -280,6 +341,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+
 <!-- Volver Modal-->
 <div class="modal fade" id="volverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -291,10 +353,11 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.</div>
+            <div class="modal-body">Al seleccionar el botón volver, no se guardará la información registrada.
+            </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../AdminGen/inicio.html">Volver</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" th:href="@{/}">Volver</a>
             </div>
         </div>
     </div>
@@ -310,12 +373,12 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por parte del
-                administrador.
+            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por
+                parte del administrador.
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="validaciones.html">Enviar</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="nuevo" class="btn btn-primary">Enviar</button>
             </div>
         </div>
     </div>
@@ -337,7 +400,56 @@
 
 <!-- Page level custom scripts -->
 <script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{/js/demo/datatables-demo.js}"></script>
+<script th:src="@{/js/exportar.js}"></script>
+<script th:src="@{/js/exportar2.js}"></script>
+<script th:src="@{/js/exportar3.js}"></script>
 </body>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>
 
 </html>

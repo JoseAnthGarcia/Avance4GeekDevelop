@@ -21,12 +21,14 @@ public class Plato implements Serializable {
     private String nombre;
     @Column(name="descripcion", nullable = false)
     @NotBlank(message = "Este campo es obligatorio")
-    @Size(max=100, message = "Maximo 100 caracteres")
+    @Size(max=150, min=50, message = "Debe ingresar como mínimo 50 caracteres y como máximo 150 caracteres")
     private String descripcion;
     @Column(name="precio", nullable = false)
     @Positive(message = "Ingrese una cantidad positiva")
-    @Digits(integer=10, fraction = 2, message = "Ingrese un precio valido")
+    @Digits(integer=10, fraction = 1, message = "Ingrese un precio válido")
     @NotNull(message = "Este campo es obligatorio")
+    @Max(value=1000, message = "El precio máximo es de 1000 soles")
+    @Min(value=5, message = "El precio mínimo es de 5 soles")
     private double precio;
     @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;

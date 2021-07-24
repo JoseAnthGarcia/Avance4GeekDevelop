@@ -8,16 +8,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
+        <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
 
-        <title>REGISTRO ADMINISTRADOR</title>
+        <title>REGISTRO RESTAURANTE</title>
 
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
         <link
                 href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
                 rel="stylesheet">
 
         <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+        <link th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
 
         <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
@@ -39,29 +40,18 @@
 
                     <!-- Topbar -->
                     <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;">
-                        <a class="navbar-brand d-flex align-items-center justify-content-center" href="#">
+                        <div class="navbar-brand d-flex align-items-center justify-content-center">
                             <div class="navbar-brand rotate-n-15">
                                 <i class="fas fa-shopping-basket" style="color: white"></i>
                             </div>
                             <div class="navbar-brand-text mx-3" style="color: white">
                                 Food Delivery
                             </div>
-                        </a>
+                        </div>
                         <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
-
 
                         <!-- Topbar Navbar -->
-
-
                         <div class="topbar-divider d-none d-sm-block"></div>
-
-
-                        </ul>
 
                     </nav>
                     <!-- End of Topbar -->
@@ -69,46 +59,92 @@
                     <!-- Begin Page Content -->
                     <div class="container">
 
-                        <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal"
-                           style="position: relative; right:12%">
+                        <a class="user" data-toggle="modal" data-target="#volverModal"
+                           style="position: relative; right:12%; color: rgba(12,10,12,0.7)">
                             <i class="fas fa-chevron-circle-left"></i>
                             Volver
                         </a>
-                        <h1 style="color: black">REGÍSTRE SU RESTAURANTE</h1>
+                        <h1 style="color: black">REGISTRE SU RESTAURANTE</h1>
                         <p>Complete el siguiente formulario para que el administrador general acepte o rechace su
                             solicitud de restaurante.</p>
-                        <form class="user">
-
+                        <form method="POST" id="registro" class="justify-content-left"
+                              th:action="@{/guardarRestaurante}" th:object="${restaurante}"
+                              enctype="multipart/form-data">
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <input type="text" class="form-control"
-                                           id="exampleNombre"
-                                           placeholder="Nombre del restaurante">
-                                    <h1 class="mt-2 mb-0" style="color: red; font-size: small; text-align: left">Ingrese
-                                        máximo 45 caracteres</h1>
+                                           id="nombre" name="nombre"
+                                           placeholder="Nombre del restaurante" th:field="*{nombre}">
+                                    <div class="text-danger"
+                                        th:if="${#fields.hasErrors('nombre')}"
+                                        th:errors="*{nombre}"></div>
+                                    <div th:if="${nombreResta!=null}" th:text="${nombreResta}"
+                                        class="text-danger"></div>
                                 </div>
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <input type="text" class="form-control"
-                                           id="exampleDirección"
-                                           placeholder="Dirección">
-                                    <h1 class="mt-2 mb-0" style="color: red; font-size: small; text-align: left">Ingrese
-                                        una dirección válida</h1>
+                                           id="direccion" name="direccion"
+                                           placeholder="Dirección" th:field="*{direccion}">
+                                    <div class="text-danger"
+                                        th:if="${#fields.hasErrors('direccion')}"
+                                        th:errors="*{direccion}"></div>
+                                    <div th:if="${direccionResta!=null}" th:text="${direccionResta}"
+                                         class="text-danger"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <input type="number" class="form-control"
-                                           id="exampleCorreo"
-                                           placeholder="RUC">
-                                    <h1 class="mt-2 mb-0" style="color: red; font-size: small; text-align: left">Ingrese
-                                        una RUC válida</h1>
+                                    <input type="text" class="form-control"
+                                           id="ruc" name="ruc"
+                                           placeholder="RUC" th:field="*{ruc}">
+                                    <div class="text-danger"
+                                        th:if="${#fields.hasErrors('ruc')}"
+                                        th:errors="*{ruc}"></div>
+                                    <div th:if="${rucResta!=null}" th:text="${rucResta}"
+                                         class="text-danger"></div>
+                                    <div th:if="${validarApi!=null}" th:text="${validarApi}"
+                                         class="text-danger"></div>
                                 </div>
-                                <div class="col-sm-6 mb-2">
-                                    <input type="number" class="form-control"
-                                           id="exampleTelefono"
-                                           placeholder="Teléfono">
-                                    <h1 class="mt-2 mb-0" style="color: red; font-size: small; text-align: left">Ingrese
-                                        un teléfono válido</h1>
+                                <div class="col-sm-6 mb-2 mb-sm-0">
+                                    <input type="text" class="form-control"
+                                           id="telefono" name="telefono"
+                                           placeholder="Teléfono" th:field="*{telefono}">
+                                    <div class="text-danger"
+                                        th:if="${#fields.hasErrors('telefono')}"
+                                        th:errors="*{telefono}"></div>
+                                    <div th:if="${telefonoResta!=null}" th:text="${telefonoResta}"
+                                        class="text-danger"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-2 mb-sm-0">
+                                    <h4 style="color: black">Distrito</h4>
+                                    <p>Seleccione el distrito donde se ubica su restaurante.</p>
+                                    <select class="form-control" th:field="*{distrito}">
+                                        <option value="" selected>Ingrese un Distrito</option>
+                                        <option th:each="distritos : ${listaDistritos}"
+                                                th:value="${distritos.getIddistrito()}"
+                                                th:text="${distritos.getNombre()}"></option>
+                                    </select>
+                                    <div th:if="${msg3 != null}" th:text="${msg3}"
+                                         class="text-danger"></div>
+                                    <div th:if="${msg5 != null}" th:text="${msg5}"
+                                         class="text-danger"></div>
+
+                                </div>
+                                <div class="col-sm-6 mb-2 mb-sm-0">
+                                    <h4 style="color: black">Imagen del restaurante</h4>
+                                    <p>Adjunte una imagen de referencial del restaurante.</p>
+                                    <div class="custom-file">
+                                        <input type="file" name="photo"
+                                               accept="image/png, image/jpeg, image/webp, image/jpg"
+                                               class="custom-file-input" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                        <div th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                            class="text-danger"></div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -116,130 +152,15 @@
                                 <div class="col-sm-6 mb-2 mb-sm-0">
                                     <h4 style="color: black">Categorías</h4>
                                     <p>Seleccione cuatro categorías que ofrecerá su restaurante.</p>
-                                    <select class="form-control  ">
-                                        <option value="" disabled selected>Primera categoría</option>
-                                        <option value="Árabe">Árabe</option>
-                                        <option value="asiática">asiática</option>
-                                        <option value="café">café</option>
-                                        <option value="carnes">carnes</option>
-                                        <option value="chifa">chifa</option>
-                                        <option value="criolla">criolla</option>
-                                        <option value="desayunos">desayunos</option>
-                                        <option value="fusión">fusión</option>
-                                        <option value="hamburguesas">hamburguesas</option>
-                                        <option value="helados">helados</option>
-                                        <option value="india">india</option>
-                                        <option value="mexicana">mexicana</option>
-                                        <option value="panadería">panadería</option>
-                                        <option value="pastas">pastas</option>
-                                        <option value="pescados y mariscos">pescados y mariscos</option>
-                                        <option value="pizzas">pizzas</option>
-                                        <option value="poke">poke</option>
-                                        <option value="postres">postres</option>
-                                        <option value="salchipapas">salchipapas</option>
-                                        <option value="saludable">saludable</option>
-                                        <option value="sopas y cremas">sopas y cremas</option>
-                                        <option value="sushi">sushi</option>
-                                        <option value="vegetariana">vegetariana</option>
-                                        <option value="pollo">pollo</option>
+                                    <select class="form-control" th:field="*{categoriasRestaurante}" multiple>
+                                        <option th:each="categorias : ${listaCategorias}"
+                                                th:value="${categorias.idcategoria}"
+                                                th:text="${categorias.getNombre()}"></option>
                                     </select>
-                                    <select class="form-control  mt-2">
-                                        <option value="" disabled selected>Segunda categoría</option>
-                                        <option value="Árabe">Árabe</option>
-                                        <option value="asiática">asiática</option>
-                                        <option value="café">café</option>
-                                        <option value="carnes">carnes</option>
-                                        <option value="chifa">chifa</option>
-                                        <option value="criolla">criolla</option>
-                                        <option value="desayunos">desayunos</option>
-                                        <option value="fusión">fusión</option>
-                                        <option value="hamburguesas">hamburguesas</option>
-                                        <option value="helados">helados</option>
-                                        <option value="india">india</option>
-                                        <option value="mexicana">mexicana</option>
-                                        <option value="panadería">panadería</option>
-                                        <option value="pastas">pastas</option>
-                                        <option value="pescados y mariscos">pescados y mariscos</option>
-                                        <option value="pizzas">pizzas</option>
-                                        <option value="poke">poke</option>
-                                        <option value="postres">postres</option>
-                                        <option value="salchipapas">salchipapas</option>
-                                        <option value="saludable">saludable</option>
-                                        <option value="sopas y cremas">sopas y cremas</option>
-                                        <option value="sushi">sushi</option>
-                                        <option value="vegetariana">vegetariana</option>
-                                        <option value="pollo">pollo</option>
-                                    </select>
-                                    <select class="form-control mt-2 ">
-                                        <option value="" disabled selected>Tercera categoría</option>
-                                        <option value="Árabe">Árabe</option>
-                                        <option value="asiática">asiática</option>
-                                        <option value="café">café</option>
-                                        <option value="carnes">carnes</option>
-                                        <option value="chifa">chifa</option>
-                                        <option value="criolla">criolla</option>
-                                        <option value="desayunos">desayunos</option>
-                                        <option value="fusión">fusión</option>
-                                        <option value="hamburguesas">hamburguesas</option>
-                                        <option value="helados">helados</option>
-                                        <option value="india">india</option>
-                                        <option value="mexicana">mexicana</option>
-                                        <option value="panadería">panadería</option>
-                                        <option value="pastas">pastas</option>
-                                        <option value="pescados y mariscos">pescados y mariscos</option>
-                                        <option value="pizzas">pizzas</option>
-                                        <option value="poke">poke</option>
-                                        <option value="postres">postres</option>
-                                        <option value="salchipapas">salchipapas</option>
-                                        <option value="saludable">saludable</option>
-                                        <option value="sopas y cremas">sopas y cremas</option>
-                                        <option value="sushi">sushi</option>
-                                        <option value="vegetariana">vegetariana</option>
-                                        <option value="pollo">pollo</option>
-                                    </select>
-                                    <select class="form-control mt-2 ">
-                                        <option value="" disabled selected>Cuarta categoría</option>
-                                        <option value="Árabe">Árabe</option>
-                                        <option value="asiática">asiática</option>
-                                        <option value="café">café</option>
-                                        <option value="carnes">carnes</option>
-                                        <option value="chifa">chifa</option>
-                                        <option value="criolla">criolla</option>
-                                        <option value="desayunos">desayunos</option>
-                                        <option value="fusión">fusión</option>
-                                        <option value="hamburguesas">hamburguesas</option>
-                                        <option value="helados">helados</option>
-                                        <option value="india">india</option>
-                                        <option value="mexicana">mexicana</option>
-                                        <option value="panadería">panadería</option>
-                                        <option value="pastas">pastas</option>
-                                        <option value="pescados y mariscos">pescados y mariscos</option>
-                                        <option value="pizzas">pizzas</option>
-                                        <option value="poke">poke</option>
-                                        <option value="postres">postres</option>
-                                        <option value="salchipapas">salchipapas</option>
-                                        <option value="saludable">saludable</option>
-                                        <option value="sopas y cremas">sopas y cremas</option>
-                                        <option value="sushi">sushi</option>
-                                        <option value="vegetariana">vegetariana</option>
-                                        <option value="pollo">pollo</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-sm-6 mb-2 mb-sm-0">
-                                    <h4 style="color: black">Imagen del restaurante</h4>
-                                    <p>Adjunte una imagen de referencial del restaurante.</p>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                        <label class="custom-file-label" for="inputGroupFile03">Adjuntar archivo</label>
-                                        <h1 class="mt-2 mb-0" style="color: red; font-size: small; text-align: left">
-                                            Ingrese un tipo de archivo válido (JPEG,JPG o PNG)</h1>
+                                    <div th:if="${msg != null}" th:text="${msg}"
+                                         class="text-danger">
                                     </div>
-
-
                                 </div>
-
-
                             </div>
 
                             <hr>
@@ -248,11 +169,8 @@
                                 Registrar
                             </a>
                         </form>
-
-
                     </div>
                     <!-- /.container-fluid -->
-
                 </div>
                 <!-- End of Main Content -->
 
@@ -283,16 +201,16 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">¿Desea volver?</h5>
+                        <h5 class="modal-title" id="exampleModalLabel1">¿Desea volver?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.
+                    <div class="modal-body">Al seleccionar el botón volver, no se guardará la información registrada.
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="adminCreado.html">Volver</a>
+                        <a class="btn btn-primary" th:href="@{/paginabienvenida}">Volver</a>
                     </div>
                 </div>
             </div>
@@ -313,29 +231,42 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="restauranteCreado.html">Enviar</a>
+                        <button class="btn btn-primary" type="submit" form="registro">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
-
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
-
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
+        <!-- Begin new script -->
+        <script>
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+        <!-- End new script -->
 
     </body>
 

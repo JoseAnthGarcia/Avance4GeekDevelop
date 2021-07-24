@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
     <title>Registro</title>
 
     <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
@@ -43,7 +43,7 @@
             <nav class="navbar navbar-expand  topbar mb-4 static-top shadow" style="background-color:#701111;">
                 <a class="navbar-brand d-flex align-items-center justify-content-center" href="#">
                     <div class="navbar-brand rotate-n-15">
-                        <i class="fas fa-truck-loading" style="color: white"></i>
+                        <i class="fas fa-shopping-basket" style="color: white"></i>
                     </div>
                     <div class="navbar-brand-text mx-3" style="color: white">
                         Food Delivery
@@ -56,21 +56,18 @@
                     </button>
                 </form>
 
-                <!-- Topbar Navbar -->
-
                 <div class="topbar-divider d-none d-sm-block"></div>
-
-                </ul>
             </nav>
             <!-- End of Topbar -->
+
             <!-- Begin Page Content -->
             <div class="container">
 
-                <a class="dropdown-item user" href="#" data-toggle="modal" data-target="#volverModal"
-                   style="position: relative; right:12%">
+                <a class="dropdown-item user"  th:href="@{/}" style="position: relative; right:12%">
                     <i class="fas fa-chevron-circle-left"></i>
                     Volver
                 </a>
+
                 <h1 style="color: black">Registro</h1>
                 <p>Complete el siguiente formulario para registrarse en el sistema y pueda realizar pedidos.</p>
                 <form method="post" enctype="multipart/form-data"
@@ -85,6 +82,9 @@
                             <div style="color: red; font-size: small; text-align: left"
                                  th:if="${#fields.hasErrors('nombres')}"
                                  th:errors="*{nombres}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg11 != null}"
+                                 th:text="${msg11}"></div>
 
 
                         </div>
@@ -95,7 +95,9 @@
                             <input type="text" class="form-control" style="border-color:lightgray"
                                    id="exampleApellido" th:field="*{apellidos}"
                                    placeholder="Apellidos">
-
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg12 != null}"
+                                 th:text="${msg12}"></div>
                             <div style="color: red; font-size: small; text-align: left"
                                  th:if="${#fields.hasErrors('apellidos')}"
                                  th:errors="*{apellidos}"></div>
@@ -159,21 +161,35 @@
                             <div style="color: red; font-size: small; text-align: left"
                                  th:if="${#fields.hasErrors('dni')}"
                                  th:errors="*{dni}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg8 != null}"
+                                 th:text="${msg8}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg9 != null}"
+                                 th:text="${msg9}"></div>
+                            <div style="color: red; font-size: small; text-align: left"
+                                 th:if="${msg10 != null}"
+                                 th:text="${msg10}"></div>
                         </div>
-                        <div class="col-sm-6 mb-2 mt-2 mb-sm-0">
-                            <label style="color: black">Foto de Perfil</label>
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <label style="color: black">Foto de perfil</label>
+                            <p>Adjunte una foto de perfil para su cuenta. Esta debe ser una fotografía en la que
+                                se visualice claramente su rostro. Este campo es obligatorio.</p>
                             <div class="custom-file">
-                                <input type="file" style="border-color:lightgray" id="inputGroupFile03">
-                                <label class="custom-file-label " for="inputGroupFile03" style="border-color:lightgray">Foto de
-                                    Perfil</label>
+                                <input type="file" name="photo"
+                                       accept="image/png, image/jpeg, image/webp" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Adjuntar archivo</label>
+                                <h1 th:if="${mensajefoto!=null}" th:text="${mensajefoto}"
+                                    style="color: red; font-size: small; text-align: left"></h1>
                             </div>
-                        </div>
 
+
+                        </div>
 
                     </div>
 
                     <div class="form-group row">
-                        <div  class="col-sm-6 mb-2 mt-2 mb-sm-0" th:object="${Usuario_has_distrito}">
+                        <div  class="col-sm-6 mb-2 mt-2 mb-sm-0" th:object="${ubicacion}">
                                 <label style="color: #000000">Dirección</label>
                                 <input type="text" class="form-control" style="border-color:lightgray"
                                        id="direccion" placeholder="Dirección" th:field="*{direccion}">
@@ -182,12 +198,10 @@
 
                         <div class="col-sm-6  mb-2 mb-sm-0">
                             <label style="color: #000000">Distritos</label>
-                            <select class="form-control" th:field="*{distritos}" style="border-color:lightgray">
+                            <select class="form-control" name="distrito" style="border-color:lightgray">
                                 <option value="0" selected>Distrito</option>
                                 <option th:each="dist : ${listaDistritos}" th:value="${dist.iddistrito}"
                                         th:text="${dist.nombre}"></option>
-
-
                             </select>
                             <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
                             <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>
@@ -265,7 +279,7 @@
 </a>
 
 <!-- Volver Modal-->
-<div class="modal fade" id="volverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="volverModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -277,51 +291,66 @@
             </div>
             <div class="modal-body">Al seleecionar el botón volver, no se guardará la información registrada.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="../login.html">Volver</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-secondary" th:href="@{/login}">Volver</a>
             </div>
         </div>
     </div>
 </div>
 <!-- Registrar Modal-->
-<div class="modal fade" id="registrarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Confirmación de envío de solicitud</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Al pulsar el botón "Enviar", sus datos serán enviados para la revisión por parte del
-                administrador.
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="registroValidacion.html">Enviar</a>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
+<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}"></script>
+<script src="../bootstrap/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+<script src="../bootstrap/vendor/chart.js/Chart.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script th:src="@{/js/demo/datatables-demo.js}"></script>
-
-
+<script src="../bootstrap/js/demo/chart-area-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
+<script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
+<script th:src="@{/js/exportar.js}"></script>
+<script th:src="@{/js/exportar2.js}"></script>
+<script th:src="@{/js/exportar3.js}"></script>
 </body>
+
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 
 </html>

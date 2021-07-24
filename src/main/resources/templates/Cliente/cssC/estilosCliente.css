@@ -18,39 +18,39 @@
 
 
 .btn-cerrito {
-    color: white;
+    color: #701111;
     background-color: #701111;
     border-color: white;
 }
 .btn-cielito{
-    color: white;
+    color: #2d4a8d;
     background-color: #2d4a8d;
     border-color: white;
 }
 
 .btn-back{
-    color: white;
+    color: #d6bd1d;
     background-color: #d6bd1d;
     border-color: white;
 }
 .btn-pay{
-    color: white;
+    color: #64a94d;
     background-color: #64a94d;
     border-color: white;
 }
 .btn-trash {
-    color: white;
+    color: #701111;
     background-color: #701111;
     border-color: white;
 }
 .btn-eliminar {
-    color: white;
+    color: #e08a3d;
     background-color: #e08a3d;
     border-color: white;
 }
 
 .btn-next {
-    color: white;
+    color: #d4b900;
     background-color: #d4b900;
     border-color: white;
 }
@@ -62,7 +62,7 @@
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #ece7e7;
+    background-color: #701111;
     background-clip: border-box;
     border: 1px solid #e3e6f0;
     border-radius: 0.35rem;
@@ -73,7 +73,7 @@
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #ece7e7;
+    background-color: #701111;
     background-clip: border-box;
     border: 1px solid #e3e6f0;
     border-radius: 0.35rem;

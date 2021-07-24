@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
+    <title>Recuperar Contraseña</title>
+    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
+    <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
+    <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
+
+
+    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this page -->
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
+</head>
+
+<body class="bg-login-image2">
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-2 shadow-lg my-5 bg-primary">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-white mb-4">Ingrese su nueva contraseña</h1>
+                                </div>
+                                <form class="user" th:action="@{/actualizarContraOlvidada}" method="post" >
+                                    <input name="id" th:value="${id}" hidden="">
+                                    <div class="form-group">
+                                        <input class="form-control form-control-user"
+                                               type="password" name="contra1"
+                                               placeholder="Contraseña">
+                                        <div th:if="${msg1 != null}" th:text="${msg1}" style="color: red; font-size: small; text-align: left" ></div>
+                                        <div th:if="${msg3 != null}" th:text="${msg3}" style="color: red; font-size: small; text-align: left" ></div>
+                                        <div th:if="${msg4 != null}" th:text="${msg4}" style="color: red; font-size: small; text-align: left" ></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input  class="form-control form-control-user"
+                                               type="password" name="contra2" placeholder="Reescriba su contraseña">
+                                        <div th:if="${msg2 != null}" th:text="${msg2}" style="color: red; font-size: small; text-align: left" ></div>
+                                        <div th:if="${msg5 != null}" th:text="${msg5}" style="color: red; font-size: small; text-align: left" ></div>
+                                    </div>
+
+                                    <button class="btn btn-primary btn-user btn-block" type="submit">Actualizar</button>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+</body>
+
+</html>

@@ -5674,9 +5674,9 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .list-group-item-primary.list-group-item-action.active {
-    color: #fff;
-    background-color: #293c74;
-    border-color: #293c74;
+    color: #78261f;
+    background-color: white;
+    border-color: #cccccc;
 }
 
 .list-group-item-secondary {
@@ -11784,7 +11784,6 @@ a:focus {
 }
 
 .image2 {
-    display: block;
     object-fit: cover;
     border-radius: 0.35rem;
 }

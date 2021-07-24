@@ -55,3 +55,42 @@ h6.notificacion{
     display: block;
 }
 
+.btn-azulito {
+    color: #fff;
+    background-color: #2f51ef;
+    border-color: #1c37d6;
+}
+
+.btn-azulito:hover {
+    color: #fff;
+    background-color: #125ed2;
+    border-color: #1d50be;
+}
+
+.btn-azulito:focus, .btn-danger.focus {
+    color: #fff;
+    background-color: #125ed2;
+    border-color: #1d50be;
+    box-shadow: 0 0 0 0.2rem rgb(50, 108, 233);
+}
+
+.btn-azulito.disabled, .btn-azulito:disabled {
+    color: #fff;
+    background-color: #2f51ef;
+    border-color: #1c37d6;
+}
+
+.btn-azulito:not(:disabled):not(.disabled):active, .btn-azulito:not(:disabled):not(.disabled).active,
+.show > .btn-azulito.dropdown-toggle {
+    color: #fff;
+    background-color: #125ed2;
+    border-color: #1d50be;
+}
+
+.btn-azulito:not(:disabled):not(.disabled):active:focus, .btn-azulito:not(:disabled):not(.disabled).active:focus,
+.show > .btn-azulito.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgb(50, 108, 233);
+}
+
+
+

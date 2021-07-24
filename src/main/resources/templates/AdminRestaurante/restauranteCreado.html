@@ -1,29 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>RESTAURANTE REGISTRADO</title>
-
-        <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
-        <link
-                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-                rel="stylesheet">
-
-        <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
-        <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
-
-
-        <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this page -->
-        <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
-    </head>
+    <head th:replace="AdminRestaurante/fragments/adminRestFragment.html :: head(title='Restaurante creado')"></head>
 
     <body id="page-top">
 
@@ -44,11 +22,6 @@
                     <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
 
                         <!-- Sidebar Toggle (Topbar) -->
-                        <form class="form-inline">
-                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </form>
 
                         <!-- Topbar Search -->
 
@@ -56,34 +29,13 @@
                         <ul class="navbar-nav ml-auto">
 
                             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                            </li>
 
                             <!-- Nav Item - Alerts -->
-
 
                             <div class="topbar-divider d-none d-sm-block"></div>
 
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-black-100 small">Joham Romucho</span>
-                                    <i class="fas fa-user"></i>
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesión
-                                    </a>
-                                </div>
-                            </li>
+                            <li th:replace="AdminRestaurante/fragments/adminRestFragment.html :: cerrarsesion"></li>
 
                         </ul>
 
@@ -94,7 +46,8 @@
                     <div class="container-fluid">
 
                         <!-- DataTales Example -->
-                        <div class="card shadow mb-5 mt-5 mx-auto bg-welcome" style="width: 50%; height: 25%; text-align: center">
+                        <div class="card shadow mb-5 mt-5 mx-auto bg-welcome"
+                             style="width: 50%; height: 25%; text-align: center">
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
@@ -102,8 +55,13 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-                            <h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text"><strong>SU SOLICITUD HA SIDO ENVIADA</strong></h1>
-                            <div class="card-body" style="text-align: center"><a class="btn btn-primary" href="#" data-toggle="modal" data-target="#logoutModal" style="width: 30%;">Cerrar sesión</a></div>
+                            <h1 style="text-align: center; color: #FFFFFF" class="text-sm-center text-uppercase text">
+                                <strong>SU SOLICITUD HA SIDO ENVIADA</strong></h1>
+                            <div class="card-body" style="text-align: center"><a class="btn btn-primary" href="#"
+                                                                                 data-toggle="modal"
+                                                                                 data-target="#logoutModal"
+                                                                                 style="width: 30%;">Cerrar sesión</a>
+                            </div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
@@ -111,9 +69,6 @@
                             <div class="card-body"></div>
                             <div class="card-body"></div>
                             <div class="card-body"></div>
-
-
-
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -152,31 +107,18 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+                    <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" style="background-color: #701111; color: #FFFFFF; border: #701111" href="loginAR.html">Cerrar Sesión</a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
-
-        <!-- Core plugin JavaScript-->
-        <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
-
-        <!-- Custom scripts for all pages-->
-        <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
-
-        <!-- Page level plugins -->
-        <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
-        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-        <!-- Page level custom scripts -->
-        <script  th:src="@{/js/demo/datatables-demo.js}"></script>
+        <!-- Begin Scripts -->
+        <div th:replace="AdminRestaurante/fragments/adminRestFragment.html :: scripts"></div>
+        <!-- End Scripts -->
 
     </body>
 

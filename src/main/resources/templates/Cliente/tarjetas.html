@@ -1,103 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-
-    <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
-    <link href="../bootstrap/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../bootstrap/css/sb-admin-2.css" rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-    <link href="../Cliente/cssC/estilosCliente.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this page -->
-    <link href="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<head th:replace="Cliente/fragments/general.html :: header( title = 'Tarjetas')"></head>
 
-    <title>Tarjetas</title>
-</head>
+
 <body id="page-top">
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
+    <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Food Delivery</div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-utensils"></i>
-                <span>Nuevo Pedido</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaRestaurantes.html">Restaurantes</a>
-
-                    <a class="collapse-item" href="categorías.html">Categorías</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-book-open"></i>
-                <span>Pedidos</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="listaPedidoActual.html">Pedido Actual</a>
-                    <a class="collapse-item" href="listaHistorialPedidos.html">Historial de Pedidos</a>
-                    <a class="collapse-item" href="listaReportes.html">Generar Reportes</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="editarPerfil.html">
-                <i class="fas fa-user-circle"></i>
-                <span>Editar Perfil</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link " href="tarjetas.html">
-                <i class="fas fa-credit-card"></i>
-                <span>Tarjetas</span>
-            </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -134,7 +48,8 @@
                                            placeholder="Buscar..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn" style="background-color:#701111; color:white;" type="button">
+                                        <button class="btn" style="background-color:#701111; color:white;"
+                                                type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
@@ -147,61 +62,60 @@
                     <!-- Nav Item - Alerts -->
 
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
-                            Av. Carlos Izaguirre
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                           th:text="|${session.distritoActual.nombre} - ${session.usuario.direccionactual}|">
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
                             <i class="fas fa-map-marker-alt"></i>
                         </a>
                     </li>
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                        <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaCupones}">
                             <i class="fas fa-tags"></i>
                         </a>
                     </li>
+                    <!-- Nav Item - Alerts campanita Notificaciones -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#notifi" id="alertsDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
+                            <i class="fas fa-bell fa-fw"
+                               data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones"></i>
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter"
+                                  th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                                  th:text="${notificaciones.size()}"></span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header" style="background-color:white; color:#701111; border:#701111;">
-                                Pedidos Pendientes
+                             aria-labelledby="alertsDropdown" id="notifi">
+                            <h6 style="background-color: #701111; border: 1px solid #701111; padding-top: .75rem; padding-bottom: .75rem; color: #fff;
+                             display: block; padding: .5rem 1.5rem; margin-bottom: 0; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                Nuevos Pedidos
                             </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}" class="mt-3 ml-4"> No
+                                tiene pedidos
+                                pendientes</p>
+                            <a th:if="${notificaciones.size()>0||!notificaciones.isEmpty()}"
+                               class="dropdown-item d-flex align-items-center"
+                               th:each="p,in:${notificaciones}"
+                               th:href="@{'/cliente/detallePedidoActual?codigo='+${p.getCodigo()}}">
                                 <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
+                                    <div class="icon-circle" style="background-color: #701111; border: 1px solid #701111; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
+                                    <div class="small text-gray-500"
+                                         th:text="${'Pendiente - S/.'+p.getPrecioTotal()}">Los Olivos - 12:45 pm
+                                    </div>
+                                    <span class="font-weight-bold"
+                                          th:text="${p.getNombre()}"></span>
                                 </div>
                             </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <img class="icon-circle" src="img/rosaNautica.jpg">
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">#12345</div>
-                                    <span class="font-weight-bold">La Rosa Náutica</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="listaPedidoActual.html">Mostrar todos mis pedidos pendientes</a>
+                            <a class="dropdown-item text-center small text-gray-500"
+                               th:href="@{/cliente/pedidoActual}">Ver todos los pedidos</a>
                         </div>
                     </li>
 
@@ -214,15 +128,17 @@
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header font-weight-bold " style="background-color:white; color:#701111; border:#701111;">
-                                Joham Romucho
+                            <h6 class="dropdown-header font-weight-bold "
+                                style="background-color:white; color:#701111; border:#701111;"
+                                th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+
                             </h6>
                             <a class="dropdown-item d-flex align-items-center">
                                 <div class="mr-3">
                                     <i class="fas fa-mobile"></i>
                                 </div>
                                 <div class="font-weight">
-                                    <div class="text-truncate">999999999</div>
+                                    <div class="text-truncate" th:text="${session.usuario.telefono} "></div>
                                     <div class="small text-gray-500">Teléfono</div>
                                 </div>
                             </a>
@@ -235,13 +151,15 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Joham Romucho</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                                  th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|">
+                               </span>
+                            <img class="img-profile rounded-circle" th:src="@{'/cliente/fotoPerfil?id='+${session.usuario.idusuario}}">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfil.html">
+                            <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Editar Perfil
                             </a>
@@ -259,6 +177,8 @@
             </nav>
             <!-- End of Topbar -->
 
+            <!-- End of Topbar -->
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -270,65 +190,71 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 " style="background-color: #701111;">
-                                <h6 class="m-0 font-weight-bold text-gray-400 text-center">AGREGAR TARJETA</h6>
+                                <h6 class="m-0 font-weight-bold text-center" style="color:white">AGREGAR TARJETA</h6>
                             </div>
                             <div class="card-header py-3">
 
-                                <form method="POST" action="">
+                                <form method="POST" th:action="@{/tarjeta/guardar}">
                                     <div class="form-row">
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="dniC">Numero de Tarjeta</label>
-                                            <input type="text" class="form-control " name="dniC"  id="dniC" value="" placeholder="xxxxxxxxxx" >
-
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="idTipoTarjeta">Tarjeta</label>
-                                            <select class="form-control " id="idTipoTarjeta">
-                                                <option selected disabled value="0">Tipo de Tarjeta</option>
-                                                <option  value="1">VISA</option>
-                                                <option  value="2">MASTERCARD</option>
-
-
-                                            </select>
-
+                                        <div class="col-md-12 mb-3">
+                                            <div th:if="${cantTarj != null}" th:text="${cantTarj}"
+                                                 class="alert alert-danger" role="alert"></div>
+                                            <div th:if="${extTarj != null}" th:text="${extTarj}"
+                                                 class="alert alert-danger" role="alert"></div>
+                                            <label>Número de Tarjeta</label>
+                                            <input type="text" class="form-control " id="numeroTarjeta"
+                                                   th:value="${tarjeta}" name="numeroTarjeta"
+                                                   placeholder="Número de tarjeta">
+                                            <div th:if="${msg1 != null}" th:text="${msg1}"
+                                                 style="color: red; font-size: small; text-align: left"></div>
+                                            <div th:if="${msgvalidar != null}" th:text="${msgvalidar}"
+                                                 style="color: red; font-size: small; text-align: left"></div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="nombreC">Nombre </label>
-                                            <input type="text" class="form-control " id="nombreC">
+                                            <input type="text" class="form-control " id="nombreC" name="nombreC"
+                                                   th:value="${nombre}">
+                                            <div th:if="${msg2 != null}" th:text="${msg2}"
+                                                 style="color: red; font-size: small; text-align: left"></div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="apellidoC">Apellidos</label>
-                                            <input type="text" class="form-control " id="apellidoC">
-
+                                            <input type="text" class="form-control " id="apellidoC" name="apellidoC"
+                                                   th:value="${apellido}">
+                                            <div th:if="${msg3 != null}" th:text="${msg3}"
+                                                 style="color: red; font-size: small; text-align: left"></div>
                                         </div>
-
 
                                         <div class="col-md-6 mb-3">
                                             <label for="apellidoC">Fecha de Caducación</label>
                                             <div class="row">
                                                 <div class="col">
-                                                    <select class="form-control ">
-                                                        <option selected disabled value="0">mes</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
+                                                    <select class="form-control" id="mes" name="mes">
+                                                        <option th:selected="${mes.equals('39')}" value="39">mes</option>
+                                                        <option th:selected="${mes.equals('1')}" value="1">1</option>
+                                                        <option th:selected="${mes.equals('2')}" value="2">2</option>
+                                                        <option th:selected="${mes.equals('3')}" value="3">3</option>
+                                                        <option th:selected="${mes.equals('4')}" value="4">4</option>
+                                                        <option th:selected="${mes.equals('5')}" value="5">5</option>
+                                                        <option th:selected="${mes.equals('6')}" value="6">6</option>
+                                                        <option th:selected="${mes.equals('7')}" value="7">7</option>
+                                                        <option th:selected="${mes.equals('8')}" value="8">8</option>
+                                                        <option th:selected="${mes.equals('9')}" value="9">9</option>
+                                                        <option th:selected="${mes.equals('10')}" value="10">10</option>
+                                                        <option th:selected="${mes.equals('11')}" value="11">11</option>
+                                                        <option th:selected="${mes.equals('12')}" value="12">12</option>
                                                     </select>
+                                                    <div th:if="${mdg6 != null}" th:text="${mdg6}"
+                                                         style="color: red; font-size: small; text-align: left"></div>
                                                 </div>
                                                 <div class="col">
-
-                                                    <input type="text" class="form-control " id="year" placeholder="año">
+                                                    <input type="text" class="form-control " id="year" name="year"
+                                                           th:value="${year}" placeholder="año">
+                                                    <div th:if="${msg5 != null}" th:text="${msg5}"
+                                                         style="color: red; font-size: small; text-align: left"></div>
                                                 </div>
                                             </div>
 
@@ -337,14 +263,15 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="idcvv">CVV</label>
-                                            <input type="text" class="form-control " placeholder="3 dígitos" id="idcvv">
-
+                                            <input type="text" class="form-control " placeholder="3 dígitos"
+                                                   th:value="${cvv}" id="idcvv" name="idcvv">
+                                            <div th:if="${msg4 != null}" th:text="${msg4}"
+                                                 style="color: red; font-size: small; text-align: left"></div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3" >
-                                            <a  class="btn btn-primary" href="tarjetasValidaciones.html" type="submit">Agregar</a>
-                                            <a  class="btn btn-danger" href="listaRestaurantes.html" type="submit">Cancelar</a>
-
+                                        <div class="col-md-6 mb-3">
+                                            <button class="btn btn-primary" type="submit">Agregar</button>
+                                            <a class="btn btn-danger">Cancelar</a>
                                         </div>
                                     </div>
                                 </form>
@@ -357,59 +284,58 @@
 
                     <!-- IMAGEN -->
                     <div class="col-xl-4 col-lg-5">
-                        <h3 >                    </h3>
+                        <h3></h3>
                         <img
-                                src="tj1.PNG" width="300" height=" 150">
+                                src="https://www.viabcp.com/wcm/connect/51282a25-8123-4517-af63-f5ccb980633c/Visa%2BLight%2BBorde-optimizado.png?MOD=AJPERES&CACHEID=ROOTWORKSPACE-51282a25-8123-4517-af63-f5ccb980633c-nyEVHqH"
+                                width="100%" height="50%">
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>
-                                            N°
-                                        </th>
-                                        <th>
-                                            Tarjeta
-                                        </th>
-                                        <th>
+                        <div th:if="${listaTarjetas.size()==0}">
+                            <h3>No hay tarjetas registradas</h3>
+                        </div>
 
-                                        </th>
+                        <form th:action="@{/tarjeta/eliminar}" method="post">
+                            <div class="card-body mt-2" th:unless="${listaTarjetas.size()==0}">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                N°
+                                            </th>
+                                            <th>
+                                                Tarjeta
+                                            </th>
+                                            <th>
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td> <input type="checkbox"> </td>
+                                            </th>
 
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td><input type="checkbox"> </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tarjeta,v : ${listaTarjetas}">
+                                            <td th:text="${v.index+1}">1</td>
+                                            <td th:text="|${tarjeta.numerotarjeta.substring(0,6)}******${tarjeta.numerotarjeta.substring(7,10)}|">
+                                                xxxxxxxxxxxxxxxx
+                                            </td>
+                                            <td><input type="checkbox"
+                                                       name="listaTarjetasSelecciones"
+                                                       th:value="${tarjeta.idtarjeta}"></td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>xxxxxxxxxxxxxxxx</td>
-                                        <td> <input type="checkbox"> </td>
+                                        </tbody>
 
-                                    </tr>
+                                    </table>
+                                    <div class="col-md-12 mb-4">
+                                        <button type="button" class="btn btn-dark" th:type="submit">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
 
-                                    </tbody>
-
-                                </table>
-                                <div class="col-md-12 mb-4"  >
-                                    <a type="button" class="btn btn-dark" >
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    </div>
 
                                 </div>
-
                             </div>
-                        </div>
+                        </form>
+
                     </div>
                 </div>
 
@@ -423,7 +349,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+                    <span>Geek Developers &copy; 2021-1</span>
                 </div>
             </div>
         </footer>
@@ -440,27 +366,33 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+<<!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 
+
+
+</body>
 <!-- Bootstrap core JavaScript-->
 <script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -478,7 +410,5 @@
 <script src="../bootstrap/js/demo/chart-area-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-pie-demo.js"></script>
 <script src="../bootstrap/js/demo/chart-bar-demo.js"></script>
-
-</body>
 
 </html>

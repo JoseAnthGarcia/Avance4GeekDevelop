@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 
@@ -8,8 +9,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
 
-  <title>Login</title>
+  <title>Ingresar</title>
 
   <!-- Custom fonts for this template/BASE-COPIAR-NOBORRAR/bootstrap/vendor/fontawesome-free/css/all.min.css -->
   <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
@@ -25,11 +27,26 @@
   <!-- Custom styles for this page -->
   <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function(){
+
+      $("#quieroUnirme").click(function(){
+        $("#quieroUnirme").hide();
+        $("#formularios").show();
+      })
+
+    });
+  </script>
+
 </head>
 
 <body class="bg-login-image2">
 
-<div class="container">
+<div class="container" >
 
   <!-- Outer Row -->
   <div class="row justify-content-center">
@@ -45,8 +62,20 @@
               <div class="p-5">
                 <div class="text-center">
                   <h1 class="h4 text-white mb-4">¡Bienvenido!</h1>
+                  <div class="alert alert-success" role="alert" th:if="${usuarioCreado!=null}">
+                    Su registro fue exitoso. Proceda a confirmar su correo electronico.
+                  </div>
+                  <div class="alert alert-danger" role="alert" th:if="${urlInvalido!=null}">
+                    Enlace no valido.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${contraseniaAct!=null}">
+                    La contraseña fue actualizada.
+                  </div>
+                  <div class="alert alert-success" role="alert" th:if="${correoEnviado!=null}">
+                    Ingrese a su correo para cambiar su contraseña.
+                  </div>
                 </div>
-                <form class="user" th:action="@{/processLogin}" method="post">
+                <form class="user" th:action="@{/processLogin}" method="post" >
                   <div class="form-group">
                     <input type="email" class="form-control form-control-user"
                            id="correo" name="correo" aria-describedby="emailHelp"
@@ -62,18 +91,32 @@
                   <button class="btn btn-primary btn-user btn-block" type="submit">Ingresar</button>
                   <div style="color: red; font-size: small; text-align: left"
                        th:if="${param.error}">Acceso denegado</div>
+                  <div style="color: red; font-size: small; text-align: left"
+                       th:if="${noExisteCuentaGoogle!=null}">Acceso denegado</div>
                   <hr>
-                  <a href="index.html" class="btn btn-google btn-user btn-block">
-                    <i class="fab fa-google fa-fw"></i> Login with Google
+                  <a th:href="@{/oauth2/authorization/google}" class="btn btn-google btn-user btn-block">
+                    <i class="fab fa-google fa-fw"></i> Ingresar con Google
                   </a>
                 </form>
                 <hr>
                 <div class="text-center">
-                  <a class="small" href="olvidoContraseña.html" style="color:#ffffff">¿Has olvidado tu contraseña?</a>
+                  <a class="small" th:href="@{/recuperarContrasenia}" style="color:#ffffff">¿Has olvidado tu contraseña?</a>
                 </div>
                 <div class="text-center">
                   <label class="small text-white-50">¿Todavía no tienes una cuenta?&nbsp</label><a class="small" th:href="@{/ClienteNuevo}" style="color:#ffffff">¡Crea una ahora!</a>
                 </div>
+                <div class="text-center">
+                  <a id="quieroUnirme" class="small" style="color:#ffffff;">¿Quieres ser parte de nosotros?</a>
+                </div>
+                <div id="formularios" style="display: none">
+                  <div class="text-center">
+                    <label class="small text-white-50">¿Administrador de un restaurante?&nbsp</label><a class="small" th:href="@{/registro}" style="color:#ffffff">¡Crea una ahora de AR!</a>
+                  </div>
+                  <div class="text-center">
+                    <label class="small text-white-50">¿Repartidor?&nbsp</label><a class="small" th:href="@{/registroRepartidor}" style="color:#ffffff">¡Crea una ahora de repartidor!</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,15 +11,10 @@ public class Distrito  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotBlank(message="Tiene que ingresar un distrito")
     private int iddistrito;
     @Column(nullable = false)
     private String nombre;
-
-    @ManyToMany
-    @JoinTable(name="usuario_has_distrito",
-            joinColumns = @JoinColumn(name="iddistrito"),
-            inverseJoinColumns = @JoinColumn(name="idusuario"))
-    private List<Usuario> usuariosDistrito;
 
     public int getIddistrito() {
         return iddistrito;
@@ -36,11 +32,4 @@ public class Distrito  implements Serializable {
         this.nombre = nombre;
     }
 
-    public List<Usuario> getUsuariosDistrito() {
-        return usuariosDistrito;
-    }
-
-    public void setUsuariosDistrito(List<Usuario> usuariosDistrito) {
-        this.usuariosDistrito = usuariosDistrito;
-    }
 }

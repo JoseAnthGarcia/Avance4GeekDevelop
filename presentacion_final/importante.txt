@@ -1,0 +1,82 @@
+Correo:
+
+----- CREDENCIALES ----
+-ADMINISTRADOR GENERAL:
+    adminGeneral: alilopez@admingeneral.pe
+    password: adminGeneral
+
+-ADMINISTRADOR:
+
+-USUARIO:
+    usuario: a20181459@pucp.edu.pe
+    clave: 123456789
+    usuario: clienta1@gmail.com
+    clave: 123456789
+
+-RESTAURANTE:
+    usuario: hector.ventura@pucp.edu.pe
+    clave: hector123
+
+-REPARTIDOR:
+    6.- garcia.jose@pucp.edu.pe
+    joseGarcia123 - Amauta, Lince, Los Olivos, Jesus Maria, Santiago de Surco
+
+    brayan.urpa@gmail.com
+    adminGeneral
+
+    mario.caminos@gmail.com
+    marioCaminos123
+
+    susana.villa@gmail.com
+    susana.villa789
+
+    alberto.huaman@gmail.com
+    alberto.huaman15
+
+    rubi.flores23@gmail.com
+    rubiFlores23
+
+Roles:
+1 - cliente
+2 - adminGeneral
+3 - adminRest
+4 - repartidor
+5 - adminitrador
+
+Pedido:
+0 - Pendiente - verde limon pastel
+1 - Aceptado - azul pastel
+2 - Cancelado - rojo pastel
+3 - Preparando - naranja pastel
+4 - Pedido Listo - verde jade pastel
+5 - En Camino - amarillo pastel
+6 - Entregado - verde pastel
+
+Método de pago:
+
+1 - Efectivo
+2 - Online
+3 - POS
+
+Tipo Movilidad: (3 LETRAS Y 3 NUMEROS - 1 LETRA 8 NUMEROS)
+
+5 - moto
+6 - carro
+7 - ticla
+Usuario:
+0 bloqueado
+1 activo
+2 pendiente
+3 rechazado
+
+Restaurante Estados:
+0 pendiente
+1 aceptado
+2 rechazado
+
+
+
+----- nueva BASE DE DATOS -----
+username = admin
+hostname: geekdevelopdb.cnpoqke0qvwy.us-east-1.rds.amazonaws.com
+password = wyw4VrtdEx19kMW9IU6R

@@ -460,8 +460,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //promedio de valoracion repartidor
     @Query(value = "select ceil(avg(p.valoracionrepartidor)) as `valoracion` from usuario u, pedido p, rol r\n" +
-            "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = 8 ", nativeQuery = true)
-    int valoracionRepartidor(int idrepartidor);
+            "where u.idrol = r.idrol and u.idusuario = p.idrepartidor and r.idrol = 4 and u.idusuario = ? ", nativeQuery = true)
+    Integer valoracionRepartidor(int idrepartidor);
 
 
     @Query(value = "select * from usuario u, rol r where u.idrol = r.idrol and concat(lower(u.nombres),lower(u.apellidos)) like %?1%\n" +

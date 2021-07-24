@@ -889,13 +889,13 @@ public class ClienteController {
         try {
             limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
             limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
-
-            for (Categorias c: categoriasList) {
-                if(c.getIdcategoria() != limitInfC){
-                    limitInfC = 0;
-                    limitSupC = 28;
-                    break;
-                }
+            // 7 9 11 12 - (9 - 7 - 11 - 12)
+            if(categoriasList.get(0).getIdcategoria() != limitInfC &&
+                    categoriasList.get(1).getIdcategoria() != limitInfC &&
+                    categoriasList.get(2).getIdcategoria() != limitInfC &&
+                    categoriasList.get(3).getIdcategoria() != limitInfC ) {
+                limitInfC = 0;
+                limitSupC = 28;
             }
             
         }catch (NumberFormatException e){

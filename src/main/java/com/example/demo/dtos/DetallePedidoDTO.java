@@ -10,6 +10,7 @@ public interface DetallePedidoDTO {
     String getFechapedido();
     String getCupon();
     BigDecimal getDescuento();
+    BigDecimal getCantidadapagar();
     int getEstado();
     String getMetodopago();
     String getComentario();

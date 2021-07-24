@@ -110,7 +110,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     @Query(value = "SELECT pe.codigo, concat(u.nombres,' ',u.apellidos) as cliente,u.telefono as telc, concat(ubi.direccion,'-',dis.nombre) as direccion,\n" +
             "       pe.fechapedido, cu.nombre as cupon,concat(ur.nombres,' ',ur.apellidos) as repartidor,\n" +
             "       ur.telefono as telr,\n" +
-            "            cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago, pe.comentariorestaurante as comentario,\n" +
+            "            cu.descuento as descuento, pe.estado as estado, pago.tipo as metodopago,pe.cantidadapagar, pe.comentariorestaurante as comentario,\n" +
             "            pe.preciototal , pe.mismodistrito FROM pedido pe\n" +
             "            inner join usuario u on pe.idcliente = u.idusuario\n" +
             "            left join usuario ur on pe.idrepartidor= ur.idusuario\n" +

@@ -1788,7 +1788,7 @@ public class AdminController  {
         return "AdminGen/reportePedidoRepartidor";
     }
 // TODO: 26/06/2021
-@GetMapping(value ="/ReporteVentas")//lista de reporte de Repartidor pedido
+@GetMapping(value ="/ReporteVentas")//lista de reporte de ventas por restaurante
 public String listaReporteVentas(@RequestParam Map<String, Object> params, Model model,
                                            @RequestParam(value = "texto", required = false) String texto,
                                            @RequestParam(value = "cantidad", required = false) String cantidad,

@@ -128,7 +128,7 @@ public class AdminController  {
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
-                                     @RequestParam(value = "numPag", required = false) Integer numPag,
+                                     @RequestParam(value = "numPag", required = false) String pag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
@@ -139,11 +139,17 @@ public class AdminController  {
 
 
         if(tipo == null){
-            tipo = "repartidor";//TODO: cambiar a "tipo = "adminRest";"
+            tipo = "repartidor";//
         }
 
         //paginacion --------
-        if(numPag==null || numPag<=0){
+        int numPag = -1;
+        try{
+            numPag = Integer.parseInt(pag);
+            if(numPag<=0){
+                numPag= 1;
+            }
+        }catch (NumberFormatException e){
             numPag= 1;
         }
 
@@ -443,14 +449,24 @@ public class AdminController  {
                                  @RequestParam(value = "tipo", required = false) String tipo,
                                  RedirectAttributes attr) throws MessagingException {
 
-        if(id == null){
+        if(id == null ||tipo == null){
             return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+            int tipoUsuario =-1;
+            switch (tipo){
+                case "repartidor":
+                        tipoUsuario=4;
+                    break;
+                case "adminRest":
+                        tipoUsuario=3;
+                    break;
 
-            if(usuarioOpt.isPresent()){
+                default:
+            }
+            if(usuarioOpt.isPresent()  && id != 1 && !tipo.equals("")){
                 Usuario usuario = usuarioOpt.get();
-                if(usuario.getEstado()==2) {
+                if(usuario.getEstado()==2 && usuario.getRol().getIdrol()==tipoUsuario) {
                     usuario.setEstado(1);
                     //Fecha de registro:
                     Date date = new Date();
@@ -488,14 +504,24 @@ public class AdminController  {
                                     @RequestParam(value = "tipo", required = false) String tipo,
                                     RedirectAttributes attr) throws MessagingException {
 
-        if(id == null){
+        if(id == null||tipo == null){
             return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+            int tipoUsuario =-1;
+            switch (tipo){
+                case "repartidor":
+                    tipoUsuario=4;
+                    break;
+                case "adminRest":
+                    tipoUsuario=3;
+                    break;
 
-            if(usuarioOpt.isPresent()){
+                default:
+            }
+            if(usuarioOpt.isPresent()  && id != 1 && !tipo.equals("")){
                 Usuario usuario = usuarioOpt.get();
-                if(usuario.getEstado()==2) {
+                if(usuario.getEstado()==2 && usuario.getRol().getIdrol()==tipoUsuario) {
                     usuario.setEstado(3);
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
@@ -527,7 +553,7 @@ public class AdminController  {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-        if (usuarioOpt.isPresent()) {
+        if (usuarioOpt.isPresent()  && idUsuario != 1 ) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
             return "AdminGen/detalleAdminR";
@@ -2477,7 +2503,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             double totalIngresos = 0.0;
 
 
-            if (usuarioOpt.isPresent()) {
+            if (usuarioOpt.isPresent()  && Integer.parseInt(idUsuario) != 1 ) {
                 Usuario usuario = usuarioOpt.get();
 
                 for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
@@ -2578,7 +2604,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         try {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(id));
 
-        if(usuarioOpt.isPresent()){
+        if(usuarioOpt.isPresent() && Integer.parseInt(id) != 1 ){
             Usuario usuario = usuarioOpt.get();
             // ESTADOS
             /*
@@ -2984,6 +3010,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -2997,6 +3025,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3010,6 +3040,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3023,6 +3055,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3036,6 +3070,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3050,6 +3086,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3062,6 +3100,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);

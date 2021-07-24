@@ -229,7 +229,7 @@
                                 </div>
                                 <br>
                                 <div class="form-check-inline mb-3">
-                                    <a class="btn btn-cielito mr-3" th:if="${session.carrito.size() != 0 }" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPlato='+${plato.getIdplato()}+'&idPage=1'}"><i
+                                    <a class="btn btn-cielito mr-3" th:if="${session.carrito != null }" style="background-color: #2d4a8d; color: #FFFFFF"  th:href="@{'/cliente/mostrarCarrito?idPlato='+${plato.getIdplato()}+'&idPage=1'}"><i
                                             class="fas fa-cart-plus mr-2"></i>Ir al carrito
                                     </a>
                                     <a class="btn btn-back mr-3" style="background-color: #d6bd1d; color: #FFFFFF" th:href="@{'/cliente/listaPlatos'}"><i
@@ -297,14 +297,14 @@
                         </div>
                     </div>
                     <div th:if="${msgAddExtra != null}" th:text="${msgAddExtra}" class="alert alert-primary ml-2 mr-2 mt-2" role="alert"></div>
-                    <h2 th:if="${listaExtras.size() == 0}" th:text="|No hay extras disponibles para este plato|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
                     <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValCantExt != null}" th:text="${msgValCantExt}"></div>
                     <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValExt != null}" th:text="${msgValExt}"></div>
+                    <h3 th:if="${listaExtras.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h3>
 
-                    <div class="card-body">
+                    <div class="card-body" th:if="${listaExtras.size() == 0}">
                         <div class="container-fluid">
-                            <div class="table-responsive ">
-                                <table th:if="${listaExtras.size() != 0}" class="table table-bordered">
+                            <div class="table-responsive">
+                                <table th:if="${listaExtras != null}" class="table table-bordered">
                                     <thead>
                                     <th class="text-center">Extras</th>
                                     <th class="text-center">Nombre</th>

@@ -95,15 +95,7 @@
                         </div>
                     </div>
                 </form>
-                <div class="alert alert-success" role="alert"
-                     th:if="${msg1!=null}" th:text="${msg1}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg2!=null}" th:text="${msg2}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg3!=null}" th:text="${msg3}">
-                </div>
+
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
@@ -129,6 +121,15 @@
 
                         </style>
                     </div>
+                    <div class="alert alert-success" role="alert"
+                         th:if="${msg1!=null}" th:text="${msg1}">
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${msg2!=null}" th:text="${msg2}">
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${msg3!=null}" th:text="${msg3}">
+                    </div>
                     <div class="containerta">
                         <div class="row">
                             <div class="col-12">
@@ -144,7 +145,7 @@
                                     <tr th:each="repartidor, v : ${listaRepartidorSolicitudes}">
                                         <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img  th:src="@{'/admin/images?id='+${repartidor.idusuario}}" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/images?id='+${repartidor.idusuario}}" class="img-fluid img-thumbnail" style="height: 200px; width: 200px">
 
                                         </td>
                                         <td><div class="table-responsive">

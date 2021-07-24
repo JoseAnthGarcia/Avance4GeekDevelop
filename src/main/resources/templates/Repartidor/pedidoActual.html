@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
                                         <a  class="btn " style="background-color: black; color: white"
-                                                th:href="@{'/repartidor/pedidoEntregado?codigo='+${pedidoAct.codigo}}">Confirmar</a>
+                                            data-toggle="modal" data-target="#finalizarModal" href="#">Confirmar</a>
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,25 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
+<!-- FInalizar Modal-->
+<div class="modal fade" id="finalizarModal" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header notificacion">
+                <h4 class="modal-title" style="color:white;">Finalizar entrega del pedido</h4>
+            </div>
+            <div class="modal-body">
+                <p class="card-text" >
+                    Si presionas el botón "Confirmar", confirmas que se ha realizado la entrega del pedido satisfactoriamente</p>
+
+                <a class="btn btn-success " style="position: relative; left: 36%"  th:href="@{'/repartidor/pedidoEntregado?codigo='+${pedidoAct.codigo}}">Confirmar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

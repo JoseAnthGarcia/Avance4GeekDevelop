@@ -27,6 +27,8 @@ public class Plato implements Serializable {
     @Positive(message = "Ingrese una cantidad positiva")
     @Digits(integer=10, fraction = 1, message = "Ingrese un precio válido")
     @NotNull(message = "Este campo es obligatorio")
+    @Max(value=1000, message = "El precio máximo es de 1000 soles")
+    @Min(value=5, message = "El precio mínimo es de 5 soles")
     private double precio;
     @Column(name="idcategoriarestaurante", nullable = false)
     private int idcategoriaplato;

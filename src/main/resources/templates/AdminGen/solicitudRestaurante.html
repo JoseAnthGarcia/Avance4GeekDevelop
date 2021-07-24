@@ -119,7 +119,7 @@
                     <div class="containerta">
                         <div class="row">
                             <div class="col-12">
-                                <table class="table table-image table-responsive">
+                                <table class="table table-bordered">
                                     <thead>
                                     <tr>
                                         <th scope="col" style="width: 50px">N°</th>
@@ -131,7 +131,7 @@
                                     <tr th:each="rest, v : ${listaRestaurantes}">
                                         <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img  th:src="@{'/admin/imagesRest?id='+${rest.idrestaurante}}" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/imagesRest?id='+${rest.idrestaurante}}" class="img-fluid img-thumbnail" style="height: 200px; width: 200px">
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">

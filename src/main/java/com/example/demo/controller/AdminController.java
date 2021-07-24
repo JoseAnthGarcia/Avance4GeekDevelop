@@ -331,8 +331,15 @@ public class AdminController  {
                     //
                     restauranteRepository.save(restaurante);
 
-                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestaurante(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
                     return "redirect:/admin/solicitudes?tipo=restaurante";
                 }else {
@@ -393,8 +400,16 @@ public class AdminController  {
                 if(restaurante.getEstado()==2) {
                     restaurante.setEstado(3);
                     restauranteRepository.save(restaurante);
-                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestauranteAdmin(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
                     return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -444,10 +459,14 @@ public class AdminController  {
                     //
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
                     /////-----------------------------------------  ------/////
@@ -480,10 +499,15 @@ public class AdminController  {
                     usuario.setEstado(3);
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+
 
                     attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
                     /////-----------------------------------------  ------/////
@@ -2514,8 +2538,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuario.setEstado(1);
             usuario.setFechaadmitido(String.valueOf(new Date()));
             usuarioRepository.save(usuario);
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
-            sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
+                sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+            }
 
         }
         return "redirect:/admin/solicitudes";
@@ -2646,10 +2676,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
+                // TODO: 23/07/2021
+                try {
+                    sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado", usuario);
+                } catch (MessagingException e) {
+                    String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                    sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                }
                 /////-----------------------------------------------/////
 
 
@@ -2850,9 +2884,16 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuarioRepository.save(usuario);
 
             /////----------------Envio Correo--------------------/////
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            }
 
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
-            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+
+
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -2939,7 +2980,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2952,7 +2993,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2965,10 +3006,38 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
+    public void sendHtmlMailAceptadoRestaurante(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAceptadoRestauranteAdmin(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+
     public void sendHtmlMailRechazado(String to, String subject, Usuario usuario) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -2977,7 +3046,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Rechazado", context);
+        String emailContent = templateEngine.process("Correo/Rechazado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAdminRegistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

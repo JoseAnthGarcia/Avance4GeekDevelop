@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Reporte Pedidos Cliente')"></head>
-
+<head th:replace="AdminGen/fragments/generalAdmin.html :: head_page( page_name = 'Reporte Pedidos Repartidor')"></head>
 
 <body id="page-top">
 
@@ -75,7 +74,7 @@
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="valoracion">
                                 <option value="0" th:selected="${valoracion.equals('0')}">Valoracion</option>
-                                <option value="6" th:selected="${valoracion.equals('6')}">0</option>
+                                <option value="6" th:selected="${valoracion.equals('6')}">Sin valoracion</option>
                                 <option value="1" th:selected="${valoracion.equals('1')}">1</option>
                                 <option value="2" th:selected="${valoracion.equals('2')}">2</option>
                                 <option value="3" th:selected="${valoracion.equals('3')}">3</option>
@@ -105,14 +104,14 @@
                         <div class="d-sm-flex align-items-center justify-content-between">
 
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE PEDIDOS POR REPARTIDOR</h2>
-                            <button th:if="${listaUsuarios.size() != 0 }"  class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                            <button th:if="${listaUsuarios.size() > 0}"  class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body" id="tabla" >
-
-                            <table class="table "
-                                   style="background-color:#F2E2AA; border-color:#F2E2AA " th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                        <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
+                            <table class="table table-bordered"
+                                   style="background-color:#F2E2AA; border-color:#F2E2AA "  >
                                 <thead>
                                 <tr>
                                     <th style="color:black">
@@ -133,15 +132,17 @@
                                 </tr>
                                 <tr>
                                     <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Cantidad de Pedidos:  ${topMas.getCantidad()}|"></td>
+                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMas.getCantidad()}|"></td>
 
-                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
+                                    <td th:if="${topMenos!=null}"
+                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
                                 </tr>
                                 <tr>
                                     <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Monto Total: S/. ${topMas.getGananciarepartidor()}|"></td>
+                                        style="color:black"  th:text="|Monto Total: S/ ${topMas.getGananciarepartidor()}|"></td>
 
-                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Monto Total: S/. ${topMenos.getGananciarepartidor()}|"></td>
+                                    <td th:if="${topMenos!=null}" style="color:black"
+                                        th:text="|Monto Total: S/ ${topMenos.getGananciarepartidor()}|"></td>
                                 </tr>
 
                                 </tbody>
@@ -149,7 +150,7 @@
                             </table>
 
 
-                            <table  class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                            <table  class="table table-bordered" >
                                 <thead>
                                 </thead>
                                 <tbody>
@@ -192,14 +193,14 @@
                                     <td th:text="${usuario.getTelefono()}" >
                                     </td>
                                     <td th:text="${usuario.getCantidad()}" ></td>
-                                    <td  th:text="|S/. ${usuario.getGananciarepartidor()}|" ></td>
-                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" ></td>
+                                    <td  th:text="|S/ ${usuario.getGananciarepartidor()}|" class="text text-center" ></td>
+                                    <td  th:text="${usuario.getValoracion()==0 ? 'Sin Valoración' : usuario.getValoracion() }" ></td>
                                 </tr>
 
 
                                 </tbody>
                             </table>
-
+                            </div>
 
                         <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
                             <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>

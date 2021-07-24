@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,20 +68,36 @@ public class TarjetaController {
         } catch (NumberFormatException numberFormatException) {
             valNumT = true;
         }
+        Boolean mes_u = true;
         //validacion año
         try {
+            Integer numeroTarjeta1 = Integer.parseInt(year);
+            Integer mesvalidar = Integer.parseInt(mes);
             if (year == null) {
                 valyear = true;
             }
             if (year.length() != 4) {
                 valyear = true;
             }
-            Integer numeroTarjeta1 = Integer.parseInt(year);
+            Date date = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int dateYear = calendar.get(Calendar.YEAR);
+            int dateMes = calendar.get(Calendar.MONTH);
+            if (numeroTarjeta1 == dateYear) {
+                if(mesvalidar < dateMes){
+                    mes_u = true;
+                }
+            }else if(numeroTarjeta1 < dateYear){
+                valyear = true;
+            }
+
+
         } catch (NumberFormatException numberFormatException) {
             valyear = true;
         }
         //VALIDACION MES
-        Boolean mes_u = true;
+
         try {
             Integer u_dist = Integer.parseInt(mes);
             for (int i = 1; i <= 12; i++) {
@@ -92,7 +110,7 @@ public class TarjetaController {
         }
         //VALIDACIÓN NOMBRES
 
-        Pattern pat = Pattern.compile("[a-zA-Z]{1,256}");
+        Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
         Matcher mat = pat.matcher(nombreC);
         if (!mat.matches()) {
             valNumN = true;
@@ -103,7 +121,7 @@ public class TarjetaController {
         //
         //VALIDACIÓN Apellidos
 
-        pat = Pattern.compile("[a-zA-Z]{1,256}");
+        pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
         mat = pat.matcher(apellidoC);
         if (!mat.matches()) {
             valNumaA = true;
@@ -151,10 +169,10 @@ public class TarjetaController {
                 model.addAttribute("cantTarj", "Puede registrar 5 tarjetas como máximo");
             }
             if (mes_u) {
-                model.addAttribute("mdg6", "Debe escoger un mes");
+                model.addAttribute("mdg6", "Debe escoger un mes válido");
             }
             if (valyear) {
-                model.addAttribute("msg5", "Debe colocar 4 dígitos(números)");
+                model.addAttribute("msg5", "Debe colocar un año válido");
             }
             model.addAttribute("tarjeta", numeroTarjeta);
             model.addAttribute("nombre", nombreC);

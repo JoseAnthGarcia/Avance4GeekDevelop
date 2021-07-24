@@ -46,7 +46,7 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 public class ClienteController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";
     public String puerto = "8080";
 
     @Autowired

@@ -380,6 +380,9 @@ public class ClienteController {
         System.out.println("IDCATEGORIA2: "+idCategoria);
 
 
+
+
+
         if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
             System.out.println(" ENTRO AL QUERY 1"  );
             Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);

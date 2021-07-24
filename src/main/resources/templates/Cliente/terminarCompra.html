@@ -12,6 +12,12 @@
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
+    <style>
+        #popup {
+            display:none;
+            display: inline-block;
+        }
+    </style>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -227,30 +233,45 @@
                                                 <div class="col-6 mt-1">
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Seleccione una tarjeta: </strong></h6>
                                                     <br>
+                                                    <div th:hidden="${listaTarjetas.size() == 0}" class="container" id="registrarTarjetaText">
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Tipo
                                                         de Tarjeta</strong></h6>
                                                     <br>
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Número
                                                         de Tarjeta: </strong></h6>
                                                     <br>
-                                                    <h6 style="color:#000000;" class="ml-3 mt-3 text-left"><strong>Expiración:
+                                                    <h6 style="color:#000000;" class="ml-3 mt-1  text-left"><strong>Expiración:
                                                         (mm/yy)</strong>
                                                     </h6>
                                                     <br>
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left">
                                                         <strong>CVV</strong></h6>
                                                     <br>
+                                                    </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div th:if="${listaTarjetas.size() == 0}" class="mt-2 mb-4"><h6><strong>No tiene una tarjeta registrada</strong></h6></div>
-                                                    <select th:if="${listaTarjetas.size() != 0}" class="form-control form-control-sm mb-4" name="tarjeta" form="generarPedido">
-                                                        <option value=""    selected>Seleccione una tarjeta</option>
-                                                        <option th:each="tarjeta : ${listaTarjetas}"
-                                                                th:text="|${tarjeta.getNumerotarjeta()}|"
-                                                                th:value="${tarjeta.getIdtarjeta()}"></option>
-                                                    </select>
+                                                    <div class="form-check-inline">
+                                                        <div th:if="${listaTarjetas.size() == 0}" class="mt-2 mb-4"><h6>
+                                                            <strong>No tiene una tarjeta registrada</strong></h6></div>
+                                                        <select th:if="${listaTarjetas.size() != 0}"
+                                                                class="form-control form-control-sm mb-4"
+                                                                onchange="hideOnlineForm()"
+                                                                name="tarjeta" form="generarPedido">
+                                                            <option value="" selected disabled>Seleccione una tarjeta
+                                                            </option>
+                                                            <option th:each="tarjeta : ${listaTarjetas}"
+                                                                    th:text="|${tarjeta.getNumerotarjeta().substring(0,6)}******${tarjeta.getNumerotarjeta().substring(13,16)}|"
+                                                                    th:value="${tarjeta.getIdtarjeta()}"></option>
+                                                        </select>
+                                                        <button type="button" class="ml-2 mb-3" onclick="showOnlineForm()" ondblclick="hideOnlineForm()" id="onlineForm"
+                                                                style="background-color: transparent; border-color: transparent">
+                                                            <i class="fas fa-caret-down"></i></button>
+<!--
+                                                        <div id="popup" >Si quiere usar una tarjeta nueva dar click al botón y doble click para esconderlo</div>
+-->
+                                                    </div>
 
-                                                    <div class="container">
+                                                    <div th:hidden="${listaTarjetas.size() == 0}" class="container" id="registrarTarjetaInput">
                                                         <select th:if="${tipo != null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
                                                             <option value="">Seleccione el tipo de su tarjeta</option>
                                                             <option value="1" th:selected="${tipo.equals('1')}">Visa</option>
@@ -262,7 +283,6 @@
                                                             <option value="2">Mastercad</option>
                                                         </select>
                                                         <h6 th:if="${msgTipoVal != null}" style="color: red; font-size: 15px" th:text="${msgTipoVal}"></h6>
-                                                    </div>
                                                     <br>
                                                     <div class="input-group input-group-sm">
                                                         <input type="text" class="form-control text-center"
@@ -316,6 +336,7 @@
                                                         <h6 th:if="${msgCvvVal != null}" style="color: red; font-size: 15px" th:text="${msgCvvVal}"></h6>
 
                                                     </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -332,19 +353,6 @@
 
                                             <div class="row justify-content-between mt-2 mb-2">
                                                 <h6 class="ml-4 mb-4" style="color: black"><strong>El repartidor aceptará cualquier tarjeta de crédito (Visa/Mastercard)</strong></h6>
-                                                <!--
-                                                <div class="col-6 mt-1">
-                                                    <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Ingrese
-                                                        el tipo de tarjeta con la que pagará: </strong></h6>
-                                                </div>
-                                                <div class="col-6">
-                                                    <select class="form-control form-control-sm mt-2">
-                                                        <option selected>Seleccionar una tarjeta</option>
-                                                        <option value="1">Visa</option>
-                                                        <option value="2">Mastercard</option>
-                                                    </select>
-                                                </div>
-                                                -->
                                             </div>
                                         </div>
                                     </div>
@@ -368,6 +376,7 @@
                                                         <h6>S/. </h6>
                                                         <input type="text" class="form-control text-center ml-2" name="efectivoPagar" form="generarPedido">
                                                         <h6 th:if="${msgEfect != null}" style="color: red; font-size: 15px" th:text="${msgEfect}"></h6>
+                                                        <h6 th:if="${msgCantidadNotNull != null}" style="color: red; font-size: 15px" th:text="${msgCantidadNotNull}"></h6>
                                                         <h6 th:if="${msgNotString != null}" style="color: red; font-size: 15px" th:text="${msgNotString}"></h6>
                                                     </div>
                                                 </div>
@@ -386,24 +395,9 @@
                             </div>
                         </div>
                         <div class="col mt-4">
-                            <!--   <p>
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseExample" aria-expanded="false"
-                                            aria-controls="collapseExample">
-                                        Button with data-bs-target
-                                    </button>
-                                </p>
-                                <div class="collapse" id="collapseExample">
-                                    <div class="card card-body">
-                                        Some placeholder content for the collapse component. This panel is
-                                        hidden by default but revealed when the user activates the relevant
-                                        trigger.
-                                    </div>
-                                </div> -->
                             <div class="card-background mr-3 mb-5 ml-3" style="background-color: #ece7e7; border-color: #FFFFFF">
                                 <div class="row justify-content-between mt-2">
                                     <div class="col-4">
-                                        <!-- TODO MOSTRAR LA LISTA CARRITO -->
                                         <div class="form-check-inline mt-sm-2">
                                             <h6 style="color:#000000; size: auto" class="ml-3 mt-2 mr-3"><strong>Carrito</strong>
                                             </h6>
@@ -713,6 +707,29 @@
 <script src="../bootstrap/js/demo/datatables-demo.js"></script>
 
 <script th:src="@{'/js/escogerMetodoPago/escogerMetodoPago.js'}"></script>
+
+<script>
+    function hideOnlineForm(){
+        $("#registrarTarjetaText").hide();
+        $("#registrarTarjetaInput").hide();
+    }
+
+    function showOnlineForm(){
+        $("#registrarTarjetaText").show();
+        $("#registrarTarjetaInput").show();
+    }
+
+    var e = document.getElementById('text');
+
+    e.onmouseover = function () {
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    e.onmouseout = function() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+</script>
 
 </body>
 

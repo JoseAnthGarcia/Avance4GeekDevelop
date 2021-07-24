@@ -230,11 +230,11 @@
                                                                     <span class="input-group-text">S/.</span>
                                                                     <br> <input type="text" class="form-control"
                                                                                 th:field="*{precio}">
-                                                                    <h1 style="color: red; font-size: small; text-align: left"
-                                                                        th:if="${#fields.hasErrors('precio')}"
-                                                                        th:errors="*{precio}"></h1>
                                                                 </div>
                                                             </div>
+                                                            <h1 style="color: red; font-size: small; text-align: left"
+                                                                th:if="${#fields.hasErrors('precio')}"
+                                                                th:errors="*{precio}"></h1>
                                                         </td>
                                                     </tr>
                                                     <tr th:if="${plato.idplato==0}">

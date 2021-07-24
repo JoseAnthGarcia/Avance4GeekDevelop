@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    public String ip = "107.20.88.235.nip.io";
+    public String ip = "34.227.30.44.nip.io";
     public String puerto = "8080";
 
     @Autowired
@@ -576,7 +576,7 @@ public class LoginController {
 
             /////----------------Envio Correo--------------------/////
 
-            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado html", cliente);
+            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado", cliente);
 
 
             /////-----------------------------------------  ------/////
@@ -649,13 +649,12 @@ public class LoginController {
                     validarCorreoRepository.save(validarcorreo2);
 
                     //genero url:
-                    String url = "http://" + ip + ":" + puerto + "/foodDelivery/cambioContra?correo=" +
-                            cliente.getCorreo() + "&id=" + codigoAleatorio;
-                    String content = "Hemos recibido una solicitud de cambio de contraseña.\n"
-                            + "Para cambiar su contraseña ingrese al siguiene enlace:\n" + url
-                            + "\nEnlace valido por 10 min.\n(Si no ha solicitado el cambio de contraseña omita este correo)";
                     String subject = "OLVIDO DE CONTRASEÑA";
-                    sendEmail(correo, subject, content);
+                    try {
+                        sendHtmlMailOlvidoContra(correo, subject, cliente, codigoAleatorio);
+                    } catch (MessagingException e) {
+                        System.out.println("Error al enviar el correo");
+                    }
                     redAt.addFlashAttribute("correoEnviado", true);
                 }
             }
@@ -668,7 +667,7 @@ public class LoginController {
     @GetMapping("/cambioContra")
     public String cambiarContra(@RequestParam(value = "id", required = false) String id,
                                 @RequestParam(value = "correo", required = false) String correo,
-                                RedirectAttributes redAt,Model model) {
+                                RedirectAttributes redAt, Model model) {
         if (id == null || correo == null) {
             return "redirect:/login";
         } else {
@@ -697,11 +696,11 @@ public class LoginController {
 
                 }
 
-                if(noValido){
+                if (noValido) {
                     validarCorreoRepository.delete(validarcorreo);
                     redAt.addFlashAttribute("urlInvalido", true);
                     return "redirect:/login";
-                }else{
+                } else {
                     model.addAttribute("id", id);
                     return "recuperarContra";
                 }
@@ -783,9 +782,9 @@ public class LoginController {
 
             }
 
-            if(noValido){
+            if (noValido) {
                 redAt.addFlashAttribute("urlInvalido", true);
-            }else{
+            } else {
                 Usuario usuario = validarcorreo.getUsuario();
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 String nuevaContra = passwordEncoder.encode(contra1);
@@ -832,6 +831,8 @@ public class LoginController {
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         javaMailSender.send(message);
@@ -841,6 +842,40 @@ public class LoginController {
     @GetMapping("/recuperarContrasenia")
     public String recuperar() {
         return "olvidoContrasenia";
+    }
+
+    public void sendHtmlMailOlvidoContra(String to, String subject,
+                                         Usuario usuario, String codigoHash) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        context.setVariable("correo", usuario.getCorreo());
+        context.setVariable("codigoHash", codigoHash);
+        String emailContent = templateEngine.process("Correo/olvidoContra", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
+    }
+
+    public void sendHtmlMailValidar(String to, String subject,
+                                    Usuario usuario, String codigoHash) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        context.setVariable("correo", usuario.getCorreo());
+        context.setVariable("codigoHash", codigoHash);
+        String emailContent = templateEngine.process("Correo/validarCuenta", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
     }
 
 
@@ -1482,13 +1517,12 @@ public class LoginController {
         validarcorreo.setHash(codigoHash);
         validarCorreoRepository.save(validarcorreo);
 
-        String url = "http://" + ip + ":" + puerto + "/foodDelivery/validarCuenta?correo="
-                + correo + "&value=" + codigoHash;
-        String content = "Su cuenta ha sido creada exitosamente." +
-                "Debe validar su correo para empezar a usar su cuenta.\n"
-                + "Para validar su correo electrónico ingrese al siguiente link:\n" + url;
-        String subject = "Bienvenido a Food Delivery!";
-        sendEmail(correo, subject, content);
+        String subject = "VALIDAR CORREO ELECTRONICO";
+        try {
+            sendHtmlMailValidar(correo, subject, usuario, codigoHash);
+        } catch (MessagingException e) {
+            System.out.println("error al enviar correo en VALIDAR CUENTA.");
+        }
     }
 
 

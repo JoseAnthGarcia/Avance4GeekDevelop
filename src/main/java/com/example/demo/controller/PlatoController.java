@@ -476,19 +476,42 @@ public class PlatoController {
 
         return "redirect:/plato/lista?idcategoria=" + idcategoria;
     }
-    /*
+
     @InitBinder("plato")
     public void validatorDataBinding(WebDataBinder binder) {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
-            public void setAsDouble(String precio) throws IllegalArgumentException {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                System.out.println("----------------------------Precio-----------------------------"+text);
                 try {
-                    this.setValue(Double.parseDouble(precio));
+                    System.out.println("xd1");
+                    this.setValue(Double.parseDouble(text));
+                    System.out.println("xddddddddddddddddddddddd "+this.getValue());
+                    if(text.contains("E")){
+                        String[] parts = text.split("E");
+                        String part1 = parts[0];
+                        String part2 = parts[1];
+                        System.out.println(part1);
+                        System.out.println(part2);
+                        if((Double.parseDouble(part1)>=1.7) && (Double.parseDouble(part2)>=308)){
+                            System.out.println("El valor es mayor o igual a 8E308");
+                            this.setValue(0.0);
+                        }
+                        else if ((Double.parseDouble(part2)>308)){
+                            System.out.println("El valor es mayor a 1E309");
+                            this.setValue(0.0);
+                        }
+                        else{
+                            System.out.println("Válido");
+                        }
+                    }
                 } catch (NumberFormatException e) {
-                    this.setValue(0);
+                    System.out.println("xd2");
+                    System.out.println(text);
+                    this.setValue(text);
                 }
             }
         };
-        binder.registerCustomEditor(Double.class, "precio", integerValidator);
+        binder.registerCustomEditor(Object.class, "precio", integerValidator);
     }
-*/
 }

@@ -109,10 +109,50 @@
                         </div>
 
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                    <div class="card-body" id="tabla" >
+
+                            <table class="table "
+                                   style="background-color:#F2E2AA; border-color:#F2E2AA ">
                                 <thead>
+                                <tr>
+                                    <th style="color:black">
+                                        TOP 1 REPARTIDOR CON MAS PEDIDOS
+                                    </th>
+                                    <th style="color:black">
+                                        TOP 1 REPARITDOR CON MENOS PEDIDOS
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody >
+
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="${topMas.getRepartidor()}"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="${topMenos.getRepartidor()}"></td>
+                                </tr>
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="|Cantidad de Pedidos:  ${topMas.getCantidad()}|"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
+                                </tr>
+                                <tr>
+                                    <td th:if="${topMas!= null}"
+                                        style="color:black"  th:text="|Monto Total: S/. ${topMas.getGananciarepartidor()}|"></td>
+
+                                    <td th:if="${topMenos!=null}" style="color:black"  th:text="|Monto Total: S/. ${topMenos.getGananciarepartidor()}|"></td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+
+                            <table  class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                                <thead>
+                                </thead>
+                                <tbody>
                                 <tr>
                                     <th class="text-center">
                                         N°
@@ -140,27 +180,27 @@
                                     </th>
 
                                 </tr>
-                                </thead>
-                                <tbody>
+
+
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
-                                    <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 60px">1</td>
+                                    <td th:text="${(current -1)*10 + v.index +1}" >1</td>
 
 
-                                    <td th:text="${usuario.getRepartidor()}" class="text-center" style="width: 240px"></td>
-                                    <td th:text="${usuario.getDni()}" class="text-center" style="width: 260px"></td>
-                                    <td th:text="${usuario.getCorreo()}" class="text-center" style="width: 200px"></td>
-                                    <td th:text="${usuario.getTelefono()}" class="text-center" style="width: 200px">
+                                    <td th:text="${usuario.getRepartidor()}" ></td>
+                                    <td th:text="${usuario.getDni()}" ></td>
+                                    <td th:text="${usuario.getCorreo()}" ></td>
+                                    <td th:text="${usuario.getTelefono()}" >
                                     </td>
-                                    <td th:text="${usuario.getCantidad()}" class="text-center" style="width: 240px"></td>
-                                    <td  th:text="|S/ ${usuario.getGananciarepartidor()}|" class="text-center" style="width: 160px"></td>
-                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
+                                    <td th:text="${usuario.getCantidad()}" ></td>
+                                    <td  th:text="|S/. ${usuario.getGananciarepartidor()}|" ></td>
+                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" ></td>
                                 </tr>
 
 
                                 </tbody>
                             </table>
 
-                        </div>
+
                         <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
                             <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
                         </div>

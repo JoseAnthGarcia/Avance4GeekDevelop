@@ -73,6 +73,8 @@
                                     <th scope="col">Pedido</th>
                                     <th scope="col">Hora de registro</th>
                                     <th scope="col">Aceptar</th>
+                                    <th scope="col">Detalle</th>
+
                                     <!-- <th scope="col">Rechazar</th>-->
                                 </tr>
                                 </thead>
@@ -81,20 +83,25 @@
 
                                 <tr th:each="pedido, i : ${listaPedidos}">
                                     <th scope="row" th:text="${(currentPage -1)*5 + i.index +1}">1</th>
-                                    <td>
-                                        <a data-toggle="modal" th:data-target="'#modal'+${pedido.codigo}"
-                                           th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}"
-                                           class="btn" th:id="${pedido.codigo}">
-                                        </a>
+                                    <td th:text="${pedido.restaurante.nombre} + ' - ' + ${pedido.codigo}">
+
                                     </td>
                                     <td th:text="${pedido.fechapedido.substring(11,pedido.fechapedido.length())}">
                                         17:49
                                     </td>
                                     <td>
                                         <a style="color: #dce3f9"
-                                           th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}"
+                                           data-toggle="modal" th:data-target="'#modalAceptar'+${pedido.codigo}"
+                                           th:id="${pedido.codigo}"
                                            class="btn btn-success btn-circle align">
                                             <i class="fas fa-check text-white"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a data-toggle="modal" th:data-target="'#modal'+${pedido.codigo}"
+                                           th:id="${pedido.codigo}"
+                                           class="btn btn-warning btn-circle align">
+                                            <i class="fas fa-info text-white"></i>
                                         </a>
                                     </td>
                                     <!-- <td>
@@ -158,7 +165,27 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
+<!-- Aceptar Modal-->
+<div>
+    <div th:each="pedido:${listaPedidos}" class="modal fade" th:id="'modalAceptar'+${pedido.codigo}" role="dialog">
+        <div class="modal-dialog">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header notificacion">
+                    <h4 class="modal-title" style="color:white;">Aceptar pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="card-text" th:utext="'Si presionas el botón Aceptar pedido, aceptarás realizar la entrega del pedido '+${pedido.codigo} ">
+                    </p>
+
+                    <a class="btn btn-success " style="position: relative; left: 36%" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}">Aceptar pedido</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

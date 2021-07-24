@@ -9,6 +9,9 @@ import com.example.demo.service.PedidoActualService;
 import com.example.demo.service.PlatoClienteService;
 import com.example.demo.service.RestauranteClienteService;
 import com.example.demo.service.*;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import javax.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -38,6 +44,10 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 
 @RequestMapping("/cliente")
 public class ClienteController {
+
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "34.227.30.44.nip.io";
+    public String puerto = "8080";
 
     @Autowired
     TarjetaRepository tarjetaRepository;
@@ -59,6 +69,12 @@ public class ClienteController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Autowired
     PlatoRepository platoRepository;
@@ -202,35 +218,36 @@ public class ClienteController {
 
 
     }
-
-    /*********************************************************  LISTA RESTAURANTE***************************************************************************************/
+/*********************************************************  LISTA RESTAURANTE***************************************************************************************/
     @GetMapping("/listaRestaurantes")
     public String listaRestaurantes(Model model, HttpSession httpSession,
                                     @RequestParam Map<String, Object> params,
-                                    @RequestParam(value = "texto", required = false) String texto,
-                                    @RequestParam(value = "idPrecio", required = false) String idPrecio,
-                                    @RequestParam(value = "idCategoria", required = false) String idCategoria,
-                                    @RequestParam(value = "val", required = false) String val) {
+                                    @RequestParam(value = "texto",required = false) String texto,
+                                    @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                                    @RequestParam(value = "idCategoria",required = false) String idCategoria,
+                                    @RequestParam(value = "val",required = false) String val) {
 
-        if (httpSession.getAttribute("carrito") != null) {
+        if(httpSession.getAttribute("carrito") != null){
             httpSession.removeAttribute("carrito");
         }
-        if (httpSession.getAttribute("extrasCarrito") != null) {
+        if(httpSession.getAttribute("extrasCarrito") != null){
             httpSession.removeAttribute("extrasCarrito");
         }
-        System.out.println("IDCATEGORIA: " + idCategoria);
+        System.out.println("IDCATEGORIA: "+ idCategoria);
 
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        System.out.println("USUARIO ID: " + usuario.getIdusuario());
+        System.out.println("USUARIO ID: "+ usuario.getIdusuario());
         int page;
-        try {
+        try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        } catch (NumberFormatException nfe) {
-            page = 0;
+        }catch(NumberFormatException nfe){
+            page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
+
+
 
 
         int iddistritoactual = 1;
@@ -249,62 +266,62 @@ public class ClienteController {
         }
 
 
-        if (val == null || val.equals("")) {
+        if(val == null || val.equals("")){
             val = "7";
             httpSession.removeAttribute("val");
-        } else {
-            httpSession.setAttribute("val", val);
+        }else{
+            httpSession.setAttribute("val",val);
         }
 
-        if (idPrecio == null || idPrecio.equals("")) {
+        if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
             httpSession.removeAttribute("idPrecio");
-        } else {
-            httpSession.setAttribute("idPrecio", idPrecio);
+        }else{
+            httpSession.setAttribute("idPrecio",idPrecio);
         }
 
         if (texto == null) {
             texto = "";
             httpSession.removeAttribute("texto");
 
-        } else {
-            httpSession.setAttribute("texto", texto);
+        }else{
+            httpSession.setAttribute("texto",texto);
         }
 
-        String id1 = "";
-        String id2 = "-";
-        String id3 = "-";
-        if (idCategoria == null) {
-            idCategoria = "";
+        String id1="";
+        String id2="-";
+        String id3="-";
+        if(idCategoria == null){
+            idCategoria="";
             httpSession.removeAttribute("idCategoria");
-        } else {
+        }else {
             try {
                 int idcat = Integer.parseInt(idCategoria);
-                if (idcat > 0 && idcat < 28) {
-                    id1 = "-" + idCategoria + "-";
-                    id2 = "-" + idCategoria;
-                    id3 = idCategoria + "-";
+                if( idcat>0 && idcat<28) {
+                    id1 = "-"+idCategoria+"-";
+                    id2 = "-"+idCategoria;
+                    id3 = idCategoria+"-";
                 }
-                httpSession.setAttribute("idCategoria", idCategoria);
-            } catch (NumberFormatException e) {
-                idCategoria = "";
+                httpSession.setAttribute("idCategoria",idCategoria);
+            }catch (NumberFormatException e){
+                idCategoria="";
                 httpSession.removeAttribute("idCategoria");
             }
 
         }
 
 
-        System.out.println("id1 :" + id1);
-        System.out.println("id12 :" + id2);
-        System.out.println("id3 :" + id3);
-        System.out.println("valoracion :" + val);
+        System.out.println("id1 :"+id1);
+        System.out.println("id12 :"+id2);
+        System.out.println("id3 :"+id3   );
+        System.out.println("valoracion :"+val );
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
-        val = httpSession.getAttribute("val") == null ? val : (String) httpSession.getAttribute("val");
-        idCategoria = httpSession.getAttribute("idCategoria") == null ? idCategoria : (String) httpSession.getAttribute("idCategoria");
-        idPrecio = httpSession.getAttribute("idPrecio") == null ? idPrecio : (String) httpSession.getAttribute("idPrecio");
+        texto= httpSession.getAttribute("texto") == null ? texto :  (String) httpSession.getAttribute("texto");
+        val= httpSession.getAttribute("val") == null ? val :  (String) httpSession.getAttribute("val");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? idCategoria :  (String) httpSession.getAttribute("idCategoria");
+        idPrecio= httpSession.getAttribute("idPrecio") == null ? idPrecio :  (String) httpSession.getAttribute("idPrecio");
 
-        switch (idPrecio) {
+        switch (idPrecio){
             case "1":
                 limitInfP = 0;
                 limitSupP = 15;
@@ -327,7 +344,7 @@ public class ClienteController {
                 limitSupP = 5000;
         }
 
-        switch (val) {
+        switch (val){
             case "0":
                 limitInfVal = -1;
                 limitSupVal = 0;
@@ -356,40 +373,40 @@ public class ClienteController {
                 limitInfVal = 0;
                 limitSupVal = 5;
         }
-        System.out.println("lmmiteinf: " + limitInfVal);
-        System.out.println("lmmitesup: " + limitSupVal);
-        System.out.println("preciol1: " + limitSupP);
-        System.out.println("preciol2: " + limitInfP);
-        System.out.println("IDCATEGORIA2: " + idCategoria);
+        System.out.println("lmmiteinf: "+limitInfVal);
+        System.out.println("lmmitesup: "+limitSupVal);
+        System.out.println("preciol1: "+limitSupP);
+        System.out.println("preciol2: "+limitInfP);
+        System.out.println("IDCATEGORIA2: "+idCategoria);
 
 
-        if (val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5")) {
-            System.out.println(" ENTRO AL QUERY 1");
-            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP, limitSupP, limitInfVal, limitSupVal, texto, id1, id2, id3, iddistritoactual, pageRequest);
+        if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
+            System.out.println(" ENTRO AL QUERY 1"  );
+            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante2.getTotalPages();
-            if (totalPage > 0) {
-                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages", pages);
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
 
-        } else {
-            System.out.println(" ENTRO AL QUERY 2");
-            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP, limitSupP, limitInfVal, limitSupVal, texto, id1, id2, id3, iddistritoactual, pageRequest);
+        }else{
+            System.out.println(" ENTRO AL QUERY 2"  );
+            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante.getTotalPages();
-            if (totalPage > 0) {
-                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages", pages);
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
         model.addAttribute("current", page + 1);
-        model.addAttribute("categorias", categoriasRestauranteRepository.findAll());
+        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
-        System.out.println("IDCATEGORIA3:  " + idCategoria);
+        System.out.println("IDCATEGORIA3:  "+ idCategoria);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
@@ -399,30 +416,30 @@ public class ClienteController {
 
     @GetMapping("/listaRestaurantespag")
     public String listaRestaurantespag(Model model, HttpSession httpSession,
-                                       @RequestParam Map<String, Object> params,
-                                       @RequestParam(value = "texto", required = false) String texto,
-                                       @RequestParam(value = "idPrecio", required = false) String idPrecio,
-                                       @RequestParam(value = "idCategoria", required = false) String idCategoria,
-                                       @RequestParam(value = "val", required = false) String val) {
+                                    @RequestParam Map<String, Object> params,
+                                    @RequestParam(value = "texto",required = false) String texto,
+                                    @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                                    @RequestParam(value = "idCategoria",required = false) String idCategoria,
+                                    @RequestParam(value = "val",required = false) String val) {
 
-        if (httpSession.getAttribute("carrito") != null) {
+        if(httpSession.getAttribute("carrito") != null){
             httpSession.removeAttribute("carrito");
         }
-        if (httpSession.getAttribute("extrasCarrito") != null) {
+        if(httpSession.getAttribute("extrasCarrito") != null){
             httpSession.removeAttribute("extrasCarrito");
         }
-        System.out.println("IDCATEGORIA: " + idCategoria);
+        System.out.println("IDCATEGORIA: "+ idCategoria);
 
 
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-        System.out.println("USUARIO ID: " + usuario.getIdusuario());
+        System.out.println("USUARIO ID: "+ usuario.getIdusuario());
         int page;
-        try {
+        try{
             page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        } catch (NumberFormatException nfe) {
-            page = 0;
+        }catch(NumberFormatException nfe){
+            page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
 
 
@@ -435,6 +452,8 @@ public class ClienteController {
         Integer limitSupVal = 6; //TODO 5
 
 
+
+
         List<ClienteDTO> listadirecc = clienteRepository.listaParaCompararDirecciones(usuario.getIdusuario());
 
         for (ClienteDTO cl : listadirecc) {
@@ -445,40 +464,40 @@ public class ClienteController {
         }
 
 
-        String id1 = "";
-        String id2 = "-";
-        String id3 = "-";
+        String id1="";
+        String id2="-";
+        String id3="-";
 
-        System.out.println("id1 :" + id1);
-        System.out.println("id12 :" + id2);
-        System.out.println("id3 :" + id3);
-        System.out.println("valoracion :" + val);
+        System.out.println("id1 :"+id1);
+        System.out.println("id12 :"+id2);
+        System.out.println("id3 :"+id3   );
+        System.out.println("valoracion :"+val   );
 
-        texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
-        val = httpSession.getAttribute("val") == null ? "7" : (String) httpSession.getAttribute("val");
-        idCategoria = httpSession.getAttribute("idCategoria") == null ? "" : (String) httpSession.getAttribute("idCategoria");
-        idPrecio = httpSession.getAttribute("idPrecio") == null ? "6" : (String) httpSession.getAttribute("idPrecio");
+        texto= httpSession.getAttribute("texto") == null ? "" :  (String) httpSession.getAttribute("texto");
+        val= httpSession.getAttribute("val") == null ? "7" :  (String) httpSession.getAttribute("val");
+        idCategoria= httpSession.getAttribute("idCategoria") == null ? "" : (String) httpSession.getAttribute("idCategoria");
+        idPrecio= httpSession.getAttribute("idPrecio") == null ? "6" :  (String) httpSession.getAttribute("idPrecio");
 
-        if (idCategoria == null) {
-            idCategoria = "";
+        if(idCategoria == null){
+            idCategoria="";
             httpSession.removeAttribute("idCategoria");
-        } else {
+        }else {
             try {
                 int idcat = Integer.parseInt(idCategoria);
-                if (idcat > 0 && idcat < 28) {
-                    id1 = "-" + idCategoria + "-";
-                    id2 = "-" + idCategoria;
-                    id3 = idCategoria + "-";
+                if( idcat>0 && idcat<28) {
+                    id1 = "-"+idCategoria+"-";
+                    id2 = "-"+idCategoria;
+                    id3 = idCategoria+"-";
                 }
-                httpSession.setAttribute("idCategoria", idCategoria);
-            } catch (NumberFormatException e) {
-                idCategoria = "";
+                httpSession.setAttribute("idCategoria",idCategoria);
+            }catch (NumberFormatException e){
+                idCategoria="";
                 httpSession.removeAttribute("idCategoria");
             }
 
         }
 
-        switch (idPrecio) {
+        switch (idPrecio){
             case "1":
                 limitInfP = 0;
                 limitSupP = 15;
@@ -501,7 +520,7 @@ public class ClienteController {
                 limitSupP = 5000;
         }
 
-        switch (val) {
+        switch (val){
             case "0":
                 limitInfVal = -1;
                 limitSupVal = 0;
@@ -530,40 +549,40 @@ public class ClienteController {
                 limitInfVal = 0;
                 limitSupVal = 5;
         }
-        System.out.println("lmmiteinf: " + limitInfVal);
-        System.out.println("lmmitesup: " + limitSupVal);
-        System.out.println("preciol1: " + limitSupP);
-        System.out.println("preciol2: " + limitInfP);
-        System.out.println("IDCATEGORIA2: " + idCategoria);
+        System.out.println("lmmiteinf: "+limitInfVal);
+        System.out.println("lmmitesup: "+limitSupVal);
+        System.out.println("preciol1: "+limitSupP);
+        System.out.println("preciol2: "+limitInfP);
+        System.out.println("IDCATEGORIA2: "+idCategoria);
 
 
-        if (val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5")) {
-            System.out.println(" ENTRO AL QUERY 1");
-            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP, limitSupP, limitInfVal, limitSupVal, texto, id1, id2, id3, iddistritoactual, pageRequest);
+        if(val.equals("1") || val.equals("2") || val.equals("3") || val.equals("4") || val.equals("5") ){
+            System.out.println(" ENTRO AL QUERY 1"  );
+            Page<RestauranteDTO> listaRestaurante2 = restauranteClienteService2.listaRestaurantePaginada2(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante2.getTotalPages();
-            if (totalPage > 0) {
-                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages", pages);
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
 
-        } else {
-            System.out.println(" ENTRO AL QUERY 2");
-            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP, limitSupP, limitInfVal, limitSupVal, texto, id1, id2, id3, iddistritoactual, pageRequest);
+        }else{
+            System.out.println(" ENTRO AL QUERY 2"  );
+            Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
             int totalPage = listaRestaurante.getTotalPages();
-            if (totalPage > 0) {
-                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages", pages);
+            if(totalPage > 0){
+                List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages",pages);
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
         model.addAttribute("current", page + 1);
-        model.addAttribute("categorias", categoriasRestauranteRepository.findAll());
+        model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
         model.addAttribute("idCategoria", idCategoria);
-        System.out.println("IDCATEGORIA3:  " + idCategoria);
+        System.out.println("IDCATEGORIA3:  "+ idCategoria);
         model.addAttribute("texto", texto);
         model.addAttribute("val", val);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario.getIdusuario()));
@@ -572,7 +591,7 @@ public class ClienteController {
     }
 
 
-    /************************************************************************************************************************************************************/
+/************************************************************************************************************************************************************/
     @GetMapping("/listaDirecciones")
     public String listaDirecciones(Model model, HttpSession httpSession) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
@@ -782,13 +801,16 @@ public class ClienteController {
 
     @GetMapping("/listaPlatos")
     public String listaplatos(@RequestParam Map<String, Object> params,
-                              @RequestParam(value = "idRest", required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
-                              @RequestParam(value = "texto", required = false) String texto,
-                              @RequestParam(value = "idPrecio", required = false) String idPrecio,
+                              @RequestParam(value = "idRest",required = false) String idRestS, //solo es necesario recibirla de restaurante a platos
+                              @RequestParam(value = "texto",required = false) String texto,
+                              @RequestParam(value = "idPrecio",required = false) String idPrecio,
+                              @RequestParam(value = "idCategoria",required = false) String idCategoriaS,
                               Model model, HttpSession session) {
 
         Integer limitInf = 0;
         Integer limitSup = 5000;
+        Integer limitInfC = 0;
+        Integer limitSupC = 28;
         Integer idRest;
 
 
@@ -815,11 +837,15 @@ public class ClienteController {
         int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 6);
 
-        if (idPrecio == null || idPrecio.equals("")) {
+        if(idPrecio == null || idPrecio.equals("")){
             idPrecio = "6";
         }
 
-        if (texto == null) {
+        if(idCategoriaS == null || idCategoriaS.equals("")){
+            idCategoriaS = "0-28";
+        }
+
+        if(texto == null){
             texto = "";
         }
 
@@ -854,18 +880,39 @@ public class ClienteController {
                 limitSup = 5000;
         }
 
-        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, pageRequest);
+        List<Categorias> categoriasList = categoriasRestauranteRepository.findCategoriasByIdrestaurante(idRest);
+        try {
+            limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
+            limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
+
+            for (Categorias c: categoriasList) {
+                if(c.getIdcategoria() != limitInfC){
+                    limitInfC = 0;
+                    limitSupC = 28;
+                    break;
+                }
+            }
+            
+        }catch (NumberFormatException e){
+            limitInfC = 0;
+            limitSupC = 28;
+        }
+        Page<PlatosDTO> listaPlato = platoClienteService.listaPlatoPaginada(idRest, texto, limitInf, limitSup, limitInfC, limitSupC,pageRequest);
+
         int totalPage = listaPlato.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
+        //a
 
         model.addAttribute("current", page + 1);
-        model.addAttribute("listaPlato", listaPlato.getContent());
-        model.addAttribute("texto", texto);
-        model.addAttribute("idPrecio", idPrecio);
+        model.addAttribute("listaPlato",listaPlato.getContent());
+        model.addAttribute("texto",texto);
+        model.addAttribute("idPrecio",idPrecio);
+        model.addAttribute("idCategoria",idCategoriaS);
+        model.addAttribute("categorias",categoriasList);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaProductos";
     }
@@ -880,7 +927,6 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         Integer idPlato;
-        // <--
         try {
             idPlato = Integer.parseInt(idPlatoS);
         } catch (NumberFormatException e) {
@@ -895,6 +941,7 @@ public class ClienteController {
             //session.removeAttribute("idPlato");
             session.setAttribute("idPlato", idPlato);
         }
+
 
 
         Plato platoObs = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
@@ -1048,15 +1095,12 @@ public class ClienteController {
         Integer idRest = (Integer) session.getAttribute("idRest");
 
         Plato_has_pedido php = new Plato_has_pedido();
-        //TODO validar plato
         Plato platoOther = platoRepository.findByIdplatoAndIdrestaurante(idPlato, idRest);
         if (platoOther == null) {
             return "redirect:/cliente/listaPlatos/";
         }
 
         Optional<Plato> platoOptional = platoRepository.findById(idPlato);
-
-
         int cantint = 0;
         try {
             cantint = Integer.parseInt(cantidadPlato);
@@ -1097,7 +1141,6 @@ public class ClienteController {
             String codigo = "CODIGOTEMPORAL";
             int puntero = 0;
             if (carrito.size() > 0) {
-                //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
                 for (int i = 0; i < carrito.size(); i++) {
                     if (idPlato == carrito.get(i).getIdplatohaspedido().getIdplato()) {
                         puntero = i;
@@ -1121,11 +1164,8 @@ public class ClienteController {
                 idComPlato.setIdplato(idPlato);
                 idComPlato.setCodigo(codigo);
 
-                //RECORDAR VOLVERLO NULL Y AÑADIR EL PEDIDO AL FINAL
                 php.setPlato(plato);
                 php.setCantidad(cantint);
-
-                //TODO SI FUERA EL SUBTOTAL EN EL CARRITO SE GUARDARÍA PRECIO UNITARIO X CANTIDAD PLATO
                 php.setPreciounitario(BigDecimal.valueOf(plato.getPrecio()));
                 php.setIdplatohaspedido(idComPlato);
                 carrito.add(php);
@@ -1242,7 +1282,7 @@ public class ClienteController {
                                        Model model) {
         Usuario usuario1 = (Usuario) session.getAttribute("usuario");
         if (session.getAttribute("extrasCarrito") == null) {
-            return "redirect:/cliente/motrarCarrito";
+            return "redirect:/cliente/listaPlatos";
         }
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         // model.addAttribute("idRest",idRest);
@@ -1538,7 +1578,7 @@ public class ClienteController {
     @PostMapping("/generarPedido")
     public String generarPedido(@RequestParam(value = "cupon", required = false) String idCupon,
                                 @RequestParam(value = "ubicacion", required = false) String idUbicacion,
-                                // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
+                               // PARAMETROS DE LA TARJETA A RECOGER - OJO : SOLO VALIDARLOS NO GUARDALRLOS
                                 @RequestParam(value = "tarjeta", required = false) String tarjeta,
                                 @RequestParam(value = "newTarjeta", required = false) String tipoTarjeta,
                                 @RequestParam(value = "numeroTarjeta", required = false) String numeroTarjeta,
@@ -1549,13 +1589,11 @@ public class ClienteController {
                                 @RequestParam(value = "efectivoPagar", required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
                                 Model model, RedirectAttributes attr,
-                                HttpSession session) {
+                                HttpSession session){
         /*
-         * THINGS TODO:
-         * Probar que mis validaciones funquen 90% - Falta tarjetas y recibir los metodos como lista *
-         * Validar que solo se reciba un idMetodo de pago
-         * Verificar que el monto que se grabe en la BD sea el correcto <- NO SE ACTUALIZA EL DISTRITO
-         * */
+        * THINGS TODO:
+        * ENVIAR CORREO
+        * */
         Usuario cliente = (Usuario) session.getAttribute("usuario");
         //   List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(cliente);
@@ -1596,6 +1634,8 @@ public class ClienteController {
         }
 
 
+
+
         //Obteniendo Ubicacion
         Ubicacion ubicacion = null;
         boolean idUbicVal = false;
@@ -1612,6 +1652,7 @@ public class ClienteController {
         MetodoDePago metodoDePago = null;
         boolean idMetPaVal = false;
         boolean idTarjetaVal = false;
+        boolean cantidadNullVal = false;
         boolean cvvVal = false;
         boolean numTarjetaVal = false;
         boolean mesVal = false;
@@ -1655,22 +1696,22 @@ public class ClienteController {
                             }
                         } else {
                             //VALIDANDO EL CVV
-                            if (cvv != null) {
+                            if(cvv != null){
                                 cvvValNull = true;
                             }
-                            if (cvvValNull) {
+                            if(cvvValNull){
                                 if (cvv.length() == 3) {
                                     int cvvInt = Integer.parseInt(cvv);
                                     cvvVal = true;
                                 }
                             }
                             //validando el mes
-                            if (mes != null) {
+                            if(mes != null){
                                 mesValNull = true;
                             }
-                            if (mesValNull) {
+                            if(mesValNull){
                                 int mesInt = Integer.parseInt(mes);
-                                if (mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves? - mmm? TODO checkar
+                                if(mesInt >= 1 && mesInt <= 12) {//nodeberiaseralreves? - mmm? TODO checkar
                                     mesVal = true;
                                 }
                             }
@@ -1765,6 +1806,15 @@ public class ClienteController {
                     mesValNull = true;
                     anioValNull = true;
                     idTarjetaVal = true;
+
+                    if(metodoDePago.getIdmetodopago() == 1){
+                        if(!efectivoPagar.equals("")){
+                            // aquí hago la validación de que ingrese una cantidad a pagar
+                            // si el metodo de pago es efectivo, más adelante se validará que
+                            // la cantidad a pagar será mayor a la del monto Total
+                            cantidadNullVal = true;
+                        }
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -1810,7 +1860,7 @@ public class ClienteController {
         }
 
         //!precioDelVal ||
-        if (!idCuponVal || !idUbicVal || !idMetPaVal ||
+        if (!idCuponVal || !idUbicVal || !idMetPaVal || !cantidadNullVal ||
                 !numTarjetaVal || !mesVal || !anioVal || !cvvVal || !tipoVal ||
                 !cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull || !idTarjetaVal) {
             // si algunos de estos datos esta mal debería redireccionarte a la misma vista
@@ -1826,6 +1876,10 @@ public class ClienteController {
 
             if (!cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull) {
                 model.addAttribute("msgNullMdp", "Ingrese un dato válido.");
+            }
+
+            if(!cantidadNullVal){
+                model.addAttribute("msgCantidadNotNull", "Ingrese una cantidad a pagar mayor al monto total.");
             }
 
             if (!numTarjetaVal) {
@@ -1855,6 +1909,7 @@ public class ClienteController {
             model.addAttribute("montoExtras", precioTotalExtras);
             model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
             model.addAttribute("listaDirecciones", listaDirecciones);
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "Cliente/terminarCompra";
         } else {
 
@@ -1892,6 +1947,7 @@ public class ClienteController {
                         model.addAttribute("montoExtras", precioTotalExtras);
                         model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                         model.addAttribute("listaDirecciones", listaDirecciones);
+                        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                         return "Cliente/terminarCompra";
                     }
                 } catch (NumberFormatException e) {
@@ -1902,6 +1958,7 @@ public class ClienteController {
                     model.addAttribute("montoExtras", precioTotalExtras);
                     model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                     model.addAttribute("listaDirecciones", listaDirecciones);
+                    model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                     return "Cliente/terminarCompra";
                 }
             }
@@ -1975,6 +2032,9 @@ public class ClienteController {
                     extraHasPedidoRepository.save(extra_has_pedido);
                 }
             }
+            try {
+                sendHtmlMailPedidoGen(cliente.getCorreo(),"Pedido Generado Exitosamente",pedido, cliente.getNombres());
+            } catch (MessagingException e) { }
             session.removeAttribute("delivery");
             session.removeAttribute("idRest");
             session.removeAttribute("idPlato");
@@ -1982,6 +2042,8 @@ public class ClienteController {
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
             attr.addFlashAttribute("msgPedGen", "Se generó exitosamente un pedido con código: " + pedido.getCodigo());
+            // todo falta reenviar notis
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "redirect:/cliente/pedidoActual";
         }
 
@@ -2181,8 +2243,7 @@ public class ClienteController {
 
 
     @GetMapping("/detallePedidoActual")
-    public String detallePedidoActual(
-            @RequestParam("codigo") String codigo, Model model, HttpSession session) {
+    public String detallePedidoActual(@RequestParam("codigo") String codigo, Model model, HttpSession session) {
 
         List<Pedido1DTO> pedido1DTOS = pedidoRepository.detalle1(codigo);
         if (pedido1DTOS.isEmpty()) {
@@ -2214,6 +2275,8 @@ public class ClienteController {
 
                     model.addAttribute("listaExtra", pedidoRepository.extrasPorPedido(codigo));
                     System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
+
+
                     model.addAttribute("codigo", codigo);
 
                     model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
@@ -2392,11 +2455,7 @@ public class ClienteController {
 
 
                     model.addAttribute("listaExtra", pedidoRepository.extrasPorPedido(codigo));
-
-                    System.out.println(pedidoRepository.extrasPorPedido(codigo).size());
-
                     model.addAttribute("codigo", codigo);
-
                     model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
                     return "Cliente/detallePedido";
 
@@ -2639,7 +2698,7 @@ public class ClienteController {
     public String pedidoActualPagina3(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "nombrec", required = false) String nombrec
-            , @RequestParam(value = "mes", required = false) String mes,
+            ,@RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
@@ -2651,7 +2710,7 @@ public class ClienteController {
         } catch (NumberFormatException nfe) {
             page = 0;
         }
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -2760,14 +2819,14 @@ public class ClienteController {
         return "Cliente/reporteDineroCliente";
     }
 
-
-    /****************************************************************REPORTE PEDIDO****************************************************************************/
+/****************************************************************REPORTE PEDIDO****************************************************************************/
     @GetMapping("/reportePedido")
     public String pedidoActual5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                 @RequestParam(value = "texto", required = false) String texto,
                                 @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+                                ,@RequestParam(value = "mes", required = false) String mes,
                                 @RequestParam(value = "anio", required = false) String anio) {
+
 
 
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
@@ -2779,7 +2838,7 @@ public class ClienteController {
             page = 0;
         }
         //int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         if (texto == null) {
@@ -2887,11 +2946,11 @@ public class ClienteController {
                 limit2cant = 50;
         }
 
-        System.out.println("limiteInf: " + limitInf);
-        System.out.println("limiteSup: " + limitSup);
-        System.out.println("limit1cat: " + limit1cant);
-        System.out.println("limit2cat: " + limit2cant);
-        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, anio, limit1cant, limit2cant, pageRequest);
+        System.out.println("limiteInf: "+ limitInf);
+        System.out.println("limiteSup: "+ limitSup);
+        System.out.println("limit1cat: "+ limit1cant);
+        System.out.println("limit2cat: "+ limit2cant);
+        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant, pageRequest);
 
         List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(), limitInf, limitSup, anio);
         List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitInf, limitSup, anio);
@@ -2914,12 +2973,12 @@ public class ClienteController {
 
 
         System.out.println(totalsuma);
-        System.out.println("limiteInf(reportePedido): " + limitInf);
-        System.out.println("limiteSup(reportePedido): " + limitSup);
-        System.out.println("limit1cant(reportePedido): " + limit1cant);
-        System.out.println("limit2cant(reportePedido): " + limit2cant);
-        System.out.println("anio(reportePedido): " + anio);
-        System.out.println("usuario(reportePedido): " + usuario1.getIdusuario());
+        System.out.println("limiteInf(reportePedido): "+ limitInf);
+        System.out.println("limiteSup(reportePedido): "+ limitSup);
+        System.out.println("limit1cant(reportePedido): "+ limit1cant);
+        System.out.println("limit2cant(reportePedido): "+ limit2cant);
+        System.out.println("anio(reportePedido): "+ anio);
+        System.out.println("usuario(reportePedido): "+ usuario1.getIdusuario());
 
         model.addAttribute("current", page + 1);
         model.addAttribute("totalsuma", totalsuma);
@@ -2959,7 +3018,7 @@ public class ClienteController {
     public String pedidoActualPagina5(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+            ,@RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
@@ -2972,7 +3031,7 @@ public class ClienteController {
         } catch (NumberFormatException nfe) {
             page = 0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -3036,6 +3095,7 @@ public class ClienteController {
         }
 
 
+
         int limit1cant;
         int limit2cant;
         switch (numpedidos) {
@@ -3065,17 +3125,17 @@ public class ClienteController {
         }
 
 
-        System.out.println("limiteInf(reportePedido): " + limitInf);
-        System.out.println("limiteSup(reportePedido): " + limitSup);
-        System.out.println("limit1cant(reportePedido): " + limit1cant);
-        System.out.println("limit2cant(reportePedido): " + limit2cant);
-        System.out.println("anio(reportePedido): " + anio);
-        System.out.println("usuario(reportePedido): " + usuario1.getIdusuario());
+        System.out.println("limiteInf(reportePedido): "+ limitInf);
+        System.out.println("limiteSup(reportePedido): "+ limitSup);
+        System.out.println("limit1cant(reportePedido): "+ limit1cant);
+        System.out.println("limit2cant(reportePedido): "+ limit2cant);
+        System.out.println("anio(reportePedido): "+ anio);
+        System.out.println("usuario(reportePedido): "+ usuario1.getIdusuario());
 
-        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, anio, limit1cant, limit2cant, pageRequest);
+        Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto, anio,limit1cant,limit2cant, pageRequest);
 
-        List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(), limitInf, limitSup, anio);
-        List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitInf, limitSup, anio);
+        List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(),limitInf, limitSup,anio);
+        List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitInf,limitSup,anio);
         int totalPage = listapedidos.getTotalPages();
 
         if (totalPage > 0) {
@@ -3084,9 +3144,9 @@ public class ClienteController {
 
         }
 
-        List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto, anio, limit1cant, limit2cant);
+        List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant);
         BigDecimal totalsuma = new BigDecimal(0);
-        if (listapedidos2.size() > 0) {
+        if(listapedidos2.size()>0) {
             for (ReportePedido rep : listapedidos) {
                 System.out.println(rep.getTotal());
                 totalsuma = totalsuma.add(rep.getTotal());
@@ -3145,7 +3205,7 @@ public class ClienteController {
         } catch (NumberFormatException nfe) {
             page = 0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         if (texto == null) {
@@ -3310,7 +3370,7 @@ public class ClienteController {
     public String pedidoActualPagina4(@RequestParam Map<String, Object> params, Model model, HttpSession httpSession,
                                       @RequestParam(value = "texto", required = false) String texto,
                                       @RequestParam(value = "numpedidos", required = false) String numpedidos
-            , @RequestParam(value = "mes", required = false) String mes,
+                                      ,@RequestParam(value = "mes", required = false) String mes,
                                       @RequestParam(value = "anio", required = false) String anio) {
 
 
@@ -3323,7 +3383,7 @@ public class ClienteController {
         } catch (NumberFormatException nfe) {
             page = 0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 10);
 
 
         texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
@@ -3355,6 +3415,10 @@ public class ClienteController {
             anio = anio1;
 
         }
+
+
+
+
 
 
         int limitSup = 0;
@@ -3647,6 +3711,22 @@ public class ClienteController {
         }
 
         return codigoPedido;
+    }
+
+    public void sendHtmlMailPedidoGen(String to, String subject, Pedido pedido, String cliente) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("pedidoCodigo", pedido.getCodigo());
+        context.setVariable("restaurante", pedido.getRestaurante().getNombre());
+        context.setVariable("user", cliente);
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        String emailContent = templateEngine.process("Correo/pedidoGenerado", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
     }
 
 }

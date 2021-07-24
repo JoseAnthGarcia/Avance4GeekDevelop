@@ -235,24 +235,25 @@
                                 <option value="1" th:selected="${idCategoria.equals('1')}">Árabe</option>
                                 <option value="2" th:selected="${idCategoria.equals('2')}">Asiática</option>
                                 <option value="3" th:selected="${idCategoria.equals('3')}">Café</option>
-                                <option value="4" th:selected="${idCategoria.equals('4')}">Carnes</option>
+                                <option value="4" th:selected="${idCategoria.equals('4')}">Chifa</option>
                                 <option value="5" th:selected="${idCategoria.equals('5')}">Chifa</option>
-                                <option value="7" th:selected="${idCategoria.equals('7')}">Criolla</option>
-                                <option value="8" th:selected="${idCategoria.equals('8')}">Desayunos</option>
-                                <option value="9" th:selected="${idCategoria.equals('9')}">Fusión</option>
-                                <option value="10" th:selected="${idCategoria.equals('10')}">Hamburguesas</option>
-                                <option value="11" th:selected="${idCategoria.equals('11')}">Helados</option>
-                                <option value="12" th:selected="${idCategoria.equals('12')}">India</option>
-                                <option value="13" th:selected="${idCategoria.equals('13')}">Internacional</option>
-                                <option value="14" th:selected="${idCategoria.equals('14')}">Jugos y batidos</option>
-                                <option value="15" th:selected="${idCategoria.equals('15')}">Mexicana</option>
-                                <option value="16" th:selected="${idCategoria.equals('16')}">Panadería</option>
-                                <option value="17" th:selected="${idCategoria.equals('17')}">Pastas</option>
-                                <option value="18" th:selected="${idCategoria.equals('18')}">Pescados y mariscos</option>
-                                <option value="19" th:selected="${idCategoria.equals('19')}">Pizzas</option>
-                                <option value="20" th:selected="${idCategoria.equals('20')}">Poke</option>
-                                <option value="21" th:selected="${idCategoria.equals('21')}">Pollería</option>
-                                <option value="22" th:selected="${idCategoria.equals('22')}">Postres</option>
+                                <option value="6" th:selected="${idCategoria.equals('6')}">Criolla</option>
+                                <option value="7" th:selected="${idCategoria.equals('7')}">Desayunos</option>
+                                <option value="8" th:selected="${idCategoria.equals('8')}">Fusión</option>
+                                <option value="9" th:selected="${idCategoria.equals('9')}">Hamburguesas</option>
+                                <option value="10" th:selected="${idCategoria.equals('10')}">Helados</option>
+                                <option value="11" th:selected="${idCategoria.equals('11')}">India</option>
+                                <option value="12" th:selected="${idCategoria.equals('12')}">Internacional</option>
+                                <option value="13" th:selected="${idCategoria.equals('13')}">Jugos y batidos</option>
+                                <option value="14" th:selected="${idCategoria.equals('14')}">Mexicana</option>
+                                <option value="15" th:selected="${idCategoria.equals('15')}">Panaderia</option>
+                                <option value="16" th:selected="${idCategoria.equals('16')}">Pastas</option>
+                                <option value="17" th:selected="${idCategoria.equals('17')}">Pescados y mariscos</option>
+                                <option value="18" th:selected="${idCategoria.equals('18')}">Pizzas</option>
+                                <option value="19" th:selected="${idCategoria.equals('19')}">Poke</option>
+                                <option value="20" th:selected="${idCategoria.equals('20')}">Polleria</option>
+                                <option value="21" th:selected="${idCategoria.equals('21')}">Postres</option>
+                                <option value="22" th:selected="${idCategoria.equals('22')}">Salchipapas</option>
                                 <option value="23" th:selected="${idCategoria.equals('23')}">Sandwiches</option>
                                 <option value="24" th:selected="${idCategoria.equals('24')}">Sopas y cremas</option>
                                 <option value="25" th:selected="${idCategoria.equals('25')}">Sushi</option>
@@ -316,7 +317,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="rest, v : ${listaRestaurante}">
-                                    <td th:text="${(current -1)*2 + v.index +1}"></td>
+                                    <td th:text="${(current -1)*5 + v.index +1}"></td>
                                     <td>
                                         <div style=text-align:center>
                                             <img width="110" height="100" alt="Avatar" th:src="@{'/cliente/images?id='+${rest.getIdrestaurante()}}">

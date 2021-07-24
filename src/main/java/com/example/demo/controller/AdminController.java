@@ -9,6 +9,7 @@ import com.example.demo.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +35,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -47,8 +51,15 @@ import java.util.stream.IntStream;
 @RequestMapping("/admin")
 public class AdminController  {
 
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
+    public String puerto = "8080";
+
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    ValidarCorreoRepository validarCorreoRepository;
 
     @Autowired
     MovilidadRepository movilidadRepository;
@@ -320,8 +331,15 @@ public class AdminController  {
                     //
                     restauranteRepository.save(restaurante);
 
-                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestaurante(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
                     return "redirect:/admin/solicitudes?tipo=restaurante";
                 }else {
@@ -382,8 +400,16 @@ public class AdminController  {
                 if(restaurante.getEstado()==2) {
                     restaurante.setEstado(3);
                     restauranteRepository.save(restaurante);
-                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestauranteAdmin(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
                     return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -433,10 +459,14 @@ public class AdminController  {
                     //
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
                     /////-----------------------------------------  ------/////
@@ -469,10 +499,15 @@ public class AdminController  {
                     usuario.setEstado(3);
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+
 
                     attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
                     /////-----------------------------------------  ------/////
@@ -1530,6 +1565,18 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+        // TODO: 19/07/2021
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
+
 
         return "AdminGen/reportePedidoRepartidor";
     }
@@ -1697,6 +1744,20 @@ public class AdminController  {
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+// TODO: 19/07/2021
+
+
+        List<UsuarioDtoRepartidor> topMas = usuarioRepository.listaUsuariosDtoRepartidorMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        List<UsuarioDtoRepartidor> topMenos = usuarioRepository.listaUsuariosDtoRepartidorMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
+
 
         return "AdminGen/reportePedidoRepartidor";
     }
@@ -1902,6 +1963,18 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
     List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
     model.addAttribute("notificaciones", notificaciones);
+    // TODO: 19/07/2021
+    List<UsuarioDtoReporteVentas> topMas = usuarioRepository.listaUsuariosDtoReporteVentasMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+    List<UsuarioDtoReporteVentas> topMenos = usuarioRepository.listaUsuariosDtoReporteVentasMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+    try {
+        model.addAttribute("topMas", topMas.get(0));
+        model.addAttribute("topMenos", topMenos.get(0));
+    }catch (IndexOutOfBoundsException i){
+        model.addAttribute("topMas", topMas);
+        model.addAttribute("topMenos", topMenos);
+    }
+
     return "AdminGen/reporteVentas";
 }
     @GetMapping(value ="/ReporteVentasPagina")//lista de reporte de Repartidor pedido
@@ -2072,6 +2145,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
+        // TODO: 19/07/2021
+        List<UsuarioDtoReporteVentas> topMas = usuarioRepository.listaUsuariosDtoReporteVentasMas(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+        List<UsuarioDtoReporteVentas> topMenos = usuarioRepository.listaUsuariosDtoReporteVentasMenos(texto,miFval,maXval,  miFestado,  maXestado, inFmont, maXmont);
+
+        try {
+            model.addAttribute("topMas", topMas.get(0));
+            model.addAttribute("topMenos", topMenos.get(0));
+        }catch (IndexOutOfBoundsException i){
+            model.addAttribute("topMas", topMas);
+            model.addAttribute("topMenos", topMenos);
+        }
+
+
         return "AdminGen/reporteVentas";
     }
     @GetMapping(value ="/ReporteIngresos")//lista de reporte de ingresos pedido
@@ -2100,7 +2186,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             page =0;
         }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        Pageable pageRequest = PageRequest.of(page, 10);
         if(monto==null){
             monto="0";
             session.removeAttribute("monto");
@@ -2233,19 +2319,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         switch (estado){
             case "3":
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             case "0":
                 miFestado2=-1;
-                maXestado2=0;
+                maXestado2=1;
                 break;
             case "1":
                 miFestado2=0;
-                maXestado2=1;
+                maXestado2=2;
                 break;
             default:
                 miFestado2=-1;
-                maXestado2=1;
+                maXestado2=2;
 
 
         }
@@ -2452,8 +2538,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuario.setEstado(1);
             usuario.setFechaadmitido(String.valueOf(new Date()));
             usuarioRepository.save(usuario);
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
-            sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
+                sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+            }
 
         }
         return "redirect:/admin/solicitudes";
@@ -2584,10 +2676,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
+                // TODO: 23/07/2021
+                try {
+                    sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado", usuario);
+                } catch (MessagingException e) {
+                    String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                    sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                }
                 /////-----------------------------------------------/////
 
 
@@ -2788,9 +2884,16 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuarioRepository.save(usuario);
 
             /////----------------Envio Correo--------------------/////
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            }
 
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
-            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+
+
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -2802,6 +2905,61 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
     }
 
+    public String cipherPassword(String text) {
+        String hashedPassword = "";
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < encodedhash.length; i++) {
+                String hex = Integer.toHexString(0xff & encodedhash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException ex) {
+
+        }
+
+        return hashedPassword;
+    }
+    //generar codigo aleatorio:
+    public String generarCodigAleatorio() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        int charsLength = chars.length;
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int tamCodigo = 5;
+        for (int i = 0; i < tamCodigo; i++) {
+            buffer.append(chars[random.nextInt(charsLength)]);
+        }
+        return buffer.toString();
+    }
+    public void enviarCorreoValidacion(String correo) {
+        String codigoHash = "";
+        while (true) {
+            codigoHash = cipherPassword(generarCodigAleatorio());
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(codigoHash);
+            if (validarcorreo == null) {
+                break;
+            }
+        }
+        Validarcorreo validarcorreo = new Validarcorreo();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        validarcorreo.setUsuario(usuario);
+        validarcorreo.setHash(codigoHash);
+        validarCorreoRepository.save(validarcorreo);
+
+        String url = "http://" + ip + ":" + puerto + "/foodDelivery/validarCuenta?correo="
+                + correo + "&value=" + codigoHash;
+        String content = "Su cuenta ha sido creada exitosamente." +
+                "Debe validar su correo para empezar a usar su cuenta.\n"
+                + "Para validar su correo electrónico ingrese al siguiente link:\n" + url;
+        String subject = "Bienvenido a Food Delivery!";
+        sendEmail(correo, subject, content);
+    }
     //Pasamos por parametro: destinatario, asunto y el mensaje
     public void sendEmail(String to, String subject, String content) {
 
@@ -2822,7 +2980,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2835,7 +2993,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2848,10 +3006,38 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
+    public void sendHtmlMailAceptadoRestaurante(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAceptadoRestauranteAdmin(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+
     public void sendHtmlMailRechazado(String to, String subject, Usuario usuario) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -2860,7 +3046,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Rechazado", context);
+        String emailContent = templateEngine.process("Correo/Rechazado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAdminRegistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

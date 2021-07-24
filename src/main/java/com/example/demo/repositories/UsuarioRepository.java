@@ -66,8 +66,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "where  concat(lower(nombres),lower(apellidos)) like %?1% \n" +
                     "and idrol != 2 \n" +
                     "and ( `idrol` > ?2 and `idrol` <= ?3 ) \n" +
-                    "and ( `estado` > ?4 and `estado` <= ?5 ) ")
+                    "and ( `estado` > ?4 and `estado` <= ?5 )")
     Page<Usuario> listaUsuarios(String texto, Integer inFrol, Integer maXrol, Integer miFestado, Integer maXestado, Pageable pageable);
+
 
 
     @Query(value ="select u.nombres as 'nombrecliente' ,u.apellidos as 'apellidocliente', r.nombre as 'nombrerest', \n" +
@@ -182,6 +183,60 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "order by count(p.codigo) desc")
     Page<UsuarioDtoRepartidor> listaUsuariosDtoRepartidor(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
+    @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
+            "\t\tcount(p.codigo) as `cantidad`,\n" +
+            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
+            "from pedido p\n" +
+            "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+            "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+            "group by p.idrepartidor\n" +
+            "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+            "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+            "order by count(p.codigo) desc",nativeQuery = true,
+            countQuery = "select count(*) \n" +
+                    "from pedido p\n" +
+                    "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+                    "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+                    "group by p.idrepartidor\n" +
+                    "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "order by count(p.codigo) desc")
+    List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+
+    @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
+            "\t\tcount(p.codigo) as `cantidad`,\n" +
+            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
+            "from pedido p\n" +
+            "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+            "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+            "group by p.idrepartidor\n" +
+            "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+            "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+            "order by count(p.codigo) asc ",nativeQuery = true,
+            countQuery = "select count(*) \n" +
+                    "from pedido p\n" +
+                    "inner join usuario r on p.idrepartidor = r.idusuario\n" +
+                    "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
+                    "group by p.idrepartidor\n" +
+                    "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "order by count(p.codigo) asc ")
+    List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+
     // TODO: 26/06/2021
     /*@Query(value ="select r.nombre, r.ruc, r.estado, pe.mismodistrito1, pe.mismodistrito0 ,pe.valoracionrestaurante , \n" +
             "pe.cantpedidos, pe.montototal \n" +
@@ -255,6 +310,53 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "order by count(p.codigo) DESC")
     Page<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +
+            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) as `total`, \n" +
+            "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as `valoracion`  from pedido p\n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
+            "group by p.idrestaurante\n" +
+            "having (sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "\t\t(avg(p.valoracionrestaurante) is null \n" +
+            "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+            "order by count(p.codigo) DESC",nativeQuery = true,
+            countQuery = "select count(*) from pedido p\n" +
+                    "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                    "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
+                    "group by p.idrestaurante\n" +
+                    "having (sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "\t\t(avg(p.valoracionrestaurante) is null \n" +
+                    "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+                    "order by count(p.codigo) DESC")
+    List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +
+            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) as `total`, \n" +
+            "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as `valoracion`  from pedido p\n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
+            "group by p.idrestaurante\n" +
+            "having (sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) > ?6 and\n" +
+            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
+            "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+            "\t\t(avg(p.valoracionrestaurante) is null \n" +
+            "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+            "order by count(p.codigo) ASC",nativeQuery = true,
+            countQuery = "select count(*) from pedido p\n" +
+                    "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                    "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
+                    "group by p.idrestaurante\n" +
+                    "having (sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) > ?6 and\n" +
+                    "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
+                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "\t\t(avg(p.valoracionrestaurante) is null \n" +
+                    "        or (round(avg(p.valoracionrestaurante),0) >= ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+                    "order by count(p.codigo) ASC")
+    List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
+
     @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , r.estado, count(p.codigo) as `cantidadpedidos`,\n" +
             "\t\tsum(if(p.mismodistrito = 1, 1, 0)) as `ingresostotalesmismodistrito`,\n" +
             "\t\tsum(if(p.mismodistrito = 0, 2, 0)) as `ingresostotalesdiferentedistrito`, \n" +
@@ -263,7 +365,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +
             "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-            "\t\t\tand r.estado >= ?2 and r.estado < ?3 and\n" +
+            "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
             "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
             "group by p.idrestaurante\n" +
             "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +
@@ -274,7 +376,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
                     "inner join distrito d on r.iddistrito = d.iddistrito\n" +
                     "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-                    "\t\t\tand r.estado >= ?2 and r.estado < ?3 and\n" +
+                    "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
                     "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
                     "group by p.idrestaurante\n" +
                     "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +

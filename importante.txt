@@ -2,7 +2,7 @@ Correo:
 
 ----- CREDENCIALES ----
 -ADMINISTRADOR GENERAL:
-    adminGeneral: admin@gmail.com
+    adminGeneral: alilopez@admingeneral.com
     password: adminGeneral
 
 -ADMINISTRADOR:

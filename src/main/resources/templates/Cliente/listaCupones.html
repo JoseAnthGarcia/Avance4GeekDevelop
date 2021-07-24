@@ -223,7 +223,7 @@
                     </div>
                     <h1 th:if="${total==0}"  th:text="| |"></h1>
                     <div  class="text-center" >
-                      <h3 th:if="${total==0}" th:text="|NO SE ENCONTRARON RESULTADOS|"></h3>
+                      <h3 style="color: red;" th:if="${total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
                     </div>
 
                     <div class="card-body" th:if="${total> 0}">

@@ -143,7 +143,7 @@ public class AdminController  {
         }
 
         //paginacion --------
-        if(numPag==null){
+        if(numPag==null || numPag<=0){
             numPag= 1;
         }
 
@@ -2492,7 +2492,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                     case "repartidor":
                         model.addAttribute("repartidor",usuario);
                         model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(Integer.parseInt(idUsuario)));
-                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario)));
+                        Integer valoracion = usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario));
+                        if(valoracion==null){
+                            valoracion = 0;
+                        }
+                        model.addAttribute("valoracion",valoracion);
                         model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";

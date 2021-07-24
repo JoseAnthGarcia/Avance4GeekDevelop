@@ -222,7 +222,9 @@
                         </div>
                     </div>
                     <div class="card-body">
-
+                        <div class="text-center" >
+                            <h3 style="color: red;" th:if="${ total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
+                        </div>
                     <div style=text-align:center>
                         <div class="alert alert-success" role="alert" th:if="${msgPedGen != null}" th:text="${msgPedGen}"></div>
                         <h6 th:if="${listaPedidos.size()==0}">No se encontraron elementos</h6>

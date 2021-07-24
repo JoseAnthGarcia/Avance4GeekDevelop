@@ -399,7 +399,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
     List<CredencialRest2DTO> platoMenosVendido(int rest);
 
     @Query(value = "select re.nombre, re.ruc, re.telefono, concat(re.direccion,' - ',dis.nombre) as direccion, \n" +
-            "concat(us.nombres,' ', us.apellidos) as administrador,\n" +
+            "us.nombres, us.apellidos,\n" +
             " us.correo, us.telefono as celular, us.dni from restaurante re\n" +
             "inner join distrito dis on dis.iddistrito=re.iddistrito\n" +
             "inner join usuario us on us.idusuario=re.idadministrador where re.idrestaurante=?1",nativeQuery = true)

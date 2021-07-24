@@ -50,12 +50,13 @@ public class TarjetaController {
                                  @RequestParam("idcvv") String idcvv, @RequestParam(value="mes",required = false) String mes, @RequestParam("year") String year, HttpSession httpSession, Model model,
                                  RedirectAttributes attr) {
         Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
-
+        List<Tarjeta> listaTarjetas = tarjetaRepository.findByUsuario(usuario);
         Boolean valNumT = false;
         Boolean valNumN = false;
         Boolean valNumaA = false;
         Boolean valNumCv = false;
         Boolean valyear = false;
+        Boolean validarRepeticion=false;
         // VALIDACIÓN DE NUMERO
         try {
             if (numeroTarjeta == null) {
@@ -65,34 +66,51 @@ public class TarjetaController {
                 valNumT = true;
             }
             Long numeroTarjeta1 = Long.parseLong(numeroTarjeta);
+                        //Validar que la tarjeta no se repita
+            for(Tarjeta tarjeta:listaTarjetas){
+                String validarTarjeta = tarjeta.getNumerotarjeta().substring(0,6)+tarjeta.getIdtarjeta()+tarjeta.getNumerotarjeta().substring(6,10);
+                if(numeroTarjeta.equals(validarTarjeta)){
+                    validarRepeticion = true;
+                }
+            }
         } catch (NumberFormatException numberFormatException) {
             valNumT = true;
         }
         Boolean mes_u = true;
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int dateYear = calendar.get(Calendar.YEAR);
+        int dateMonth = calendar.get(Calendar.MONTH);
+        Boolean validarfechacaducidad=false;
         //validacion año
         try {
             Integer numeroTarjeta1 = Integer.parseInt(year);
-            Integer mesvalidar = Integer.parseInt(mes);
             if (year == null) {
                 valyear = true;
             }
             if (year.length() != 4) {
                 valyear = true;
             }
-            Date date = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            int dateYear = calendar.get(Calendar.YEAR);
-            int dateMes = calendar.get(Calendar.MONTH);
-            if (numeroTarjeta1 == dateYear) {
-                if(mesvalidar < dateMes){
-                    mes_u = true;
-                }
-            }else if(numeroTarjeta1 < dateYear){
+            if(numeroTarjeta1 < dateYear){
+                valyear = true;
+                validarfechacaducidad = true;
+            }
+        } catch (NumberFormatException numberFormatException) {
+            valyear = true;
+        }
+
+        try {
+            Integer numeroTarjeta1 = Integer.parseInt(year);
+            if (year == null) {
                 valyear = true;
             }
-
-
+            if (year.length() != 4) {
+                valyear = true;
+            }
+            if(numeroTarjeta1 < dateYear){
+                valyear = true;
+            }
         } catch (NumberFormatException numberFormatException) {
             valyear = true;
         }
@@ -108,6 +126,22 @@ public class TarjetaController {
         } catch (Exception n) {
             mes_u = true;
         }
+
+        //2da
+        try {
+            Integer numeroTarjeta1 = Integer.parseInt(year);
+            Integer u_dist = Integer.parseInt(mes);
+            if(numeroTarjeta1==dateYear){
+                if(u_dist < dateMonth){
+                    validarfechacaducidad = true;
+                }
+            }else if(numeroTarjeta1<dateYear){
+                validarfechacaducidad = true;
+            }
+        } catch (Exception n) {
+        }
+
+
         //VALIDACIÓN NOMBRES
 
         Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
@@ -143,16 +177,18 @@ public class TarjetaController {
         }
         //Validar cantidad tarjetas
         Boolean cantTarjetas = false;
-        List<Tarjeta> listaTarjetas = tarjetaRepository.findByUsuario(usuario);
         if (listaTarjetas.size() == 5) {
             cantTarjetas = true;
         }
-        if (valNumT || valNumN || valNumaA || valNumCv || cantTarjetas || mes_u || valyear) {
+
+        if (valNumT || valNumN || valNumaA || valNumCv || cantTarjetas || mes_u || valyear || validarfechacaducidad || validarRepeticion) {
 
 
             if (valNumT && !cantTarjetas) {
                 model.addAttribute("msg1", "Debe colocar 16 dígitos(números)");
-
+            }
+            if(validarRepeticion){
+                model.addAttribute("msgvalidar","Esta tarjeta ya se encuentra registrada");
             }
             if (valNumN && !cantTarjetas) {
                 model.addAttribute("msg2", "Debe colocar su nombre");
@@ -168,7 +204,7 @@ public class TarjetaController {
             if (cantTarjetas) {
                 model.addAttribute("cantTarj", "Puede registrar 5 tarjetas como máximo");
             }
-            if (mes_u) {
+            if (mes_u || validarfechacaducidad) {
                 model.addAttribute("mdg6", "Debe escoger un mes válido");
             }
             if (valyear) {

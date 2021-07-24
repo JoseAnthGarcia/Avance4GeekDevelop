@@ -12,12 +12,11 @@
     <!-- Sidebar -->
     <ul th:replace="Cliente/fragments/clienteFragment.html :: sidebar"></ul>
 
-    <style>
+    <!--<style>
         #popup {
             display:none;
-            display: inline-block;
         }
-    </style>
+    </style>-->
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -263,11 +262,11 @@
                                                                     th:text="|${tarjeta.getNumerotarjeta().substring(0,6)}******${tarjeta.getNumerotarjeta().substring(7,10)}|"
                                                                     th:value="${tarjeta.getIdtarjeta()}"></option>
                                                         </select>
-                                                        <button type="button" class="ml-2 mb-3" onclick="showOnlineForm()" ondblclick="hideOnlineForm()" id="onlineForm"
+                                                        <button type="button" class="ml-2 mb-3" data-toggle="tooltip" data-placement="rigth" title="Si quiere usar una tarjeta nueva dar click al botón y doble click para esconderlo" onclick="showOnlineForm()" ondblclick="hideOnlineForm()" id="onlineForm"
                                                                 style="background-color: transparent; border-color: transparent">
                                                             <i class="fas fa-caret-down"></i></button>
 <!--
-                                                        <div id="popup" >Si quiere usar una tarjeta nueva dar click al botón y doble click para esconderlo</div>
+                                                        <div id="popup" style="display: none;">Si quiere usar una tarjeta nueva dar click al botón y doble click para esconderlo</div>
 -->
                                                     </div>
 
@@ -718,17 +717,6 @@
         $("#registrarTarjetaText").show();
         $("#registrarTarjetaInput").show();
     }
-
-    var e = document.getElementById('text');
-
-    e.onmouseover = function () {
-        document.getElementById('popup').style.display = 'block';
-    }
-
-    e.onmouseout = function() {
-        document.getElementById('popup').style.display = 'none';
-    }
-
 </script>
 
 </body>

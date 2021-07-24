@@ -128,7 +128,7 @@ public class AdminController  {
 
     @GetMapping("/solicitudes")
     public String listaDeSolicitudes(@RequestParam(value = "tipo", required = false) String tipo,
-                                     @RequestParam(value = "numPag", required = false) Integer numPag,
+                                     @RequestParam(value = "numPag", required = false) String pag,
                                      Model model,
                                      @RequestParam(value = "nombreUsuario", required = false) String nombreUsuario1,
                                      @RequestParam(value = "tipoMovilidad", required = false) String tipoMovilidad1,
@@ -143,7 +143,13 @@ public class AdminController  {
         }
 
         //paginacion --------
-        if(numPag==null || numPag<=0){
+        int numPag = -1;
+        try{
+            numPag = Integer.parseInt(pag);
+            if(numPag<=0){
+                numPag= 1;
+            }
+        }catch (NumberFormatException e){
             numPag= 1;
         }
 

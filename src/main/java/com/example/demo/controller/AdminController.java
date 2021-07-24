@@ -139,7 +139,7 @@ public class AdminController  {
 
 
         if(tipo == null){
-            tipo = "repartidor";//TODO: cambiar a "tipo = "adminRest";"
+            tipo = "repartidor";//
         }
 
         //paginacion --------
@@ -449,14 +449,24 @@ public class AdminController  {
                                  @RequestParam(value = "tipo", required = false) String tipo,
                                  RedirectAttributes attr) throws MessagingException {
 
-        if(id == null){
+        if(id == null ||tipo == null){
             return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+            int tipoUsuario =-1;
+            switch (tipo){
+                case "repartidor":
+                        tipoUsuario=4;
+                    break;
+                case "adminRest":
+                        tipoUsuario=3;
+                    break;
 
-            if(usuarioOpt.isPresent()  && id != 1 ){
+                default:
+            }
+            if(usuarioOpt.isPresent()  && id != 1 && !tipo.equals("")){
                 Usuario usuario = usuarioOpt.get();
-                if(usuario.getEstado()==2) {
+                if(usuario.getEstado()==2 && usuario.getRol().getIdrol()==tipoUsuario) {
                     usuario.setEstado(1);
                     //Fecha de registro:
                     Date date = new Date();
@@ -494,14 +504,24 @@ public class AdminController  {
                                     @RequestParam(value = "tipo", required = false) String tipo,
                                     RedirectAttributes attr) throws MessagingException {
 
-        if(id == null){
+        if(id == null||tipo == null){
             return "redirect:/admin/solicitudes?tipo=" + tipo; //Retornar pagina principal
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+            int tipoUsuario =-1;
+            switch (tipo){
+                case "repartidor":
+                    tipoUsuario=4;
+                    break;
+                case "adminRest":
+                    tipoUsuario=3;
+                    break;
 
-            if(usuarioOpt.isPresent()  && id != 1 ){
+                default:
+            }
+            if(usuarioOpt.isPresent()  && id != 1 && !tipo.equals("")){
                 Usuario usuario = usuarioOpt.get();
-                if(usuario.getEstado()==2) {
+                if(usuario.getEstado()==2 && usuario.getRol().getIdrol()==tipoUsuario) {
                     usuario.setEstado(3);
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////

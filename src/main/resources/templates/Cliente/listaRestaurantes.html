@@ -228,7 +228,7 @@
                             </select>
                         </div>
                     -->
-                        <!-- -------------------------------------------------------------------------------------- -->
+                        <!-- --------------------------------------------------------------------------------------
                         <div class="col-sm-2 mb-2 ">
                             <select id="buscadorCategoria" name="idCategoria" class="form-control" style="border-color: lightgray">
                                 <option value="" th:selected="${idCategoria.equals('')}">Categorías</option>
@@ -260,8 +260,17 @@
                                 <option value="26" th:selected="${idCategoria.equals('26')}">Vegetariana</option>
                                 <option value="27" th:selected="${idCategoria.equals('27')}">Saludable</option>
                             </select>
-                        </div>
+                        </div> -->
 
+
+                        <div class="col-sm-3 mb-1">
+                            <select id="buscadorCategorias" name="idCategoria" class="form-control" style="border-color: lightgray">
+                                <option value=""  th:selected="${idCategoria.equals('')}">Categoría</option>
+                                <option  th:each="categoria : ${categorias}"
+                                         th:selected="${#strings.equals(idCategoria, #strings.toString(categoria.getIdcategoria()))}"
+                                         th:text="${categoria.getNombre()}" th:value="${categoria.getIdcategoria()}"></option>
+                            </select>
+                        </div>
 
 
            <!-- ------------------------------------------------------------------------------------------------------------- -->

@@ -7,7 +7,8 @@ public interface CredencialRest1DTO {
     String getRuc();
     String getTelefono();
     String getDireccion();
-    String getAdministrador();
+    String getNombres();
+    String getApellidos();
     String getCorreo();
     String getCelular();
     String getDni();

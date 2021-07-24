@@ -368,6 +368,7 @@
                                                         <h6>S/. </h6>
                                                         <input type="text" class="form-control text-center ml-2" name="efectivoPagar" form="generarPedido">
                                                         <h6 th:if="${msgEfect != null}" style="color: red; font-size: 15px" th:text="${msgEfect}"></h6>
+                                                        <h6 th:if="${msgCantidadNotNull != null}" style="color: red; font-size: 15px" th:text="${msgCantidadNotNull}"></h6>
                                                         <h6 th:if="${msgNotString != null}" style="color: red; font-size: 15px" th:text="${msgNotString}"></h6>
                                                     </div>
                                                 </div>

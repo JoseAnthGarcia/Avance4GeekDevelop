@@ -407,9 +407,9 @@
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/restaurante/page?pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&textDireccion='+ ${textoDr} + '&inputPrecio='+ ${textoP} + '&textEstado=' + ${textoE} + '&fechainicio=' + ${fechainicio} + '&fechafin=' + ${fechafin}}"
                                            th:utext="${i}"
-                                           class="active"></a>
+                                           class="active page-link"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+                                           th:utext="${i}" class="text-white page-link" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

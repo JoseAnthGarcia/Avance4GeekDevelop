@@ -107,12 +107,12 @@ public class CuponController {
         LocalDate fechafin2;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
             fechafin2 = LocalDate.parse("3000-05-21");
-            model.addAttribute("fechafin", "dd/mm/aaaa");
+            model.addAttribute("fechafin", null);
         } else {
             try {
                 fechafin2 = LocalDate.parse(fechafin);
                 if(fechafin.equalsIgnoreCase("3000-05-21")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechafin", fechafin2);
                 }
@@ -123,7 +123,7 @@ public class CuponController {
         LocalDate fechainicio2;
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio2 = LocalDate.now();
-            model.addAttribute("fechainicio", "dd/mm/aaaa");
+            model.addAttribute("fechainicio", null);
         } else {
             try {
                 fechainicio2 = LocalDate.parse(fechainicio);
@@ -132,7 +132,7 @@ public class CuponController {
                 Date today = Calendar.getInstance().getTime();
                 String todayAsString = df.format(today);
                 if(fechainicio.equalsIgnoreCase(todayAsString)){
-                    model.addAttribute("fechainicio", "dd/mm/aaaa");
+                    model.addAttribute("fechainicio", null);
                 }else {
                     model.addAttribute("fechainicio", fechainicio2);
                 }

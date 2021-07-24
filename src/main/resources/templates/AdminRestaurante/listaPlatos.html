@@ -280,9 +280,9 @@
                                         <a th:if="${currentPage != i}"
                                            th:href="@{'/plato/page?idcategoria='+${idcategoria}+'&pageNo=' + ${i} + '&textBuscador='+ ${texto} + '&inputPrecio='+ ${textoP}}"
                                            th:utext="${i}"
-                                           class="active"></a>
+                                           class="active page-link"></a>
                                         <a th:unless="${currentPage != i}"
-                                           th:utext="${i}" class="text-white" style="pointer-events: none"></a>
+                                           th:utext="${i}" class="text-white page-link" style="pointer-events: none"></a>
 
                                     </div>
                                 </div>

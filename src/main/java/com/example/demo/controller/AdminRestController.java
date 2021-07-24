@@ -232,7 +232,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
                 fechafin3 = simpleDateFormat2.format(fechafin2);
                 System.out.println(fechafin3);
-                model.addAttribute("fechafin", "dd/mm/aaaa");
+                model.addAttribute("fechafin", null);
             } catch (ParseException e) {
                 return "redirect:/restaurante/listaPedidos";
             }
@@ -247,7 +247,7 @@ public class AdminRestController {
                 fechafin3 = simpleDateFormat2.format(fechafin2);
                 System.out.println(fechafin3);
                 if(fechafin.equalsIgnoreCase("3000-05-21 00:00:00")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechafin", fechafin);
                 }
@@ -271,7 +271,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio3 = simpleDateFormat.format(fechainicio2);
                 System.out.println(fechainicio3);
-                model.addAttribute("fechainicio", "dd/mm/aaaa");
+                model.addAttribute("fechainicio", null);
             } catch (IllegalFormatException e) {
                 return "redirect:/restaurante/listaPedidos";
             }
@@ -291,7 +291,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormatHoy = new SimpleDateFormat(patternHoy);
                 String comparar = simpleDateFormatHoy.format(hoy);
                 if(fechainicio.equalsIgnoreCase(comparar)){
-                    model.addAttribute("fechainicio", "dd/mm/aaaa");
+                    model.addAttribute("fechainicio", null);
                 }else {
                     model.addAttribute("fechainicio", fechainicio);
                 }
@@ -609,7 +609,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechafin2 = simpleDateFormat.parse(fechafin);
                 if(fechafin.equalsIgnoreCase("3000-05-21")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechafin", fechafin);
                 }
@@ -628,7 +628,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio2 = simpleDateFormat.parse(fechainicio);
                 if(fechainicio.equalsIgnoreCase("1980-05-21")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechainicio", fechainicio);
                 }
@@ -749,7 +749,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechafin2 = simpleDateFormat.parse(fechafin);
                 if(fechafin.equalsIgnoreCase("3000-05-21")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechafin", fechafin);
                 }
@@ -767,7 +767,7 @@ public class AdminRestController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio2 = simpleDateFormat.parse(fechainicio);
                 if(fechainicio.equalsIgnoreCase("1980-05-21")){
-                    model.addAttribute("fechafin", "dd/mm/aaaa");
+                    model.addAttribute("fechafin", null);
                 }else {
                     model.addAttribute("fechainicio", fechainicio);
                 }

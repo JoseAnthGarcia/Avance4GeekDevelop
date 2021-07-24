@@ -286,7 +286,7 @@
                                 </thead>
                             <tbody>
                                 <tr th:each="ped,info:${listapedidos}">
-                                    <td th:text="${(current -1)*5 +info.index+1} "></td>
+                                    <td th:text="${(current -1)*10 +info.index+1} "></td>
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getFechapedido()}"></td>

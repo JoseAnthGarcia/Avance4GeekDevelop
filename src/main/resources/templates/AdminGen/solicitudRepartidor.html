@@ -95,15 +95,7 @@
                         </div>
                     </div>
                 </form>
-                <div class="alert alert-success" role="alert"
-                     th:if="${msg1!=null}" th:text="${msg1}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg2!=null}" th:text="${msg2}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg3!=null}" th:text="${msg3}">
-                </div>
+
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
@@ -129,6 +121,15 @@
 
                         </style>
                     </div>
+                    <div class="alert alert-success" role="alert"
+                         th:if="${msg1!=null}" th:text="${msg1}">
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${msg2!=null}" th:text="${msg2}">
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${msg3!=null}" th:text="${msg3}">
+                    </div>
                     <div class="containerta">
                         <div class="row">
                             <div class="col-12">
@@ -144,7 +145,7 @@
                                     <tr th:each="repartidor, v : ${listaRepartidorSolicitudes}">
                                         <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img  th:src="@{'/admin/images?id='+${repartidor.idusuario}}" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/images?id='+${repartidor.idusuario}}" class="img-fluid img-thumbnail" style="height: 200px; width: 200px">
 
                                         </td>
                                         <td><div class="table-responsive">
@@ -190,6 +191,19 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
+                                            <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
+                                                <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+                                                    <a th:if="${currentPage != i}"
+                                                       th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
+                   +${(nombreUsuario1==null || nombreUsuario1.equals(''))?'':'&nombreUsuario='+nombreUsuario1}
+                   +${tipoMovilidad1==null?'':'&tipoMovilidad='+tipoMovilidad1}
+                   +${fechaRegistro1==null?'':'&fechaRegistro=' +fechaRegistro1}}"
+                                                       th:utext="${i}"
+                                                       class="active page-link"></a>
+                                                    <a th:unless="${currentPage != i}"
+                                                       th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
+                                                </div>
+                                            </div>
                                         </div>
                                         </td>
                                     </tr>
@@ -204,19 +218,7 @@
             <div th:if="${listaRepartidorSolicitudes.size()==0}">
                 <h3 class="text-lg-center text-danger">No tiene solicitudes de repartidor.</h3>
             </div>
-            <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
-            <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
-                <a th:if="${currentPage != i}"
-                   th:href="@{'/admin/solicitudes?tipo=repartidor&numPag=' + ${i}
-                   +${(nombreUsuario1==null || nombreUsuario1.equals(''))?'':'&nombreUsuario='+nombreUsuario1}
-                   +${tipoMovilidad1==null?'':'&tipoMovilidad='+tipoMovilidad1}
-                   +${fechaRegistro1==null?'':'&fechaRegistro=' +fechaRegistro1}}"
-                   th:utext="${i}"
-                   class="active page-link"></a>
-                <a th:unless="${currentPage != i}"
-                   th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
-            </div>
-        </div>
+
             <!-- /.container-fluid -->
 
         </div>

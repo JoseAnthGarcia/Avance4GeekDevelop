@@ -576,7 +576,7 @@ public class LoginController {
 
             /////----------------Envio Correo--------------------/////
 
-            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado html", cliente);
+            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado", cliente);
 
 
             /////-----------------------------------------  ------/////

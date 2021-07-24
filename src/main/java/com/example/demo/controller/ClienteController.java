@@ -9,6 +9,9 @@ import com.example.demo.service.PedidoActualService;
 import com.example.demo.service.PlatoClienteService;
 import com.example.demo.service.RestauranteClienteService;
 import com.example.demo.service.*;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import javax.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -38,6 +44,10 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 
 @RequestMapping("/cliente")
 public class ClienteController {
+
+    //todo change in presentation public String ip = "54.175.37.128.nip.io";
+    public String ip = "localhost";
+    public String puerto = "8080";
 
     @Autowired
     TarjetaRepository tarjetaRepository;
@@ -59,6 +69,12 @@ public class ClienteController {
 
     @Autowired
     UbicacionRepository ubicacionRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Autowired
     PlatoRepository platoRepository;
@@ -374,7 +390,7 @@ public class ClienteController {
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
-
+            model.addAttribute("total", totalPage);
         }else{
             System.out.println(" ENTRO AL QUERY 2"  );
             Page<RestauranteDTO> listaRestaurante = restauranteClienteService.listaRestaurantePaginada(limitInfP,limitSupP,limitInfVal,limitSupVal,texto,id1,id2,id3,iddistritoactual,pageRequest);
@@ -383,9 +399,10 @@ public class ClienteController {
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
             }
-
+            model.addAttribute("total", totalPage);
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
+
         model.addAttribute("current", page + 1);
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
@@ -423,7 +440,7 @@ public class ClienteController {
         }catch(NumberFormatException nfe){
             page =0;
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         String direccionactual = usuario.getDireccionactual();
 
 
@@ -547,9 +564,11 @@ public class ClienteController {
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
+
             }
 
             model.addAttribute("listaRestaurante", listaRestaurante2.getContent());
+            model.addAttribute("total", totalPage);
 
         }else{
             System.out.println(" ENTRO AL QUERY 2"  );
@@ -558,10 +577,12 @@ public class ClienteController {
             if(totalPage > 0){
                 List<Integer> pages = IntStream.rangeClosed(1,totalPage).boxed().collect(Collectors.toList());
                 model.addAttribute("pages",pages);
+                //model.addAttribute("total", totalPage);
             }
-
+            model.addAttribute("total", totalPage);
             model.addAttribute("listaRestaurante", listaRestaurante.getContent());
         }
+        //model.addAttribute();
         model.addAttribute("current", page + 1);
         model.addAttribute("categorias",categoriasRestauranteRepository.findAll());
         model.addAttribute("idPrecio", idPrecio);
@@ -868,13 +889,13 @@ public class ClienteController {
         try {
             limitInfC = Integer.valueOf(idCategoriaS.split("-")[0]);
             limitSupC = Integer.valueOf(idCategoriaS.split("-")[1]);
-
-            for (Categorias c: categoriasList) {
-                if(c.getIdcategoria() != limitInfC){
-                    limitInfC = 0;
-                    limitSupC = 28;
-                    break;
-                }
+            // 7 9 11 12 - (9 - 7 - 11 - 12)
+            if(categoriasList.get(0).getIdcategoria() != limitInfC &&
+                    categoriasList.get(1).getIdcategoria() != limitInfC &&
+                    categoriasList.get(2).getIdcategoria() != limitInfC &&
+                    categoriasList.get(3).getIdcategoria() != limitInfC ) {
+                limitInfC = 0;
+                limitSupC = 28;
             }
             
         }catch (NumberFormatException e){
@@ -1573,7 +1594,7 @@ public class ClienteController {
                                 @RequestParam(value = "efectivoPagar", required = false) String efectivoPagar,
                                 @RequestParam(value = "metodoPago", required = false) String idmp,
                                 Model model, RedirectAttributes attr,
-                                HttpSession session) {
+                                HttpSession session){
         /*
         * THINGS TODO:
         * ENVIAR CORREO
@@ -1636,6 +1657,7 @@ public class ClienteController {
         MetodoDePago metodoDePago = null;
         boolean idMetPaVal = false;
         boolean idTarjetaVal = false;
+        boolean cantidadNullVal = false;
         boolean cvvVal = false;
         boolean numTarjetaVal = false;
         boolean mesVal = false;
@@ -1789,6 +1811,15 @@ public class ClienteController {
                     mesValNull = true;
                     anioValNull = true;
                     idTarjetaVal = true;
+
+                    if(metodoDePago.getIdmetodopago() == 1){
+                        if(!efectivoPagar.equals("")){
+                            // aquí hago la validación de que ingrese una cantidad a pagar
+                            // si el metodo de pago es efectivo, más adelante se validará que
+                            // la cantidad a pagar será mayor a la del monto Total
+                            cantidadNullVal = true;
+                        }
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -1834,7 +1865,7 @@ public class ClienteController {
         }
 
         //!precioDelVal ||
-        if (!idCuponVal || !idUbicVal || !idMetPaVal ||
+        if (!idCuponVal || !idUbicVal || !idMetPaVal || !cantidadNullVal ||
                 !numTarjetaVal || !mesVal || !anioVal || !cvvVal || !tipoVal ||
                 !cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull || !idTarjetaVal) {
             // si algunos de estos datos esta mal debería redireccionarte a la misma vista
@@ -1850,6 +1881,10 @@ public class ClienteController {
 
             if (!cvvValNull || !numTarjetaValNull || !mesValNull || !anioValNull) {
                 model.addAttribute("msgNullMdp", "Ingrese un dato válido.");
+            }
+
+            if(!cantidadNullVal){
+                model.addAttribute("msgCantidadNotNull", "Ingrese una cantidad a pagar mayor al monto total.");
             }
 
             if (!numTarjetaVal) {
@@ -1879,6 +1914,7 @@ public class ClienteController {
             model.addAttribute("montoExtras", precioTotalExtras);
             model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
             model.addAttribute("listaDirecciones", listaDirecciones);
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "Cliente/terminarCompra";
         } else {
 
@@ -1916,6 +1952,7 @@ public class ClienteController {
                         model.addAttribute("montoExtras", precioTotalExtras);
                         model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                         model.addAttribute("listaDirecciones", listaDirecciones);
+                        model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                         return "Cliente/terminarCompra";
                     }
                 } catch (NumberFormatException e) {
@@ -1926,6 +1963,7 @@ public class ClienteController {
                     model.addAttribute("montoExtras", precioTotalExtras);
                     model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                     model.addAttribute("listaDirecciones", listaDirecciones);
+                    model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
                     return "Cliente/terminarCompra";
                 }
             }
@@ -1999,6 +2037,9 @@ public class ClienteController {
                     extraHasPedidoRepository.save(extra_has_pedido);
                 }
             }
+            try {
+                sendHtmlMailPedidoGen(cliente.getCorreo(),"Pedido Generado Exitosamente",pedido, cliente.getNombres());
+            } catch (MessagingException e) { }
             session.removeAttribute("delivery");
             session.removeAttribute("idRest");
             session.removeAttribute("idPlato");
@@ -2006,6 +2047,8 @@ public class ClienteController {
             session.removeAttribute("extrasCarrito");
             session.removeAttribute("delivery");
             attr.addFlashAttribute("msgPedGen", "Se generó exitosamente un pedido con código: " + pedido.getCodigo());
+            // todo falta reenviar notis
+            model.addAttribute("notificaciones", clienteRepository.notificacionCliente(cliente.getIdusuario()));
             return "redirect:/cliente/pedidoActual";
         }
 
@@ -2101,7 +2144,7 @@ public class ClienteController {
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
-
+        model.addAttribute("total", totalPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaPedidoActual";
 
@@ -2166,6 +2209,7 @@ public class ClienteController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+        model.addAttribute("total", totalPage);
         model.addAttribute("current", page + 1);
         model.addAttribute("listaPedidos", listaPedidos.getContent());
         //mandar valores
@@ -2320,7 +2364,7 @@ public class ClienteController {
         //mandar valores
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
-
+        model.addAttribute("total", totalPage);
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
         return "Cliente/listaHistorialPedidos";
     }
@@ -2373,6 +2417,7 @@ public class ClienteController {
         model.addAttribute("current", page + 1);
         model.addAttribute("listaPedidos", listaPedidos);
         //mandar valores
+        model.addAttribute("total", totalPage);
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
 
@@ -3673,6 +3718,22 @@ public class ClienteController {
         }
 
         return codigoPedido;
+    }
+
+    public void sendHtmlMailPedidoGen(String to, String subject, Pedido pedido, String cliente) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("pedidoCodigo", pedido.getCodigo());
+        context.setVariable("restaurante", pedido.getRestaurante().getNombre());
+        context.setVariable("user", cliente);
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        String emailContent = templateEngine.process("Correo/pedidoGenerado", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
     }
 
 }

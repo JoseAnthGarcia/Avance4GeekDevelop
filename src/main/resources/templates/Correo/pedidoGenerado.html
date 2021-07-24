@@ -19,7 +19,7 @@
                         <td class="" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #701111; margin: 0; padding: 20px;"
                             align="center" bgcolor="#71b6f9" valign="top">
                             <a href="#" style="font-size:32px;color:#fff;"> FoodDelivery.com</a> <br>
-                            <span style="margin-top: 10px;display: block;"  > Bienvenid@ a Food Delivery!, <h1 th:text="${user}" ></h1></span>
+                            <span style="margin-top: 10px;display: block;"  > <h1 th:text="${user}"></h1> su pedido fue generado exitosamente!</span>
                         </td>
                     </tr>
                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
@@ -28,22 +28,22 @@
                                 <tbody>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                     <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
-                                         Tu registro fue <strong style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> un éxito! </strong>
+                                        El código de su pedido es <strong style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;" th:text="${pedidoCodigo}"></strong>
                                     </td>
                                 </tr>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                     <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
-                                        Vive esta nueva experiencia al máximo con un solo click obtén todas las comidas de tus restaurantes favoritos.
+                                        Su pedido empezará a prepararse en cuanto el restaurante <strong style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;" th:text="${restaurante}"></strong> acepte el pedido. Puede ver el detalle de su compra presionando el siguiente botón.                                    </td>
                                     </td>
                                 </tr>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
-                                        <a th:href="@{'http://'+${ip}+':'+${puerto}+'/foodDelivery/login'}" class="btn-primary" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #701111; margin: 0; border-color: #701111; border-style: solid; border-width: 8px 16px;">
-                                            Ingresamos</a>
+                                    <td class="content-block ml-3" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                        <a th:href="@{'http://'+${ip}+':'+${puerto}+'/foodDelivery/cliente/detallePedidoActual?codigo='+${pedidoCodigo}}" class="btn-primary" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #701111; margin: 0; border-color: #701111; border-style: solid; border-width: 8px 16px;">
+                                            Ver detalle</a>
                                     </td>
                                 </tr>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                    <td class="content-block ml-3" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                         Gracias por elegir  <b>Food Delivery</b> .
                                     </td>
                                 </tr>

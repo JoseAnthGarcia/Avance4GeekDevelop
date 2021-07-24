@@ -235,7 +235,7 @@
                                             <tr th:each="p2, info:${listapedido2}">
                                                 <td th:text="${info.index +1}"></td>
                                                 <td th:text="${p2.getNombreplato()}"></td>
-                                                <td th:text="${p2.getCantidad()}"></td>
+                                                <td th:text="|${p2.getCantidad()} uni.|"></td>
                                                 <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
                                                 <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
 												<td><a data-toggle="modal" th:data-target="${'#comentario'+p2.getIdplato()}"
@@ -323,7 +323,7 @@
                                         <tr th:each="p2, info:${listaExtra}">
                                             <td th:text="${info.index +1}">1</td>
                                             <td th:text="${p2.getNombre()}"></td>
-                                            <td th:text="${p2.getCantidad()}"></td>
+                                            <td th:text="|${p2.getCantidad()} uni.|"></td>
                                             <td th:text="|S/. ${p2.getPreciounitario()}|"></td>
                                             <td th:text="|S/. ${p2.getCantidad()*p2.getPreciounitario()}|"></td>
                                         </tr>

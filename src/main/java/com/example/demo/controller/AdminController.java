@@ -143,7 +143,7 @@ public class AdminController  {
         }
 
         //paginacion --------
-        if(numPag==null){
+        if(numPag==null || numPag<=0){
             numPag= 1;
         }
 
@@ -331,8 +331,15 @@ public class AdminController  {
                     //
                     restauranteRepository.save(restaurante);
 
-                    String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestaurante(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getNombre() + " tu cuenta fue creada exitosamente";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Restaurante aceptado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg1", "Restaurante aceptado exitosamente");
                     return "redirect:/admin/solicitudes?tipo=restaurante";
                 }else {
@@ -393,8 +400,16 @@ public class AdminController  {
                 if(restaurante.getEstado()==2) {
                     restaurante.setEstado(3);
                     restauranteRepository.save(restaurante);
-                    String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
-                    sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptadoRestauranteAdmin(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado" , restaurante);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + restaurante.getAdministrador().getNombres() + " administrador esta es tu cuenta creada";
+                        sendEmail(restaurante.getAdministrador().getCorreo(), "Cuenta Administrador creado", contenido);
+                    }
+
+
                     attr.addFlashAttribute("msg2", "Restaurante rechazado exitosamente");
 
                     return "redirect:/admin/solicitudes?tipo=restaurante";
@@ -433,7 +448,7 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(1);
@@ -444,10 +459,14 @@ public class AdminController  {
                     //
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " tu solicitud fue aceptada exitosamente";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue aceptada", contenido);
-                    //sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue ACeptada html", usuario);
 
 
                     /////-----------------------------------------  ------/////
@@ -474,16 +493,21 @@ public class AdminController  {
         }else {
             Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
 
-            if(usuarioOpt.isPresent()){
+            if(usuarioOpt.isPresent()  && id != 1 ){
                 Usuario usuario = usuarioOpt.get();
                 if(usuario.getEstado()==2) {
                     usuario.setEstado(3);
                     usuarioRepository.save(usuario);
                     /////----------------Envio Correo--------------------/////
+                    // TODO: 23/07/2021
+                    try {
+                        sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada", usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
+                        sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
+                    }
 
-                    String contenido = "Hola " + usuario.getNombres() + " solicitud fue rechazada";
-                    sendEmail(usuario.getCorreo(), "Cuenta fue rechazada", contenido);
-                    //sendHtmlMailRechazado(usuario.getCorreo(), "Cuenta Fue Rechazada html", usuario);
+
 
                     attr.addFlashAttribute("msg2", "Usuario rechazado exitosamente");
                     /////-----------------------------------------  ------/////
@@ -503,7 +527,7 @@ public class AdminController  {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         List<Usuario> notificaciones = usuarioRepository.findByEstadoOrderByFecharegistroAsc(2);
         model.addAttribute("notificaciones", notificaciones);
-        if (usuarioOpt.isPresent()) {
+        if (usuarioOpt.isPresent()  && idUsuario != 1 ) {
             Usuario usuario = usuarioOpt.get();
             model.addAttribute("administradorRestaurante", usuario);
             return "AdminGen/detalleAdminR";
@@ -554,7 +578,7 @@ public class AdminController  {
         int estadoBuscador = 0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -679,7 +703,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -778,7 +802,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -980,7 +1004,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1130,7 +1154,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1255,7 +1279,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1352,7 +1376,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1568,7 +1592,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("valoracion") != null || session.getAttribute("cantidad") != null || session.getAttribute("valoracion") != null  ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1749,7 +1773,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     int page;
     int estadoBuscador = 0;
     try{
-        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
     }catch(NumberFormatException nfe){
         page =0;
     }
@@ -1965,7 +1989,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("cantidad") != null || session.getAttribute("monto") != null || session.getAttribute("valoracion") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -2157,7 +2181,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -2453,7 +2477,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             double totalIngresos = 0.0;
 
 
-            if (usuarioOpt.isPresent()) {
+            if (usuarioOpt.isPresent()  && Integer.parseInt(idUsuario) != 1 ) {
                 Usuario usuario = usuarioOpt.get();
 
                 for(int i = 0; i < usuario.getListaPedidosPorUsuario().size(); i++) {
@@ -2468,7 +2492,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                     case "repartidor":
                         model.addAttribute("repartidor",usuario);
                         model.addAttribute("ganancia",usuarioRepository.gananciaRepartidor(Integer.parseInt(idUsuario)));
-                        model.addAttribute("valoracion",usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario)));
+                        Integer valoracion = usuarioRepository.valoracionRepartidor(Integer.parseInt(idUsuario));
+                        if(valoracion==null){
+                            valoracion = 0;
+                        }
+                        model.addAttribute("valoracion",valoracion);
                         model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
@@ -2514,8 +2542,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuario.setEstado(1);
             usuario.setFechaadmitido(String.valueOf(new Date()));
             usuarioRepository.save(usuario);
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
-            sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAceptado(usuario.getCorreo(), "Cuenta Fue Aceptada", usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta aceptada";
+                sendEmail(usuario.getCorreo(), "Cuenta Aceptada", contenido);
+            }
 
         }
         return "redirect:/admin/solicitudes";
@@ -2544,7 +2578,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         try {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(Integer.parseInt(id));
 
-        if(usuarioOpt.isPresent()){
+        if(usuarioOpt.isPresent() && Integer.parseInt(id) != 1 ){
             Usuario usuario = usuarioOpt.get();
             // ESTADOS
             /*
@@ -2646,10 +2680,14 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
                 /////----------------Envio Correo--------------------/////
 
-                String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
+                // TODO: 23/07/2021
+                try {
+                    sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado", usuario);
+                } catch (MessagingException e) {
+                    String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                    sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                }
                 /////-----------------------------------------------/////
 
 
@@ -2850,9 +2888,16 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             usuarioRepository.save(usuario);
 
             /////----------------Envio Correo--------------------/////
+            // TODO: 23/07/2021
+            try {
+                sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            }
 
-            String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
-            sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+
+
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -2939,7 +2984,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/AdminGen/mailTemplate", context);
+        String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2952,7 +2997,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/clienteREgistrado", context);
+        String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
@@ -2965,10 +3010,38 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Aceptado", context);
+        String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
+    public void sendHtmlMailAceptadoRestaurante(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAceptadoRestauranteAdmin(String to, String subject, Restaurante usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getAdministrador().getNombres());
+        context.setVariable("id", usuario.getRuc());
+        context.setVariable("restaurante", usuario.getNombre());
+        String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+
+
     public void sendHtmlMailRechazado(String to, String subject, Usuario usuario) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -2977,7 +3050,19 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
-        String emailContent = templateEngine.process("/Correo/Rechazado", context);
+        String emailContent = templateEngine.process("Correo/Rechazado", context);
+        helper.setText(emailContent, true);
+        mailSender.send(message);
+    }
+    public void sendHtmlMailAdminRegistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

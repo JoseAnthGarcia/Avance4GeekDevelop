@@ -286,7 +286,7 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center" >
-                            <h5 th:if="${listaRestaurante.size()==0}" th:text="|No se encontraron resultados|"></h5>
+                            <h3 style="color: red;" th:if="${listaRestaurante.size()==0 || total==0}" th:text="|No hay resultados para su búsqueda|"></h3>
                         </div>
                         <div class="table-responsive"  >
                             <table class="table table-bordered" th:if="${listaRestaurante.size()>0}">
@@ -380,6 +380,10 @@
                         </div>
    <!-- ------------------------------------------------------------------------------------ -->
                      </div>
+
+
+
+
                     </div>
                 </div>
             </div>

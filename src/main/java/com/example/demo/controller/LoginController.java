@@ -107,6 +107,10 @@ public class LoginController {
 
     @Autowired
     ValidarCorreoRepository validarCorreoRepository;
+    @GetMapping("")
+    public String pagiIndex(){
+return "index";
+    }
 
     @GetMapping("/login")
     public String loginForm(Model model, HttpSession httpSession) {

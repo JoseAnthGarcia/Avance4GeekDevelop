@@ -303,6 +303,7 @@ public class ClienteController {
                     id3 = idCategoria+"-";
                 }
                 httpSession.setAttribute("idCategoria",idCategoria);
+                //se deberia guardar si no esta en el rango????
             }catch (NumberFormatException e){
                 idCategoria="";
                 httpSession.removeAttribute("idCategoria");

@@ -293,8 +293,6 @@ public class PlatoController {
         boolean validarFoto = true;
 
         if (file != null) {
-            System.out.println("No soy nul 1111111111111111111111111111111111111111111");
-            System.out.println(file);
             if (file.isEmpty()) {
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
@@ -434,7 +432,7 @@ public class PlatoController {
                 return "redirect:/plato/lista?idcategoria="+idcategoria;
             }
         }catch(NumberFormatException e){
-            System.out.println("error");
+
             return "redirect:/plato/lista?idcategoria="+idcategoria;
         }
     }
@@ -482,23 +480,18 @@ public class PlatoController {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
-                System.out.println("----------------------------Precio-----------------------------"+text);
                 try {
-                    System.out.println("xd1");
                     this.setValue(Double.parseDouble(text));
-                    System.out.println("xddddddddddddddddddddddd "+this.getValue());
                     if(text.contains("E")){
                         String[] parts = text.split("E");
                         String part1 = parts[0];
                         String part2 = parts[1];
-                        System.out.println(part1);
-                        System.out.println(part2);
-                        if((Double.parseDouble(part1)>=1.7) && (Double.parseDouble(part2)>=308)){
-                            System.out.println("El valor es mayor o igual a 8E308");
+
+                        if((Double.parseDouble(part1)>1.7) && (Double.parseDouble(part2)>=308)){
                             this.setValue(0.0);
                         }
                         else if ((Double.parseDouble(part2)>308)){
-                            System.out.println("El valor es mayor a 1E309");
+
                             this.setValue(0.0);
                         }
                         else{
@@ -506,8 +499,6 @@ public class PlatoController {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("xd2");
-                    System.out.println(text);
                     this.setValue(text);
                 }
             }

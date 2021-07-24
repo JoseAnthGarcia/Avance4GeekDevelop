@@ -139,7 +139,7 @@
                                         <div th:case="repartidor" th:text="|Repartidor${usuario.sexo == 'femenino' ? 'a':''}|"></div>
                                     </td>
                                     <td th:text="${usuario.fecharegistro}" class="text-center" style="width: 250px"></td>
-                                    <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
+                                    <td th:text="${usuario.estado == 1 ? 'ACTIVO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
                                     <td th:if="${session.usuario.rol.idrol==2}">
                                         <a th:if="${usuario.estado != 0}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
                                         <a th:unless="${usuario.estado != 0 }" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>

@@ -91,7 +91,8 @@
                                     </td>
                                     <td>
                                         <a style="color: #dce3f9"
-                                           th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}"
+                                           data-toggle="modal" th:data-target="'#modalAceptar'+${pedido.codigo}"
+                                           th:id="${pedido.codigo}"
                                            class="btn btn-success btn-circle align">
                                             <i class="fas fa-check text-white"></i>
                                         </a>
@@ -164,7 +165,27 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
+<!-- Aceptar Modal-->
+<div>
+    <div th:each="pedido:${listaPedidos}" class="modal fade" th:id="'modalAceptar'+${pedido.codigo}" role="dialog">
+        <div class="modal-dialog">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header notificacion">
+                    <h4 class="modal-title" style="color:white;">Aceptar pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="card-text" th:utext="'Si presionas el botón Aceptar pedido, aceptarás realizar la entrega del pedido '+${pedido.codigo} ">
+                    </p>
+
+                    <a class="btn btn-success " style="position: relative; left: 36%" th:href="@{'/repartidor/aceptarPedido?codigo='+${pedido.codigo}}">Aceptar pedido</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

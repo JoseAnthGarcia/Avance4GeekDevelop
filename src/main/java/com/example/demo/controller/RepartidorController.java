@@ -382,6 +382,7 @@ public class RepartidorController {
     public String pedidoEntregado(@RequestParam(value = "codigo", required = false) String codigo,
                                   HttpSession session) {
 
+        String codigoActual = (String) session.getAttribute("pedidoActual");
         if (codigo!=null &&
                 session.getAttribute("pedidoActual")!=null &&
                 ((String)session.getAttribute("pedidoActual")).equals(codigo))  {

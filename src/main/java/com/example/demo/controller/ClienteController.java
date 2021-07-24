@@ -1825,6 +1825,8 @@ public class ClienteController {
                             // la cantidad a pagar será mayor a la del monto Total
                             cantidadNullVal = true;
                         }
+                    }else{
+                        cantidadNullVal = true;
                     }
                 }
             }

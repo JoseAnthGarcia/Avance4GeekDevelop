@@ -30,7 +30,7 @@ public class Extra  implements Serializable {
     @Column(nullable = false, name = "preciounitario")
     @Digits(integer = 1000, fraction = 1, message = "Ingresar un precio válido")
     @Max(value = 50 , message = "El precio máximo es de 50 soles")
-    @Min(value = 1, message = "El precio mínimo es de 5 soles")
+    @Min(value = 1, message = "El precio mínimo es de 1 sol")
     @NotNull(message = "Este campo no puede estar vacío")
     private double preciounitario;
 

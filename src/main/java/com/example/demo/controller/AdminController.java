@@ -3010,6 +3010,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("AdminGen/mailTemplate", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3023,6 +3025,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/clienteREgistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3036,6 +3040,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Aceptado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3049,6 +3055,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestaurante", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3062,6 +3070,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         context.setVariable("user", usuario.getAdministrador().getNombres());
         context.setVariable("id", usuario.getRuc());
         context.setVariable("restaurante", usuario.getNombre());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AceptadoRestauranteAdmin", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3076,6 +3086,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/Rechazado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);
@@ -3088,6 +3100,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Context context = new Context();
         context.setVariable("user", usuario.getNombres());
         context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
         String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
         helper.setText(emailContent, true);
         mailSender.send(message);

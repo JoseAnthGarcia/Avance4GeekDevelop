@@ -231,7 +231,7 @@
                             Se agregó un plato al carrito
                         </div>
 
-                        <h2 th:if="${listaPlato.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h2>
+                        <h3 th:if="${listaPlato.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h3>
                         <div style="color: red" th:if="${msgValCant != null}" th:text="${msgValCant}" class="mr-2 mt-1"></div>
                         <div style="color: red" th:if="${msgVal != null}" th:text="${msgVal}" class="mr-2 mt-1"></div>
 

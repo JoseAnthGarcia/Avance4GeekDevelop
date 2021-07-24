@@ -257,10 +257,10 @@
                                                                 class="form-control form-control-sm mb-4"
                                                                 onchange="hideOnlineForm()"
                                                                 name="tarjeta" form="generarPedido">
-                                                            <option value="" selected disabled>Seleccione una tarjeta
+                                                            <option value="" onclick="showOnlineForm()" selected>Seleccione una tarjeta
                                                             </option>
                                                             <option th:each="tarjeta : ${listaTarjetas}"
-                                                                    th:text="|${tarjeta.getNumerotarjeta().substring(0,6)}******${tarjeta.getNumerotarjeta().substring(13,16)}|"
+                                                                    th:text="|${tarjeta.getNumerotarjeta().substring(0,6)}******${tarjeta.getNumerotarjeta().substring(7,10)}|"
                                                                     th:value="${tarjeta.getIdtarjeta()}"></option>
                                                         </select>
                                                         <button type="button" class="ml-2 mb-3" onclick="showOnlineForm()" ondblclick="hideOnlineForm()" id="onlineForm"

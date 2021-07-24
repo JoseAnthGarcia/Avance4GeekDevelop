@@ -301,7 +301,7 @@
                     <div class="ml-2 mb-3" style="color:#EE2D20;" th:if="${msgValExt != null}" th:text="${msgValExt}"></div>
                     <h3 th:if="${listaExtras.size() == 0}" th:text="|No se encontraron resultados en la búsqueda|" class="ml-2 mr-2 mt-2 text-center"  style="color:red;"></h3>
 
-                    <div class="card-body" th:if="${listaExtras.size() == 0}">
+                    <div class="card-body" th:if="${listaExtras.size() != 0}">
                         <div class="container-fluid">
                             <div class="table-responsive">
                                 <table th:if="${listaExtras != null}" class="table table-bordered">

@@ -204,7 +204,7 @@
 
                     <div th:if="${listaRepartidor.size()!=0 || listaRepartidor.size()!=null}" class="row justify-content-center" th:each="r1:${listaRepartidor}">
                         <h5 class="col-3" style="color:black"  th:text="|Repartidor : ${r1.getNombres()} ${r1.getApellidos()}|"> </h5>
-                        <h5 class="col-3 offset-md-3" style="color:black" th:text="|Telefono (Repartidor) : ${r1.getTelefono()} |" ></h5>
+                        <h5 class="col-3 offset-md-3" style="color:black" th:text="|Teléfono (Repartidor) : ${r1.getTelefono()} |" ></h5>
 
                     </div>
 
@@ -370,7 +370,7 @@
 
                     <div class="row justify-content-center">
                         <h6 class="col-3" style="color:black">Método de Pago</h6>
-                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo|"></h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1}" th:text="|Efectivo: S/. ${p3.getCantp()}|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
 

@@ -163,7 +163,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
 
-    @Query(value ="select DISTINCT(ped.codigo), r.nombre as 'nombrerest',\n" +
+    @Query(value ="select DISTINCT(ped.codigo),ped.cantidadapagar as cantp,r.nombre as 'nombrerest',\n" +
             "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
             "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento,ped.comentrechazorest as 'obsrest' \n" +
             "from pedido ped \n" +

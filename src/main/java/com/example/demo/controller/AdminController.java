@@ -578,7 +578,7 @@ public class AdminController  {
         int estadoBuscador = 0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -703,7 +703,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -802,7 +802,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1004,7 +1004,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1154,7 +1154,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1279,7 +1279,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("estado") != null || session.getAttribute("idrol") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1376,7 +1376,7 @@ public class AdminController  {
         int page;
         int estadoBuscador = 0;
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1592,7 +1592,7 @@ public class AdminController  {
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("valoracion") != null || session.getAttribute("cantidad") != null || session.getAttribute("valoracion") != null  ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -1773,7 +1773,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
     int page;
     int estadoBuscador = 0;
     try{
-        page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+        page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
     }catch(NumberFormatException nfe){
         page =0;
     }
@@ -1989,7 +1989,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         int estadoBuscador = session.getAttribute("texto") != null || session.getAttribute("cantidad") != null || session.getAttribute("monto") != null || session.getAttribute("valoracion") != null ? 1 :0;
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null  &&  Integer.valueOf(params.get("page").toString()) > 0 ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }
@@ -2181,7 +2181,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
 
         try{
-            page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
+            page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         }catch(NumberFormatException nfe){
             page =0;
         }

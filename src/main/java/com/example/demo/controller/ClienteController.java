@@ -1571,7 +1571,15 @@ public class ClienteController {
             }
         }
 
+      /*  int monto = (int) (subTotalCarrito + subTotalExtras + delivery);
+        int montoVal = (int) (subTotalCarrito + subTotalExtras);
 
+        for (Cupon c: listaCupones1){
+            if(c.getDescuento() > monto){
+                c.setDescuento(montoVal);
+            }
+        }
+*/
         model.addAttribute("montoCarrito", subTotalCarrito);
         model.addAttribute("listaCupones", listaCupones1);
         model.addAttribute("montoExtras", subTotalExtras);
@@ -1941,7 +1949,15 @@ public class ClienteController {
             }
             if (idCupon != null) {
                 if (!idCupon.trim().equals("")) {
+
+                    if(desc.compareTo(precioTotal) > 0){
+                        precioTotal = desc;
+                        System.out.println("CUPON MAYOR AL PRECIO TOTAL" + precioTotal.toString() + " - " + desc.toString());
+                        // si esto pasa el precio total se restaria y quedaría cero
+                        // para que después se añada el efectivo
+                    }
                     precioTotal = precioTotal.subtract(desc);
+
                 }
             }
 

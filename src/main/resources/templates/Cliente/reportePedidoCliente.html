@@ -270,12 +270,6 @@
                     </div>
                     <br>
 
-                    <div class="text-center" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
-                        <br>
-                        <h3 style="color:black"
-                            th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                        <br>
-                    </div>
                     <div class="text-center" th:if="${total==0  }">
                         <br>
                         <h3 style="color: red;"  th:text="|No hay resultados para su búsqueda|"></h3>
@@ -284,19 +278,24 @@
 
                     <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <div class="card-body" id='tabla' th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
-                        <table class="table "
-                               style="background-color:#F2E2AA; border-color:#F2E2AA ">
-                            <thead>
+                        <table class="table">
                             <tr>
-                                <th style="color:black">
-                                    TOP 3 RESTAURANTES
-                                </th>
-                                <th style="color:black">
-                                    TOP 3 PLATOS MÁS VENDIDOS
-                                </th>
+                            <th style=" font-size:35px " class="text-center"
+                                th:text="|Consumo Total: S/ ${totalsuma+'0'}|"></th>
                             </tr>
-                            </thead>
+                        </table>
+
+                        <table class="table"
+                               style="background-color:#F2E2AA; border-color:#F2E2AA ">
                             <tbody >
+                            <tr>
+                                <td style="color:black">
+                                    TOP 3 RESTAURANTES
+                                </td>
+                                <td style="color:black">
+                                    TOP 3 PLATOS MÁS VENDIDOS
+                                </td>
+                            </tr>
 
                             <tr>
                                 <td th:if="${listarestTop.get(0).getNombrerest()!= null}"
@@ -345,7 +344,7 @@
                                     <td th:text="${(current - 1)*10 +info.index+1}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getNumPedidos()}">10</td>
-                                    <td th:text="|S/. ${ped.getTotal()}|"></td>
+                                    <td th:text="|S/.${ped.getTotal()+'0'}|"></td>
                                     <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
                                     <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
                                     <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>
@@ -359,6 +358,7 @@
                                     <td th:if="${ped.getMes()==11}" th:text="|Noviembre|"></td>
                                     <td th:if="${ped.getMes()==12}" th:text="|Diciembre|"></td>
                                 </tr>
+
                                 </tbody>
 
                             </table>

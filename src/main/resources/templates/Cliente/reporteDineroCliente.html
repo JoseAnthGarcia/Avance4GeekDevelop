@@ -255,45 +255,46 @@
 							</div>	
 						</div>
                         </div>
-                        <div class="text-center" th:if="${total>0}" >
-                            <br>
-                            <h3  style="color:#000000"  th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
-                        </div>
 						<div class="text-center" th:if="${total==0}"  >
                             <br>
                             <h3 style="color: red;" th:text="|No hay resultados para su búsqueda|"></h3>
                             <br>
 						</div>
 
-                        <div class="card-body"  th:if="${total>0}" >
+                        <div class="card-body" id="tabla"   th:if="${total>0}" >
                             <div class="table-responsive">
-                             <table id="tabla" class="table table-bordered">
-                                 <thead>
-                                 <tr>
-                                     <th>
-                                         N°
-                                     </th>
-									 <th>
-                                         Cupones
-                                     </th>
-                                     <th>
-                                         Restaurantes
-                                     </th>
-                                     <th>
-                                         Fecha
-                                     </th>
-                                     <th>
-                                         Monto
-                                     </th>
-                                 </tr>
-                                </thead>
+                                <table class="table">
+                                    <tr>
+                                        <th style=" font-size:35px " class="text-center"
+                                            th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></th>
+                                    </tr>
+                                </table>
+                             <table  class="table table-bordered">
+
                             <tbody>
+                            <tr>
+                                <td>
+                                    N°
+                                </td>
+                                <td>
+                                    Cupones
+                                </td>
+                                <td>
+                                    Restaurantes
+                                </td>
+                                <td>
+                                    Fecha
+                                </td>
+                                <td>
+                                    Monto
+                                </td>
+                            </tr>
                                 <tr th:each="ped,info:${listapedidos}">
                                     <td th:text="${(current -1)*10 +info.index+1} "></td>
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getFechapedido()}"></td>
-                                    <td th:text="|S/ ${ped.getDescuento()}|"></td>
+                                    <td th:text="|S/ ${ped.getDescuento()+'0'}|"></td>
                                 </tr>
                                 
                             </tbody>

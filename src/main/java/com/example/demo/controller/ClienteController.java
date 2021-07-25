@@ -48,8 +48,8 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 public class ClienteController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    //public String ip = "34.227.30.44.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";
+    //public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -1571,7 +1571,15 @@ public class ClienteController {
             }
         }
 
+      /*  int monto = (int) (subTotalCarrito + subTotalExtras + delivery);
+        int montoVal = (int) (subTotalCarrito + subTotalExtras);
 
+        for (Cupon c: listaCupones1){
+            if(c.getDescuento() > monto){
+                c.setDescuento(montoVal);
+            }
+        }
+*/
         model.addAttribute("montoCarrito", subTotalCarrito);
         model.addAttribute("listaCupones", listaCupones1);
         model.addAttribute("montoExtras", subTotalExtras);
@@ -1941,7 +1949,15 @@ public class ClienteController {
             }
             if (idCupon != null) {
                 if (!idCupon.trim().equals("")) {
+
+                    if(desc.compareTo(precioTotal) > 0){
+                        precioTotal = desc;
+                        System.out.println("CUPON MAYOR AL PRECIO TOTAL" + precioTotal.toString() + " - " + desc.toString());
+                        // si esto pasa el precio total se restaria y quedaría cero
+                        // para que después se añada el efectivo
+                    }
                     precioTotal = precioTotal.subtract(desc);
+
                 }
             }
 

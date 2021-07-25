@@ -178,7 +178,7 @@ public class ExtraController {
                     List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
                     model.addAttribute("texto", textBuscador);
                     model.addAttribute("textoP", inputPrecio);
-
+                    model.addAttribute("pageSize", pageSize);
                     model.addAttribute("currentPage", pageNo);
                     model.addAttribute("totalPages", page.getTotalPages());
                     model.addAttribute("totalItems", page.getTotalElements());

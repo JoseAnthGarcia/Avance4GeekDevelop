@@ -194,13 +194,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
     @Query(value ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
-            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , truncate (sum(p.preciototal),1 )as'total'\n" +
             "from pedido p \n" +
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
             "where p.idcliente=?1 and (p.estado = 6) and (EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido)<=?3 )\n" +
             "and lower(r.nombre) like %?4% and (EXTRACT(YEAR from p.fechapedido) like ?5)\n" +
             "group by p.idrestaurante  having ( count(r.idrestaurante)>?6 and count(r.idrestaurante)<= ?7)", countQuery ="select r.nombre as 'nombrerest' , count(r.idrestaurante) as \"numpedidos\"\n" +
-            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , sum(p.preciototal) as'total'\n" +
+            ",EXTRACT(MONTH from p.fechapedido) as 'mes' , truncate (sum(p.preciototal),1) as'total'\n" +
             "from pedido p \n" +
             "inner join restaurante r on p.idrestaurante=r.idrestaurante \n" +
             "where p.idcliente=?1 and (p.estado = 6) and (EXTRACT(MONTH from p.fechapedido) >?2 and EXTRACT(MONTH from p.fechapedido)<=?3 )\n" +

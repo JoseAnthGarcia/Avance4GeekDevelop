@@ -374,8 +374,17 @@
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==1 }" th:text="|Efectivo|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==2}" th:text="|Online|"></h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
-
                     </div>
+                    <div class="row justify-content-center" th:if="${p3.getIdmetodopago()==1 && (p3.getCantp()!=null && p3.getCantp() > 0)}">
+                        <h6 class="col-3" style="color:black" >Monto de Pago</h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getCantp()}|"  ></h6>
+                    </div>
+                    <div class="row justify-content-center" th:if="${p3.getIdmetodopago()==1 && (p3.getCantp()!=null && p3.getCantp()> 0)}">
+                        <h6 class="col-3" style="color:black" >Vuelto </h6>
+                        <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${ p3.getCantp() - p3.getPreciototal() }|"  ></h6>
+                    </div>
+                    <div class="dropdown-divider" style="border-color:#701111;" ></div>
+
                     <div class="row justify-content-center">
                         <h6 class="col-3" style="color:black">Fecha de entrega</h6>
                         <h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>

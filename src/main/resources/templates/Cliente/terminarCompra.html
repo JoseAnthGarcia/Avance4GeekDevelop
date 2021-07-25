@@ -199,6 +199,12 @@
                                     <ul class="nav nav-tabs card-header-tabs">
                                         <li class="nav-item active">
                                             <a href="#content_online" class="nav-link" role="tab" data-toggle="tab"
+                                               th:classappend="${(msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null) ? 'active' : ''}"
+                                               th:aria-selected="${msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null}"
                                                id="title_online"
                                                style="color: #6f6f6f"><strong>PAGO
                                                 ONLINE</strong></a>
@@ -210,6 +216,8 @@
                                         </li>
                                         <li class="nav-item ml-2">
                                             <a href="#content_efectivo" class="nav-link" role="tab" data-toggle="tab"
+                                               th:classappend="${(msgEfect != null || msgNotString != null) ? 'active' : ''}"
+                                               th:aria-selected="${msgEfect != null || msgNotString != null}"
                                                id="title_efectivo" style="color:#6f6f6f"><strong>PAGO
                                                 EFECTIVO</strong></a>
                                         </li>
@@ -217,7 +225,10 @@
                                 </div>
 
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane fade" id="content_online">
+                                    <div role="tabpanel" class="tab-pane fade" id="content_online"
+                                         th:classappend="${(msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null) ? 'active show' : ''}">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -356,7 +367,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane fade" id="content_efectivo">
+                                    <div role="tabpanel" class="tab-pane fade" id="content_efectivo"
+                                         th:classappend="${(msgEfect != null || msgNotString != null) ? 'active show' : ''}">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">

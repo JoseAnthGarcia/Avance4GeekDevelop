@@ -27,6 +27,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //List<Usuario> findByEstadoAndRolOrderByFecharegistroAsc(int estado, Rol rol);
 
+    List<Usuario> findByEstadoAndRol_Idrol(int estado, int idRol);
+
     @Query(value = "select ub.* from ubicacion ub\n" +
             "inner join usuario u on u.idusuario = ub.idusuario\n" +
             "where u.idusuario = ?1 and ub.borrado = 0 ",nativeQuery = true)

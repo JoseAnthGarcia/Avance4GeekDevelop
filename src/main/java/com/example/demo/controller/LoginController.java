@@ -1505,6 +1505,7 @@ return "index";
                     usuario.setEstado(2);
                 }
                 usuarioRepository.save(usuario);
+                validarCorreoRepository.delete(validarcorreo);
                 model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";
             } else {

@@ -1553,8 +1553,6 @@ public class ClienteController {
                 delivery = 8.00;
             }
 
-            //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
-            System.out.println(carrito);
             session.setAttribute("carrito", carrito);
             session.setAttribute("delivery", delivery);
         } else {

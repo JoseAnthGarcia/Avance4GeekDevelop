@@ -6,16 +6,13 @@ import com.example.demo.dtos.CredencialRest1DTO;
 import com.example.demo.dtos.CredencialRest2DTO;
 import com.example.demo.dtos.NotifiRestDTO;
 import com.example.demo.entities.*;
-import com.example.demo.repositories.CuponRepository;
+import com.example.demo.repositories.*;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 
-import com.example.demo.repositories.PedidoRepository;
-import com.example.demo.repositories.RestauranteRepository;
-import com.example.demo.repositories.UsuarioRepository;
 import com.example.demo.service.CuponService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,9 @@ public class CuponController {
     RestauranteRepository restauranteRepository;
     @Autowired
     PedidoRepository pedidoRepository;
+
+    @Autowired
+    ClienteHasCuponRepository clienteHasCuponRepository;
 
     @GetMapping("/imagenadmin/{id}")
     public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
@@ -318,7 +318,7 @@ public class CuponController {
                 switch (estado) {
                     case "0":
                         cupon.setEstado(0);
-                        attr.addFlashAttribute("bloqueo", "Cupón publicado exitosamente");
+                        attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
                         break;
                     case "1":
                         cupon.setEstado(1);
@@ -330,6 +330,31 @@ public class CuponController {
                         break;
                 }
                 cuponRepository.save(cupon);
+                List<Usuario> usuariosDisponibles = usuarioRepository.findByEstadoAndRol_Idrol(1,1);
+                Cliente_has_cupon chc = new Cliente_has_cupon();
+
+                if(cupon.getEstado() == 2){
+                    for (Usuario u: usuariosDisponibles){
+                        // Setiando la llave
+                        Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
+                        chcK.setIdcupon(cupon.getIdcupon());
+                        chcK.setIdcliente(u.getIdusuario());
+                        // Setiando el cliente has cupon
+                        chc.setUtilizado(false);
+                        chc.setCliente_has_cuponKey(chcK);
+                        clienteHasCuponRepository.save(chc);
+                    }
+                }else if (cupon.getEstado() == 0){
+                    for (Usuario u: usuariosDisponibles){
+                        // Setiando la llave
+                        Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
+                        chcK.setIdcupon(cupon.getIdcupon());
+                        chcK.setIdcliente(u.getIdusuario());
+
+                        clienteHasCuponRepository.deleteById(chcK);
+                    }
+                }
+
             } else {
                 return "redirect:/cupon/lista";
             }

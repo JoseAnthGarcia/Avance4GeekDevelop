@@ -5,7 +5,21 @@
 <head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes Restaurante')"></head>
 
 <body id="page-top">
+<style>
+    .containerta {
+        padding: 2rem 0rem;
+    }
 
+    h4 {
+        margin: 2rem 0rem 1rem;
+    }
+
+    .table-image
+    td, th {
+        vertical-align: middle;
+    }
+
+</style>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -85,40 +99,27 @@
 
                 </form>
                 <!-- DataTales Example -->
-                <div class="alert alert-success" role="alert"
-                     th:if="${msg1!=null}" th:text="${msg1}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg2!=null}" th:text="${msg2}">
-                </div>
-                <div class="alert alert-danger" role="alert"
-                     th:if="${msg3!=null}" th:text="${msg3}">
-                </div>
-                <div class="card shadow mb-4">
+
+                <div class="card shadow ">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <h2 class="font-weight-bold text-white  text-md-center">LISTA DE SOLICITUDES RESTAURANTES</h2>
 
 
-                        <style>
-                            .containerta {
-                                padding: 2rem 0rem;
-                            }
 
-                            h4 {
-                                margin: 2rem 0rem 1rem;
-                            }
-
-                            .table-image
-                            td, th {
-                                vertical-align: middle;
-                            }
-
-                        </style>
                     </div>
-                    <div class="containerta">
-                        <div class="row">
-                            <div class="col-12">
+                    <div class="card-body">
+                        <div class="alert alert-success" role="alert"
+                             th:if="${msg1!=null}" th:text="${msg1}">
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg2!=null}" th:text="${msg2}">
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg3!=null}" th:text="${msg3}">
+                        </div>
+
+                            <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -220,7 +221,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
 

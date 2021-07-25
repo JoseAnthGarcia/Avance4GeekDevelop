@@ -256,100 +256,151 @@ public class CuponController {
     public String editarCupon(@ModelAttribute("cupon") Cupon cupon,
                               Model model, @RequestParam("fechainicio") String fechainicio,
                               @RequestParam("fechafin") String fechafin,
-                              @RequestParam("id") int id, HttpSession session) {
+                              @RequestParam("id") String idS, HttpSession session) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int ida = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(ida);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
-        model.addAttribute("listaNotiRest", listaNotificacion);
         List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
         List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
-        model.addAttribute("credencial1", credencialRest1DTOS);
-        model.addAttribute("platoMasVendido", platoTOP);
-        model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
-        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
-        if (optionalCupon.isPresent()) {
-            cupon = optionalCupon.get();
-            cupon.setFechainicio(LocalDate.parse(fechainicio));
-            cupon.setFechafin(LocalDate.parse(fechafin));
-            model.addAttribute("cupon", cupon);
-            return "AdminRestaurante/nuevoCupon";
-        } else {
+
+        Optional<Cupon> optionalCupon = null;
+        try{
+            int id = Integer.parseInt(idS);
+            optionalCupon = cuponRepository.findByIdcuponAndIdrestaurante(id, restaurante.getIdrestaurante());
+
+            if (optionalCupon.isPresent()) {
+                cupon = optionalCupon.get();
+                cupon.setFechainicio(LocalDate.parse(fechainicio));
+                cupon.setFechafin(LocalDate.parse(fechafin));
+                model.addAttribute("cupon", cupon);
+
+                model.addAttribute("listaNotiRest", listaNotificacion);
+                model.addAttribute("credencial1", credencialRest1DTOS);
+                model.addAttribute("platoMasVendido", platoTOP);
+                model.addAttribute("platoMenosVendido", platoDOWN);
+                model.addAttribute("pedidosCredenciales",pedidosDTOList);
+                return "AdminRestaurante/nuevoCupon";
+            } else {
+                // si no es del restaurante
+                model.addAttribute("listaNotiRest", listaNotificacion);
+                model.addAttribute("credencial1", credencialRest1DTOS);
+                model.addAttribute("platoMasVendido", platoTOP);
+                model.addAttribute("platoMenosVendido", platoDOWN);
+                model.addAttribute("pedidosCredenciales",pedidosDTOList);
+                return "redirect:/cupon/lista";
+            }
+        }catch (NumberFormatException e){
+            // si ingresa cualquier cosa
+            model.addAttribute("listaNotiRest", listaNotificacion);
+            model.addAttribute("credencial1", credencialRest1DTOS);
+            model.addAttribute("platoMasVendido", platoTOP);
+            model.addAttribute("platoMenosVendido", platoDOWN);
+            model.addAttribute("pedidosCredenciales",pedidosDTOList);
             return "redirect:/cupon/lista";
         }
     }
 
     @GetMapping("/actualizar")
-    public String actualizarCupon(@RequestParam("id") int id,
+    public String actualizarCupon(@RequestParam("id") String idS,
                                   @RequestParam("estado") String estado,
                                   RedirectAttributes attr, HttpSession session, Model model) {
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int ida = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(ida);
+
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
-        model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
-        model.addAttribute("credencial1", credencialRest1DTOS);
-        model.addAttribute("platoMasVendido", platoTOP);
-        model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
-        Optional<Cupon> optionalCupon = cuponRepository.findById(id);
-        LocalDate date = LocalDate.now();
-        if (optionalCupon.isPresent()) {
-            Cupon cupon = optionalCupon.get();
-            LocalDate fecha = cupon.getFechafin();
-            String fecha2 = fecha.toString();
-            if (fecha.isAfter(date)) {
-                switch (estado) {
-                    case "0":
-                        cupon.setEstado(0);
-                        attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
-                        break;
-                    case "1":
-                        cupon.setEstado(1);
-                        attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
-                        break;
-                    case "2":
-                        cupon.setEstado(2);
-                        attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
-                        break;
-                }
-                cuponRepository.save(cupon);
-                List<Usuario> usuariosDisponibles = usuarioRepository.findByEstadoAndRol_Idrol(1,1);
-                Cliente_has_cupon chc = new Cliente_has_cupon();
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
 
-                if(cupon.getEstado() == 2){
-                    for (Usuario u: usuariosDisponibles){
-                        // Setiando la llave
-                        Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
-                        chcK.setIdcupon(cupon.getIdcupon());
-                        chcK.setIdcliente(u.getIdusuario());
-                        // Setiando el cliente has cupon
-                        chc.setUtilizado(false);
-                        chc.setCliente_has_cuponKey(chcK);
-                        clienteHasCuponRepository.save(chc);
+        Optional<Cupon> optionalCupon = null;
+        try{
+            int id = Integer.parseInt(idS);
+            optionalCupon = cuponRepository.findByIdcuponAndIdrestaurante(id,restaurante.getIdrestaurante());
+
+            //TODO - validar estado previo
+
+            LocalDate date = LocalDate.now();
+            if (optionalCupon.isPresent()) {
+                Cupon cupon = optionalCupon.get();
+                LocalDate fecha = cupon.getFechafin();
+                String fecha2 = fecha.toString();
+                if (fecha.isAfter(date)) {
+                    switch (estado) {
+                        case "0":
+                            cupon.setEstado(0);
+                            attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
+                            break;
+                        case "1":
+                            cupon.setEstado(1);
+                            attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
+                            break;
+                        case "2":
+                            cupon.setEstado(2);
+                            attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
+                            break;
                     }
-                }else if (cupon.getEstado() == 0){
-                    for (Usuario u: usuariosDisponibles){
-                        // Setiando la llave
-                        Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
-                        chcK.setIdcupon(cupon.getIdcupon());
-                        chcK.setIdcliente(u.getIdusuario());
+                    cuponRepository.save(cupon);
+                    List<Usuario> usuariosDisponibles = usuarioRepository.findByEstadoAndRol_Idrol(1, 1);
+                    Cliente_has_cupon chc = new Cliente_has_cupon();
 
-                        clienteHasCuponRepository.deleteById(chcK);
+                    if (cupon.getEstado() == 2) {
+                        for (Usuario u : usuariosDisponibles) {
+                            // Setiando la llave
+                            Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
+                            chcK.setIdcupon(cupon.getIdcupon());
+                            chcK.setIdcliente(u.getIdusuario());
+                            // Setiando el cliente has cupon
+                            chc.setUtilizado(false);
+                            chc.setCliente_has_cuponKey(chcK);
+                            clienteHasCuponRepository.save(chc);
+                        }
+                    } else if (cupon.getEstado() == 0) {
+                        //TODO no se puede bloquear 2 veces
+                        for (Usuario u : usuariosDisponibles) {
+                            // Setiando la llave
+                            Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
+                            chcK.setIdcupon(cupon.getIdcupon());
+                            chcK.setIdcliente(u.getIdusuario());
+
+                            clienteHasCuponRepository.deleteById(chcK);
+                        }
                     }
-                }
 
+                    model.addAttribute("listaNotiRest", listaNotificacion);
+                    model.addAttribute("credencial1", credencialRest1DTOS);
+                    model.addAttribute("platoMasVendido", platoTOP);
+                    model.addAttribute("platoMenosVendido", platoDOWN);
+                    model.addAttribute("pedidosCredenciales", pedidosDTOList);
+                    return "redirect:/cupon/lista";
+
+                } else {
+                    model.addAttribute("listaNotiRest", listaNotificacion);
+                    model.addAttribute("credencial1", credencialRest1DTOS);
+                    model.addAttribute("platoMasVendido", platoTOP);
+                    model.addAttribute("platoMenosVendido", platoDOWN);
+                    model.addAttribute("pedidosCredenciales", pedidosDTOList);
+                    return "redirect:/cupon/lista";
+                }
             } else {
+                model.addAttribute("listaNotiRest", listaNotificacion);
+                model.addAttribute("credencial1", credencialRest1DTOS);
+                model.addAttribute("platoMasVendido", platoTOP);
+                model.addAttribute("platoMenosVendido", platoDOWN);
+                model.addAttribute("pedidosCredenciales", pedidosDTOList);
                 return "redirect:/cupon/lista";
             }
+        }catch (NumberFormatException e){
+            model.addAttribute("listaNotiRest", listaNotificacion);
+            model.addAttribute("credencial1", credencialRest1DTOS);
+            model.addAttribute("platoMasVendido", platoTOP);
+            model.addAttribute("platoMenosVendido", platoDOWN);
+            model.addAttribute("pedidosCredenciales", pedidosDTOList);
+            return "redirect:/cupon/lista";
         }
-        return "redirect:/cupon/lista";
     }
 }

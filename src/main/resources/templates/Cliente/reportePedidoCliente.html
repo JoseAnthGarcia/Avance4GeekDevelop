@@ -270,12 +270,6 @@
                     </div>
                     <br>
 
-                    <div class="text-center" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
-                        <br>
-                        <h3 style="color:black"
-                            th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                        <br>
-                    </div>
                     <div class="text-center" th:if="${total==0  }">
                         <br>
                         <h3 style="color: red;"  th:text="|No hay resultados para su búsqueda|"></h3>
@@ -284,7 +278,11 @@
 
                     <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <div class="card-body" id='tabla' th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
-                        <table class="table "
+                        <table class="table " th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
+                            <h3 style="color:black" class="text-center"
+                                th:text="|Consumo Total: S/ ${totalsuma+'0'}|"></h3>
+                        </table>
+                        <table class="table"
                                style="background-color:#F2E2AA; border-color:#F2E2AA ">
                             <thead>
                             <tr>
@@ -345,7 +343,7 @@
                                     <td th:text="${(current - 1)*10 +info.index+1}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getNumPedidos()}">10</td>
-                                    <td th:text="|S/. ${ped.getTotal()}|"></td>
+                                    <td th:text="|S/.${ped.getTotal()+'0'}|"></td>
                                     <td th:if="${ped.getMes()==1}" th:text="|Enero|"></td>
                                     <td th:if="${ped.getMes()==2}" th:text="|Febrero|"></td>
                                     <td th:if="${ped.getMes()==3}" th:text="|Marzo|"></td>

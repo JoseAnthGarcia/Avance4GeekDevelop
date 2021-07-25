@@ -257,7 +257,7 @@
                         </div>
                         <div class="text-center" th:if="${total>0}" >
                             <br>
-                            <h3  style="color:#000000"  th:text="|Total dinero ahorrado: S/ ${totalsuma}|"></h3>
+                            <h3  style="color:#000000"  th:text="|Total dinero ahorrado: S/ ${totalsuma+'0'}|"></h3>
                         </div>
 						<div class="text-center" th:if="${total==0}"  >
                             <br>
@@ -293,7 +293,7 @@
                                     <td th:text="${ped.getNombrecupon()}"></td>
                                     <td th:text="${ped.getNombrerest()}"></td>
                                     <td th:text="${ped.getFechapedido()}"></td>
-                                    <td th:text="|S/ ${ped.getDescuento()}|"></td>
+                                    <td th:text="|S/ ${ped.getDescuento()+'0'}|"></td>
                                 </tr>
                                 
                             </tbody>

@@ -2443,6 +2443,12 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         Integer minDistrito;
         Integer maxDistrito;
 
+        try{
+            idDistritoInt = session.getAttribute("idDistrito") != null && Integer.valueOf((Integer) session.getAttribute("idDistrito")) < 43 ? Integer.valueOf((Integer) session.getAttribute("idDistrito")) : 43;
+
+        }catch(NumberFormatException nfe){
+            idDistritoInt =43;
+        }
 
         try{
             page = params.get("page") != null &&  Integer.valueOf(params.get("page").toString()) > 0  ? Integer.valueOf(params.get("page").toString()) - 1 : 0;

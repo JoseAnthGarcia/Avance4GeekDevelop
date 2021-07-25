@@ -386,15 +386,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "order by count(p.codigo) ASC")
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
-    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , r.estado, count(p.codigo) as `cantidadpedidos`,\n" +
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , u.estado, count(p.codigo) as `cantidadpedidos`,\n" +
             "\t\tsum(if(p.mismodistrito = 1, 1, 0)) as `ingresostotalesmismodistrito`,\n" +
             "\t\tsum(if(p.mismodistrito = 0, 2, 0)) as `ingresostotalesdiferentedistrito`, \n" +
             "        sum(if(p.mismodistrito = 1, 1, 2)) as `ingresostotales` \n" +
             "from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +
+            "inner join usuario u on r.idadministrador = u.idusuario\n" +
             "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-            "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
+            "\t\t\tand u.estado > ?2 and u.estado < ?3 and\n" +
             "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
             "group by p.idrestaurante\n" +
             "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +
@@ -404,8 +405,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             countQuery = "select count(*) from pedido p\n" +
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
                     "inner join distrito d on r.iddistrito = d.iddistrito\n" +
+                    "inner join usuario u on r.idadministrador = u.idusuario\n" +
+
                     "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-                    "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
+                    "\t\t\tand u.estado > ?2 and u.estado < ?3 and\n" +
                     "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
                     "group by p.idrestaurante\n" +
                     "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +

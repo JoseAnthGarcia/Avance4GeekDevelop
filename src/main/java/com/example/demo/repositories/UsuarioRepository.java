@@ -96,7 +96,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\tp.codigo, p.estado, \n" +
             "        if(p.idrepartidor is null, \"NA\", rp.nombres) as 'nombrerepartidor',\n" +
             "        if(p.idrepartidor is null, \"NA\", rp.apellidos) as 'apellidorep', p.fechapedido, \n" +
-            "         p.preciototal,\n" +
+            "        truncate (p.preciototal,1) as preciototal ,\n" +
             "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as 'valoracion' from pedido p\n" +
             "inner join usuario c on p.idcliente = c.idusuario\n" +
             "left join usuario rp on rp.idusuario = p.idrepartidor or p.idrepartidor is null \n" +
@@ -189,7 +189,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     // TODO: 18/07/2021
     @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
             "\t\tcount(p.codigo) as `cantidad`,\n" +
-            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "        truncate(sum(if(p.mismodistrito = 1, 4,6)), 1) as `gananciarepartidor`,\n" +
             "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
             "from pedido p\n" +
             "inner join usuario r on p.idrepartidor = r.idusuario\n" +
@@ -216,7 +216,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
             "\t\tcount(p.codigo) as `cantidad`,\n" +
-            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "        truncate(sum(if(p.mismodistrito = 1, 4,6)),1) as `gananciarepartidor`,\n" +
             "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
             "from pedido p\n" +
             "inner join usuario r on p.idrepartidor = r.idusuario\n" +
@@ -228,22 +228,22 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
             "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
             "order by count(p.codigo) desc",nativeQuery = true,
-            countQuery = "select count(*) \n" +
+            countQuery = "select count(*)\n" +
                     "from pedido p\n" +
                     "inner join usuario r on p.idrepartidor = r.idusuario\n" +
                     "where concat(r.apellidos,r.nombres,r.dni) like %?1% \n" +
                     "group by p.idrepartidor\n" +
                     "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
-                    "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
-                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
-                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
-                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "sum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
+                    "(count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "(if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
                     "order by count(p.codigo) desc")
     List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
     @Query(value ="select concat(r.apellidos, \" \" ,r.nombres) as `repartidor`, r.dni, r.correo, r.telefono,\n" +
             "\t\tcount(p.codigo) as `cantidad`,\n" +
-            "        sum(if(p.mismodistrito = 1, 4,6)) as `gananciarepartidor`,\n" +
+            "        truncate (sum(if(p.mismodistrito = 1, 4,6)),1) as `gananciarepartidor`,\n" +
             "         if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) as `valoracion`\n" +
             "from pedido p\n" +
             "inner join usuario r on p.idrepartidor = r.idusuario\n" +
@@ -253,8 +253,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
             "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
             "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
-            "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
-            "order by count(p.codigo) asc ",nativeQuery = true,
+            "and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+            "order by count(p.codigo) asc",nativeQuery = true,
             countQuery = "select count(*) \n" +
                     "from pedido p\n" +
                     "inner join usuario r on p.idrepartidor = r.idusuario\n" +
@@ -262,10 +262,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "group by p.idrepartidor\n" +
                     "having (sum(if(p.mismodistrito = 1, 4,6)) > ?6 and\n" +
                     "\t\tsum(if(p.mismodistrito = 1, 4,6)) <= ?7 ) and\n" +
-                    "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
-                    "        (if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
-                    "        and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
-                    "order by count(p.codigo) asc ")
+                    "(count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
+                    "(if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) >= ?2 \n" +
+                    "and if(round(avg(p.valoracionrepartidor),0) is null,0,round(avg(p.valoracionrepartidor),0)) <=  ?3 )\n" +
+                    "order by count(p.codigo) asc")
     List<UsuarioDtoRepartidor> listaUsuariosDtoRepartidorMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
     // TODO: 26/06/2021
@@ -318,7 +318,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 */
     // TODO: 18/07/2021
     @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +
-            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) as `total`, \n" +
+            "\t\ttruncate(sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))),1) as `total`, \n" +
             "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as `valoracion`  from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
@@ -337,12 +337,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
                     "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
                     "\t\t(avg(p.valoracionrestaurante) is null \n" +
-                    "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
+                    "or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
                     "order by count(p.codigo) DESC")
     Page<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont, Pageable pageable);
 
-    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +
-            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) as `total`, \n" +
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, truncate(count(p.codigo),0) as `cantidadpedidos`, \n" +
+            "\t\ttruncate(sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))),1) as `total`, \n" +
             "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as `valoracion`  from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
@@ -357,15 +357,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
                     "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
                     "group by p.idrestaurante\n" +
-                    "having (sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) > ?6 and\n" +
-                    "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ) and \n" +
+                    "having truncate(sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))), 1) > ?6 and\n" +
+                    "\t\ttruncate(sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) <= ?7 ),1) and \n" +
                     "        (count(p.codigo) > ?4 and count(p.codigo) <= ?5 ) and\n" +
                     "\t\t(avg(p.valoracionrestaurante) is null \n" +
                     "        or (round(avg(p.valoracionrestaurante),0) > ?2 and round(avg(p.valoracionrestaurante),0) <= ?3 ))\n" +
                     "order by count(p.codigo) DESC")
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMas(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
-    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, count(p.codigo) as `cantidadpedidos`, \n" +
-            "\t\tsum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))) as `total`, \n" +
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, truncate(count(p.codigo),0) as `cantidadpedidos`, \n" +
+            "\t\ttruncate(sum(if(p.mismodistrito = 1, (p.preciototal - 5), (p.preciototal - 8))),1) as `total`, \n" +
             "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as `valoracion`  from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "where p.estado = 6 and concat(r.nombre,r.ruc) like %?1% \n" +
@@ -389,9 +389,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
     @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , u.estado, count(p.codigo) as `cantidadpedidos`,\n" +
-            "\t\tsum(if(p.mismodistrito = 1, 1, 0)) as `ingresostotalesmismodistrito`,\n" +
-            "\t\tsum(if(p.mismodistrito = 0, 2, 0)) as `ingresostotalesdiferentedistrito`, \n" +
-            "        sum(if(p.mismodistrito = 1, 1, 2)) as `ingresostotales` \n" +
+            "\t\ttruncate(sum(if(p.mismodistrito = 1, 1, 0)),0) as `ingresostotalesmismodistrito`,\n" +
+            "\t\t truncate(sum(if(p.mismodistrito = 0, 2, 0)),0) as `ingresostotalesdiferentedistrito`, \n" +
+            "       truncate( sum(if(p.mismodistrito = 1, 1, 2)),0)as `ingresostotales` \n" +
             "from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +

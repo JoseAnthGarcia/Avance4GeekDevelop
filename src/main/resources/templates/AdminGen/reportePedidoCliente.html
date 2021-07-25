@@ -74,8 +74,8 @@
 
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="valoracion">
-                                <option value="0" th:selected="${valoracion.equals('0')}">Valoracion</option>
-                                <option value="6" th:selected="${valoracion.equals('6')}">0</option>
+                                <option value="0" th:selected="${valoracion.equals('0')}">Valoración</option>
+                                <option value="6" th:selected="${valoracion.equals('6')}">Sin valoración</option>
                                 <option value="1" th:selected="${valoracion.equals('1')}">1</option>
                                 <option value="2" th:selected="${valoracion.equals('2')}">2</option>
                                 <option value="3" th:selected="${valoracion.equals('3')}">3</option>
@@ -159,10 +159,10 @@
                                         <div th:case="5" th:text="|En Camino|"></div>
                                         <div th:case="6" th:text="|Entregado|"></div>
                                     </td>
-                                    <td th:text="${usuario.getNombrerepartidor()==null ||usuario.getApellidorep()== null ? 'Repartidor no asignado' : usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getNombrerepartidor().equals('NA') ||usuario.getApellidorep().equals('NA')  ? 'Repartidor no asignado' : usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getFechapedido().substring(0,18)}"  class="text-center" style="width: 160px"></td>
                                     <td  th:text="|S/ ${usuario.getPrecioTotal()}|" class="text-center" style="width: 110px"></td>
-                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
+                                    <td  th:text="${usuario.getValoracion()==0 ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
                                 </tr>
 
 

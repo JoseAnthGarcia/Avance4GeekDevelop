@@ -896,11 +896,11 @@ public class AdminController  {
                 miFestado=-1;
                 maXestado=7;
                 break;
-            case "0":
+            case "0"://pendiente
                 miFestado=-1;
                 maXestado=0;
                 break;
-            case "1":
+            case "1"://aceptado
                 miFestado=0;
                 maXestado=1;
                 break;

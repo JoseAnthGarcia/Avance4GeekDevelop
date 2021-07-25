@@ -96,7 +96,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "\t\tp.codigo, p.estado, \n" +
             "        if(p.idrepartidor is null, \"NA\", rp.nombres) as 'nombrerepartidor',\n" +
             "        if(p.idrepartidor is null, \"NA\", rp.apellidos) as 'apellidorep', p.fechapedido, \n" +
-            "         truncate(p.preciototal,1) ,\n" +
+            "        truncate (p.preciototal,1) as preciototal ,\n" +
             "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as 'valoracion' from pedido p\n" +
             "inner join usuario c on p.idcliente = c.idusuario\n" +
             "left join usuario rp on rp.idusuario = p.idrepartidor or p.idrepartidor is null \n" +
@@ -389,9 +389,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
     @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , u.estado, count(p.codigo) as `cantidadpedidos`,\n" +
-            "\t\tsum(if(p.mismodistrito = 1, 1, 0)) as `ingresostotalesmismodistrito`,\n" +
-            "\t\tsum(if(p.mismodistrito = 0, 2, 0)) as `ingresostotalesdiferentedistrito`, \n" +
-            "        sum(if(p.mismodistrito = 1, 1, 2)) as `ingresostotales` \n" +
+            "\t\ttruncate(sum(if(p.mismodistrito = 1, 1, 0)),0) as `ingresostotalesmismodistrito`,\n" +
+            "\t\t truncate(sum(if(p.mismodistrito = 0, 2, 0)),0) as `ingresostotalesdiferentedistrito`, \n" +
+            "       truncate( sum(if(p.mismodistrito = 1, 1, 2)),0)as `ingresostotales` \n" +
             "from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +

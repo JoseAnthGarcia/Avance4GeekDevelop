@@ -3592,34 +3592,31 @@ public class ClienteController {
 
         switch (descuento) {
             case "1":
-                limitSup = 10;
+                limitSup = 5;
                 limitInf = 0;
                 break;
 
             case "2":
-                limitSup = 20;
+                limitSup = 10;
+                limitInf = 5;
+                break;
+            case "3":
+                limitSup = 15;
                 limitInf = 10;
                 break;
 
-            case "3":
-                limitSup = 30;
-                limitInf = 20;
-                break;
-
             case "4":
-                limitSup = 40;
-                limitInf = 30;
-                break;
-            case "5":
-                limitSup = 50;
-                limitInf = 40;
+                limitSup = 20;
+                limitInf = 15;
                 break;
             default:
-                limitSup = 100;
+                limitSup = 20;
                 limitInf = 0;
         }
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
+
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
@@ -3661,34 +3658,29 @@ public class ClienteController {
         int limitInf;
         switch (descuento) {
             case "1":
-                limitSup = 10;
+                limitSup = 5;
                 limitInf = 0;
                 break;
 
             case "2":
-                limitSup = 20;
-                limitInf = 10;
+                limitSup = 10;
+                limitInf = 5;
                 break;
 
             case "3":
-                limitSup = 30;
-                limitInf = 20;
+                limitSup = 15;
+                limitInf = 10;
                 break;
             case "4":
-                limitSup = 40;
-                limitInf = 30;
+                limitSup = 20;
+                limitInf = 15;
                 break;
-            case "5":
-                limitSup = 50;
-                limitInf = 40;
-                break;
-
             default:
-                limitSup = 100;
+                limitSup = 20;
                 limitInf = 0;
         }
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2( texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());

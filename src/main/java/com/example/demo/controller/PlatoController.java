@@ -445,8 +445,8 @@ public class PlatoController {
         model.addAttribute("idcategoria", idcategoria);
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
-        Plato platoOptional = platoRepository.findByIdplatoAndIdrestaurante(id, idr);
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Plato platoOptional = platoRepository.findByIdplatoAndIdrestaurante(id, restaurante.getIdrestaurante());
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
         List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());

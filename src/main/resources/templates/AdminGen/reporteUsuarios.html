@@ -98,13 +98,13 @@
 
                             <div class="d-sm-flex align-items-center justify-content-between">
                                 <h2 class="font-weight-bold text-white text-lg-center mx-auto "  id="nombre_pagina">REPORTE DE USUARIOS</h2>
-                                <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                                <button th:if="${listaUsuarios.size() > 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                             </div>
 
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                            <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
+                                <table id="tabla" class="table table-bordered" >
                                     <thead>
                                     <tr>
                                         <th class="text-center">
@@ -138,12 +138,8 @@
                                             <div th:case="repartidor" th:text="|Repartidor${usuario.sexo == 'femenino' ? 'a':''}|"></div>
                                         </td>
                                         <td th:text="${usuario.fecharegistro}" class="text-center" style="width: 250px"></td>
-                                        <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
+                                        <td th:text="${usuario.estado == 1 ? 'ACTIVO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
                                         </tr>
-
-
-
-
                                     </tbody>
                                 </table>
 

@@ -612,7 +612,13 @@ public class AdminController  {
 
         PageRequest pageRequest = PageRequest.of(page, 10);
 
-        if(texto==null){
+        try{
+            texto=texto.trim();
+        }catch (NullPointerException e){
+
+        }
+
+        if(texto==null ){
             texto="";
             session.removeAttribute("texto");
 
@@ -850,7 +856,11 @@ public class AdminController  {
             estadoBuscador=1;
         }
 
+        try{
+            texto=texto.trim();
+        }catch (NullPointerException e){
 
+        }
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -886,11 +896,11 @@ public class AdminController  {
                 miFestado=-1;
                 maXestado=7;
                 break;
-            case "0":
+            case "0"://pendiente
                 miFestado=-1;
                 maXestado=0;
                 break;
-            case "1":
+            case "1"://aceptado
                 miFestado=0;
                 maXestado=1;
                 break;
@@ -1187,6 +1197,11 @@ public class AdminController  {
         }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
+        try{
+            texto=texto.trim();
+        }catch (NullPointerException e){
+
+        }
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -1425,7 +1440,11 @@ public class AdminController  {
             estadoBuscador=1;
         }
 
+        try{
+            texto=texto.trim();
+        }catch (NullPointerException e){
 
+        }
         if(texto==null){
             texto="";
             session.removeAttribute("texto");
@@ -1821,7 +1840,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         session.setAttribute("valoracion",valoracion);
         estadoBuscador=1;
     }
+    try{
+        texto=texto.trim();
+    }catch (NullPointerException e){
 
+    }
 
     if(texto==null){
         texto="";
@@ -2222,7 +2245,11 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             estadoBuscador=1;
         }
 
+        try{
+            texto=texto.trim();
+        }catch (NullPointerException e){
 
+        }
 
         if(texto==null){
             texto="";

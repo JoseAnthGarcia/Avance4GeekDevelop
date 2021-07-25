@@ -234,7 +234,15 @@ public class ExtraController {
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
         int idrestaurante = restaurante.getIdrestaurante();
-
+        boolean bool=false;
+        List<Extra>listaTotalExtras= extraRepository.findByIdrestaurante(idrestaurante);
+        for (Extra lista: listaTotalExtras){
+            if (lista.getNombre().equalsIgnoreCase(extra.getNombre())){
+                model.addAttribute("mensajerepetido", "Este nombre ya se encuentra registrado en el restaurante");
+                bool=true;
+                break;
+            }
+        }
         String fileName = "";
         boolean validarFoto = true;
         if (file != null) {
@@ -248,7 +256,7 @@ public class ExtraController {
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
                 model.addAttribute("idcategoria", idc);
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                model.addAttribute("mensajefoto", "No se permite '..' en el archivo");
                 return "AdminRestaurante/nuevoExtra";
             }
         }
@@ -256,7 +264,7 @@ public class ExtraController {
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
         extra.setIdcategoriaextra(idc);
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || bool) {
             if (extra.getIdextra() == 0 && !validarFoto) {
                 model.addAttribute("idcategoria", idc);
                 return "AdminRestaurante/nuevoExtra";

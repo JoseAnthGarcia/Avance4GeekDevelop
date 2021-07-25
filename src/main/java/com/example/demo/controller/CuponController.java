@@ -330,7 +330,7 @@ public class CuponController {
                 if (fecha.isAfter(date)) {
                     switch (estado) {
                         case "0":
-                            //TODO - ver lo de bloquear publicados
+                            //IMPORTANTE - CUPONES PUBLICADOS SÍ PUEDEN SER BLOQUEADOS
                             cupon.setEstado(0);
                             attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
                             break;

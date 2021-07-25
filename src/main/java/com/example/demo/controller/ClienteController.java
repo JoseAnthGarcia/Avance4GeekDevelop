@@ -32,7 +32,9 @@ import org.thymeleaf.context.Context;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -1973,10 +1975,9 @@ public class ClienteController {
                     return "Cliente/terminarCompra";
                 }
             }
-
-
+            BigDecimal precioTotal_1d = precioTotal.setScale(1, RoundingMode.HALF_UP);
             Pedido pedido = new Pedido();
-            pedido.setPreciototal(precioTotal.floatValue());
+            pedido.setPreciototal(precioTotal_1d.floatValue());
 
 
             if (!efectivoPagar.equals("")) {

@@ -239,7 +239,7 @@ public class ExtraController {
         if(extra.getIdextra()==0) {
             for (Extra lista : listaTotalExtras) {
                 if (lista.getNombre().equalsIgnoreCase(extra.getNombre())) {
-                    model.addAttribute("mensajerepetido", "Este nombre ya se encuentra registrado en el restaurante");
+                    model.addAttribute("mensajerepetido", "Este nombre del extra ya se encuentra registrado en el restaurante");
                     bool = true;
                     break;
                 }

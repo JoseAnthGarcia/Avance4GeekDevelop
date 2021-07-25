@@ -220,7 +220,6 @@ public class AdminRestController {
             return "redirect:/restaurante/listaPedidos";
         }
 
-        System.out.println(fechafin + "############");
         Date fechafin2;
         String fechafin3;
         if (fechafin == null || fechafin.equals("") || fechafin.equalsIgnoreCase("null")) {
@@ -231,7 +230,6 @@ public class AdminRestController {
                 String pattern2 = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
                 fechafin3 = simpleDateFormat2.format(fechafin2);
-                System.out.println(fechafin3);
                 model.addAttribute("fechafin", null);
             } catch (ParseException e) {
                 return "redirect:/restaurante/listaPedidos";
@@ -245,7 +243,6 @@ public class AdminRestController {
                 String pattern2 = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
                 fechafin3 = simpleDateFormat2.format(fechafin2);
-                System.out.println(fechafin3);
                 if(fechafin.equalsIgnoreCase("3000-05-21 00:00:00")){
                     model.addAttribute("fechafin", null);
                 }else {
@@ -270,7 +267,6 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd 00:00:00";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio3 = simpleDateFormat.format(fechainicio2);
-                System.out.println(fechainicio3);
                 model.addAttribute("fechainicio", null);
             } catch (IllegalFormatException e) {
                 return "redirect:/restaurante/listaPedidos";
@@ -284,7 +280,6 @@ public class AdminRestController {
                 String pattern2 = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
                 fechainicio3 = simpleDateFormat2.format(fechainicio2);
-                System.out.println(fechainicio3);
 
                 Date hoy = date;
                 String patternHoy = "yyyy-MM-dd 00:00:00";
@@ -300,10 +295,6 @@ public class AdminRestController {
             }
         }
 
-        System.out.println("#################");
-        System.out.println(inputEstadoMin);
-        System.out.println(inputEstadoMax);
-        System.out.println("#################");
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
@@ -344,12 +335,9 @@ public class AdminRestController {
 
         Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
         Matcher mat = pat.matcher(s3);
-        System.out.println(s3);
         if (mat.matches()) {
-            System.out.println("SI");
             cometariovacio = false;
         } else {
-            System.out.println("NO");
             cometariovacio = true;
         }
     
@@ -370,7 +358,6 @@ public class AdminRestController {
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
         
         if (pedido != null && !cometariovacio) {
-            System.out.println("xd11");
             if (pedido.getEstado() == 0) {
                 if (comentarioAR != null || !cometariovacio) {
                     pedido.setEstado(2);
@@ -378,7 +365,6 @@ public class AdminRestController {
                     pedidoRepository.save(pedido);
                     attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
                 } else {
-                    System.out.println("xd12112121");
                     attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
                 }
 
@@ -616,10 +602,7 @@ public class AdminRestController {
             } catch (ParseException e) {
                 return "redirect:/restaurante/reporteVentas";
             }
-
-
         }
-
         if (fechainicio == null || fechainicio.equals("") || fechainicio.equalsIgnoreCase("null")) {
             fechainicio = "1980-05-21";
         } else {
@@ -637,12 +620,6 @@ public class AdminRestController {
             }
         }
 
-
-        System.out.println(fechainicio);
-        System.out.println(fechafin);
-
-        System.out.println("#################");
-        System.out.println("#################");
 
         //Obtener lista de reportes
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
@@ -721,7 +698,7 @@ public class AdminRestController {
         List<ValoracionReporteDTO> listaValoracionReporte;
 
         //Manipular input de buscadores
-        System.out.println(inputValoracion);
+
         int inputValoracion2;
         if (inputValoracion == null) {
             inputValoracion = "";
@@ -775,13 +752,6 @@ public class AdminRestController {
                 return "redirect:/restaurante/reporteValoracion";
             }
         }
-
-
-        System.out.println(fechainicio);
-        System.out.println(fechafin);
-
-        System.out.println("#################");
-        System.out.println("#################");
 
         //Obtener lista de reportes
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
@@ -845,11 +815,6 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         int inputCategoria2;
-        System.out.println(inputCategoria);
-        System.out.println(listaCategorias.get(0).getIdcategoria());
-        System.out.println(listaCategorias.get(1).getIdcategoria());
-        System.out.println(listaCategorias.get(2).getIdcategoria());
-        System.out.println(listaCategorias.get(3).getIdcategoria());
         if (inputCategoria == null) {
             return "redirect:/restaurante/reportePlatos";
         } else {
@@ -858,16 +823,16 @@ public class AdminRestController {
                 int i = 1;
                 for (Categorias categoria : listaCategorias) {
                     if (categoria.getIdcategoria() == inputCategoria2) {
-                        System.out.println("entre1");
+
                         inputCategoria = String.valueOf(inputCategoria2);
                         break;
                     } else if (inputCategoria2 == 0) {
-                        System.out.println("entre2");
+
                         inputCategoria = "";
                         break;
                     } else {
                         if (i == 4) {
-                            System.out.println("entre3");
+
                             return "redirect:/restaurante/reportePlatos";
                         }
                     }
@@ -921,13 +886,6 @@ public class AdminRestController {
                 } catch (NumberFormatException e) {
                     return "redirect:/restaurante/reportePlatos";
                 }
-
-                System.out.println("#################");
-                System.out.println(restaurante.getIdrestaurante());
-                System.out.println(inputCantidadMin * 5 - 5);
-                System.out.println(inputCantidadMax * 5);
-                System.out.println("#################");
-
 
                 //Obtener lista de reportes
 

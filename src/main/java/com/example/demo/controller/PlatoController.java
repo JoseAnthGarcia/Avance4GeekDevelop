@@ -441,11 +441,12 @@ public class PlatoController {
     public String borrarPlato(@RequestParam("id") int id,
                               RedirectAttributes attr, @RequestParam(value = "idcategoria", required = false) Integer idcategoria,
                               Model model, HttpSession session) {
-        Optional<Plato> platoOptional = platoRepository.findById(id);
+
         model.addAttribute("idcategoria", idcategoria);
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Plato platoOptional = platoRepository.findByIdplatoAndIdrestaurante(id, restaurante.getIdrestaurante());
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
         List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
@@ -464,10 +465,9 @@ public class PlatoController {
                 break;
             }
         }
-        if (platoOptional.isPresent()) {
-            Plato plato = platoOptional.get();
-            plato.setDisponible(false);
-            platoRepository.save(plato);
+        if (platoOptional!=null) {
+            platoOptional.setDisponible(false);
+            platoRepository.save(platoOptional);
             attr.addFlashAttribute("msg3", "Plato borrado exitosamente");
             attr.addFlashAttribute("tipo", "borrado");
         }

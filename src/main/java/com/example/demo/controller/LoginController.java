@@ -1505,13 +1505,6 @@ return "index";
                     usuario.setEstado(2);
                 }
                 usuarioRepository.save(usuario);
-                if(usuario.getRol().getIdrol() == 1){
-                    try {
-                        sendHtmlMailREgistrado(usuario.getCorreo(), "Correo de Bienvenida HTML", usuario);
-                    } catch (MessagingException e) {
-                        System.out.println("ERROR AL ENVIAR CORREO DE BIENVENIDA");
-                    }
-                }
                 model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";
             } else {

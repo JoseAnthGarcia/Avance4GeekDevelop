@@ -78,7 +78,7 @@ public class CuponController {
         DateFormat df = new SimpleDateFormat(pattern);
         Date today = Calendar.getInstance().getTime();
         String todayAsString = df.format(today);
-        System.out.println(todayAsString);
+
 
         return findPaginated("", "3000-05-21", todayAsString, "0" , 1, restaurante.getIdrestaurante(), model, session);
     }
@@ -162,11 +162,9 @@ public class CuponController {
         } catch (NumberFormatException e) {
             return "redirect:/cupon/lista";
         }
-        System.out.println(inputPrecio);
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int id = adminRest.getIdusuario();
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
-        System.out.println(restaurante.getIdrestaurante());
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
         page = cuponService.findPaginated2(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, fechainicio2, fechafin2, inputPMin * 5 - 5, inputPMax * 5);
@@ -236,23 +234,19 @@ public class CuponController {
             return "AdminRestaurante/nuevoCupon";
         }else {
             if (cupon.getIdcupon() == 0) {
-                System.out.println("SOYYYYYYYYYYYYYYYYYYYYYY UNUNUUNU");
 
                 cupon.setFechainicio(LocalDate.now());
                 cupon.setEstado(1);
                 attributes.addFlashAttribute("creado", "Cupón creado exitosamente");
             } else {
                 Optional<Cupon> optionalCupon = cuponRepository.findById(cupon.getIdcupon());
-                System.out.println("SOYYYYYYYYYYYYYYYYYYYYYY ");
                 if (optionalCupon.isPresent()) {
                     Cupon cupon2 = optionalCupon.get();
                     attributes.addFlashAttribute("editado", "Cupón editado exitosamente");
                 } else {
                     return "redirect:/cupon/lista";
                 }
-
             }
-
             cuponRepository.save(cupon);
         }
         return "redirect:/cupon/lista";
@@ -277,7 +271,6 @@ public class CuponController {
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
         Optional<Cupon> optionalCupon = cuponRepository.findById(id);
-        System.out.println(fechainicio);
         if (optionalCupon.isPresent()) {
             cupon = optionalCupon.get();
             cupon.setFechainicio(LocalDate.parse(fechainicio));
@@ -312,8 +305,6 @@ public class CuponController {
             Cupon cupon = optionalCupon.get();
             LocalDate fecha = cupon.getFechafin();
             String fecha2 = fecha.toString();
-            System.out.println("------Fecha parseada-----" + fecha2);
-            System.out.println("------Fecha actual-----" + date);
             if (fecha.isAfter(date)) {
                 switch (estado) {
                     case "0":
@@ -361,59 +352,4 @@ public class CuponController {
         }
         return "redirect:/cupon/lista";
     }
-
-    /*@GetMapping("/eliminar")
-    public  String eliminarCupon(@RequestParam("id") int id, RedirectAttributes attributes){
-        Optional<Cupon> cuponOptional = cuponRepository.findById(id);
-        if (cuponOptional.isPresent()){
-            cuponRepository.deleteById(id);
-            attributes.addFlashAttribute("eliminado", "Cupon eliminado exitosamente!");
-        }
-        return "redirect:/cupon/listar";
-    }*/
-
-   /*
-   * @InitBinder("cupon")
-    public void cuponValidator(WebDataBinder binder){
-        PropertyEditorSupport fechaValidator = new PropertyEditorSupport(){
-
-            @Override
-            public void setAsText(String date) throws IllegalArgumentException {
-                // dd-MM-yyyy
-                System.out.println(date);
-                System.out.println(date);
-                System.out.println("date");
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                //obteniendo la fecha actual
-                Date currentDate = new Date();
-                Calendar c = new GregorianCalendar();
-
-
-                String dateF = dateFormat.format(date); // yyyy-MM-dd
-                String[] dateSplit =dateF.split("-");
-
-                int anioActual = c.get(Calendar.YEAR);
-                int anioCad = Integer.parseInt(dateSplit[2]);
-
-                c.set(Calendar.YEAR, Integer.parseInt(dateSplit[0]));
-                c.set(Calendar.MONTH, Integer.parseInt(dateSplit[1])-1);
-                c.set(Calendar.DATE, Integer.parseInt(dateSplit[2]));
-
-                Date dateCadu = c.getTime();
-                // una mejor forma de recibir la fecha
-                //obteniendo la fecha actual con el formato yyyy-MM-dd
-
-                if(currentDate.compareTo(dateCadu) <= 0){
-                    this.setValue(" ");
-                }else{
-                    this.setValue(date);
-                }
-                //se quiere validar que la fecha de caducidad sea mayor a la fecha actual pero que dure un año
-            }
-        };
-        binder.registerCustomEditor(LocalDate.class, "fechafin",fechaValidator);
-    }
-   **/
-
 }

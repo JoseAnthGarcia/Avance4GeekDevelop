@@ -73,7 +73,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 
 
-    @Query(value ="select u.nombres as 'nombrecliente' ,u.apellidos as 'apellidocliente', r.nombre as 'nombrerest', \n" +
+    /*@Query(value ="select u.nombres as 'nombrecliente' ,u.apellidos as 'apellidocliente', r.nombre as 'nombrerest', \n" +
             "pe.codigo , pe.estado  , u1.nombres as 'nombrerepartidor',u1.apellidos as 'apellidorep', pe.fechapedido \n" +
             " , pe.preciototal, pe.valoracionrestaurante as 'valoracion' from pedido pe \n" +
             "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
@@ -91,7 +91,36 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "            and (pe.valoracionrestaurante is null or (pe.valoracionrestaurante >?2 and pe.valoracionrestaurante<=?3))  \n" +
                     "            and (pe.preciototal> ?4 and pe.preciototal<=?5)and (pe.estado> ?6 and pe.estado <=?7 )\n "+
                     "            order by pe.fechapedido ASC")
+    Page<UsuarioDtoCliente> listaUsuariosDtoCliente(String texto, Integer miFval, Integer maXval, Integer inFmont, Integer maXmont, Integer miFestado, Integer maXestado, Pageable pageable);*/
+    @Query(value ="select c.nombres as 'nombrecliente', c.apellidos as 'apellidocliente', r.nombre  as 'nombrerest',\n" +
+            "\t\tp.codigo, p.estado, \n" +
+            "        if(p.idrepartidor is null, \"NA\", rp.nombres) as 'nombrerepartidor',\n" +
+            "        if(p.idrepartidor is null, \"NA\", rp.apellidos) as 'apellidorep', p.fechapedido, \n" +
+            "         p.preciototal,\n" +
+            "        if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) as 'valoracion' from pedido p\n" +
+            "inner join usuario c on p.idcliente = c.idusuario\n" +
+            "left join usuario rp on rp.idusuario = p.idrepartidor or p.idrepartidor is null \n" +
+            "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+            "where concat(c.apellidos,c.nombres,r.nombre,p.codigo,rp.apellidos,rp.nombres) like %?1% and\n" +
+            "\t\t(p.estado > ?6 and p.estado <= ?7) and ( p.preciototal > ?4 and \n" +
+            "\t\t p.preciototal <= ?5 )  \n" +
+            "group by p.codigo\n" +
+            "having (if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) > ?2 \n" +
+            "        and if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) <= ?3)\n" +
+                        "order by p.fechapedido asc",nativeQuery = true,
+            countQuery = "select count(*) from pedido p\n" +
+                    "inner join usuario c on p.idcliente = c.idusuario\n" +
+                    "left join usuario rp on rp.idusuario = p.idrepartidor or p.idrepartidor is null \n" +
+                    "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                    "where concat(c.apellidos,c.nombres,r.nombre,p.codigo,rp.apellidos,rp.nombres) like %?1% and\n" +
+                    "\t\t(p.estado > ?6 and p.estado <= ?7) and ( p.preciototal > ?4 and \n" +
+                    "\t\t p.preciototal <= ?5 )  \n" +
+                    "group by p.codigo\n" +
+                    "having (if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) > ?2 \n" +
+                    "        and if(round(avg(p.valoracionrestaurante),0) is null,0,round(avg(p.valoracionrestaurante),0)) <= ?3) \n" +
+                    "order by p.fechapedido asc")
     Page<UsuarioDtoCliente> listaUsuariosDtoCliente(String texto, Integer miFval, Integer maXval, Integer inFmont, Integer maXmont, Integer miFestado, Integer maXestado, Pageable pageable);
+
 
     @Query(value = "select u.nombres  ,u.apellidos  , count(u.idusuario) as 'cantpedidos'from pedido pe\n" +
             "\t\t\tleft join usuario u on u.idusuario=pe.idcliente\n" +
@@ -359,15 +388,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                     "order by count(p.codigo) ASC")
     List<UsuarioDtoReporteVentas> listaUsuariosDtoReporteVentasMenos(String texto, Integer miFval, Integer maXval, Integer miFestado, Integer maXestado, Integer inFmont, Integer maXmont);
 
-    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , r.estado, count(p.codigo) as `cantidadpedidos`,\n" +
+    @Query(value ="select r.idrestaurante,r.nombre, r.ruc, d.nombre as `distrito` , u.estado, count(p.codigo) as `cantidadpedidos`,\n" +
             "\t\tsum(if(p.mismodistrito = 1, 1, 0)) as `ingresostotalesmismodistrito`,\n" +
             "\t\tsum(if(p.mismodistrito = 0, 2, 0)) as `ingresostotalesdiferentedistrito`, \n" +
             "        sum(if(p.mismodistrito = 1, 1, 2)) as `ingresostotales` \n" +
             "from pedido p\n" +
             "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
             "inner join distrito d on r.iddistrito = d.iddistrito\n" +
+            "inner join usuario u on r.idadministrador = u.idusuario\n" +
             "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-            "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
+            "\t\t\tand u.estado > ?2 and u.estado < ?3 and\n" +
             "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
             "group by p.idrestaurante\n" +
             "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +
@@ -377,8 +407,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             countQuery = "select count(*) from pedido p\n" +
                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
                     "inner join distrito d on r.iddistrito = d.iddistrito\n" +
+                    "inner join usuario u on r.idadministrador = u.idusuario\n" +
+
                     "where p.estado = 6  and concat(r.nombre,r.ruc) like %?1% \n" +
-                    "\t\t\tand r.estado > ?2 and r.estado < ?3 and\n" +
+                    "\t\t\tand u.estado > ?2 and u.estado < ?3 and\n" +
                     "\t\t(r.iddistrito > ?8 and r.iddistrito <= ?9 )\n" +
                     "group by p.idrestaurante\n" +
                     "having (sum(if(p.mismodistrito = 1, 1, 2)) > ?6  and\n" +

@@ -74,8 +74,8 @@
 
                         <div class="col-sm-2 mb-1">
                             <select class="form-control" name="valoracion">
-                                <option value="0" th:selected="${valoracion.equals('0')}">Valoracion</option>
-                                <option value="6" th:selected="${valoracion.equals('6')}">0</option>
+                                <option value="0" th:selected="${valoracion.equals('0')}">Valoración</option>
+                                <option value="6" th:selected="${valoracion.equals('6')}">Sin valoración</option>
                                 <option value="1" th:selected="${valoracion.equals('1')}">1</option>
                                 <option value="2" th:selected="${valoracion.equals('2')}">2</option>
                                 <option value="3" th:selected="${valoracion.equals('3')}">3</option>
@@ -105,13 +105,13 @@
                         <div class="d-sm-flex align-items-center justify-content-between">
 
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE PEDIDOS POR CLIENTE</h2>
-                            <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                            <button th:if="${listaUsuarios.size() > 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                        <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive" >
+                            <table th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" id="tabla" class="table table-bordered"  >
                                 <thead>
                                 <tr>
                                     <th class="text-center">
@@ -159,10 +159,10 @@
                                         <div th:case="5" th:text="|En Camino|"></div>
                                         <div th:case="6" th:text="|Entregado|"></div>
                                     </td>
-                                    <td th:text="${usuario.getNombrerepartidor()==null ||usuario.getApellidorep()== null ? 'Repartidor no asignado' : usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="${usuario.getNombrerepartidor().equals('NA') ||usuario.getApellidorep().equals('NA')  ? 'Repartidor no asignado' : usuario.getApellidorep()+','+usuario.getNombrerepartidor()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getFechapedido().substring(0,18)}"  class="text-center" style="width: 160px"></td>
                                     <td  th:text="|S/ ${usuario.getPrecioTotal()}|" class="text-center" style="width: 110px"></td>
-                                    <td  th:text="${usuario.getValoracion()==null ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
+                                    <td  th:text="${usuario.getValoracion()==0 ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
                                 </tr>
 
 

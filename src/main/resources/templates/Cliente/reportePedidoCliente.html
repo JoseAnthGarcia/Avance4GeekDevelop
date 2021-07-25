@@ -270,50 +270,17 @@
                     </div>
                     <br>
 
-                    <div class="text-center">
-                        <h5 class="justify-content-center"
-                            th:if="${listarestTop.size()==0 && listarestPl.size()==0 }"
-                            th:text="|No se encontraron resultados|"></h5>
-
-                    </div>
-                    <div class="text-center" >
-                        <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
+                    <div class="text-center" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
+                        <br>
+                        <h3 style="color:black"
                             th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                        <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
-                        <h3 style="color: red;" th:if="${total==0 && listarestTop.size()>0 }" th:text="|No hay resultados para su búsqueda|"></h3>
+                        <br>
                     </div>
-                    <!--
-                        <div class="justify-content-center row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                            <img width="4%" height="4%" th:src="@{/img/top-tres.svg}">
-                            <span><h2 style="color:black">Top 3</h2></span>
-                        </div>
+                    <div class="text-center" th:if="${total==0  }">
                         <br>
-
-                        <div class="justify-content-center row">
-
-                            <div class="col-3" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                                <div style="color:black; text-align:center">Restaurantes</div>
-                                <h6 style="color: black" th:each="ped,info: ${listarestTop}"
-                                    th:text="${ped.getNombrerest()}"></h6>
-
-                            </div>
-                            <br>
-                            <div class="col-3 offset-md-1" style="background-color:#F2E2AA" th:if="${listarestTop.size()>0 && listarestPl.size()>0 }">
-                                <div style="color:black; text-align:center">Platos más pedidos</div>
-                                <h6 style="color:black" th:each="ped:${listarestPl}" th:text="${ped.getNombre()}"></h6>
-                            </div>
-                        </div>
-
+                        <h3 style="color: red;"  th:text="|No hay resultados para su búsqueda|"></h3>
                         <br>
-                        <div class="text-center" >
-                            <h3 style="color:black" th:if="${listarestTop.size()>0 && listarestPl.size()>0  && total>0}"
-                                th:text="|Consumo Total: S/ ${totalsuma}|"></h3>
-                            <h3 th:if="${total==0 && listarestTop.size()==0 }" > </h3>
-                            <h5 th:if="${total==0 && listarestTop.size()>0 }" th:text="|No se encontraron resultados|"></h5>
-
-                        </div>
-                            -->
-
+                    </div>
 
                     <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <div class="card-body" id='tabla' th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0}">
@@ -395,9 +362,6 @@
                                 </tbody>
 
                             </table>
-
-
-
 
                         <div class="row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0 } ">
                             <div class="col-md-2"></div>

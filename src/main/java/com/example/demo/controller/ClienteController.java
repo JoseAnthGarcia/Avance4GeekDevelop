@@ -1825,6 +1825,8 @@ public class ClienteController {
                             // la cantidad a pagar será mayor a la del monto Total
                             cantidadNullVal = true;
                         }
+                    }else{
+                        cantidadNullVal = true;
                     }
                 }
             }
@@ -3592,7 +3594,10 @@ public class ClienteController {
                 limitSup = 40;
                 limitInf = 30;
                 break;
-
+            case "5":
+                limitSup = 50;
+                limitInf = 40;
+                break;
             default:
                 limitSup = 100;
                 limitInf = 0;
@@ -3655,10 +3660,13 @@ public class ClienteController {
                 limitSup = 30;
                 limitInf = 20;
                 break;
-
             case "4":
                 limitSup = 40;
                 limitInf = 30;
+                break;
+            case "5":
+                limitSup = 50;
+                limitInf = 40;
                 break;
 
             default:

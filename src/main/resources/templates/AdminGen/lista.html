@@ -102,8 +102,8 @@
                                  th:if="${msgBloqueado !=null}" th:text="${msgBloqueado}">
                             </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}">
+                        <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
+                            <table class="table table-bordered" >
                                 <thead>
                                 <tr>
                                     <th class="text-center">

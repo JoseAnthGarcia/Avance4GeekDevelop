@@ -330,8 +330,11 @@
                     </div>
                     <div class="modal-body">Al seleccionar el botón salir, usted cerrará su sesión.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="cerrar" class="btn btn-primary">Salir</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-primary" type="submit">Cerrar Sesión
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

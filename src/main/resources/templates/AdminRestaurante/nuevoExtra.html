@@ -202,10 +202,24 @@
                                                             <h1 th:if="${mensajerepetido!=null}"
                                                                 th:text="${mensajerepetido}"
                                                                 style="color: red; font-size: small; text-align: left"></h1>
-                                                        <td rowspan="3" colspan="3" th:if="${extra.idextra==0}"><img
+                                                        <td rowspan="3" colspan="3" th:if="${extra.idextra==0}">
+                                                        <img th:if="${idcategoria==1}"
                                                                 id="image_preview"
-                                                                src="https://images.squarespace-cdn.com/content/v1/504fafcf84ae1835d7e5c807/1481053836481-1P6LXZV7W56MFQ3XTRYF/ke17ZwdGBToddI8pDm48kEPi1-yrhDrzLshLxN3QC8RZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpwpHDH2dI8XKnmDPhhL-Z4ihJCPIeRMB9aDS9L0YuCpaVeHjzKGTX-CN79Cq4zdtLU/upload-arrow_318-26670.jpg?format=750w"
-                                                                width="300"></td>
+                                                             th:src="@{/imagenes/extra/bebidas.jpg}"
+                                                             width="500">
+                                                        <img th:if="${idcategoria==2}"
+                                                                id="image_preview"
+                                                             th:src="@{/imagenes/extra/cubiertos.jpg}"
+                                                             width="500">
+                                                        <img th:if="${idcategoria==3}"
+                                                                id="image_preview"
+                                                             th:src="@{/imagenes/extra/ensaladas.jpg}"
+                                                             width="500">
+                                                        <img th:if="${idcategoria==4}"
+                                                                id="image_preview"
+                                                             th:src="@{/imagenes/extra/guarniciones.jpg}"
+                                                             width="500">
+                                                    </td>
                                                         <td rowspan="3" colspan="3" th:if="${extra.idextra!=0}"><img
                                                                 id="image_previe"
                                                                 th:src="@{|imagen/${extra.idextra}|}"

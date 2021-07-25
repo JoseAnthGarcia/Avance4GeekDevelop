@@ -322,8 +322,6 @@ public class CuponController {
             int id = Integer.parseInt(idS);
             optionalCupon = cuponRepository.findByIdcuponAndIdrestaurante(id,restaurante.getIdrestaurante());
 
-            //TODO - validar estado previo
-
             LocalDate date = LocalDate.now();
             if (optionalCupon.isPresent()) {
                 Cupon cupon = optionalCupon.get();
@@ -332,17 +330,50 @@ public class CuponController {
                 if (fecha.isAfter(date)) {
                     switch (estado) {
                         case "0":
+                            //TODO - ver lo de bloquear publicados
                             cupon.setEstado(0);
                             attr.addFlashAttribute("bloqueo", "Cupón bloqueado exitosamente");
                             break;
                         case "1":
-                            cupon.setEstado(1);
-                            attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
-                            break;
+                            // solo debe desbloquear en caso el estado sea desbloquado
+                            if(cupon.getEstado() == 0){
+                                cupon.setEstado(1);
+                                attr.addFlashAttribute("activo", "Cupón desbloqueado exitosamente");
+                                break;
+                            }else{
+                                // EL CUPON DEBE ESTAR EN ESTADO BLOQUEADO PARA SER DESBLOQUEADO
+                                // attr.addFlashAttribute("msgValEstado1", "El cupón debe estar en estado bloqueado para ser desbloqueado");
+                                model.addAttribute("listaNotiRest", listaNotificacion);
+                                model.addAttribute("credencial1", credencialRest1DTOS);
+                                model.addAttribute("platoMasVendido", platoTOP);
+                                model.addAttribute("platoMenosVendido", platoDOWN);
+                                model.addAttribute("pedidosCredenciales", pedidosDTOList);
+                                return "redirect:/cupon/lista";
+                            }
                         case "2":
-                            cupon.setEstado(2);
-                            attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
-                            break;
+                            // solo debe publicar en caso el estado sea activo/desbloquado
+                            if(cupon.getEstado() == 1){
+                                cupon.setEstado(2);
+                                attr.addFlashAttribute("publicado", "Cupón publicado exitosamente");
+                                break;
+                            }else{
+                                // EL CUPON DEBE ESTAR EN ESTADO ACTIVO PARA SER PUBLICADO
+                                // attr.addFlashAttribute("msgValEstado2", "El cupón debe estar en estado activo para ser publicado");
+                                model.addAttribute("listaNotiRest", listaNotificacion);
+                                model.addAttribute("credencial1", credencialRest1DTOS);
+                                model.addAttribute("platoMasVendido", platoTOP);
+                                model.addAttribute("platoMenosVendido", platoDOWN);
+                                model.addAttribute("pedidosCredenciales", pedidosDTOList);
+                                return "redirect:/cupon/lista";
+                            }
+                        default:
+                            model.addAttribute("listaNotiRest", listaNotificacion);
+                            model.addAttribute("credencial1", credencialRest1DTOS);
+                            model.addAttribute("platoMasVendido", platoTOP);
+                            model.addAttribute("platoMenosVendido", platoDOWN);
+                            model.addAttribute("pedidosCredenciales", pedidosDTOList);
+                            return "redirect:/cupon/lista";
+
                     }
                     cuponRepository.save(cupon);
                     List<Usuario> usuariosDisponibles = usuarioRepository.findByEstadoAndRol_Idrol(1, 1);
@@ -360,14 +391,16 @@ public class CuponController {
                             clienteHasCuponRepository.save(chc);
                         }
                     } else if (cupon.getEstado() == 0) {
-                        //TODO no se puede bloquear 2 veces
-                        for (Usuario u : usuariosDisponibles) {
-                            // Setiando la llave
-                            Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
-                            chcK.setIdcupon(cupon.getIdcupon());
-                            chcK.setIdcliente(u.getIdusuario());
+                        List<Cliente_has_cupon> listaParaValidar = clienteHasCuponRepository.findByIdCupon(cupon.getIdcupon());
+                        if(listaParaValidar.size() != 0){
+                            for (Usuario u : usuariosDisponibles) {
+                                // Setiando la llave
+                                Cliente_has_cuponKey chcK = new Cliente_has_cuponKey();
+                                chcK.setIdcupon(cupon.getIdcupon());
+                                chcK.setIdcliente(u.getIdusuario());
 
-                            clienteHasCuponRepository.deleteById(chcK);
+                                clienteHasCuponRepository.deleteById(chcK);
+                            }
                         }
                     }
 

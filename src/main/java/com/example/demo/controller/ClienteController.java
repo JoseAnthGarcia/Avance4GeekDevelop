@@ -32,7 +32,9 @@ import org.thymeleaf.context.Context;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,7 +48,8 @@ import static org.aspectj.runtime.internal.Conversions.doubleValue;
 public class ClienteController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    public String ip = "34.227.30.44.nip.io";
+    //public String ip = "34.227.30.44.nip.io";
+    public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -301,9 +304,9 @@ public class ClienteController {
                     id1 = "-"+idCategoria+"-";
                     id2 = "-"+idCategoria;
                     id3 = idCategoria+"-";
+                    httpSession.setAttribute("idCategoria",idCategoria);
                 }
-                httpSession.setAttribute("idCategoria",idCategoria);
-                //se deberia guardar si no esta en el rango????
+
             }catch (NumberFormatException e){
                 idCategoria="";
                 httpSession.removeAttribute("idCategoria");
@@ -1552,8 +1555,6 @@ public class ClienteController {
                 delivery = 8.00;
             }
 
-            //TODO SETIEAR DETALLES DE PEDIDO - MONTO POR CADA CARRITO
-            System.out.println(carrito);
             session.setAttribute("carrito", carrito);
             session.setAttribute("delivery", delivery);
         } else {
@@ -1570,7 +1571,15 @@ public class ClienteController {
             }
         }
 
+      /*  int monto = (int) (subTotalCarrito + subTotalExtras + delivery);
+        int montoVal = (int) (subTotalCarrito + subTotalExtras);
 
+        for (Cupon c: listaCupones1){
+            if(c.getDescuento() > monto){
+                c.setDescuento(montoVal);
+            }
+        }
+*/
         model.addAttribute("montoCarrito", subTotalCarrito);
         model.addAttribute("listaCupones", listaCupones1);
         model.addAttribute("montoExtras", subTotalExtras);
@@ -1824,6 +1833,8 @@ public class ClienteController {
                             // la cantidad a pagar será mayor a la del monto Total
                             cantidadNullVal = true;
                         }
+                    }else{
+                        cantidadNullVal = true;
                     }
                 }
             }
@@ -1938,7 +1949,15 @@ public class ClienteController {
             }
             if (idCupon != null) {
                 if (!idCupon.trim().equals("")) {
+
+                    if(desc.compareTo(precioTotal) > 0){
+                        precioTotal = desc;
+                        System.out.println("CUPON MAYOR AL PRECIO TOTAL" + precioTotal.toString() + " - " + desc.toString());
+                        // si esto pasa el precio total se restaria y quedaría cero
+                        // para que después se añada el efectivo
+                    }
                     precioTotal = precioTotal.subtract(desc);
+
                 }
             }
 
@@ -1972,10 +1991,9 @@ public class ClienteController {
                     return "Cliente/terminarCompra";
                 }
             }
-
-
+            BigDecimal precioTotal_1d = precioTotal.setScale(1, RoundingMode.HALF_UP);
             Pedido pedido = new Pedido();
-            pedido.setPreciototal(precioTotal.floatValue());
+            pedido.setPreciototal(precioTotal_1d.floatValue());
 
 
             if (!efectivoPagar.equals("")) {
@@ -3591,7 +3609,10 @@ public class ClienteController {
                 limitSup = 40;
                 limitInf = 30;
                 break;
-
+            case "5":
+                limitSup = 50;
+                limitInf = 40;
+                break;
             default:
                 limitSup = 100;
                 limitInf = 0;
@@ -3654,10 +3675,13 @@ public class ClienteController {
                 limitSup = 30;
                 limitInf = 20;
                 break;
-
             case "4":
                 limitSup = 40;
                 limitInf = 30;
+                break;
+            case "5":
+                limitSup = 50;
+                limitInf = 40;
                 break;
 
             default:

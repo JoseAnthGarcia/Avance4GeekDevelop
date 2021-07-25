@@ -197,7 +197,7 @@
 
                         <div th:if="${listaRepartidor.size()!=0 || listaRepartidor.size()!=null}" class="row justify-content-center" th:each="r1:${listaRepartidor}">
                             <h5 class="col-3" style="color:black"  th:text="|Repartidor : ${r1.getNombres()} ${r1.getApellidos()}|"> </h5>
-                            <h5 class="col-3 offset-md-3" style="color:black" th:text="|Telefono (Repartidor) : ${r1.getTelefono()} |" ></h5>
+                            <h5 class="col-3 offset-md-3" style="color:black" th:text="|Teléfono (Repartidor) : ${r1.getTelefono()} |" ></h5>
 
                         </div>
 
@@ -273,26 +273,6 @@
                                     </table>
 
                                 </div>
-
-
-
-                         <!--   <div class="row">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-8">
-                                    <nav aria-label="pagination">
-                                        <ul class="pagination justify-content-center">
-
-                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                                <a th:unless="${codigo == null   }" class="page-link active text-white"  style="background-color: #701111"
-                                                   th:text="${page}"
-                                                   th:href="@{'/cliente/detallePedidoActual?page='+${page}+'&codigo='+${codigo}}"></a>
-                                            </li>
-
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="col-md-2"></div>
-                            </div> -->
 
                 <!--------------------------------Extras----------------------------------------------------------------->
                             <div class="card-body" th:if="${listaExtra.size!=0}">
@@ -386,6 +366,15 @@
                             <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getIdmetodopago()==3}" th:text="|POS|"></h6>
 
                         </div>
+                        <div class="row justify-content-center" th:if="${p3.getIdmetodopago()==1 && (p3.getCantp()!=null && p3.getCantp() >0)}">
+                            <h6 class="col-3" style="color:black" >Monto de Pago</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${p3.getCantp()}|"  ></h6>
+                        </div>
+                        <div class="row justify-content-center" th:if="${p3.getIdmetodopago()==1 && (p3.getCantp()!=null && p3.getCantp() >0)}">
+                            <h6 class="col-3" style="color:black" >Vuelto </h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:text="|S/. ${ p3.getCantp() - p3.getPreciototal() }|"  ></h6>
+                        </div>
+                        <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Fecha de entrega</h6>
                             <h6 class="col-3 offset-md-3" style="color:black" th:text="${p3.getFechapedido()}"  ></h6>

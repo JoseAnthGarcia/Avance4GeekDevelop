@@ -234,7 +234,15 @@ public class ExtraController {
         model.addAttribute("platoMenosVendido", platoDOWN);
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
         int idrestaurante = restaurante.getIdrestaurante();
-
+        boolean bool=false;
+        List<Extra>listaTotalExtras= extraRepository.findByIdrestaurante(idrestaurante);
+        for (Extra lista: listaTotalExtras){
+            if (lista.getNombre().equalsIgnoreCase(extra.getNombre())){
+                model.addAttribute("mensajerepetido", "Este nombre ya se encuentra registrado en el restaurante");
+                bool=true;
+                break;
+            }
+        }
         String fileName = "";
         boolean validarFoto = true;
         if (file != null) {
@@ -248,7 +256,7 @@ public class ExtraController {
             fileName = file.getOriginalFilename();
             if (fileName.contains("..")) {
                 model.addAttribute("idcategoria", idc);
-                model.addAttribute("mensajefoto", "No se premite '..' een el archivo");
+                model.addAttribute("mensajefoto", "No se permite '..' en el archivo");
                 return "AdminRestaurante/nuevoExtra";
             }
         }
@@ -256,7 +264,7 @@ public class ExtraController {
         extra.setIdrestaurante(idrestaurante); //Jarcodeado
         extra.setDisponible(true); //default expresion !!!!
         extra.setIdcategoriaextra(idc);
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || bool) {
             if (extra.getIdextra() == 0 && !validarFoto) {
                 model.addAttribute("idcategoria", idc);
                 return "AdminRestaurante/nuevoExtra";
@@ -392,23 +400,22 @@ public class ExtraController {
         PropertyEditorSupport integerValidator = new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
-                System.out.println("----------------------------Precio-----------------------------"+text);
+
                 try {
                     System.out.println("xd1");
                     this.setValue(Double.parseDouble(text));
-                    System.out.println("xddddddddddddddddddddddd2 "+this.getValue());
+
                     if(text.contains("E")){
                         String[] parts = text.split("E");
                         String part1 = parts[0];
                         String part2 = parts[1];
-                        System.out.println(part1);
-                        System.out.println(part2);
-                        if((Double.parseDouble(part1)>=1.7) && (Double.parseDouble(part2)>=308)){
-                            System.out.println("El valor es mayor o igual a 8E308");
+
+                        if((Double.parseDouble(part1)>1.7) && (Double.parseDouble(part2)>=308)){
+
                             this.setValue(0.0);
                         }
                         else if ((Double.parseDouble(part2)>308)){
-                            System.out.println("El valor es mayor a 1E309");
+
                             this.setValue(0.0);
                         }
                         else{
@@ -416,7 +423,7 @@ public class ExtraController {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("xd2");
+
                     this.setValue(text);
                 }
             }

@@ -28,7 +28,7 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form th:action="@{/admin/ReporteVentas}" method="get">
+                <form th:action="@{/admin/ReporteIngresos}" method="get">
 
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1" >
@@ -159,7 +159,7 @@
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a th:href="@{/admin/ReporteVentas}" class="btn btn-secondary">Quitar filtros</a>
+                            <a th:href="@{/admin/ReporteIngresos}" class="btn btn-secondary">Quitar filtros</a>
                         </div>
                     </div>
 
@@ -174,12 +174,12 @@
                         <div class="d-sm-flex align-items-center justify-content-between">
 
                             <h2 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE INGRESOS POR RESTAURANTE </h2>
-                            <button th:if="${listaUsuarios.size() != 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
+                            <button th:if="${listaUsuarios.size() > 0}" class="btn btn-warning mr-1" id="btnExportar">Exportar</button>
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
                             <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
                                 <thead>
                                 <tr>
@@ -222,7 +222,7 @@
                                     <td th:text="${usuario.getNombre()}" class="text-center" style="width: 240px"></td>
                                     <td th:text="${usuario.getRuc()}" class="text-center" style="width: 260px"></td>
                                     <td th:text="${usuario.getDistrito()}" class="text-center" style="width: 260px"></td>
-                                    <td th:text="${usuario.getEstado()}" class="text-center" style="width: 260px"></td>
+                                    <td th:text="${usuario.estado == 1 ? 'ACTIVO' : 'BLOQUEADO' }" class="text-center" style="width: 260px"></td>
 
 
 
@@ -254,7 +254,7 @@
                                               <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${prev}|}">Anterior</a>
                                           </li>-->
                                         <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${page}|}" th:text="${page}"></a>
+                                            <a class="page-link" th:href="@{|/admin/ReporteIngresosPagina/?page=${page}|}" th:text="${page}"></a>
                                         </li>
                                         <!--      <li class="page-item" th:classappend="${current == last ? 'disabled': ''}">
                                                    <a class="page-link" th:href="@{|/admin/ReporteVentasPagina/?page=${next}|}">Siguiente</a>
@@ -267,7 +267,7 @@
                     </div>
                 </div>
 
-                <div class="card shadow mb-4">
+                <!--<div class="card shadow mb-4">
                     <div class="card-header py-3 " style="background-color: #701111;">
 
                         <div class="d-sm-flex align-items-center justify-content-between">
@@ -342,7 +342,7 @@
                 </div>
 
 
-                <!--  <div class="card shadow mb-4">
+                  <div class="card shadow mb-4">
                       <div class="card-header py-3 " style="background-color: #701111;">
 
                           <div class="d-sm-flex align-items-center justify-content-between">

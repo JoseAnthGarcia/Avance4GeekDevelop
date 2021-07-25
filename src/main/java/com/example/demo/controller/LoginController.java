@@ -61,7 +61,8 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    public String ip = "34.227.30.44.nip.io";
+    //public String ip = "34.227.30.44.nip.io";
+    public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -550,8 +551,8 @@ return "index";
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
                 return "Cliente/registro";
             }
-            //
-            cliente.setEstado(1);
+            // IMPORTANTE - ESTE ESTADO DEBE SER -1 HASTA QUE VALIDE SU CUENTA
+            cliente.setEstado(-1);
             cliente.setRol(rolRepository.findById(1).get());
             String fechanacimiento = LocalDate.now().toString();
             cliente.setFecharegistro(fechanacimiento);
@@ -580,8 +581,7 @@ return "index";
 
             /////----------------Envio Correo--------------------/////
 
-            sendHtmlMailREgistrado(cliente.getCorreo(), "Cliente registrado", cliente);
-
+            enviarCorreoValidacion(cliente.getCorreo());
 
             /////-----------------------------------------  ------/////
 
@@ -916,7 +916,8 @@ return "index";
         System.out.println(adminRest.getContrasenia());
         //se agrega rol:
         adminRest.setRol(rolRepository.findById(3).get());
-        adminRest.setEstado(2);
+        //IMPORTANTE - DEBE SETEARLO A -1 HASTA QUE SU CUENTA SEA VALIDADA
+        adminRest.setEstado(-1);
         Date date = new Date();
         DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
         String fecharegistro = LocalDate.now().toString();
@@ -942,7 +943,6 @@ return "index";
                 model.addAttribute("mensajefoto", "Debe subir una imagen");
                 validarFoto = false;
             } else if (!file.getContentType().contains("jpeg") && !file.getContentType().contains("png") && !file.getContentType().contains("web")) {
-                System.out.println("FILE NULL---- HECTOR CTM5");
                 model.addAttribute("mensajefoto", "Ingrese un formato de imagen válido (p.e. JPEG,PNG o WEBP)");
                 validarFoto = false;
             }
@@ -1028,6 +1028,9 @@ return "index";
                 model.addAttribute("mensajefoto", "Ocurrió un error al subir el archivo");
                 return "AdminRestaurante/registroAR";
             }
+
+            enviarCorreoValidacion(adminRest.getCorreo());
+
             return "AdminRestaurante/solicitudAR";
         } else {
             return "AdminRestaurante/registroAR";
@@ -1494,7 +1497,13 @@ return "index";
             if (validarcorreo != null) {
 //                validarCorreoRepository.delete(validarcorreo);
                 Usuario usuario = usuarioRepository.findByCorreo(correo);
-                usuario.setEstado(2);
+                // en caso sea un cliente no necesita que su cuenta este valdidad
+                // solo para cuando es un admin rest o admin o repartidor
+                if(usuario.getRol().getIdrol() == 1){
+                    usuario.setEstado(1);
+                }else{
+                    usuario.setEstado(2);
+                }
                 usuarioRepository.save(usuario);
                 model.addAttribute("rol", usuario.getRol().getIdrol());
                 return "cuentaValidada";

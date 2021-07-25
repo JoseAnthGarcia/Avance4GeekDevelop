@@ -199,6 +199,12 @@
                                     <ul class="nav nav-tabs card-header-tabs">
                                         <li class="nav-item active">
                                             <a href="#content_online" class="nav-link" role="tab" data-toggle="tab"
+                                               th:classappend="${(msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null) ? 'active' : ''}"
+                                               th:aria-selected="${msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null}"
                                                id="title_online"
                                                style="color: #6f6f6f"><strong>PAGO
                                                 ONLINE</strong></a>
@@ -210,6 +216,8 @@
                                         </li>
                                         <li class="nav-item ml-2">
                                             <a href="#content_efectivo" class="nav-link" role="tab" data-toggle="tab"
+                                               th:classappend="${(msgEfect != null || msgNotString != null) ? 'active' : ''}"
+                                               th:aria-selected="${msgEfect != null || msgNotString != null}"
                                                id="title_efectivo" style="color:#6f6f6f"><strong>PAGO
                                                 EFECTIVO</strong></a>
                                         </li>
@@ -217,7 +225,10 @@
                                 </div>
 
                                 <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane fade" id="content_online">
+                                    <div role="tabpanel" class="tab-pane fade" id="content_online"
+                                         th:classappend="${(msgNumTarjetaVal != null || msgFechaVal != null
+                                                                || msgCvvVal != null || msgTipoVal  != null
+                                                                || msgNullMdp != null) ? 'active show' : ''}">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -232,7 +243,8 @@
                                                 <div class="col-6 mt-1">
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Seleccione una tarjeta: </strong></h6>
                                                     <br>
-                                                    <div th:hidden="${listaTarjetas.size() == 0}" class="container" id="registrarTarjetaText">
+                                                    <!--th:hidden="${listaTarjetas.size() == 0}"-->
+                                                    <div class="container" id="registrarTarjetaText">
                                                     <h6 style="color:#000000;" class="ml-3 mt-1 text-left"><strong>Tipo
                                                         de Tarjeta</strong></h6>
                                                     <br>
@@ -250,7 +262,7 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-check-inline">
-                                                        <div th:if="${listaTarjetas.size() == 0}" class="mt-2 mb-4"><h6>
+                                                        <div th:if="${listaTarjetas.size() == 0}" class="mt-2"><h6>
                                                             <strong>No tiene una tarjeta registrada</strong></h6></div>
                                                         <select th:if="${listaTarjetas.size() != 0}"
                                                                 class="form-control form-control-sm mb-4"
@@ -269,8 +281,8 @@
                                                         <div id="popup" style="display: none;">Si quiere usar una tarjeta nueva dar click al botón y doble click para esconderlo</div>
 -->
                                                     </div>
-
-                                                    <div th:hidden="${listaTarjetas.size() == 0}" class="container" id="registrarTarjetaInput">
+                                                    <!--th:hidden="${listaTarjetas.size() == 0}"-->
+                                                    <div class="container" id="registrarTarjetaInput">
                                                         <select th:if="${tipo != null}" class="form-control form-control-sm" name="newTarjeta" form="generarPedido">
                                                             <option value="">Seleccione el tipo de su tarjeta</option>
                                                             <option value="1" th:selected="${tipo.equals('1')}">Visa</option>
@@ -329,7 +341,7 @@
                                                         <h6 th:if="${msgFechaVal != null}" style="color: red; font-size: 15px" th:text="${msgFechaVal}"></h6>
                                                     </div>
                                                     <br>
-                                                    <div class="input-group input-group-sm mb-3 mt-3">
+                                                    <div class="input-group input-group-sm mb-3">
                                                         <input type="text" class="form-control " placeholder="3 dígitos" form="generarPedido"
                                                                th:placeholder="${cvv== null ? '' : cvv}"  id="idcvv" name="cvv">
                                                         <h6 th:if="${msgCvvVal != null}" style="color: red; font-size: 15px" th:text="${msgCvvVal}"></h6>
@@ -355,7 +367,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane fade" id="content_efectivo">
+                                    <div role="tabpanel" class="tab-pane fade" id="content_efectivo"
+                                         th:classappend="${(msgEfect != null || msgNotString != null) ? 'active show' : ''}">
                                         <div class="container">
                                             <div class="row justify-content-start">
                                                 <div class="col-2 mt-3 ml-2">
@@ -371,13 +384,14 @@
                                                         con cuánto cancelará: </strong></h6>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="input-group input-group-sm mb-3 mt-2">
+                                                    <div class="input-group input-group-sm mt-2">
                                                         <h6>S/. </h6>
                                                         <input type="text" class="form-control text-center ml-2" name="efectivoPagar" form="generarPedido">
-                                                        <h6 th:if="${msgEfect != null}" style="color: red; font-size: 15px" th:text="${msgEfect}"></h6>
-                                                        <h6 th:if="${msgCantidadNotNull != null}" style="color: red; font-size: 15px" th:text="${msgCantidadNotNull}"></h6>
-                                                        <h6 th:if="${msgNotString != null}" style="color: red; font-size: 15px" th:text="${msgNotString}"></h6>
                                                     </div>
+                                                    <h6 th:if="${msgEfect != null}" style="color: red; font-size: 15px" th:text="${msgEfect}"></h6>
+                                                    <h6 th:if="${msgCantidadNotNull != null}" style="color: red; font-size: 15px" th:text="${msgCantidadNotNull}"></h6>
+                                                    <h6 th:if="${msgNotString != null}" style="color: red; font-size: 15px" th:text="${msgNotString}"></h6>
+
                                                 </div>
                                             </div>
 
@@ -388,7 +402,6 @@
 
                             <div class="container mt-3 mb-3">
                                 <div class="row justify-content-center">
-                                    <!-- <img src="img/pago.jpg"> -->
                                     <img src="https://cdn.shopify.com/s/files/1/0457/7476/6240/files/oie_transparent_1_1200x1200.png?v=1611084564" class="mt-3" width="450" height="225" alt="Avatar">
                                 </div>
                             </div>
@@ -443,28 +456,6 @@
                                         <h6 th:if="${descuento != null}" style="color:#000000;" class="mr-3 mt-sm-2"><strong th:text="|- S/. ${descuento}|"></strong></h6>
                                     </div>
                                 </div>
-                               <!-- <div class="form-check-inline">
-                                    <div class="container mt-4" style="width: 300px">
-                                        &lt;!&ndash; ONLINE &ndash;&gt;
-                                        <input class="form-check-input" name="metodoPago" form="generarPedido" type="checkbox" value="2" id="online" onclick="escogerMetodoPago()"
-                                            th:checked="${msgNumTarjetaVal != null || msgFechaVal != null
-                                                            || msgCvvVal != null || msgTipoVal  != null
-                                                            || msgNullMdp != null}">
-                                        <i class="fab fa-cc-visa" style="color: darkblue"></i>
-                                        <i class="fab fa-cc-mastercard" style="color: darkred"></i>
-                                    </div>
-                                    <div class="container mt-4">
-                                        &lt;!&ndash; POS &ndash;&gt;
-                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="3" id="pos" onclick="escogerMetodoPago()">
-                                        <i class="fab fa-paypal" style="color: darkred;"></i>
-                                    </div>
-                                    <div class="container mt-4">
-                                        &lt;!&ndash; EFECTIVO &ndash;&gt;
-                                        <input class="form-check-input" type="checkbox" form="generarPedido" name="metodoPago" value="1" id="efectivo" onclick="escogerMetodoPago()"
-                                               th:checked="${msgEfect != null || msgNotString != null}">
-                                        <i class="fas fa-money-bill" style="color: darkgreen"></i>
-                                    </div>
-                                </div>-->
                                 <div class="container mt-3 mb-3">
                                     <div class="form-check form-check-inline mr-5">
                                         <!--ONLINE-->

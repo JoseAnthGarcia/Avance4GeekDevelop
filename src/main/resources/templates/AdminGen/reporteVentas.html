@@ -109,9 +109,9 @@
                         </div>
 
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="tabla">
                         <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
-                            <table class="table " th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}"
+                            <table class="table table-bordered"
                                    style="background-color:#F2E2AA; border-color:#F2E2AA ">
                                 <thead>
                                 <tr>
@@ -148,8 +148,8 @@
 
                             </table>
 
-                            <table id="tabla" class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
-                                <thead>
+                            <table  class="table table-bordered" th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                                <thead></thead>
                                 <tr>
                                     <th class="text-center">
                                         N°
@@ -171,7 +171,7 @@
                                     </th>
 
                                 </tr>
-                                </thead>
+
                                 <tbody>
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
                                     <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 60px">1</td>

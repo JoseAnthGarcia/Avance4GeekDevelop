@@ -2729,7 +2729,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                             valoracion = 0;
                         }
                         model.addAttribute("valoracion",valoracion);
-                        model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
+                        //model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
                     case "cliente":

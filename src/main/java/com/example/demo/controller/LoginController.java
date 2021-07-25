@@ -61,8 +61,9 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    //public String ip = "34.227.30.44.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";//hector
+    //public String ip = "54.87.150.35.nip.io";//diego
+    //public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired

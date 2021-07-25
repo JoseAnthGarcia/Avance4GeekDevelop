@@ -1454,13 +1454,14 @@ public class ClienteController {
                                  HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
-        //CUPONES
-        List<CuponClienteDTO> listaCupones1 = pedidoRepository.listaCupones1(usuario.getIdusuario());
         //  List<Ubicacion> listaDirecciones = (List) session.getAttribute("poolDirecciones");
         List<Ubicacion> listaDirecciones = ubicacionRepository.findByUsuarioVal(usuario);
         //List<Ubicacion> direcciones_distritos = clienteRepository.findUbicacionActual(usuario.getIdusuario());
         //List <Cupon> listaCupones = (List<Cupon>) session.getAttribute("listaCupones");
         int idRest = (Integer) session.getAttribute("idRest");
+        //CUPONES
+        List<Cupon> listaCupones1 = cuponRepository.findCuponesbyIdclienteAndRestId(usuario.getIdusuario(), idRest);
+
         ArrayList<Plato_has_pedido> carrito = (ArrayList<Plato_has_pedido>) session.getAttribute("carrito");
         ArrayList<Extra_has_pedido> carritoExtra = (ArrayList<Extra_has_pedido>) session.getAttribute("extrasCarrito");
 
@@ -1927,7 +1928,7 @@ public class ClienteController {
             }
 
             model.addAttribute("montoCarrito", precioTotalPlatos);
-            model.addAttribute("listaCupones", pedidoRepository.listaCupones1(cliente.getIdusuario()));
+            model.addAttribute("listaCupones", cuponRepository.findCuponesbyIdclienteAndRestId(cliente.getIdusuario(), idRest));
             model.addAttribute("montoExtras", precioTotalExtras);
             model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
             model.addAttribute("listaDirecciones", listaDirecciones);
@@ -1973,7 +1974,7 @@ public class ClienteController {
                         model.addAttribute("efectivo", efectivoPagar);
 
                         model.addAttribute("montoCarrito", precioTotalPlatos);
-                        model.addAttribute("listaCupones", pedidoRepository.listaCupones1(cliente.getIdusuario()));
+                        model.addAttribute("listaCupones", cuponRepository.findCuponesbyIdclienteAndRestId(cliente.getIdusuario(), idRest));
                         model.addAttribute("montoExtras", precioTotalExtras);
                         model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                         model.addAttribute("listaDirecciones", listaDirecciones);
@@ -1984,7 +1985,7 @@ public class ClienteController {
                     model.addAttribute("msgNotString", "Ingrese un número válido.");
 
                     model.addAttribute("montoCarrito", precioTotalPlatos);
-                    model.addAttribute("listaCupones", pedidoRepository.listaCupones1(cliente.getIdusuario()));
+                    model.addAttribute("listaCupones", cuponRepository.findCuponesbyIdclienteAndRestId(cliente.getIdusuario(), idRest));
                     model.addAttribute("montoExtras", precioTotalExtras);
                     model.addAttribute("listaTarjetas", tarjetaRepository.findByUsuario(cliente));
                     model.addAttribute("listaDirecciones", listaDirecciones);
@@ -3592,36 +3593,31 @@ public class ClienteController {
 
         switch (descuento) {
             case "1":
-                limitSup = 10;
+                limitSup = 5;
                 limitInf = 0;
                 break;
 
             case "2":
-                limitSup = 20;
+                limitSup = 10;
+                limitInf = 5;
+                break;
+            case "3":
+                limitSup = 15;
                 limitInf = 10;
                 break;
 
-            case "3":
-                limitSup = 30;
-                limitInf = 20;
-                break;
-
             case "4":
-                limitSup = 40;
-                limitInf = 30;
-                break;
-            case "5":
-                limitSup = 50;
-                limitInf = 40;
+                limitSup = 20;
+                limitInf = 15;
                 break;
             default:
-                limitSup = 100;
+                limitSup = 20;
                 limitInf = 0;
         }
 
         //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
@@ -3663,34 +3659,29 @@ public class ClienteController {
         int limitInf;
         switch (descuento) {
             case "1":
-                limitSup = 10;
+                limitSup = 5;
                 limitInf = 0;
                 break;
 
             case "2":
-                limitSup = 20;
-                limitInf = 10;
+                limitSup = 10;
+                limitInf = 5;
                 break;
 
             case "3":
-                limitSup = 30;
-                limitInf = 20;
+                limitSup = 15;
+                limitInf = 10;
                 break;
             case "4":
-                limitSup = 40;
-                limitInf = 30;
+                limitSup = 20;
+                limitInf = 15;
                 break;
-            case "5":
-                limitSup = 50;
-                limitInf = 40;
-                break;
-
             default:
-                limitSup = 100;
+                limitSup = 20;
                 limitInf = 0;
         }
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2( texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());

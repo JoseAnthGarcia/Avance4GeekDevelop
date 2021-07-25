@@ -228,10 +228,10 @@
 
                                     <td th:text="${usuario.getCantidadpedidos()}" class="text-center" style="width: 260px"></td>
 
-                                    <td th:text="${usuario.getIngresostotalesmismodistrito()}" class="text-center" style="width: 240px"></td>
+                                    <td th:text="|S/ ${usuario.getIngresostotalesmismodistrito()+'.00'}|" class="text-center" style="width: 240px"></td>
 
-                                    <td th:text="${usuario.getIngresostotalesdiferentedistrito()}" class="text-center" style="width: 240px"></td>
-                                    <td  th:text="|S/ ${usuario.getIngresosTotales()}|" class="text-center" style="width: 160px"></td>
+                                    <td th:text="|S/ ${usuario.getIngresostotalesdiferentedistrito()+'.00'}|" class="text-center" style="width: 240px"></td>
+                                    <td  th:text="|S/ ${usuario.getIngresosTotales()+'.00'}|" class="text-center" style="width: 160px"></td>
                                 </tr>
 
 

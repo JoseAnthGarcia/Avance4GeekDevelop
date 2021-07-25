@@ -178,7 +178,7 @@ public class ExtraController {
                     List<CategoriaExtra> listaCategoriaExtra = categoriaExtraRepository.findAll();
                     model.addAttribute("texto", textBuscador);
                     model.addAttribute("textoP", inputPrecio);
-
+                    model.addAttribute("pageSize", pageSize);
                     model.addAttribute("currentPage", pageNo);
                     model.addAttribute("totalPages", page.getTotalPages());
                     model.addAttribute("totalItems", page.getTotalElements());
@@ -235,12 +235,14 @@ public class ExtraController {
         model.addAttribute("pedidosCredenciales",pedidosDTOList);
         int idrestaurante = restaurante.getIdrestaurante();
         boolean bool=false;
-        List<Extra>listaTotalExtras= extraRepository.findByIdrestaurante(idrestaurante);
-        for (Extra lista: listaTotalExtras){
-            if (lista.getNombre().equalsIgnoreCase(extra.getNombre())){
-                model.addAttribute("mensajerepetido", "Este nombre ya se encuentra registrado en el restaurante");
-                bool=true;
-                break;
+        List<Extra>listaTotalExtras= extraRepository.findByIdrestauranteAndDisponible(idrestaurante,true);
+        if(extra.getIdextra()==0) {
+            for (Extra lista : listaTotalExtras) {
+                if (lista.getNombre().equalsIgnoreCase(extra.getNombre())) {
+                    model.addAttribute("mensajerepetido", "Este nombre del extra ya se encuentra registrado en el restaurante");
+                    bool = true;
+                    break;
+                }
             }
         }
         String fileName = "";
@@ -384,12 +386,14 @@ public class ExtraController {
 
     @GetMapping("/borrar")
     public String borrarExtra(@RequestParam("id") int id, RedirectAttributes attr,
-                              @RequestParam(value = "idcategoria") int idc, Model model) {
-        Optional<Extra> extraOptional = extraRepository.findById(id);
-        if (extraOptional.isPresent()) {
-            Extra extra = extraOptional.get();
-            extra.setDisponible(false);
-            extraRepository.save(extra);
+                              @RequestParam(value = "idcategoria") int idc, Model model, HttpSession session) {
+        Usuario adminRest = (Usuario) session.getAttribute("usuario");
+        int idr = adminRest.getIdusuario();
+        Restaurante restaurante = restauranteRepository.encontrarRest(idr);
+        Extra extraxd = extraRepository.findByIdextraAndIdrestaurante(id, restaurante.getIdrestaurante());
+        if (extraxd!=null) {
+            extraxd.setDisponible(false);
+            extraRepository.save(extraxd);
             attr.addFlashAttribute("msg3", "Extra borrado exitosamente");
         }
         model.addAttribute("idcategoria", idc);

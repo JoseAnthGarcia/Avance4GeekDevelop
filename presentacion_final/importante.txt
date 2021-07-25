@@ -63,6 +63,7 @@ Tipo Movilidad: (3 LETRAS Y 3 NUMEROS - 1 LETRA 8 NUMEROS)
 5 - moto
 6 - carro
 7 - ticla
+
 Usuario:
 0 bloqueado
 1 activo

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CuponRepository extends JpaRepository<Cupon, Integer> {
@@ -20,6 +21,8 @@ public interface CuponRepository extends JpaRepository<Cupon, Integer> {
     Cupon buscarPorNombre(String nombre);
 
     Page<Cupon> findByIdrestauranteAndNombreIsContainingAndFechafinBetweenAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(int idrestaurante, String nombre, LocalDate fechainicio, LocalDate fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
+
+    Optional<Cupon> findByIdcuponAndIdrestaurante(int idCupon, int idRest);
 
     @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
             "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +

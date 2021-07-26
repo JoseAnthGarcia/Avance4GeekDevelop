@@ -29,12 +29,12 @@ public interface ExtraRepository extends JpaRepository<Extra, Integer> {
                 "inner join categoriaextra_has_plato chp on chp.idcategoriaextra = ce.idcategoriaextra\n" +
                 "where e.idrestaurante = ?1 and chp.idplato = ?2 and e.disponible = 1 and e.nombre like %?3% \n" +
                 " and (chp.idcategoriaextra > ?4 and chp.idcategoriaextra <= ?5) \n" +
-                "     and (e.preciounitario > ?6 and e.preciounitario <= ?7)",nativeQuery = true, countQuery = "select count(*) from extra e \n" +
+                "     and (e.preciounitario > ?6 and e.preciounitario <= ?7) order by e.preciounitario asc ",nativeQuery = true, countQuery = "select count(*) from extra e \n" +
                 "inner join categoriaextra ce on ce.idcategoriaextra = e.idcategoriaextra\n" +
                 "inner join categoriaextra_has_plato chp on chp.idcategoriaextra = ce.idcategoriaextra\n" +
                 "where e.idrestaurante = ?1 and chp.idplato = ?2 and e.disponible = 1 and e.nombre like %?3% \n" +
                 " and (chp.idcategoriaextra > ?4 and chp.idcategoriaextra <= ?5) \n" +
-                "      and (e.preciounitario > ?6 and e.preciounitario <= ?7)")
+                "      and (e.preciounitario > ?6 and e.preciounitario <= ?7) ")
     Page<ExtraDTO> listaExtrasDisponibles(int idRestaurante, int idPlato,String texto, int limitInfCa, int limitSupCa,
                                           int limitInfPe, int limitSupPe, int disponible,Pageable pageable);
 }

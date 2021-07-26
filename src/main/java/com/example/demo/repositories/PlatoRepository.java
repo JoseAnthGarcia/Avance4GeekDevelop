@@ -27,7 +27,7 @@ public interface PlatoRepository extends JpaRepository<Plato, Integer> {
             "from plato p\n" +
             "inner join categoriarestaurante c on c.idcategoria = p.idcategoriarestaurante\n" +
             "where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +
-            "and (p.precio >= ?3 and p.precio < ?4) and (c.idcategoria >=?5 and c.idcategoria < ?6) ",
+            "and (p.precio >= ?3 and p.precio < ?4) and (c.idcategoria >=?5 and c.idcategoria < ?6) order by p.precio asc ",
              nativeQuery = true , countQuery = "select count(*) from plato p\n" +
             "inner join categoriarestaurante c on c.idcategoria = p.idcategoriarestaurante\n" +
             "where p.idrestaurante = ?1 and p.disponible = 1 and p.nombre like %?2% \n" +

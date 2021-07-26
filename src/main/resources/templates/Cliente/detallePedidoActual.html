@@ -327,10 +327,10 @@
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black" th:text="|Costo|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-5 +p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and p3.getUtilizado()==1 }" th:text="|S/. ${p3.getPreciototal()-8 + p3.getDescuento()}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-5}|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 and (p3.getUtilizado()==0 || p3.getUtilizado()==null)}" th:text="|S/. ${p3.getPreciototal()-8}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 && p3.getNombrecupon()!=null }" th:text="|S/. ${p3.getPreciototal()-5 +p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 && p3.getNombrecupon()!=null }" th:text="|S/. ${p3.getPreciototal()-8 + p3.getDescuento()}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==1 && ( p3.getNombrecupon()==null)}" th:text="|S/. ${p3.getPreciototal()-5}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getMismodistrito()==0 && ( p3.getNombrecupon()==null)}" th:text="|S/. ${p3.getPreciototal()-8}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
@@ -340,8 +340,8 @@
                         </div>
                         <div class="row justify-content-center">
                             <h6 class="col-3" style="color:black">Cupón</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==0 || p3.getUtilizado() == null}"  th:text="|NO|"></h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getUtilizado()==1 }"  th:text="|${p3.getNombrecupon()} : S/. -${p3.getDescuento}|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getNombrecupon()==null}"  th:text="|NO|"></h6>
+                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getNombrecupon()!=null }"  th:text="|${p3.getNombrecupon()} : S/. -${p3.getDescuento}|"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
                         <div class="row justify-content-center">
@@ -350,12 +350,11 @@
                         </div>
 
 
-                        <div class="dropdown-divider" style="border-color:#701111;"  th:if="${p3.getEstado==2}"></div>
+                        <div class="dropdown-divider" style="border-color:#701111;"  th:if="${p3.getEstado==2 && p3.getObsrest!=null }"></div>
 
-                        <div class="row justify-content-center"  th:if="${p3.getEstado==2}">
-                            <h6 class="col-3" style="color:black" th:if="${p3.getEstado==2}">Motivo de Cancelacion</h6>
-                            <h6 class="col-3 offset-md-3" style="color:black" th:if="${p3.getEstado==2}" th:text="${p3.getObsrest()}"></h6>
-
+                        <div class="row justify-content-center"  th:if="${p3.getEstado==2 && p3.getObsrest!=null }">
+                            <h6 class="col-3" style="color:black" >Motivo de Cancelacion</h6>
+                            <h6 class="col-3 offset-md-3" style="color:black"  th:text="${p3.getObsrest()}"></h6>
                         </div>
                         <div class="dropdown-divider" style="border-color:#701111;" ></div>
 

@@ -2915,12 +2915,8 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
 
                 // TODO: 23/07/2021
-                try {
-                    sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado", usuario);
-                } catch (MessagingException e) {
-                    String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
-                    sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-                }
+                enviarCorreoValidacion2(usuario.getCorreo());
+
                 /////-----------------------------------------------/////
 
 
@@ -3101,7 +3097,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                 return "AdminGen/crearAdmin";
             }
 
-            usuario.setEstado(1);
+            usuario.setEstado(-1);
             usuario.setRol(rolRepository.findById(5).get());
             String fechanacimiento = LocalDate.now().toString();
             //usuario.setFecharegistro(fechanacimiento);
@@ -3122,15 +3118,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
             /////----------------Envio Correo--------------------/////
             // TODO: 23/07/2021
-            try {
-                sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
-            } catch (MessagingException e) {
-                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
-                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
-            }
-
-
-
+            enviarCorreoValidacion2(usuario.getCorreo());
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -3142,6 +3130,28 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         }
     }
 
+    public void enviarCorreoValidacion2(String correo) {
+        String codigoHash = "";
+        while (true) {
+            codigoHash = cipherPassword(generarCodigAleatorio());
+            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(codigoHash);
+            if (validarcorreo == null) {
+                break;
+            }
+        }
+        Validarcorreo validarcorreo = new Validarcorreo();
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        validarcorreo.setUsuario(usuario);
+        validarcorreo.setHash(codigoHash);
+        validarCorreoRepository.save(validarcorreo);
+
+        String subject = "VALIDAR CORREO ELECTRONICO";
+        try {
+            sendHtmlMailValidar(correo, subject, usuario, codigoHash);
+        } catch (MessagingException e) {
+            System.out.println("error al enviar correo en VALIDAR CUENTA.");
+        }
+    }
     public String cipherPassword(String text) {
         String hashedPassword = "";
         try {
@@ -3191,6 +3201,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
         helper.setText(emailContent, true);
         mailSender.send(message);
     }
+
 
     public void enviarCorreoValidacion(String correo) {
         String codigoHash = "";

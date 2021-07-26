@@ -702,7 +702,7 @@ public class AdminRestController {
         List<ValoracionReporteDTO> listaValoracionReporte;
 
         //Manipular input de buscadores
-
+        String inputValoracion3="6";
         int inputValoracion2;
         if (inputValoracion == null) {
             inputValoracion = "";
@@ -713,6 +713,7 @@ public class AdminRestController {
                     return "redirect:/restaurante/reporteValoracion";
                 } else if (inputValoracion2 == 6) {
                     inputValoracion = "";
+                    inputValoracion3="6";
                 }
             } catch (NumberFormatException e) {
                 return "redirect:/restaurante/reporteValoracion";
@@ -775,9 +776,8 @@ public class AdminRestController {
         listaValoracionReporte = page.getContent();
 
         //Enviar atributos a la vista
-        model.addAttribute("inputValoracion", inputValoracion);
+        model.addAttribute("inputValoracion", inputValoracion3);
 
-        System.out.println(pageNo + "\n" + pageSize + "\n" + inputValoracion + "\n" + fechainicio + "\n" + fechafin);
 
         //Enviar lista y valores para paginación
         model.addAttribute("pageSize", pageSize);
@@ -819,6 +819,7 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<Categorias> listaCategorias = restaurante.getCategoriasRestaurante();
         int inputCategoria2;
+        String inputCategoria3="0";
         if (inputCategoria == null) {
             return "redirect:/restaurante/reportePlatos";
         } else {
@@ -829,10 +830,12 @@ public class AdminRestController {
                     if (categoria.getIdcategoria() == inputCategoria2) {
 
                         inputCategoria = String.valueOf(inputCategoria2);
+                        inputCategoria3=String.valueOf(inputCategoria2);
                         break;
                     } else if (inputCategoria2 == 0) {
 
                         inputCategoria = "";
+                        inputCategoria3="0";
                         break;
                     } else {
                         if (i == 4) {
@@ -908,14 +911,12 @@ public class AdminRestController {
 
                 //Enviar atributos a la vista
                 model.addAttribute("texto", textBuscador);
-                model.addAttribute("textoC", inputCategoria);
+                model.addAttribute("textoC", inputCategoria3);
                 model.addAttribute("textoCant", inputCantidad);
 
 
                 model.addAttribute("listaCategorias", listaCategorias);
 
-
-                System.out.println(pageNo + "\n" + pageSize + "\n" + textBuscador + "\n" + inputCategoria + "\n" + inputCantidad + "\n" + page.getTotalElements() + "\n" + page.getTotalPages());
 
                 //Enviar lista y valores para paginación
                 model.addAttribute("pageSize", pageSize);

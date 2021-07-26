@@ -38,18 +38,15 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC", nativeQuery = true,
-            countQuery = "select count(*) from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
-                    "            date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
-                    "            date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
-                    "            p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
-                    "            p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
-                    "p.comentariorestaurante as `comentariorestaurante` , \n" +
-                    "            p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
-                    "            p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
-                    "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-                    "            where p.idcliente=?1 and (p.estado= 2 || p.estado= 6 ) ) as pedidosT\n" +
-                    "            where lower(`nombre`) like %?2% and (estado > ?3 and estado <= ?4)\n" +
-                    "            ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ")
+            countQuery = "select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante',\n" +
+                    "date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+                    "date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
+                    "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+                    "p.idcliente as 'idcliente' from pedido p \n" +
+                    "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                    "where p.idcliente=?1 and (p.estado=0 || p.estado=1 || p.estado=3 || p.estado=4 || p.estado=5) )\n" +
+                    " as pedidosT\n" +
+                    "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC")
     Page<PedidoDTO> pedidosTotales(int idCliente, String texto, Integer estado1, Integer estado2, Pageable pageable);
 
     @Query(value="select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
@@ -64,18 +61,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
             "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
             " as pedidosT\n" +
             "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC",
-             countQuery = "select count(*) from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
-                     "            date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
-                     "            date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
-                     "            p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
-                     "            p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
-                     "\t\t\tp.comentariorestaurante as `comentariorestaurante` , \n" +
-                     "            p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
-                     "            p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
-                     "            inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
-                     "            where p.idcliente=?1 and (p.estado= 2 || p.estado= 6 ) ) as pedidosT\n" +
-                     "            where lower(`nombre`) like %?2% and (estado > ?3 and estado <= ?4)\n" +
-                     "            ORDER BY UNIX_TIMESTAMP(fechapedido) DESC ",nativeQuery = true)
+             countQuery = "select * from (select r.nombre as `nombre`, r.idrestaurante as 'idrestaurante', \n" +
+                     "date_format(p.fechapedido,'%d-%m-%y') as 'fecha',p.fechapedido as 'fechapedido', \n" +
+                     "date_format(p.fechapedido, '%H:%i')as 'hora', \n" +
+                     "p.tiempoentrega as 'tiempoentrega', p.estado as 'estado', p.codigo as 'codigo' ,r.foto as 'foto', \n" +
+                     "p.idcliente as 'idcliente' , p.valoracionrestaurante as `valoracionrestaurante` , \n" +
+                     " p.comentariorestaurante as `comentariorestaurante` , \n" +
+                     " p.valoracionrepartidor as  `valoracionrepartidor`,\n" +
+                     " p.comentariorepartidor as `comentariorepartidor` from pedido p \n" +
+                     "inner join restaurante r on p.idrestaurante = r.idrestaurante\n" +
+                     "where p.idcliente=?1 and (p.estado=2 || p.estado=6 ) )\n" +
+                     " as pedidosT\n" +
+                     "having lower(`nombre`) like %?2% and (estado > ?3 and estado <=?4) ORDER BY UNIX_TIMESTAMP(fechapedido) DESC",nativeQuery = true)
     Page<PedidoValoracionDTO> pedidosTotales2(int idCliente, String texto, Integer estado1, Integer estado2,Pageable pageable);
 
     Page<Pedido> findByEstadoAndUbicacion_DistritoOrderByFechapedidoAsc(int estado, Distrito distrito, Pageable pageable);
@@ -147,7 +144,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
 
-    @Query(value="SELECT php.codigo,pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
+    @Query(value="SELECT DISTINCT(php.codigo),pl.idplato,pl.nombre as 'nombreplato' , php.cantidad, php.preciounitario\n" +
             ", php.observacionplatillo\n" +
             "  FROM geekdevelop.plato_has_pedido  php\n" +
             "inner join plato pl on pl.idplato= php.idplato\n" +
@@ -357,22 +354,22 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
     Pedido findByCodigo(String codigo);
 
-    @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
+    @Query(value="select distinct(c.idcupon), c.nombre as 'nombrecupon',\n" +
             "       c.descuento, c.fechafin, c.politica, r.nombre as 'nombrerestaurante', \n" +
             "       chp.utilizado, chp.idcliente as 'idcliente'\n" +
             "from cupon c\n" +
-            "left join restaurante r on r.idrestaurante=c.idrestaurante\n" +
-            "left join cliente_has_cupon chp on chp.idcupon = c.idcupon \n" +
-            "where r.estado = 1 and c.estado= 2 and chp.utilizado = 0\n" +
-            "and r.nombre like %?1% and (c.descuento >?2 and c.descuento<= ?3) order by fechafin asc",countQuery ="select c.idcupon, c.nombre as 'nombrecupon',\n" +
+            "inner  join restaurante r on r.idrestaurante=c.idrestaurante\n" +
+            "inner join cliente_has_cupon chp on chp.idcupon = c.idcupon \n" +
+            "where idcliente=?1 and r.estado = 1 and c.estado= 2 and chp.utilizado = 0\n" +
+            "and r.nombre like %?2% and (c.descuento >?3 and c.descuento<= ?4) order by fechafin asc",countQuery ="select distinct(c.idcupon), c.nombre as 'nombrecupon',\n" +
             "       c.descuento, c.fechafin, c.politica, r.nombre as 'nombrerestaurante', \n" +
             "       chp.utilizado, chp.idcliente as 'idcliente'\n" +
             "from cupon c\n" +
-            "left join restaurante r on r.idrestaurante=c.idrestaurante\n" +
-            "left join cliente_has_cupon chp on chp.idcupon = c.idcupon \n" +
-            "where r.estado = 1 and c.estado= 2 and chp.utilizado = 0\n" +
-            "and r.nombre like %?1% and (c.descuento >?2 and c.descuento<= ?3) order by fechafin asc",nativeQuery = true)
-    Page<CuponClienteDTO> listaCupones(String texto, int limitInf, int limitSup, Pageable pageable);
+            "inner  join restaurante r on r.idrestaurante=c.idrestaurante\n" +
+            "inner join cliente_has_cupon chp on chp.idcupon = c.idcupon \n" +
+            "where idcliente=?1 and r.estado = 1 and c.estado= 2 and chp.utilizado = 0\n" +
+            "and r.nombre like %?2% and (c.descuento >?3 and c.descuento<= ?4) order by fechafin asc",nativeQuery = true)
+    Page<CuponClienteDTO> listaCupones(int idcliente,String texto, int limitInf, int limitSup, Pageable pageable);
 
     @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
             "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +

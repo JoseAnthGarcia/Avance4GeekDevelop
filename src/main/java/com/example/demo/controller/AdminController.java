@@ -52,8 +52,9 @@ import java.util.stream.IntStream;
 public class AdminController  {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    //public String ip = "34.227.30.44.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";//hector
+    //public String ip = "54.87.150.35.nip.io";//diego
+    //public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -2729,7 +2730,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                             valoracion = 0;
                         }
                         model.addAttribute("valoracion",valoracion);
-                        //model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
+                        model.addAttribute("direcciones", ubicacionRepository.findByUsuarioVal(usuario));
                    //     model.addAttribute("totalIngresos", totalIngresos);
                         return "AdminGen/visualizarRepartidor";
                     case "cliente":
@@ -2914,9 +2915,12 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
 
                 // TODO: 23/07/2021
-
-                    enviarCorreoValidacion2(usuario.getCorreo());
-
+                try {
+                    sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado", usuario);
+                } catch (MessagingException e) {
+                    String contenido = "Hola "+ usuario.getNombres()+" administrador esta es tu cuenta creada";
+                    sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                }
                 /////-----------------------------------------------/////
 
 
@@ -3097,7 +3101,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
                 return "AdminGen/crearAdmin";
             }
 
-            usuario.setEstado(-1);
+            usuario.setEstado(1);
             usuario.setRol(rolRepository.findById(5).get());
             String fechanacimiento = LocalDate.now().toString();
             //usuario.setFecharegistro(fechanacimiento);
@@ -3118,8 +3122,15 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
 
             /////----------------Envio Correo--------------------/////
             // TODO: 23/07/2021
+            try {
+                sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
+            } catch (MessagingException e) {
+                String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
+                sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+            }
 
-                enviarCorreoValidacion2(usuario.getCorreo());
+
+
 
             //sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Administrador creado html", usuario);
 
@@ -3130,28 +3141,7 @@ public String listaReporteVentas(@RequestParam Map<String, Object> params, Model
             return "redirect:/admin/usuarios";
         }
     }
-    public void enviarCorreoValidacion2(String correo) {
-        String codigoHash = "";
-        while (true) {
-            codigoHash = cipherPassword(generarCodigAleatorio());
-            Validarcorreo validarcorreo = validarCorreoRepository.findByHash(codigoHash);
-            if (validarcorreo == null) {
-                break;
-            }
-        }
-        Validarcorreo validarcorreo = new Validarcorreo();
-        Usuario usuario = usuarioRepository.findByCorreo(correo);
-        validarcorreo.setUsuario(usuario);
-        validarcorreo.setHash(codigoHash);
-        validarCorreoRepository.save(validarcorreo);
 
-        String subject = "VALIDAR CORREO ELECTRONICO";
-        try {
-            sendHtmlMailValidar(correo, subject, usuario, codigoHash);
-        } catch (MessagingException e) {
-            System.out.println("error al enviar correo en VALIDAR CUENTA.");
-        }
-    }
     public String cipherPassword(String text) {
         String hashedPassword = "";
         try {

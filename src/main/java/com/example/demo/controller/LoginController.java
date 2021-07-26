@@ -61,8 +61,9 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    //public String ip = "34.227.30.44.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";//hector
+    //public String ip = "54.87.150.35.nip.io";//diego
+    //public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -108,9 +109,41 @@ public class LoginController {
 
     @Autowired
     ValidarCorreoRepository validarCorreoRepository;
-    @GetMapping("")
-    public String pagiIndex(){
-return "index";
+    @GetMapping(value = {"", "/"})
+    public String pagiIndex(Model model, HttpSession httpSession){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            if (httpSession.getAttribute("noExisteCuentaGoogle") != null) {
+                model.addAttribute("noExisteCuentaGoogle", true);
+                httpSession.removeAttribute("noExisteCuentaGoogle");
+            }
+            return "index";
+        } else {
+            String rol = "";
+            for (GrantedAuthority role : authentication.getAuthorities()) {
+                rol = role.getAuthority();
+                break;
+            }
+            switch (rol) {
+                case "cliente":
+
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    return "redirect:/paginabienvenida";
+
+                case "repartidor":
+
+                    return "redirect:/repartidor/listaPedidos";
+
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
+        }
+
     }
 
     @GetMapping("/login")
@@ -181,6 +214,7 @@ return "index";
 
 
     }
+
 
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")

@@ -311,7 +311,7 @@
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a th:unless="${texto == null && nombrec == null && mes==null && anio==null}" class="page-link" th:text="${page}"
-                                                   th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&nombrec='+${nombrec}+'&mes='+${mes}+'&anio='+${anio}}"></a>
+                                                   th:href="@{'/cliente/reporteDinero?page='+${page}+'&texto='+${texto}+'&nombrec='+${nombrec}+'&mes='+${mes}+'&anio='+${anio}}"></a>
                                             </li>
                                         </ul>
                                     </nav>

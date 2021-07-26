@@ -190,7 +190,7 @@
 
           </div>
           <div class="card-body">
-            <div class="table-responsive">
+            <div th:if="${listaPedidoReporte.size()!=0}" class="table-responsive">
               <table id="tabla" class="table table-bordered">
                 <thead>
                 <tr>
@@ -231,10 +231,11 @@
                 </tbody>
 
               </table>
-              <div th:if="${listaPedidoReporte.size()==0}">
-                <h3 class="text-lg-center text-danger">No tiene repartos realizados.</h3>
-              </div>
+
             </div>
+            <div th:if="${listaPedidoReporte.size()==0}">
+            <h3 class="text-lg-center text-danger">No tiene repartos realizados.</h3>
+          </div>
             <!--Pagination -->
 
             <div th:if="${totalPages >= 1}" class="pagination justify-content-center">

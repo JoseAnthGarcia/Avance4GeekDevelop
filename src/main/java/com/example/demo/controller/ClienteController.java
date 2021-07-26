@@ -2262,7 +2262,7 @@ public class ClienteController {
                     pedido.setEstado(2);
                     pedidoRepository.save(pedido);
 
-                    /*try {
+                    try {
                         if (String.valueOf(pedido.getCupon().getIdcupon()) != null) {
                             Cliente_has_cupon chp = new Cliente_has_cupon();
                             Cliente_has_cuponKey chk = new Cliente_has_cuponKey();
@@ -2274,7 +2274,7 @@ public class ClienteController {
                         }
                     }catch (NullPointerException e){
                         //si es nulo quiere decir que no se uso cupon
-                    }*/
+                    }
 
                 }
             }

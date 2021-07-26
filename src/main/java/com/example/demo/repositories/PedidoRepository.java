@@ -160,13 +160,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
 
 
-    @Query(value ="select DISTINCT(ped.codigo),ped.cantidadapagar as cantp,r.nombre as 'nombrerest',\n" +
-            "clhp.utilizado ,ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
-            "ped.fechapedido, ped.tiempoentrega , c.nombre as 'nombrecupon', c.descuento,ped.comentrechazorest as 'obsrest' \n" +
+    @Query(value ="select c.nombre as 'nombrecupon', ped.codigo,ped.cantidadapagar as cantp,r.nombre as 'nombrerest',\n" +
+            "            ped.preciototal,ped.mismodistrito,ped.estado,ped.idmetodopago,\n" +
+            "            ped.fechapedido, ped.tiempoentrega , c.descuento,ped.comentrechazorest as 'obsrest' \n" +
             "from pedido ped \n" +
-            "left join restaurante r on ped.idrestaurante=r.idrestaurante\n" +
-            "left join cliente_has_cupon clhp on ped.idcupon = clhp.idcupon\n" +
-            "left join cupon c on ped.idcupon = c.idcupon\n"+
+            "inner join restaurante r on ped.idrestaurante=r.idrestaurante\n" +
+            "left join cupon c on ped.idcupon=c.idcupon\n" +
             "where ped.codigo = ?1", nativeQuery = true)
 
     List<Pedido1DTO> detalle1(String codigo);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CuponRepository extends JpaRepository<Cupon, Integer> {
@@ -20,6 +21,8 @@ public interface CuponRepository extends JpaRepository<Cupon, Integer> {
     Cupon buscarPorNombre(String nombre);
 
     Page<Cupon> findByIdrestauranteAndNombreIsContainingAndFechafinBetweenAndDescuentoGreaterThanEqualAndDescuentoLessThanEqual(int idrestaurante, String nombre, LocalDate fechainicio, LocalDate fechafin, int descuentoMin, int descuentoMax, Pageable pageable);
+
+    Optional<Cupon> findByIdcuponAndIdrestaurante(int idCupon, int idRest);
 
     @Query(value="select c.idcupon, c.nombre as 'nombrecupon',\n" +
             "c.descuento,c.fechafin, c.politica,r.nombre as 'nombrerestaurante', \n" +
@@ -32,4 +35,12 @@ public interface CuponRepository extends JpaRepository<Cupon, Integer> {
             "and (cl.idusuario is null || cl.idusuario = ?1) and \n" +
             "r.nombre like %?2%  and (c.descuento >=?3 and c.descuento<= ?4)",nativeQuery = true)
     Page<CuponClienteDTO> listaCupones(int idusuario,String texto, int limitInf, int limitSup, Pageable pageable);
+
+    @Query(value = "select c.* from cupon c\n" +
+            "inner join restaurante r on r.idrestaurante=c.idrestaurante\n" +
+            "inner join cliente_has_cupon chp on chp.idcupon = c.idcupon \n" +
+            "where r.estado = 1 and c.estado= 2 and chp.utilizado = 0 " +
+            "and chp.idcliente = ?1  and r.idrestaurante = ?2 ",  nativeQuery = true)
+    List<Cupon> findCuponesbyIdclienteAndRestId(int idCliente, int idRestaurante);
+
 }

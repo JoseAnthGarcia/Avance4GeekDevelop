@@ -283,7 +283,7 @@
                                         <br>
                                         <div class="row">
                                             <div class="col-6">
-                                                <div  class=" ml-2" type="text" th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} - ${pedido.getTiempoentrega()+30} min|">  </div>
+                                                <div  class=" ml-2" type="text" th:text="|Tiempo de entrega: ${pedido.getTiempoentrega()} min|">  </div>
                                             </div>
 
                                             <div class="col-6">
@@ -607,11 +607,11 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
-                                    <ul class="pagination text-center justify-content-center">
-                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{'/cliente/paginacionHistPed?page='+${page}}" th:text="${page}"></a>
-                                        </li>
 
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a th:unless="${texto == null && estado == null}" class="page-link" th:text="${page}" th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&estado='+${estado}}"></a>
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>

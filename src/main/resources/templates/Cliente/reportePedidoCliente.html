@@ -363,17 +363,16 @@
 
                             </table>
 
-                        <div class="row" th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0 } ">
+                        <div class="row">
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
-                                    <ul class="pagination text-center justify-content-center">
-                                        <li class="page-item" th:each="page : ${pages}"
-                                            th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{'/cliente/reportepedidopage?page='+${page}}"
-                                               th:text="${page}"></a>
-                                        </li>
 
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                            <a th:unless="${texto == null && numpedidos == null && mes==null && anio==null}" class="page-link" th:text="${page}"
+                                               th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&numpedidos='+${numpedidos}+'&mes='+${mes}+'&anio='+${anio}}"></a>
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>

@@ -196,11 +196,10 @@
                         <div class="col-sm-3 mb-1">
                             <select class="form-control" name="descuento">
                                 <option value="7" th:selected="${descuento.equals('7')}">Descuento</option>
-                                <option value="1" th:selected="${descuento.equals('1')}">S./0.00 hasta S./10.00</option>
-                                <option value="2" th:selected="${descuento.equals('2')}">S/10.00 hasta S/20.00</option>
-                                <option value="3" th:selected="${descuento.equals('3')}">S/20.00 hasta S/30.00</option>
-                                <option value="4" th:selected="${descuento.equals('4')}">S/30.00 hasta S/40.00</option>
-                                <option value="5" th:selected="${descuento.equals('5')}">S/40.00 hasta S/50.00</option>
+                                <option value="1" th:selected="${descuento.equals('1')}">S./0.00 hasta S./5.00</option>
+                                <option value="2" th:selected="${descuento.equals('2')}">S/5.00 hasta S/10.00</option>
+                                <option value="3" th:selected="${descuento.equals('3')}">S/10.00 hasta S/15.00</option>
+                                <option value="4" th:selected="${descuento.equals('4')}">S/15.00 hasta S/20.00</option>
                             </select>
                         </div>
 
@@ -220,7 +219,7 @@
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3" style="background-color: #701111;">
-                        <h5 class="font-weight-bold text-white text-center mb-0">CUPONES DISPONIBLES</h5>
+                        <h4 class="font-weight-bold text-white text-center mb-0">CUPONES DISPONIBLES</h4>
                     </div>
 
                     <div  class="text-center" th:if="${total==0}" >
@@ -240,7 +239,22 @@
                                     </th>
                                     <th >
                                         <div style=text-align:center>
-                                            Descripción
+                                            Restaurante
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div style=text-align:center>
+                                            Descuento
+                                        </div>
+                                    </th>
+                                    <th >
+                                        <div style=text-align:center>
+                                            Caducidad
+                                        </div>
+                                    </th>
+                                    <th >
+                                        <div style=text-align:center>
+                                            Política
                                         </div>
                                     </th>
 
@@ -255,8 +269,8 @@
                             <div class="col-6">
                                 <div class="container2">
                                     <img src="https://kinsta.com/es/wp-content/uploads/sites/8/2018/05/kinsta-cupon-1.png" alt="Avatar"
-                                         class="image2 shadow" style="height: 200px; width: 300px">
-                                    <a class="overlay2" href="#" style="height: 200px; width: 300px">
+                                         class="image2 shadow" width="110" height="100" >
+                                    <a class="overlay2" href="#" width="110" height="100" >
                                         <h1 class="text2 font-weight-bolder text-left" th:text="${cupon.getNombrecupon()}"></h1>
                                     </a>
                                 </div>
@@ -264,30 +278,27 @@
                             </div>
                             </td>
                 <!---------------------------------------------------------------------------------------------------------------------------------->
-                            <td>
+                        <td >
                             <div style=text-align:center>
-
-                                <div style=text-align:center>
-                                    <h5 class="mb-2" style="color:#701111;" th:text="${cupon.getNombrerestaurante()}"></h5>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <h5 type="text" th:text="|Descuento : - S/. ${cupon.getDescuento()}|"></h5>
-                                        </div>
-                                        <div class="col-4">
-                                            <h5 type="text" th:text="|Caducidad: ${cupon.getFechafin()}|"></h5>
-                                        </div>
-                                        <div class="col-4">
-                                            <h5 type="text" th:text="|Política : ${cupon.getPolitica()}|"></h5>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
+                                <h6 th:text="${cupon.getNombrerestaurante()}"></h6>
                             </div>
-                            </td>
+                        </td>
 
+                            <td >
+                                <div style=text-align:center>
+                                    <h6 th:text="|S/. ${cupon.getDescuento()}|"></h6>
+                                </div>
+                            </td>
+                            <td >
+                                <div style=text-align:center>
+                                    <h6 th:text="|${cupon.getFechafin()}|"></h6>
+                                </div>
+                            </td>
+                            <td>
+                                <div style=text-align:center>
+                                    <h6 th:text="|${cupon.getPolitica()}|"></h6>
+                                </div>
+                            </td>
                             <!---------------------------------------------------------------------------------------------------------------------------------->
                         </tr>
                                 </tbody>
@@ -300,12 +311,12 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
-                                    <ul class="pagination text-center justify-content-center">
 
+                                    <ul class="pagination justify-content-center">
                                         <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{'/cliente/cuponespage?page='+${page}}" th:text="${page}"></a>
+                                            <a th:unless="${texto == null && descuento == null }" class="page-link" th:text="${page}"
+                                               th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
                                         </li>
-
                                     </ul>
                                 </nav>
                             </div>

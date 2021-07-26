@@ -262,7 +262,7 @@
                                 <h4 class="font-weight-bold text-white" id="nombre_pagina"
                                     th:text="|REPORTES DE PEDIDOS DEL AÑO ${anio}|"></h4>
                             </div>
-                            <button th:if="${listarestTop.size()>0 && listarestPl.size()>0 }" id="btnExportar"
+                            <button th:if="${listarestTop.size()>0 && listarestPl.size()>0 && total>0 }" id="btnExportar"
                                     class="btn btn-warning mr-1">Exportar
                             </button>
 
@@ -293,8 +293,7 @@
                                     TOP 3 RESTAURANTES
                                 </td>
                                 <td style="color:black">
-                                    TOP 3 PLATOS MÁS VENDIDOS
-                                </td>
+                                    TOP 3 PLATOS
                             </tr>
 
                             <tr>

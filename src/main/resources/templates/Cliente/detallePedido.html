@@ -190,7 +190,7 @@
                     </div>
                     <br>
                     <div class="row justify-content-center" th:each="p1:${listapedido1}">
-                        <h5 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h5>
+                        <h5 class="col-3" style="color:black"  th:text="|Código : ${p1.getCodigo()}|"> </h5>
                         <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==0}" >Estado : Pendiente</h5>
                         <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==1}" >Estado : Aceptado</h5>
                         <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==2}" >Estado : Cancelado</h5>

@@ -86,7 +86,8 @@
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
+                            <h6 style="background-color: #701111; border: 1px solid #701111; padding-top: .75rem; padding-bottom: .75rem; color: #fff;
+                             display: block; padding: .5rem 1.5rem; margin-bottom: 0; white-space: nowrap; font-weight: 700; font-size: .95rem; color: #ffffff">
                                 Pedido actual
                             </h6>
                             <p th:if="${notificaciones.size()==0||notificaciones.isEmpty()}"> No tiene pedidos cancelados o entregados</p>
@@ -183,7 +184,7 @@
                         </div>
                         <br>
 						<div class="row justify-content-center" th:each="p1:${listapedido1}">
-							<h5 class="col-3" style="color:black"  th:text="|Codigo : ${p1.getCodigo()}|"> </h5>
+							<h5 class="col-3" style="color:black"  th:text="|Código : ${p1.getCodigo()}|"> </h5>
                             <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==0}" >Estado : Pendiente</h5>
                             <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==1}" >Estado : Aceptado</h5>
                             <h5 class="col-3 offset-md-3" style="color:black" th:if="${p1.getEstado==2}" >Estado : Cancelado</h5>

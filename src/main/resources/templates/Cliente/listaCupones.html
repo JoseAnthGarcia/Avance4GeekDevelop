@@ -311,12 +311,12 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
                                 <nav aria-label="pagination">
-                                    <ul class="pagination text-center justify-content-center">
 
+                                    <ul class="pagination justify-content-center">
                                         <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
-                                            <a class="page-link" th:href="@{'/cliente/cuponespage?page='+${page}}" th:text="${page}"></a>
+                                            <a th:unless="${texto == null && descuento == null }" class="page-link" th:text="${page}"
+                                               th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&descuento='+${descuento}}"></a>
                                         </li>
-
                                     </ul>
                                 </nav>
                             </div>

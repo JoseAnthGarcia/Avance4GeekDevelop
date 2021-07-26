@@ -36,7 +36,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 @Controller
 @RequestMapping("/restaurante")
 public class AdminRestController {
@@ -70,6 +69,8 @@ public class AdminRestController {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+    @Autowired
+    ClienteHasCuponRepository clienteHasCuponRepository;
 
     @GetMapping("/imagenadmin/{id}")
     public ResponseEntity<byte[]> mostrarImagen(@PathVariable("id") String id) {
@@ -120,21 +121,21 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
         System.out.println(today);
 
-        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00","", "1", restaurante.getIdrestaurante(), model, session);
+        return findPaginated("", "0", "0", today, "3000-05-21 00:00:00", "", "1", restaurante.getIdrestaurante(), model, session);
     }
 
     @GetMapping("/page")
@@ -243,9 +244,9 @@ public class AdminRestController {
                 String pattern2 = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
                 fechafin3 = simpleDateFormat2.format(fechafin2);
-                if(fechafin.equalsIgnoreCase("3000-05-21 00:00:00")){
+                if (fechafin.equalsIgnoreCase("3000-05-21 00:00:00")) {
                     model.addAttribute("fechafin", null);
-                }else {
+                } else {
                     model.addAttribute("fechafin", fechafin);
                 }
             } catch (ParseException e) {
@@ -285,9 +286,9 @@ public class AdminRestController {
                 String patternHoy = "yyyy-MM-dd 00:00:00";
                 SimpleDateFormat simpleDateFormatHoy = new SimpleDateFormat(patternHoy);
                 String comparar = simpleDateFormatHoy.format(hoy);
-                if(fechainicio.equalsIgnoreCase(comparar)){
+                if (fechainicio.equalsIgnoreCase(comparar)) {
                     model.addAttribute("fechainicio", null);
-                }else {
+                } else {
                     model.addAttribute("fechainicio", fechainicio);
                 }
             } catch (ParseException e) {
@@ -300,14 +301,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         page = pedidoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), textBuscador, textDireccion, inputEstadoMin, inputEstadoMax, inputPMin * 20 - 20, inputPMax * 20, fechainicio3, fechafin3);
         listaPedidos = page.getContent();
 
@@ -331,16 +332,16 @@ public class AdminRestController {
                                  RedirectAttributes attr,
                                  Model model, HttpSession session) {
         boolean cometariovacio = false;
-        String s3=comentarioAR.trim();
+        String s3 = comentarioAR.trim();
 
-        Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s]+$/g]{2,254}");
+        Pattern pat = Pattern.compile("[/^[A-Za-záéíñóúüÁÉÍÑÓÚÜ_.\\s \\d]+$/g]{2,254}");
         Matcher mat = pat.matcher(s3);
         if (mat.matches()) {
             cometariovacio = false;
         } else {
             cometariovacio = true;
         }
-    
+
         Usuario adminRest = (Usuario) session.getAttribute("usuario");
         int idr = adminRest.getIdusuario();
 
@@ -348,29 +349,32 @@ public class AdminRestController {
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
-        
-        if (pedido != null && !cometariovacio) {
-            if (pedido.getEstado() == 0) {
-                if (comentarioAR != null || !cometariovacio) {
-                    pedido.setEstado(2);
-                    pedido.setComentrechazorest(s3);
-                    pedidoRepository.save(pedido);
-                    attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
-                } else {
-                    attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
+        try {
+            if (pedido != null && !cometariovacio) {
+                if (pedido.getEstado() == 0) {
+                    if (comentarioAR != null || !cometariovacio) {
+                        pedido.setEstado(2);
+                        pedido.setComentrechazorest(s3);
+                        pedidoRepository.save(pedido);
+                        attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
+                    } else {
+                        attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
+                    }
                 }
-
+            } else {
+                attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
             }
-        }else{
-            attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
+
+        }catch (NullPointerException e){
+            System.out.println("capturó la excepcion");
         }
         return "redirect:/restaurante/listaPedidos";
     }
@@ -385,14 +389,14 @@ public class AdminRestController {
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         if (pedido != null) {
             if (pedido.getEstado() == 0) {
                 pedido.setEstado(1);
@@ -415,14 +419,14 @@ public class AdminRestController {
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         if (pedido != null) {
             if (pedido.getEstado() == 1) {
                 pedido.setEstado(3);
@@ -444,14 +448,14 @@ public class AdminRestController {
         Pedido pedido = pedidoRepository.pedidosXrestauranteXcodigo(restaurante.getIdrestaurante(), id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         if (pedido != null) {
             if (pedido.getEstado() == 3) {
                 pedido.setEstado(4);
@@ -479,14 +483,14 @@ public class AdminRestController {
         }
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         List<PlatoPorPedidoDTO> listaPlatos = pedidoRepository.platosPorPedido(restaurante.getIdrestaurante(), codigoPedido);
         List<ExtraPorPedidoDTO> listaExtras = pedidoRepository.extrasPorPedido(codigoPedido);
         BigDecimal sumatotalPlato = new BigDecimal("0.00");
@@ -514,14 +518,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         return findPaginatedRepVen("", "1980-05-21", "3000-05-21", "0", "1", restaurante.getIdrestaurante(), model, session);
     }
 
@@ -594,9 +598,9 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechafin2 = simpleDateFormat.parse(fechafin);
-                if(fechafin.equalsIgnoreCase("3000-05-21")){
+                if (fechafin.equalsIgnoreCase("3000-05-21")) {
                     model.addAttribute("fechafin", null);
-                }else {
+                } else {
                     model.addAttribute("fechafin", fechafin);
                 }
             } catch (ParseException e) {
@@ -610,9 +614,9 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio2 = simpleDateFormat.parse(fechainicio);
-                if(fechainicio.equalsIgnoreCase("1980-05-21")){
+                if (fechainicio.equalsIgnoreCase("1980-05-21")) {
                     model.addAttribute("fechafin", null);
-                }else {
+                } else {
                     model.addAttribute("fechainicio", fechainicio);
                 }
             } catch (ParseException e) {
@@ -627,14 +631,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         page = reporteVentasService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, fechainicio, fechafin, textCodigo, inputPrecioMin * 20 - 20, inputPrecioMax * 20);
         listaVentasReporte = page.getContent();
 
@@ -660,14 +664,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         return findPaginatedRepVal("6", "1980-05-21", "3000-05-21", "1", restaurante.getIdrestaurante(), model, session);
     }
 
@@ -728,9 +732,9 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechafin2 = simpleDateFormat.parse(fechafin);
-                if(fechafin.equalsIgnoreCase("3000-05-21")){
+                if (fechafin.equalsIgnoreCase("3000-05-21")) {
                     model.addAttribute("fechafin", null);
-                }else {
+                } else {
                     model.addAttribute("fechafin", fechafin);
                 }
             } catch (ParseException e) {
@@ -746,9 +750,9 @@ public class AdminRestController {
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 fechainicio2 = simpleDateFormat.parse(fechainicio);
-                if(fechainicio.equalsIgnoreCase("1980-05-21")){
+                if (fechainicio.equalsIgnoreCase("1980-05-21")) {
                     model.addAttribute("fechafin", null);
-                }else {
+                } else {
                     model.addAttribute("fechainicio", fechainicio);
                 }
             } catch (ParseException e) {
@@ -762,14 +766,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         page = reporteValoracionService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, inputValoracion, fechainicio, fechafin);
         listaValoracionReporte = page.getContent();
 
@@ -794,14 +798,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         return findPaginatedRepPla("", "0", "0", "1", restaurante.getIdrestaurante(), model, session);
     }
 
@@ -894,14 +898,14 @@ public class AdminRestController {
 
                 List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
                 model.addAttribute("listaNotiRest", listaNotificacion);
-                List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+                List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
                 List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-                List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-                List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+                List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+                List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
                 model.addAttribute("credencial1", credencialRest1DTOS);
                 model.addAttribute("platoMasVendido", platoTOP);
                 model.addAttribute("platoMenosVendido", platoDOWN);
-                model.addAttribute("pedidosCredenciales",pedidosDTOList);
+                model.addAttribute("pedidosCredenciales", pedidosDTOList);
                 page = reportePlatoService.findPaginated(pageNo, pageSize, restaurante.getIdrestaurante(), 6, textBuscador, inputCategoria, inputCantidadMin * 5 - 5, inputCantidadMax * 5);
                 listaPlatoReporte = page.getContent();
 
@@ -937,14 +941,14 @@ public class AdminRestController {
         Restaurante restaurante = restauranteRepository.encontrarRest(id);
         List<NotifiRestDTO> listaNotificacion = pedidoRepository.notificacionPeidosRestaurante(restaurante.getIdrestaurante(), 3);
         model.addAttribute("listaNotiRest", listaNotificacion);
-        List<CredencialRest1DTO> credencialRest1DTOS=pedidoRepository.credencialRest(restaurante.getIdrestaurante());
+        List<CredencialRest1DTO> credencialRest1DTOS = pedidoRepository.credencialRest(restaurante.getIdrestaurante());
         List<CredencialRest2DTO> platoTOP = pedidoRepository.platoMasVendido(restaurante.getIdrestaurante());
-        List<CredencialRest2DTO> platoDOWN= pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
-        List<CredencialPedidosDTO> pedidosDTOList= pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
+        List<CredencialRest2DTO> platoDOWN = pedidoRepository.platoMenosVendido(restaurante.getIdrestaurante());
+        List<CredencialPedidosDTO> pedidosDTOList = pedidoRepository.pedidosCredencia(restaurante.getIdrestaurante());
         model.addAttribute("credencial1", credencialRest1DTOS);
         model.addAttribute("platoMasVendido", platoTOP);
         model.addAttribute("platoMenosVendido", platoDOWN);
-        model.addAttribute("pedidosCredenciales",pedidosDTOList);
+        model.addAttribute("pedidosCredenciales", pedidosDTOList);
         return "AdminRestaurante/eleccionReporte";
     }
 

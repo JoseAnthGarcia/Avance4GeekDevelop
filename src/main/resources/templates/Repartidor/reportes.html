@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reportes')"></head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(notificaciones=${notificaciones})"></nav>
+        <div class="container-fluid">
+
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3" style="background-color: #701111;">
+                    <h5 class="font-weight-bold text-white text-center mb-0">REPORTES</h5>
+                </div>
+                <div class="row">
+                        <div class="col-lg-6 mb-5 mt-5" >
+                            <div class="container2 "style="justify-content: center" >
+                                <img src="https://cdn.iconscout.com/icon/free/png-512/home-delivery-1901776-1607975.png" alt="Avatar"
+                                     class="image2 shadow"
+                                     style="height: 300px; width: 400px;margin-right: auto; margin-left: auto">
+                                <a class="overlay2" style="height: 300px; width: 400px;margin-right: auto; margin-left: auto" th:href="@{'/repartidor/reporteDelivery2'}">
+                                    <H1 class="text2 font-weight-bolder">DELIVERYS</H1>
+                                </a>
+                            </div>
+
+                        </div>
+                    <div class="col-lg-6 mb-5 mt-5 mx-auto" >
+                        <div class="container2 "style="justify-content: center" >
+                            <img src="https://economipedia.com/wp-content/uploads/Ingreso-1.png" alt="Avatar"
+                                 class="image2 shadow"
+                                 style="height: 300px; width: 400px;margin-right: auto; margin-left: auto">
+                            <a class="overlay2" style="height: 300px; width: 400px;margin-right: auto; margin-left: auto"th:href="@{'/repartidor/reporteIngresos'}">
+                                <H1 class="text2 font-weight-bolder">INGRESOS</H1>
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="Repartidor/fragments/generalRepartidor.html :: libs">
+</div>
+<script th:src="@{/js/exportar.js}"></script>
+
+</body>
+<!-- Core plugin JavaScript-<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>-->
+
+
+</html>

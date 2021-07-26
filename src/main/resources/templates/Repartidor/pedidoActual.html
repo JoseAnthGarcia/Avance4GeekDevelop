@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Pedido actual')"></head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(notificaciones=${notificaciones})"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- DataTales Example -->
+                <div th:if="${msg != null}" th:text="${msg}" class="col-lg-12 alert alert-danger" ></div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+
+                        <div class="d-sm-flex align-items-center justify-content-between">
+
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">ENTREGA ACTUAL</h5>
+
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-sm-6" th:object="${pedidoAct}">
+                                        <div class="row">
+                                            <h1 class="card-title"
+                                                style="color: black"
+                                                th:text="|${pedidoAct.getRestaurante().nombre} - ${pedidoAct.ubicacion.distrito.nombre}|">Ceviche - Restaurante Marino</h1>
+                                            <h3 class="card-title"
+                                                style="color: black; position: relative; bottom: 10px"
+                                                th:text="|${pedidoAct.codigo}|">Ceviche - Restaurante Marino</h3>
+                                            <p class="card-text"
+                                               th:utext="'Dirección de restaurante: '+${pedidoAct.restaurante.direccion}
+                                            +'<br>Direción de envio: '+${pedidoAct.cliente.direccionactual}
+                                             +'<br>Cliente: '+${pedidoAct.cliente.nombres +' '+ pedidoAct.cliente.apellidos }
+                                            +'<br>Teléfono de cliente: '+${pedidoAct.cliente.telefono}
+                                            +'<br>Hora de registro de pedido: '+${pedidoAct.fechapedido}
+                                            +'<br>Método de pago : '+${pedidoAct.metodopago.tipo}+'-S/.'+${pedidoAct.preciototal}">Dirección de restaurante: Av. Universitaria 345<br>
+                                                Direción de cliente: Av. Universitaria 987<br>
+                                                Producto: Ceviche<br>
+                                                Hora de registro de pedido:   17:49<br>
+                                                Método de pago : Efectivo</p>
+                                        </div>
+                                        <div style="position: relative; bottom: 2%; right: 3%"  class="mt-0 ml-0">
+                                            <p class="card-text mt-0 mb-0">Platos:</p>
+                                            <p  class="card-text mb-0" th:each="plato : ${platosPorPedido}"th:utext="'-'+${plato.nombre}"></p>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <img  th:src="@{'/repartidor/images?id='+${pedidoAct.restaurante.idrestaurante}}" class="img-fluid">
+                                        <!--<img src="https://media-cdn.tripadvisor.com/media/photo-s/0f/70/b9/5f/salon-principal.jpg" class="img-fluid mx-auto" style="width: 90%; height: 70%">-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+
+                        <div class="d-sm-flex align-items-center justify-content-between">
+
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto">PROCESO DE LA ENTREGA</h5>
+
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                <!-- <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <h4  style="color: black">Confirmación de la recepción del pedido</h4>
+                                            <p >Si el pedido fue recogido del restaurante y ya se encuentra
+                                                en camino hacia la dirección del cliente, confirme su recepción.</p>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                       <a  class="btn " style="background-color: black; color: white">Confirmar</a>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <h4  style="color: black">Finalizar entrega</h4>
+                                            <p >Si el pedido fue recogido del restaurante y ya se encuentra
+                                                en camino hacia la dirección del cliente, confirme su recepción.</p>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-6 mx-auto" style="position: relative; left: 25%">
+                                        <a  class="btn " style="background-color: black; color: white"
+                                            data-toggle="modal" data-target="#finalizarModal" href="#">Confirmar</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                    </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Geek Developers &copy; 2021-1</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+                </div>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- /.container-fluid -->
+
+
+        </div>
+        <!-- End of Main Content -->
+
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<!-- FInalizar Modal-->
+<div class="modal fade" id="finalizarModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header notificacion">
+                <h4 class="modal-title" style="color:white;">Finalizar entrega del pedido</h4>
+            </div>
+            <div class="modal-body">
+                <p class="card-text" >
+                    Si presionas el botón "Confirmar", confirmas que se ha realizado la entrega del pedido satisfactoriamente</p>
+
+                <a class="btn btn-success " style="position: relative; left: 36%"  th:href="@{'/repartidor/pedidoEntregado?codigo='+${pedidoAct.codigo}}">Confirmar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="Repartidor/fragments/generalRepartidor.html :: libs">
+</div>
+
+</body>
+
+<!-- Core plugin JavaScript-<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>$(document).ready(function () {
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image_preview').attr('src', e.target.result);
+                $('#image_preview').removeAttr('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+            console.log(input.files[0].name.split(".")[1])
+            let extensions = ['jpg', 'jpeg', 'png']
+            if (!(extensions.includes(input.files[0].name.split(".")[1]))) {
+                $('#photo_error').text('Debe adjuntar archivos con extensión png, bmp o jpg').removeAttr('hidden');
+                $('#error').attr('hidden', 'true');
+            } else {
+                $('#photo_error').attr('hidden', 'true');
+            }
+        }
+    }
+
+    $("#imagen").change(function () {
+        console.log("sdafefdgsagsagasdg");
+        readURL(this);
+    });
+})</script>-->
+
+
+</html>

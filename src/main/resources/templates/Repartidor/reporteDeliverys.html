@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
+<head th:replace="Repartidor/fragments/generalRepartidor.html :: head_page(page_name = 'Reporte de deliverys')"></head>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+<script>
+    /*$(document).ready(function(){
+
+        var cantPedidos = document.getElementsByTagName("tr").length-1;
+        var tampag = 2;
+        var pagAct = 1;
+        generarPaginacion();
+        generarPagina1();
+        function generarPaginacion(){
+            $(".pagination").append("<a class='butPag'>«</a>");
+            for(i=1; i<=Math.ceil(cantPedidos/tampag);i++){
+                $(".pagination").append("<a id='pag"+i+"' class='butPag'>"+i+"</a>");
+            }
+            $(".pagination").append("<a class='butPag'>»</a>");
+        }
+
+        $(".pagination").on("click", ".butPag", function(){
+            var pag = parseInt(this.innerHTML,10);
+
+            if(pag!=pagAct){
+                $("#pag"+pagAct).removeClass("active");
+                $("#pag"+pag).addClass("active");
+                pagAct= pag;
+            }
+
+            for(i=1; i<=cantPedidos;i++){
+                console.log("i:"+ i);
+                if(i>tampag*(pag-1) && i<=tampag*(pag)){
+                    console.log("if true");
+                    $("#"+i).show();
+                }else{
+                    console.log("if false");
+                    $("#"+i).hide();
+                }
+            }
+
+        });
+
+        function generarPagina1(){
+            $("#pag1").addClass("active");
+            var pag = 1;
+            for(i=1; i<=cantPedidos;i++){
+                console.log("i:"+ i);
+                if(i>tampag*(pag-1) && i<=tampag*(pag)){
+                    console.log("if true");
+                    $("#"+i).show();
+                }else{
+                    console.log("if false");
+                    $("#"+i).hide();
+                }
+            }
+        }
+
+    });¨*/
+
+</script>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="Repartidor/fragments/generalRepartidor.html :: topbar" ></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="Repartidor/fragments/generalRepartidor.html :: navbar(notificaciones=${notificaciones})"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- DataTales Example -->
+                <form th:action="@{/repartidor/reporteDelivery}" method="get">
+
+                    <div class="row">
+                        <div class="col-sm-3  mb-2">
+                            <input type="busquedaRestaurante" class="form-control"
+                                   name="nombreRest"
+                                   placeholder="Búsqueda por restaurante" th:if="${nombreRest.equals('')}">
+                            <input type="busquedaRestaurante" class="form-control"
+                                   name="nombreRest"
+                                   th:value="${nombreRest}" th:unless="${nombreRest.equals('')}">
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control" name="idDistrito" th:if="${idDistrito.equals('')}">
+                                <option value="" disabled selected>Buscar por distrito</option>
+                                <option th:each="distrito : ${distritos}"
+                                        th:value="${distrito.iddistrito}"
+                                        th:text="${distrito.nombre}">Cercado de Lima</option>
+                            </select>
+                            <select class="form-control" name="idDistrito" th:unless="${idDistrito.equals('')}">
+                                <option th:each="distrito : ${distritos}"
+                                        th:value="${distrito.iddistrito}"
+                                        th:text="${distrito.nombre}"
+                                        th:selected="${idDistrito==distrito.iddistrito}">Cercado de Lima</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 m-b-2">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMin.equals('1900-01-01')}">
+                            <input placeholder="Desde" class="form-control" type="text"
+                                   name="fechaMin" onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMin}"
+                                   th:unless="${fechaMin.equals('1900-01-01')}">
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')"
+                                   th:if="${fechaMax.equals('3000-01-01')}">
+                            <input placeholder="Hasta" class="form-control"
+                                   type="text" name="fechaMax"
+                                   onfocus="(this.type='date')"
+                                   onblur="(this.type='text')" th:value="${fechaMax}"
+                                   th:unless="${fechaMax.equals('3000-01-01')}">
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control" name="monto" th:if="${monto.equals('')}">
+                                <option value="" disabled selected>Monto</option>
+                                <option value="1" >S/. 0.0 - S/. 20.0</option>
+                                <option value="2" >S/. 20. - S/. 40.0</option>
+                                <option value="3" >S/. 40.0 - S/. 60.0</option>
+                                <option value="4" >S/. 60.0 a más</option>
+                            </select>
+                            <select class="form-control" name="monto" th:unless="${monto.equals('')}">
+                                <option value="1" th:selected="${monto.equals('1')}">S/. 0.0 - S/. 20.0</option>
+                                <option value="2" th:selected="${monto.equals('2')}">S/. 20. - S/. 40.0</option>
+                                <option value="3" th:selected="${monto.equals('3')}">S/. 40.0 - S/. 60.0</option>
+                                <option value="4" th:selected="${monto.equals('4')}">S/. 60.0 a más</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <select class="form-control" name="valoracion" th:if="${valoracion.equals('')}">
+                                <option value="" disabled selected>Valoracion</option>
+                                <option value="1" >0 - 2</option>
+                                <option value="2" >2 - 5</option>
+                            </select>
+                            <select class="form-control" name="valoracion" th:unless="${valoracion.equals('')}">
+                                <option value="" disabled selected>Valoracion</option>
+                                <option value="1" th:selected="${valoracion.equals('1')}">0 - 2</option>
+                                <option value="2" th:selected="${valoracion.equals('2')}">2 - 5</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-3 mb-2" style="text-align: right">
+                            <a class="btn btn-secondary " th:href="@{/repartidor/reporteDelivery}">Quitar filtros</a>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 " style="background-color: #701111;">
+
+                        <div class="d-sm-flex align-items-center justify-content-between">
+
+                            <h5 class="font-weight-bold text-white text-lg-center mx-auto " id="nombre_pagina">REPORTE DE ENTREGAS REALIZADAS</h5>
+                            <button id="btnExportar" class="btn btn-warning mr-1 ">Exportar</button>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tabla" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        N°
+                                    </th>
+                                    <th class="text-center">
+                                        Código
+                                    </th>
+                                    <th class="text-center">
+                                        Restaurante
+                                    </th>
+
+                                    <th class="text-center">
+                                        Distrito
+                                    </th>
+                                    <th class="text-center">
+                                        Fecha
+                                    </th>
+                                    <th class="text-center">
+                                        Monto
+                                    </th>
+                                    <th class="text-center">
+                                        Valoración
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="pedido, i : ${listaPedidoReporte}" th:id="${i.index +1}">
+                                    <td style="width: 300px" th:text="${tamPag*(pag - 1)+ i.index +1}">1</td>
+                                    <td style="width: 160px" th:text="${pedido.codigo}">123455</td>
+                                    <td style="width: 250px" th:text="${pedido.restaurante.nombre}">La Leña</td>
+                                    <td style="width: 160px" th:text="${pedido.ubicacion.distrito.nombre}">La Molina</td>
+                                    <td style="width: 160px" th:text="${pedido.fechapedido}">04/02/2021</td>
+                                    <td style="width: 160px" th:text="${pedido.preciototal}">S/. 32.0</td>
+                                    <td style="width: 160px" th:text="${pedido.valoracionrepartidor}">4.5</td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                            <div th:if="${listaPedidoReporte.size()==0}">
+                                <h3 class="text-lg-center text-danger">No tiene repartos realizados.</h3>
+                            </div>
+                        </div>
+                        <!--Pagination -->
+
+                        <div th:if="${totalPages >= 1}" class="pagination justify-content-center">
+                            <div th:each="i: ${#numbers.sequence(1,totalPages)}" class="page-item">
+
+                                <a th:if="${pag != i}"
+                                   th:href="@{'/repartidor/reporteDelivery?nombreRest='+${nombreRest}
+                                    + '&idDistrito='+ ${idDistrito}+ '&fechaMin='+ ${fechaMin}+ '&fechaMax='+ ${fechaMax}
+                                    + '&monto='+ ${monto} + '&valoracion='+ ${valoracion}+'&pag=' + ${i}} "
+                                   th:utext="${i}"
+                                   class="active page-link "></a>
+                                <a th:unless="${pag != i}"
+                                   th:utext="${i}" class=" page-link " style="pointer-events: none ;background-color: #701111; color: #FFFFFF"></a>
+                            </div>
+                        </div>
+                        <!-- End of pagination -->
+                    </div>
+                    <!-- Footer -->
+                    <footer class="sticky-footer bg-white">
+                        <div class="container my-auto">
+                            <div class="copyright text-center my-auto">
+                                <span>Geek Developers &copy; 2021-1</span>
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- End of Footer -->
+                </div>
+
+            </div>
+
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea Salir?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
+            <div class="modal-footer">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="Repartidor/fragments/generalRepartidor.html :: libs">
+</div>
+<script th:src="@{/js/exportar.js}"></script>
+</body>
+
+
+</html>

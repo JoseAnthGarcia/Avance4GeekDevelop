@@ -20,39 +20,36 @@
         <div id="content">
 
             <!-- Begin of Topbar -->
-            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar"></nav>
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
 
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <form th:action="@{/admin/buscador}" method="get">
+                <form th:action="@{/admin/usuarios}" method="get">
 
                     <div class="form-group row">
-                        <div class="col-sm-3 mb-1 ">
-                            <input th:if="${textoBuscador == null}" type="text" class="form-control" name="texto"
-                                   placeholder="Búsqueda por usuario" >
-                            <input th:unless="${textoBuscador == null}" th:value="${textoBuscador}" type="text"
-                                   class="form-control" name="texto"
-                                   placeholder="Búsqueda por usuario" >
+                        <div class="col-sm-3 mb-1" >
+                            <input type="text" class="form-control" name="texto"
+                                   th:value="${texto.equals('')?'':texto}"
+                                   th:placeholder="${texto.equals('')?'Búsqueda por usuario...':texto}">
                         </div>
                         <div class="col-sm-2 mb-1">
-                            <select th:if="${rolBuscador == null}" class="form-control" name="idRol">
-                                <option value="" disabled selected>Rol</option>
-                                <option value="1">Cliente</option>
-                                <option value="3">Administrador de Restaurante</option>
-                                <option value="4">Repartidor</option>
+                            <select class="form-control" name="idrol">
+                                <option value="6"  selected>Rol</option>
+                                <option value="1"  th:selected="${idrol.equals('1')}">Cliente</option>
+                                <option value="3" th:selected="${idrol.equals('3')}">Administrador Restaurante</option>
+                                <option value="4" th:selected="${idrol.equals('4')}">Repartidor</option>
+                                <option value="5" th:selected="${idrol.equals('5')}">Administrador</option>
+
+
                             </select>
-                            <select th:unless="${rolBuscador == null}" class="form-control" name="idRol">
-                                <option value="" disabled selected>Rol</option>
-                                <option th:selected="${rolBuscador == 1}" value="1">Cliente</option>
-                                <option th:selected="${rolBuscador == 3}" value="3">Administrador de Restaurante</option>
-                                <option th:selected="${rolBuscador == 4}" value="4">Repartidor</option>
-                            </select>
+
+
                         </div>
 
-                        <div class="col-sm-2 mb-1">
+                       <!--  <div class="col-sm-2 mb-1">
                             <select th:if="${fechaBuscador == null}" class="form-control" name="fechaRegsitro">
                                 <option value="" disabled selected>Fecha de Registro</option>
                                 <option value="1">Hoy</option>
@@ -67,18 +64,14 @@
                                 <option th:selected="${fechaBuscador == 30}" value="30">Este mes</option>
                                 <option th:selected="${fechaBuscador == 365}" value="365">Este año</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-sm-2 mb-1">
-                            <select th:if="${estadoBuscador == null}" class="form-control" name="estado">
-                                <option value="" disabled selected>Estado</option>
-                                <option value="0">Bloqueado</option>
-                                <option value="1">Activo</option>
-                            </select>
-                            <select th:unless="${estadoBuscador == null}" th:value="${estadoBuscador}"
-                                    class="form-control" name="estado">
-                                <option value="" disabled selected>Estado</option>
-                                <option th:selected="${estadoBuscador == 0}" value="0">Bloqueado</option>
-                                <option th:selected="${estadoBuscador == 1}" value="1">Activo</option>
+
+                            <select class="form-control" name="estado">
+                                <option value="3" selected>Estado</option>
+                                <option value="0" th:selected="${estado.equals('0')}">Bloqueado</option>
+                                <option value="1" th:selected="${estado.equals('1')}">Activo</option>
+
                             </select>
                         </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
@@ -92,7 +85,6 @@
                     </div>
                 </form>
 
-
                 <!-- DataTales Example -->
                 <div class="card shadow ">
 
@@ -102,13 +94,26 @@
 
                     </div>
                         <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-image table-responsive">
+
+                            <div class="alert alert-success" role="alert"
+                                 th:if="${msgAceptado !=null}" th:text="${msgAceptado}">
+                            </div>
+                            <div class="alert alert-warning" role="alert"
+                                 th:if="${msg !=null}" th:text="${msg}">
+                            </div>
+                            <div class="alert alert-danger" role="alert"
+                                 th:if="${msgBloqueado !=null}" th:text="${msgBloqueado}">
+                            </div>
+
+                        <div th:if="${listaUsuarios.size() > 0 && listaUsuarios != null}" class="table-responsive">
+                            <table class="table table-bordered" >
                                 <thead>
                                 <tr>
                                     <th class="text-center">
                                         N°
                                     </th>
+                                    <div class="topbar-divider d-none d-sm-block"></div>
+
                                     <th class="text-center">
                                         Usuario
                                     </th>
@@ -117,12 +122,12 @@
                                     </th>
 
                                     <th class="text-center">
-                                        Última fecha de ingreso
+                                         Fecha de Registro
                                     </th>
                                     <th class="text-center">
                                         Estado
                                     </th>
-                                    <th class="text-center">
+                                    <th class="text-center"  th:if="${session.usuario.rol.idrol==2}">
                                         Des/Bloquear
                                     </th>
                                     <th class="text-center">
@@ -133,7 +138,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each= "usuario, v : ${listaUsuarios}">
-                                    <td th:text="${v.index + 1}" class="text-center" style="width: 150px"></td>
+                                    <td th:text="${(current -1)*10 + v.index +1}" class="text-center" style="width: 150px"></td>
                                     <td th:text="${usuario.nombres} +' '+${usuario.apellidos}" class="text-center" style="width: 450px"></td>
                                     <td th:switch="${usuario.rol.tipo}" class="text-center" style="width: 450px">
                                         <div th:case="cliente" th:text="|Cliente|"></div>
@@ -141,11 +146,11 @@
                                         <div th:case="administrador" th:text="|Administrador|"></div>
                                         <div th:case="repartidor" th:text="|Repartidor${usuario.sexo == 'femenino' ? 'a':''}|"></div>
                                     </td>
-                                    <td th:text="${usuario.ultimoingreso}" class="text-center" style="width: 250px"></td>
-                                    <td th:text="${usuario.estado == 1 ? 'ACEPTADO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
-                                    <td>
-                                        <a th:if="${usuario.estado != 0}" th:href="@{'/admin/bloqueado?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
-                                        <a th:unless="${usuario.estado != 0}" th:href="@{'/admin/bloqueado?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
+                                    <td th:text="${usuario.fecharegistro}" class="text-center" style="width: 250px"></td>
+                                    <td th:text="${usuario.estado == 1 ? 'ACTIVO' : 'BLOQUEADO' }" class="text-center" style="width: 250px"></td>
+                                    <td th:if="${session.usuario.rol.idrol==2}">
+                                        <a th:if="${usuario.estado != 0}" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm"><i class="fas fa-lock"></i></a>
+                                        <a th:unless="${usuario.estado != 0 }" th:href="@{'/admin/actualizar?idUsuario='+${usuario.idusuario}}" class="btn btn-secondary btn-circle btn-sm" style="background-color: #701111;"><i class="fas fa-lock-open"></i></a>
                                     </td>
                                     <td><a th:href="@{'/admin/detalle?idUsuario='+${usuario.idusuario}}" class="btn btn-warning btn-circle btn-sm" ><i class="fas fa-info"></i></a></td>
                                 </tr>
@@ -153,21 +158,47 @@
                             </table>
 
                         </div>
-                        <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                            <a  href="#">&laquo;</a>
-                            <a  href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">&raquo;</a>
-                        </div>
-                    </div>
-                </div>
+                            <!--<div class="pagination" style=" margin-left: 630px ;align-content: center">
+                                <a  href="#">&laquo;</a>
+                                <a  href="#" class="active">1</a>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                <a href="#">5</a>
+                                <a href="#">6</a>
+                                <a href="#">&raquo;</a>
+                            </div>-->
+                            <div th:if="${estadoBuscador == 1 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados para su búsqueda.</h3>
+                            </div>
+                            <div th:if="${estadoBuscador == 0 && (listaUsuarios.size() == 0 || listaUsuarios == null)}">
+                                <h3 class="text-lg-center text-danger">No hay resultados.</h3>
+                            </div>
 
-            </div>
-            <!-- /.container-fluid -->
+                            <div class="row"  th:if="${listaUsuarios.size() != 0 || listaUsuarios != null}" >
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <!--<li class="page-item hidden" th:classappend="${prev == 0 ? 'disabled': ''}">
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${prev}|}">Anterior</a>
+                                            </li>-->
+                                            <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
+                                                <a class="page-link" th:href="@{|/admin/pagina/?page=${page}|}" th:text="${page}"></a>
+                                            </li>
+                                            <!-- <li class="page-item hidden" th:classappend="${current == last ? 'disabled': ''}">
+                                                 <a class="page-link" th:href="@{|/admin/pagina/?page=${next}|}">Siguiente</a>
+                                             </li>-->
+                                         </ul>
+                                     </nav>
+                                 </div>
+                                 <div class="col-md-2"></div>
+                             </div>
+                     </div>
+                 </div>
+
+             </div>
+             <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
@@ -216,22 +247,21 @@
 </div>
 
 
-<!-- Bootstrap core JavaScript-->
-<script src="../../static/bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../../static/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../../static/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../../static/bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../../static/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../../static/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../../static/bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
 </body>
 

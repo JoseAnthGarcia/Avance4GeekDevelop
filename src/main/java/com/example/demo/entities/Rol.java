@@ -3,9 +3,11 @@ package com.example.demo.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table(name="rol")
 public class Rol implements Serializable {
 
     @Id

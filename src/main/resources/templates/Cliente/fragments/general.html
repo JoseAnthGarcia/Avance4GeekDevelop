@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 <head th:fragment="header (title)">
-    <title th:text="${title}"></title>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="icon" th:href="@{/img/icono_shop.ico}" type="image/x-icon"/>
+    <title th:text="${title}"></title>
     <!-- Custom fonts for this template -->
     <link  th:href="@{/vendor/fontawesome-free/css/all.css}" rel="stylesheet" type="text/css">
     <link
@@ -18,18 +19,23 @@
     <!-- href="./static/css/sb-admin-2.css"Custom styles for this template src/main/resources/templates/bootstrap/blank.html -->
     <link  th:href="@{/css/sb-admin-2.css}" rel="stylesheet">
 
+    <!--comentado1-->
 
-    <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">
+    <!-- <link th:href="@{/cssAR/estilosAdminRest.css}" rel="stylesheet" type="text/css">-->
+
     <!-- Custom styles for this page -->
     <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
     <link  th:href="@{/cssC/estilosCliente.css}" rel="stylesheet" type="text/css">
-
 
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
     <!-- Core plugin JavaScript-->
     <script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
+
+    <script th:src="@{/js/xlsx.full.min.js}"></script>
+    <script th:src="@{/js/FileSaver.min.js}"></script>
+    <script th:src="@{/js/tableexport.min.js}"></script>
 
     <!-- Custom scripts for all pages-->
     <script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
@@ -40,10 +46,20 @@
 
     <!-- Page level custom scripts -->
     <script  th:src="@{/js/demo/datatables-demo.js}"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+    </style>
 </head>
 <body>
 <ul  th:fragment="sidebar" class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111;" id="accordionSidebar">
@@ -51,7 +67,7 @@
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <i class="fas fa-shopping-basket"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Food Delivery</div>
     </a>
@@ -66,12 +82,10 @@
             <i class="fas fa-utensils"></i>
             <span>Nuevo Pedido</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="listaRestaurantes.html">Restaurantes</a>
-
-                <a class="collapse-item" href="categorías.html">Categorías</a>
-            </div>
+        <div id="collapseTwo" class="collapse" aria-expanded="false">
+            <ul class="flex-column pl-2 nav">
+                <a class="collapse-item" th:href="@{/cliente/listaRestaurantes}">Restaurantes</a>
+            </ul>
         </div>
     </li>
 
@@ -85,15 +99,15 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="listaPedidoActual.html">Pedido Actual</a>
-                <a class="collapse-item" href="listaHistorialPedidos.html">Historial de Pedidos</a>
-                <a class="collapse-item" href="listaReportes.html">Generar Reportes</a>
+                <a class="collapse-item" th:href="@{/cliente/pedidoActual}">Pedido Actual</a>
+                <a class="collapse-item" th:href="@{/cliente/historialPedidos}">Historial de Pedidos</a>
+                <a class="collapse-item" th:href="@{/cliente/listaReportes}">Generar Reportes</a>
             </div>
         </div>
     </li>
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="editarPerfil.html">
+        <a class="nav-link" th:href="@{/cliente/editarPerfil}">
             <i class="fas fa-user-circle"></i>
             <span>Editar Perfil</span>
         </a>
@@ -101,7 +115,7 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link " href="tarjetas.html">
+        <a class="nav-link " th:href="@{/tarjeta/lista}">
             <i class="fas fa-credit-card"></i>
             <span>Tarjetas</span>
         </a>
@@ -109,11 +123,6 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
-
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
 
 </ul>
 
@@ -159,19 +168,18 @@
             <!-- Nav Item - Alerts -->
 
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="listaDirecciones.html"
+                <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}"
+                   th:text="${session.usuario.direccionactual} ">
 
-                >
-                    Av. Carlos Izaguirre
                 </a>
             </li>
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="listaDirecciones.html">
+                <a class="nav-link dropdown-toggle" th:href="@{/cliente/listaDirecciones}">
                     <i class="fas fa-map-marker-alt"></i>
                 </a>
             </li>
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="listaCupones.html">
+                <a class="nav-link dropdown-toggle"  th:href="@{/cliente/listaCupones}">
                     <i class="fas fa-tags"></i>
                 </a>
             </li>
@@ -215,7 +223,7 @@
                             <span class="font-weight-bold">La Rosa Náutica</span>
                         </div>
                     </a>
-                    <a class="dropdown-item text-center small text-gray-500" href="listaPedidoActual.html">Mostrar todos mis pedidos pendientes</a>
+                    <a class="dropdown-item text-center small text-gray-500" th:href="@{/cliente/pedidoActual}">Mostrar todos mis pedidos pendientes</a>
                 </div>
             </li>
 
@@ -254,12 +262,12 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                           th:text="| ${session.usuario.nombres} ${session.usuario.apellidos}|"> </span>
-                    <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
+                    <img class="img-profile rounded-circle" th:src="@{/img/undraw_profile.svg}">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                      aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="editarPerfil.html">
+                    <a class="dropdown-item" th:href="@{/cliente/editarPerfil}">
                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                         Editar Perfil
                     </a>
@@ -283,7 +291,30 @@
     </nav>
     <!-- End of Topbar -->
 
+<div th:fragment="down" class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sesión</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Usted esta a punto de salir ¿Desea continuar?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
 
 <!-- End of Sidebar -->
 </body>

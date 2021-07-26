@@ -5,13 +5,18 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Entity
+@Table(name="movilidad")
 public class Movilidad implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idmovilidad;
     //@Pattern(regexp = "^[A-Z]{3}-[1-9]{3}|^[A-Z]{1}[1-9]{1}[A-Z]{1}-[1-9]{3}|^[1-9]{4}-[A-Z,1-9]{2}|^[A-Z]{2}-[1-9]{3}$",message = "Ingrese una placa válida")
+
+    //@Pattern(regexp = "^([A-Z]{3}\\d{3})$",message = "Ingrese una placa en el formato correcto. Ej: AAA111, ABC123")
     private String placa;
+
+    //@Pattern(regexp = "^([A-Z]{1}\\d{8})$",message = "Ingrese una licencia en el formato correcto. Ej: Q12345678, R23432245")
     private String licencia;
 
     @OneToOne

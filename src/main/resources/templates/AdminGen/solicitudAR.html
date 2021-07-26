@@ -1,105 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/css/sb-admin-2.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/repartidor.css}" rel="stylesheet" type="text/css">
 
 <head th:replace="AdminGen/fragments/generalAdmin.html :: head_page(page_name = 'Solicitudes AR')"></head>
 
 <body id="page-top">
+<style>
+    .containerta {
+        padding: 2rem 0rem;
+    }
 
+    h4 {
+        margin: 2rem 0rem 1rem;
+    }
+
+    .table-image
+    td, th {
+        vertical-align: middle;
+    }
+
+</style>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
 
     <!-- Sidebar -->
-    <ul class="navbar-nav  sidebar sidebar-dark accordion" style="background-color:#701111       ;" id="accordionSidebar">
-        <div class="">
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-shopping-basket"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Food Delivery </div>
-            </a>
-        </div>
-        <!-- Sidebar - Brand -->
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="lista.html">
-                <i class="fas fa-fw fa-list"></i>
-                <span>Listas</span></a>
-        </li>
-
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate"  href="#submenu2" data-toggle="collapse" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Solicitudes</span>
-
-            </a>
-            <div class="collapse" id="submenu2" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Administrador Restaurante</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Restaurante</span></a></li>
-                </ul>
-
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="crearAdministrador.html">
-                <i class="fas fa-fw fa-user-edit"></i>
-                <span>Crear Administrador</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-
-        <li class="nav-item">
-            <a class="nav-link nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" >
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Reportes</span>
-
-            </a>
-            <div class="collapse" id="submenu1" aria-expanded="false">
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Usuarios</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por cliente</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Pedidos por repartidor</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ventas</span></a></li>
-                </ul>
-                <ul class="flex-column pl-2 nav">
-                    <li class="nav-item"><a class="nav-link py-0" href="#"><span>Ingresos</span></a></li>
-                </ul>
-            </div>
-        </li>
-
-
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
+    <ul th:replace="AdminGen/fragments/generalAdmin.html :: topbar" ></ul>
     <!-- End of Sidebar -->
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -108,185 +35,104 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
-
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in "
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="notificacion">
-                                Nuevas Solicitudes
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Repartidor - 12:45 pm</div>
-                                    <span class="font-weight-bold">Carlos Martinez</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo Restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">La mas brasa</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle notificacion">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">Nuevo administrador de restaurante - 12:45 pm</div>
-                                    <span class="font-weight-bold">KArla Avellana</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las solicitudes</a>
-                        </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrador General</span>
-                            <img class="img-profile rounded-circle" src="../bootstrap/img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="editarPerfilAG.html">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Editar Perfil
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cerrar Sesión
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
+            <nav th:replace="AdminGen/fragments/generalAdmin.html :: navbar(notificaciones=${notificaciones})"></nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <form>
-
+                <form th:action="@{'/admin/solicitudes?tipo=adminRest'}" method="get">
+                    <input type="hidden" name="tipo" value="adminRest">
                     <div class="form-group row">
                         <div class="col-sm-3 mb-1 ">
                             <input type="text" class="form-control"
-                                   id="exampleCliente"
-                                   placeholder="Búsqueda por usuario">
+                                   name="nombreUsuario"
+                                   placeholder="Búsqueda por usuario"
+                                   th:if="${nombreUsuario1 == null || nombreUsuario1.equals('')}">
+                            <input type="text" class="form-control"
+                                   name="nombreUsuario"
+                                   th:unless="${nombreUsuario1 == null || nombreUsuario1.equals('')}"
+                                   th:value="${nombreUsuario1}">
+                        </div>
+                        <div class="col-sm-2 mb-1">
+                            <input type="text" class="form-control"
+                                   name="dni"
+                                   placeholder="DNI"
+                                   th:if="${dni1 == null || dni1.equals('')}">
+                            <input type="text" class="form-control"
+                                   name="dni"
+                                   th:unless="${dni1 == null || dni1.equals('')}"
+                                   th:value="${dni1}">
                         </div>
 
 
                         <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Fecha de Registro</option>
-                                <option value="">Última Hora</option>
-                                <option value="">Hoy</option>
-                                <option value="">Esta semana</option>
-                                <option value="">Este mes</option>
-                                <option value="">Este año</option>
+                            <select class="form-control" name="fechaRegistro" th:if="${fechaRegistro1==null}">
+                                <option value="" disabled selected>Fecha de Registro</option>
+                                <!--option value="hora">Última Hora</option-->
+                                <option value="1">Hoy</option>
+                                <option value="7">Esta semana</option>
+                                <option value="30">Este mes</option>
+                                <option value="365">Este año</option>
+                            </select>
+                            <select class="form-control" name="fechaRegistro" th:unless="${fechaRegistro1==null}">
+                                <option value="1"
+                                        th:selected="${fechaRegistro1 == 1}">Hoy</option>
+                                <option value="7"
+                                        th:selected="${fechaRegistro1 == 7}">Esta semana</option>
+                                <option value="30"
+                                        th:selected="${fechaRegistro1 == 30}">Este mes</option>
+                                <option value="365"
+                                        th:selected="${fechaRegistro1 == 365}">Este año</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 mb-1">
-                            <select class="form-control">
-                                <option value="">Estado</option>
-                                <option value="">Bloqueado</option>
-                                <option value="">Operativo</option>
 
-                            </select>
-                        </div>
                         <div class="input-group-append col-sm-1 mb-3 ml-0">
-                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="button">
+                            <button class="btn" style="background-color:#701111; color:white; border:#701111" type="submit">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                         <div class="col-sm-2 mb-1 ml-0" style="text-align: right">
-                            <a class="btn btn-secondary">Quitar filtros</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/solicitudes?tipo=adminRest'}">Quitar filtros</a>
                         </div>
                     </div>
 
 
                 </form>
+
+
                 <!-- DataTales Example -->
-                <div class="card shadow mb-4">
+                <div class="card shadow ">
                     <div class="card-header py-3 " style="background-color: #701111;">
                             <h2 class="font-weight-bold text-white  text-md-center">LISTA DE SOLICITUDES ADMINISTRADORES DE RESTAURANTES</h2>
 
-                        <style>
-                            .containerta {
-                                padding: 2rem 0rem;
-                            }
 
-                            h4 {
-                                margin: 2rem 0rem 1rem;
-                            }
-
-                            .table-image
-                            td, th {
-                                vertical-align: middle;
-                            }
-
-                        </style>
                     </div>
-                    <div class="containerta">
-                        <div class="row">
-                            <div class="col-12">
-                                <table class="table table-image table-responsive">
+                    <div class="card-body">
+                        <div class="alert alert-success" role="alert"
+                             th:if="${msg1!=null}" th:text="${msg1}">
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg2!=null}" th:text="${msg2}">
+                        </div>
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${msg3!=null}" th:text="${msg3}">
+                        </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
                                     <thead>
                                     <tr>
                                         <th scope="col" style="width: 50px">N°</th>
-                                        <th scope="col" style="width: 600px">Image</th>
+                                        <th scope="col" style="width: 600px">Imagen</th>
                                         <th scope="col" style="width: 700px">Datos</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="adminR, v : ${listaAdminRestSolicitudes}">
-                                        <td scope="row" th:text="${v.index+1}">1</td>
+                                        <td scope="row" th:text="${(currentPage -1)*tamPag+(v.index+1)}">1</td>
                                         <td class="w-25">
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">
+                                            <img  th:src="@{'/admin/images?id='+${adminR.idusuario}}" class="img-fluid img-thumbnail" style="height: 200px; width: 200px">
+                                            <!-- Main Content<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nu4ej6fgxyPM8v---fOhOQg7Tw8xPTudfVYqogq6noeuNjCeBIrXhhUsakfeneVNFPI&usqp=CAU" class="img-fluid img-thumbnail" alt="Sheep">-->
                                         </td>
                                         <td><div class="table-responsive">
                                             <table class="table table-bordered ">
@@ -295,7 +141,7 @@
                                                 <tr>
 
                                                     <td th:text="|Fecha de Registro: ${adminR.fecharegistro}|">Fecha de Registro: 20/01/3113 10:30:12</td>
-                                                    <td th:text="|Estado: ${adminR.estado}|">Estado: Pendiente 10:30:12</td>
+                                                    <td th:text="|DNI: ${adminR.dni}|">DNI: 12345678</td>
 
                                                 </tr>
                                                 <tr>
@@ -305,41 +151,39 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td th:text="|DNI: ${adminR.dni}|">DNI: 12345678</td>
-                                                    <td >Correo: asdddd@gmail.com</td>
+                                                    <td th:text="|Teléfono: ${adminR.telefono}|">Teléfono: 32325164564 </td>
+                                                    <td th:text="|Correo: ${adminR.correo}|">Correo: asdddd@gmail.com</td>
 
                                                 </tr>
 
                                                 <tr>
                                                     <td th:text="|Sexo: ${adminR.sexo}|">Sexo: Masculino </td>
-                                                    <td th:text="|Teléfono: ${adminR.telefono}|">Teléfono: 32325164564 </td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-
                                                     <td>
-                                                        <a href="#" class="btn btn-success btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
+                                                        <a th:href="@{'/admin/aceptarSolicitud?id='+${adminR.idusuario}+'&tipo=adminRest'}"
+                                                           class="btn btn-success btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-check"></i>
+                                                        </span>
                                                             <span class="text">Aceptar</span>
                                                         </a>
-                                                        <a href="#" class="btn btn-danger btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-times"></i>
-                                        </span>
+                                                        <a th:href="@{'/admin/rechazarSolicitud?id='+${adminR.idusuario}+'&tipo=adminRest'}"
+                                                           class="btn btn-danger btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-times"></i>
+                                                        </span>
                                                             <span class="text">Rechazar</span>
                                                         </a>
 
-                                                        <a href="#" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-info"></i>
-                                        </span>
+                                                         <!--a th:href="@{'/admin/detalleAdminSoli?idUsuario='+${adminR.idusuario}}"
+                                                           class="btn btn-warning btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-info"></i>
+                                                        </span>
                                                             <span class="text">Informacion</span>
-                                                        </a>
+                                                        </a-->
                                                     </td>
-
                                                 </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -347,18 +191,23 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div class="pagination" style=" margin-left: 630px ;align-content: center">
-                                    <a  href="#">&laquo;</a>
-                                    <a  href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">6</a>
-                                    <a href="#">&raquo;</a>
+                                <div th:if="${listaAdminRestSolicitudes.size()==0}">
+                                    <h3 class="text-lg-center text-danger">No tiene solicitudes de administradores de restaurante.</h3>
+                                </div>
+                                <div th:if="${ totalPages >= 1}" class="pagination justify-content-center">
+                                    <div th:each="i: ${#numbers.sequence(1,totalPages)}" >
+
+                                        <a th:if="${currentPage != i}"
+                                           th:href="@{'/admin/solicitudes?tipo=adminRest&numPag=' + ${i}}"
+                                           th:utext="${i}"
+                                           class="active page-link"></a>
+                                        <a th:unless="${currentPage != i}"
+                                           th:utext="${i}" class="page-link" style="pointer-events: none; background-color: #701111; color: #FFFFFF"></a>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -402,29 +251,31 @@
             </div>
             <div class="modal-body">Al seleecionar el boton salir, usted cerrará su sesión.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/html/Login.html">Cerrar Sesión</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit">Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../bootstrap/vendor/jquery/jquery.min.js"></script>
-<script src="../bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" ></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script th:src="@{/vendor/bootstrap/vendor/jquery-easing/jquery.easing.min.js}" ></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../bootstrap/js/sb-admin-2.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/sb-admin-2.min.js}" ></script>
 
 <!-- Page level plugins -->
-<script src="../bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}" ></script>
+<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../bootstrap/js/demo/datatables-demo.js"></script>
+<script  th:src="@{/js/demo/datatables-demo.js}"></script>
 
 </body>
 

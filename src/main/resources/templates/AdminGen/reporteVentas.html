@@ -181,7 +181,7 @@
                                     <td th:text="${usuario.getRuc()}" class="text-center" style="width: 260px"></td>
                                     <td th:text="${usuario.getCantidadpedidos()}" class="text-center" style="width: 240px"></td>
                                     <td  th:text="|S/ ${usuario.getTotal()+'0'}|" class="text-center" style="width: 160px"></td>
-                                    <td  th:text="${usuario.getValoracion()== 0 ? 'Sin Valoración' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
+                                    <td  th:text="${usuario.getValoracion()== 0 ? '-' : usuario.getValoracion() }" class="text-center" style="width: 60px"></td>
                                 </tr>
 
 

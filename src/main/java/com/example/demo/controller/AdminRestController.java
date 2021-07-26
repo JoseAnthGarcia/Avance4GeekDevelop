@@ -365,9 +365,19 @@ public class AdminRestController {
                         pedido.setComentrechazorest(s3);
                         pedidoRepository.save(pedido);
                         attr.addFlashAttribute("msg", "Pedido rechazado exitosamente");
+                        if (pedido.getCupon().getIdcupon() != 0) {
+                            Cliente_has_cuponKey cliente_has_cuponKey = new Cliente_has_cuponKey();
+                            Cliente_has_cupon cliente_has_cupon = new Cliente_has_cupon();
+                            cliente_has_cuponKey.setIdcliente(pedido.getCliente().getIdusuario());
+                            cliente_has_cuponKey.setIdcupon(pedido.getCupon().getIdcupon());
+                            cliente_has_cupon.setCliente_has_cuponKey(cliente_has_cuponKey);
+                            cliente_has_cupon.setUtilizado(false);
+                            clienteHasCuponRepository.save(cliente_has_cupon);
+                        }
                     } else {
                         attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");
                     }
+
                 }
             } else {
                 attr.addFlashAttribute("msg3", "Debe ingresar un motivo válido");

@@ -53,7 +53,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "            left join categoriarestaurante cr on rhcr.idcategoria=cr.idcategoria\n" +
             "            group by rhcr.idrestaurante) t3 on t3.idrestaurante=r.idrestaurante\n" +
             "            where r.estado = 1\n" +
-            "            and (t2.`prom_prec` >= ?1 and t2.`prom_prec` < ?2) \n" +
+            "            and (t2.`prom_prec` > ?1 and t2.`prom_prec` <= ?2) \n" +
             "            and t.`prom_val` is null or (t.`prom_val` > ?3 and t.`prom_val` <= ?4)      \n" +
             "            having r.nombre like %?5%  \n" +
             "            and (t3.`idcategorias` like %?6% \n" +
@@ -77,7 +77,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "            left join categoriarestaurante cr on rhcr.idcategoria=cr.idcategoria\n" +
             "            group by rhcr.idrestaurante) t3 on t3.idrestaurante=r.idrestaurante\n" +
             "            where r.estado = 1\n" +
-            "            and (t2.`prom_prec` >= ?1 and t2.`prom_prec` < ?2) \n" +
+            "            and (t2.`prom_prec` > ?1 and t2.`prom_prec` <=?2) \n" +
             "            and t.`prom_val` is null or (t.`prom_val` > ?3 and t.`prom_val` <= ?4)      \n" +
             "            having r.nombre like %?5%  \n" +
             "            and( t3.`idcategorias` like %?6% \n" +
@@ -104,7 +104,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
             "left join categoriarestaurante cr on rhcr.idcategoria=cr.idcategoria\n" +
             "group by rhcr.idrestaurante) t3 on t3.idrestaurante=r.idrestaurante\n" +
             "where r.estado = 1\n" +
-            "and (t2.`prom_prec` >= ?1 and t2.`prom_prec` < ?2) \n" +
+            "and (t2.`prom_prec` > ?1 and t2.`prom_prec` <= ?2) \n" +
             "and (t.`prom_val` > ?3 and t.`prom_val` <= ?4)      \n" +
             "having r.nombre like %?5%  \n" +
             " and( t3.`idcategorias` like %?6% \n" +
@@ -128,7 +128,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
                     "left join categoriarestaurante cr on rhcr.idcategoria=cr.idcategoria\n" +
                     "group by rhcr.idrestaurante) t3 on t3.idrestaurante=r.idrestaurante\n" +
                     "where r.estado = 1\n" +
-                    "and (t2.`prom_prec` >= ?1 and t2.`prom_prec` < ?2) \n" +
+                    "and (t2.`prom_prec` > ?1 and t2.`prom_prec` <= ?2) \n" +
                     "and (t.`prom_val` > ?3 and t.`prom_val` <= ?4)      \n" +
                     "having r.nombre like %?5%  \n" +
                     " and (t3.`idcategorias` like %?6% \n" +

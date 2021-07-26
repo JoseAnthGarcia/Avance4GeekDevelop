@@ -194,7 +194,7 @@
                                     </td>
                                     <td th:text="${usuario.getCantidad()}" ></td>
                                     <td  th:text="|S/ ${usuario.getGananciarepartidor()+'.00'}|" class="text text-center" ></td>
-                                    <td  th:text="${usuario.getValoracion()==0 ? 'Sin Valoración' : usuario.getValoracion() }" ></td>
+                                    <td  th:text="${usuario.getValoracion()==0 ? '-' : usuario.getValoracion() }" ></td>
                                 </tr>
 
 

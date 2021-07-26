@@ -1535,6 +1535,11 @@ public class LoginController {
                 // solo para cuando es un admin rest o admin o repartidor
                 if(usuario.getRol().getIdrol() == 1){
                     usuario.setEstado(1);
+                    try {
+                        sendHtmlMailREgistrado(usuario.getCorreo(), "Cuenta Cliente creado" , usuario);
+                    } catch (MessagingException e) {
+                        System.out.println("FALLO AL ENVIAR EL HTML CON CORREO");
+                    }
                 }else if(usuario.getRol().getIdrol() == 5) {
                     usuario.setEstado(1);
                     try {

@@ -143,15 +143,8 @@
                                                     <td th:text="|Placa: ${repartidor.movilidad.placa!=null?repartidor.movilidad.placa:'--'}|"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td th:if="${repartidor.movilidad == null}" th:text="|Licencia de Conducir: ${repartidor.movilidad.licencia}|"></td>
+                                                    <!--<td th:if="${repartidor.movilidad == null}" th:text="|Licencia de Conducir: ${repartidor.movilidad.licencia}|"></td>-->
                                                     <td th:if="${ganancia!=null}" th:text="|Total de ingreso: S/.${ganancia}|"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-
-                                                    </td>
-
-
                                                     <td>
 
                                                         <a th:href="@{/admin/usuarios}" class="btn btn-warning btn-icon-split">
@@ -169,8 +162,8 @@
 
 
                                                     </td>
-
                                                 </tr>
+
                                                 </tbody>
 
                                             </table>

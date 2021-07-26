@@ -284,7 +284,7 @@
                                          N° Pedidos
                                      </td>
                                      <td>
-                                         Tiempor Promedio
+                                         Tiempo Promedio
                                      </td>
                                      <td>
                                          Mes
@@ -326,7 +326,7 @@
                                         <ul class="pagination justify-content-center">
                                             <li class="page-item" th:each="page : ${pages}" th:classappend="${current == page ? 'active': ''}">
                                                 <a th:unless="${texto == null && numpedidos == null && mes==null && anio==null}" class="page-link" th:text="${page}"
-                                                   th:href="@{'/cliente/historialPedidos?page='+${page}+'&texto='+${texto}+'&numpedidos='+${numpedidos}+'&mes='+${mes}+'&anio='+${anio}}"></a>
+                                                   th:href="@{'/cliente/reporteTiempo?page='+${page}+'&texto='+${texto}+'&numpedidos='+${numpedidos}+'&mes='+${mes}+'&anio='+${anio}}"></a>
                                             </li>
                                         </ul>
                                     </nav>

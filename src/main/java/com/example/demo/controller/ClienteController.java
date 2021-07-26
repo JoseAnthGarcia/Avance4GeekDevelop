@@ -375,7 +375,7 @@ public class ClienteController {
                 limitSupVal = 5;
                 break;
             default:
-                limitInfVal = 0;
+                limitInfVal = -1;
                 limitSupVal = 5;
         }
         System.out.println("lmmiteinf: "+limitInfVal);
@@ -555,7 +555,7 @@ public class ClienteController {
                 limitSupVal = 5;
                 break;
             default:
-                limitInfVal = 0;
+                limitInfVal = -1;
                 limitSupVal = 5;
         }
         System.out.println("lmmiteinf: "+limitInfVal);
@@ -828,7 +828,11 @@ public class ClienteController {
 
 
         if (idRestS == null) {
-            idRest = (Integer) session.getAttribute("idRest");
+            try {
+                idRest = (Integer) session.getAttribute("idRest");
+            } catch (Exception e){
+                return "redirect:/cliente/listaRestaurantes"    ;   
+            }
         } else {
             try {
                 idRest = Integer.parseInt(idRestS);
@@ -1363,7 +1367,6 @@ public class ClienteController {
 
             int puntero = 0;
             if (extrasCarrito.size() > 0) {
-                //TODO VALIDAR QUE CUANDO SE AGREGA UN PEDIDO DEL MISMO ID PLATO - ESTA CANTIDAD SEA LA SUMA
                 for (int i = 0; i < extrasCarrito.size(); i++) {
                     if (idExtra == extrasCarrito.get(i).getIdextra().getIdextra()) {
                         puntero = i;
@@ -2015,7 +2018,7 @@ public class ClienteController {
             if (idCupon != null) {
                 if (!idCupon.trim().equals("")) {
                     pedido.setCupon(cupon);
-                }
+               }
             }
             pedido.setCliente(cliente);
             pedido.setMetodopago(metodoDePago);
@@ -2258,6 +2261,21 @@ public class ClienteController {
                 if (pedido.getEstado() == 0) {
                     pedido.setEstado(2);
                     pedidoRepository.save(pedido);
+
+                    try {
+                        if (String.valueOf(pedido.getCupon().getIdcupon()) != null) {
+                            Cliente_has_cupon chp = new Cliente_has_cupon();
+                            Cliente_has_cuponKey chk = new Cliente_has_cuponKey();
+                            chk.setIdcupon(pedido.getCupon().getIdcupon());
+                            chk.setIdcliente(pedido.getCliente().getIdusuario());
+                            chp.setCliente_has_cuponKey(chk);
+                            chp.setUtilizado(false);
+                            clienteHasCuponRepository.save(chp);
+                        }
+                    }catch (NullPointerException e){
+                        //si es nulo quiere decir que no se uso cupon
+                    }
+
                 }
             }
         } catch (Exception e) {
@@ -2660,7 +2678,7 @@ public class ClienteController {
         List<ReporteDineroDTO> listapedidos2 = pedidoRepository.reportedinero2(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, nombrec);
         BigDecimal totalsuma1 = new BigDecimal(0);
         if (listapedidos2.size() > 0) {
-            for (ReporteDineroDTO rep : listapedidos2) {
+            for (ReporteDineroDTO rep : pedidoRepository.reportedinerocant(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, nombrec)) {
                 System.out.println(rep.getDescuento());
                 totalsuma1 = totalsuma1.add(rep.getDescuento());
             }
@@ -2963,7 +2981,7 @@ public class ClienteController {
         List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto, anio, limit1cant, limit2cant);
         BigDecimal totalsuma = new BigDecimal(0);
         if (listapedidos2.size() > 0) {
-            for (ReportePedido rep : listapedidos) {
+            for (ReportePedido rep : pedidoRepository.reportexmescant(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant)) {
                 System.out.println(rep.getTotal());
                 totalsuma = totalsuma.add(rep.getTotal());
             }
@@ -3314,7 +3332,7 @@ public class ClienteController {
         int totalsuma1 = 0;
         int i = 0;
         if (totalPage > 0) {
-            for (ReportePedidoCDTO rep : listapedidos) {
+            for (ReportePedidoCDTO rep : pedidoRepository.reportetiempocant(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, limit1cant, limit2cant)) {
                 // System.out.println(rep.getTiempoEntrega());
                 totalsuma1 = totalsuma1 + rep.getTiempoentrega();
                 i = i + 1;

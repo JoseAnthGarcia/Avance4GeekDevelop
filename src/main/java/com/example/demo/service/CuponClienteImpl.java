@@ -16,7 +16,7 @@ public class CuponClienteImpl implements CuponClienteService{
     PedidoRepository pedidoRepository;
 
     @Override
-    public Page<CuponClienteDTO>  findPaginated2( String texto, int limitInf, int limitSup, Pageable pageable) {
-        return this.pedidoRepository.listaCupones(texto,limitInf,limitSup,pageable);
+    public Page<CuponClienteDTO>  findPaginated2( int idcliente,String texto, int limitInf, int limitSup, Pageable pageable) {
+        return this.pedidoRepository.listaCupones(idcliente,texto,limitInf,limitSup,pageable);
     }
 }

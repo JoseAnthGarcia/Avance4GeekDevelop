@@ -375,7 +375,7 @@ public class ClienteController {
                 limitSupVal = 5;
                 break;
             default:
-                limitInfVal = 0;
+                limitInfVal = -1;
                 limitSupVal = 5;
         }
         System.out.println("lmmiteinf: "+limitInfVal);
@@ -555,7 +555,7 @@ public class ClienteController {
                 limitSupVal = 5;
                 break;
             default:
-                limitInfVal = 0;
+                limitInfVal = -1;
                 limitSupVal = 5;
         }
         System.out.println("lmmiteinf: "+limitInfVal);

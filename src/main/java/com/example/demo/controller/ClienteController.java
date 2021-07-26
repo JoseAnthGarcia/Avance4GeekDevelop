@@ -2678,7 +2678,7 @@ public class ClienteController {
         List<ReporteDineroDTO> listapedidos2 = pedidoRepository.reportedinero2(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, nombrec);
         BigDecimal totalsuma1 = new BigDecimal(0);
         if (listapedidos2.size() > 0) {
-            for (ReporteDineroDTO rep : listapedidos2) {
+            for (ReporteDineroDTO rep : pedidoRepository.reportedinerocant(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, nombrec)) {
                 System.out.println(rep.getDescuento());
                 totalsuma1 = totalsuma1.add(rep.getDescuento());
             }
@@ -2981,7 +2981,7 @@ public class ClienteController {
         List<ReportePedido> listapedidos2 = pedidoRepository.reportexmes2(usuario1.getIdusuario(), limitInf, limitSup, texto, anio, limit1cant, limit2cant);
         BigDecimal totalsuma = new BigDecimal(0);
         if (listapedidos2.size() > 0) {
-            for (ReportePedido rep : listapedidos) {
+            for (ReportePedido rep : pedidoRepository.reportexmescant(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant)) {
                 System.out.println(rep.getTotal());
                 totalsuma = totalsuma.add(rep.getTotal());
             }
@@ -3332,7 +3332,7 @@ public class ClienteController {
         int totalsuma1 = 0;
         int i = 0;
         if (totalPage > 0) {
-            for (ReportePedidoCDTO rep : listapedidos) {
+            for (ReportePedidoCDTO rep : pedidoRepository.reportetiempocant(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, limit1cant, limit2cant)) {
                 // System.out.println(rep.getTiempoEntrega());
                 totalsuma1 = totalsuma1 + rep.getTiempoentrega();
                 i = i + 1;

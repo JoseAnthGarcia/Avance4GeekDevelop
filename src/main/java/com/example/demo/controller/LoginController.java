@@ -61,8 +61,9 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     //todo change in presentation public String ip = "54.175.37.128.nip.io";
-    //public String ip = "34.227.30.44.nip.io";
-    public String ip = "localhost";
+    public String ip = "34.227.30.44.nip.io";//hector
+    //public String ip = "54.87.150.35.nip.io";//diego
+    //public String ip = "localhost";
     public String puerto = "8080";
 
     @Autowired
@@ -1534,6 +1535,14 @@ public class LoginController {
                 // solo para cuando es un admin rest o admin o repartidor
                 if(usuario.getRol().getIdrol() == 1){
                     usuario.setEstado(1);
+                }else if(usuario.getRol().getIdrol() == 5) {
+                    usuario.setEstado(1);
+                    try {
+                        sendHtmlMailAdminRegistrado(usuario.getCorreo(), "Cuenta Administrador creado" , usuario);
+                    } catch (MessagingException e) {
+                        String contenido = "Hola "+ usuario.getNombres()+" tu cuenta de administrador fue creada exitosamente, recuerda resetear tu contraseña.";
+                        sendEmail(usuario.getCorreo(), "Cuenta Administrador creado", contenido);
+                    }
                 }else{
                     usuario.setEstado(2);
                 }
@@ -1547,7 +1556,20 @@ public class LoginController {
             return "redirect:/cliente/login";
         }
     }
-
+    public void sendHtmlMailAdminRegistrado(String to, String subject, Usuario usuario) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        Context context = new Context();
+        context.setVariable("user", usuario.getNombres());
+        context.setVariable("id", usuario.getDni());
+        context.setVariable("ip", ip);
+        context.setVariable("puerto", puerto);
+        String emailContent = templateEngine.process("Correo/AdminRegistrado", context);
+        helper.setText(emailContent, true);
+        javaMailSender.send(message);
+    }
     public void enviarCorreoValidacion(String correo) {
         String codigoHash = "";
         while (true) {

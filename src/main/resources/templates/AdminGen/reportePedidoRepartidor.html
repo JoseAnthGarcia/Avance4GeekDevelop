@@ -132,17 +132,17 @@
                                 </tr>
                                 <tr>
                                     <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMas.getCantidad()}|"></td>
+                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMas.getCantidad() +' pedidos'}|"></td>
 
                                     <td th:if="${topMenos!=null}"
-                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad()}|"></td>
+                                        style="color:black"  th:text="|Cantidad de Pedidos: ${topMenos.getCantidad() +' pedidos'}|"></td>
                                 </tr>
                                 <tr>
                                     <td th:if="${topMas!= null}"
-                                        style="color:black"  th:text="|Monto Total: S/ ${topMas.getGananciarepartidor()+'0'}|"></td>
+                                        style="color:black"  th:text="|Monto Total: S/ ${topMas.getGananciarepartidor()+'.00'}|"></td>
 
                                     <td th:if="${topMenos!=null}" style="color:black"
-                                        th:text="|Monto Total: S/ ${topMenos.getGananciarepartidor()+'0'}|"></td>
+                                        th:text="|Monto Total: S/ ${topMenos.getGananciarepartidor()+'.00'}|"></td>
                                 </tr>
 
                                 </tbody>
@@ -193,8 +193,8 @@
                                     <td th:text="${usuario.getTelefono()}" >
                                     </td>
                                     <td th:text="${usuario.getCantidad()}" ></td>
-                                    <td  th:text="|S/ ${usuario.getGananciarepartidor()+'0'}|" class="text text-center" ></td>
-                                    <td  th:text="${usuario.getValoracion()==0 ? 'Sin Valoración' : usuario.getValoracion() }" ></td>
+                                    <td  th:text="|S/ ${usuario.getGananciarepartidor()+'.00'}|" class="text text-center" ></td>
+                                    <td  th:text="${usuario.getValoracion()==0 ? '-' : usuario.getValoracion() }" ></td>
                                 </tr>
 
 

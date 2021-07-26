@@ -703,6 +703,9 @@ public class AdminRestController {
         if (inputValoracion == null) {
             inputValoracion = "";
         } else {
+            if (inputValoracion.equalsIgnoreCase("")){
+                inputValoracion = "6";
+            }
             try {
                 inputValoracion2 = Integer.parseInt(inputValoracion);
                 if (inputValoracion2 > 6) {

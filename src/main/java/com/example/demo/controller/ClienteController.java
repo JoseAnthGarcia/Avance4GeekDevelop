@@ -2106,22 +2106,17 @@ public class ClienteController {
         Pageable pageRequest = PageRequest.of(page, 5);
 
 
-        if (texto == null) {
+        if (texto == null ) {
             texto = "";
-            httpSession.removeAttribute("texto");
 
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
         if (estado == null) {
             estado = "7";
-            httpSession.removeAttribute("estado");
-        } else {
-            httpSession.setAttribute("estado", estado);
+
         }
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
-        estado = httpSession.getAttribute("estado") == null ? estado : (String) httpSession.getAttribute("estado");
+        //texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        //estado = httpSession.getAttribute("estado") == null ? estado : (String) httpSession.getAttribute("estado");
 
         Integer limitSup;
         Integer limitInf;
@@ -2159,7 +2154,6 @@ public class ClienteController {
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
-
         }
         model.addAttribute("current", page + 1);
 
@@ -2341,20 +2335,15 @@ public class ClienteController {
 
         if (texto == null) {
             texto = "";
-            httpSession.removeAttribute("texto");
 
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
         if (estado == null) {
             estado = "7";
-            httpSession.removeAttribute("estado");
-        } else {
-            httpSession.setAttribute("estado", estado);
+
         }
 
-        texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
-        estado = httpSession.getAttribute("estado") == null ? "7" : (String) httpSession.getAttribute("estado");
+       // texto = httpSession.getAttribute("texto") == null ? "" : (String) httpSession.getAttribute("texto");
+        //estado = httpSession.getAttribute("estado") == null ? "7" : (String) httpSession.getAttribute("estado");
 
         Integer limitSup = 6;
         Integer limitInf = 0;
@@ -2443,9 +2432,7 @@ public class ClienteController {
         model.addAttribute("total", totalPage);
         model.addAttribute("texto", texto);
         model.addAttribute("estado", estado);
-
         model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
-
         return "Cliente/listaHistorialPedidos";
     }
 
@@ -2488,7 +2475,6 @@ public class ClienteController {
                     model.addAttribute("codigo", codigo);
                     model.addAttribute("notificaciones", clienteRepository.notificacionCliente(usuario1.getIdusuario()));
                     return "Cliente/detallePedido";
-
 
                 }
 
@@ -2584,19 +2570,12 @@ public class ClienteController {
 
         if (texto == null) {
             texto = "";
-            httpSession.removeAttribute("texto");
 
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
 
         /******************************/
         if (nombrec == null) {
             nombrec = "";
-            httpSession.removeAttribute("nombrec");
-
-        } else {
-            httpSession.setAttribute("nombrec", nombrec);
         }
 
         /*********************************************++AÑO *************************************/
@@ -2611,10 +2590,10 @@ public class ClienteController {
         try {
             if (anio == null) {
                 anio = anio1;
-                httpSession.removeAttribute("anio");
+
             } else if (mes != null) {
                 int an = Integer.parseInt(anio);
-                httpSession.setAttribute("anio", anio);
+
             } else {
                 anio = anio1;
             }
@@ -2635,7 +2614,7 @@ public class ClienteController {
                 mes = Integer.toString(m);
                 limitSup = m;
                 limitInf = m - 1;
-                httpSession.removeAttribute("mes");
+
             } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) <= 13) {
                 if (mes.equalsIgnoreCase("13")) {
                     limitSup = 12;
@@ -2644,7 +2623,7 @@ public class ClienteController {
                     limitSup = Integer.parseInt(mes);
                     limitInf = limitSup - 1;
                 }
-                httpSession.setAttribute("mes", mes);
+
             } else {
                 limitSup = 12;
                 limitInf = 0;
@@ -2658,14 +2637,14 @@ public class ClienteController {
         /*************************************************************************/
 
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        //texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
 
-        nombrec = httpSession.getAttribute("nombrec") == null ? nombrec : (String) httpSession.getAttribute("nombrec");
+        //nombrec = httpSession.getAttribute("nombrec") == null ? nombrec : (String) httpSession.getAttribute("nombrec");
 
 
-        mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
+        //mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
 
-        anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
+        //anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
 
 
         Page<ReporteDineroDTO> listapedidos = reporteDineroService.findpage(usuario1.getIdusuario(), limitInf, limitSup, anio, texto, nombrec, pageRequest);
@@ -2857,8 +2836,6 @@ public class ClienteController {
                                 ,@RequestParam(value = "mes", required = false) String mes,
                                 @RequestParam(value = "anio", required = false) String anio) {
 
-
-
         Usuario usuario1 = (Usuario) httpSession.getAttribute("usuario");
 
         int page;
@@ -2870,20 +2847,13 @@ public class ClienteController {
         //int page = params.get("page") != null ? Integer.valueOf(params.get("page").toString()) - 1 : 0;
         Pageable pageRequest = PageRequest.of(page, 10);
 
-
         if (texto == null) {
             texto = "";
-            httpSession.removeAttribute("texto");
-
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
 
         if (numpedidos == null) {
             numpedidos = "7";
-            httpSession.removeAttribute("numpedidos");
-        } else {
-            httpSession.setAttribute("numpedidos", numpedidos);
+
         }
 
         List<YearDTO> listanios = pedidoRepository.listanios();
@@ -2893,22 +2863,20 @@ public class ClienteController {
         int a = c2.get(Calendar.YEAR);
         String anio1 = Integer.toString(a);
 
-
         try {
             if (anio == null) {
                 anio = anio1;
-                httpSession.removeAttribute("anio");
+
             } else if (mes != null) {
                 int an = Integer.parseInt(anio);
-                httpSession.setAttribute("anio", anio);
+
             } else {
                 anio = anio1;
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             anio = anio1;
 
         }
-
 
         int limitSup = 0;
         int limitInf = 12;
@@ -2921,7 +2889,7 @@ public class ClienteController {
                 mes = Integer.toString(m);
                 limitSup = m;
                 limitInf = m - 1;
-                httpSession.removeAttribute("mes");
+
             } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) <= 13) {
                 if (mes.equalsIgnoreCase("13")) {
                     limitSup = 12;
@@ -2930,23 +2898,21 @@ public class ClienteController {
                     limitSup = Integer.parseInt(mes);
                     limitInf = limitSup - 1;
                 }
-                httpSession.setAttribute("mes", mes);
             } else {
                 limitSup = 12;
                 limitInf = 0;
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             limitSup = 12;
             limitInf = 0;
         }
 
+        //texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        //numpedidos = httpSession.getAttribute("numpedidos") == null ? numpedidos : (String) httpSession.getAttribute("numpedidos");
 
-        numpedidos = httpSession.getAttribute("numpedidos") == null ? numpedidos : (String) httpSession.getAttribute("numpedidos");
-
-        mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
-        anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
+        //mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
+        //anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
 
         int limit1cant;
         int limit2cant;
@@ -2981,7 +2947,6 @@ public class ClienteController {
         System.out.println("limit1cat: "+ limit1cant);
         System.out.println("limit2cat: "+ limit2cant);
         Page<ReportePedido> listapedidos = reportePedidoCService.findPaginated3(usuario1.getIdusuario(), limitInf, limitSup, texto,anio,limit1cant,limit2cant, pageRequest);
-
         List<ReporteTop3> listarestTop = pedidoRepository.reporteTop3Rest(usuario1.getIdusuario(), limitInf, limitSup, anio);
         List<ReporteTop3P> listaPl = pedidoRepository.reporteTop3Pl(usuario1.getIdusuario(), limitInf, limitSup, anio);
         int totalPage = listapedidos.getTotalPages();
@@ -3240,19 +3205,13 @@ public class ClienteController {
 
         if (texto == null) {
             texto = "";
-            httpSession.removeAttribute("texto");
 
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
 
 
         if (numpedidos == null) {
             numpedidos = "";
-            httpSession.removeAttribute("numpedidos");
 
-        } else {
-            httpSession.setAttribute("numpedidos", numpedidos);
         }
 
 
@@ -3268,10 +3227,8 @@ public class ClienteController {
         try {
             if (anio == null) {
                 anio = anio1;
-                httpSession.removeAttribute("anio");
             } else if (mes != null) {
                 int an = Integer.parseInt(anio);
-                httpSession.setAttribute("anio", anio);
             } else {
                 anio = anio1;
             }
@@ -3291,7 +3248,6 @@ public class ClienteController {
                 mes = Integer.toString(m);
                 limitSup = m;
                 limitInf = m - 1;
-                httpSession.removeAttribute("mes");
             } else if (Integer.parseInt(mes) > 0 && Integer.parseInt(mes) <= 13) {
                 if (mes.equalsIgnoreCase("13")) {
                     limitSup = 12;
@@ -3300,7 +3256,6 @@ public class ClienteController {
                     limitSup = Integer.parseInt(mes);
                     limitInf = limitSup - 1;
                 }
-                httpSession.setAttribute("mes", mes);
             } else {
                 limitSup = 12;
                 limitInf = 0;
@@ -3311,13 +3266,13 @@ public class ClienteController {
         }
 
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        //texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
 
-        numpedidos = httpSession.getAttribute("numpedidos") == null ? numpedidos : (String) httpSession.getAttribute("numpedidos");
+        //numpedidos = httpSession.getAttribute("numpedidos") == null ? numpedidos : (String) httpSession.getAttribute("numpedidos");
 
 
-        mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
-        anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
+        //mes = httpSession.getAttribute("mes") == null ? mes : (String) httpSession.getAttribute("mes");
+        //anio = httpSession.getAttribute("anio") == null ? anio : (String) httpSession.getAttribute("anio");
         int limit1cant;
         int limit2cant;
         switch (numpedidos) {
@@ -3571,20 +3526,13 @@ public class ClienteController {
 
         if (texto == null) {
             texto = "";
-            httpSession.removeAttribute("texto");
-
-        } else {
-            httpSession.setAttribute("texto", texto);
         }
         if (descuento == null) {
             descuento = "7";
-            httpSession.removeAttribute("descuento");
-        } else {
-            httpSession.setAttribute("descuento", descuento);
         }
 
-        texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
-        descuento = httpSession.getAttribute("descuento") == null ? descuento : (String) httpSession.getAttribute("descuento");
+        //texto = httpSession.getAttribute("texto") == null ? texto : (String) httpSession.getAttribute("texto");
+        //descuento = httpSession.getAttribute("descuento") == null ? descuento : (String) httpSession.getAttribute("descuento");
 
         //int limitSup ;
         //int limitInf ;
@@ -3614,7 +3562,7 @@ public class ClienteController {
 
         //List<CuponClienteDTO> listaCupones1=pedidoRepository.listaCupones1(usuario.getIdusuario());
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2( texto, limitInf, limitSup, pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2(usuario1.getIdusuario(), texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
@@ -3678,7 +3626,7 @@ public class ClienteController {
                 limitInf = 0;
         }
 
-        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2( texto, limitInf, limitSup, pageRequest);
+        Page<CuponClienteDTO> cuponClienteDTOS = cuponClienteService.findPaginated2( usuario1.getIdusuario(),texto, limitInf, limitSup, pageRequest);
         int totalPage = cuponClienteDTOS.getTotalPages();
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());

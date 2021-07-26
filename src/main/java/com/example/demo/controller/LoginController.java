@@ -108,9 +108,41 @@ public class LoginController {
 
     @Autowired
     ValidarCorreoRepository validarCorreoRepository;
-    @GetMapping("")
-    public String pagiIndex(){
-return "index";
+    @GetMapping(value = {"", "/"})
+    public String pagiIndex(Model model, HttpSession httpSession){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            if (httpSession.getAttribute("noExisteCuentaGoogle") != null) {
+                model.addAttribute("noExisteCuentaGoogle", true);
+                httpSession.removeAttribute("noExisteCuentaGoogle");
+            }
+            return "index";
+        } else {
+            String rol = "";
+            for (GrantedAuthority role : authentication.getAuthorities()) {
+                rol = role.getAuthority();
+                break;
+            }
+            switch (rol) {
+                case "cliente":
+
+                    return "redirect:/cliente/listaRestaurantes";
+                case "administradorG":
+                    return "redirect:/admin/usuarios";
+                case "administrador":
+                    return "redirect:/admin/usuarios";
+                case "administradorR":
+                    return "redirect:/paginabienvenida";
+
+                case "repartidor":
+
+                    return "redirect:/repartidor/listaPedidos";
+
+                default:
+                    return "somewhere"; //no tener en cuenta
+            }
+        }
+
     }
 
     @GetMapping("/login")
@@ -181,6 +213,7 @@ return "index";
 
 
     }
+
 
     //Redirect HttpServletRequest req
     @GetMapping(value = "/redirectByRole")

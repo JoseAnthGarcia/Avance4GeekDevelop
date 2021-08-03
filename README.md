@@ -2,7 +2,7 @@
 
 _El presente proyecto fue desarrollado por alumnos de la especialidad de Ingeniería de las Telecomunicaciones de la Facultad de Ciencias e Ingeniería - Pontificia Universidad Católica del Perú. El proyecto fue desarrollado a lo largo del séptimo ciclo y se presento ante el profesor a cargo al finalizar dicho ciclo._
 
-## Descripción del pryecto ⚙️
+## Descripción del proyecto ⚙️
 
 _Food Delivery es una aplicación web para gestionar pedidos de diversos restaurantes. Puede encontrar el plan de proyecto compleyo en el siguiente enlace:_
 [Plan de proyecto](https://docs.google.com/document/d/12ija4k3EWv2nS8rx04lJ71Q5PkHXhzOIaxQZRHwORLk/edit?usp=sharing)

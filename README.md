@@ -7,11 +7,6 @@ _El presente proyecto fue desarrollado por alumnos de la especialidad de Ingenie
 _Food Delivery es una aplicación web para gestionar pedidos de diversos restaurantes. Puede encontrar el plan de proyecto completo en el siguiente enlace:_
 [Plan de proyecto](https://docs.google.com/document/d/12ija4k3EWv2nS8rx04lJ71Q5PkHXhzOIaxQZRHwORLk/edit?usp=sharing)
 
-* [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) - Lenguaje de programación base.
-* [Spring Boot](https://spring.io/projects/spring-boot) - Framework utilizado para implementar el backend de la aplicación web.
-* [Mysql](https://www.mysql.com/) - Base de datos utilizado.
-* [AWS - EC2](https://aws.amazon.com/ec2/?nc2=h_ql_prod_fs_ec2&ec2-whats-new.sort-by=item.additionalFields.postDateTime&ec2-whats-new.sort-order=desc) - Servicio AWS utilizado para su despliegue en la nube.
-
 ## Construido con 🛠️
 
 _Para el presente proyecto se utilizaron las siguientes herramientas:_
